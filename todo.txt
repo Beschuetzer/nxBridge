@@ -1,0 +1,31 @@
+Desired Flow:
+  1. get user ID from local storage if available otherwise from mongodb atlas server and then store in local storage
+      (the function that retrieves the user ID from atlas can accept either an email or username: '/api/getId?name=...' or 'api/getId?email=...'
+  2. user id is used to retrieve the 10 most recent games that user has played (store games in local storage with key being iso date)
+  3. deal info is fetched when user clicks 'load' next to the deal they want to load in the DealList
+  * include a game summary containing relavent game info
+  * display all relevant details of the game in an expanding box within the game's deal list (maybe make game's deal list a table?)
+  *Would need to mkake a query that has the total number of games that user has for pagination purposes (then store in local storage);  Maybe can make one query that does that and gets the first page of game?
+
+
+Components:
+  1. PageContainer
+  2. UserInputs (inputs for username and email, input for filter before and filter after (three ways to use: get games before date, after date, or between dates), dropdown to select nth page to view when more than specified-amount-to-view-per-page number of games available
+  3. GameList (displays the list of games and makes request regarding games to backend)
+  3.1. GameDetail (dumb component that has Input() of game and a template for the game)
+  4. DealList (each GameDetail has one DealList;  displays the list of deals for a game and makes requests regarding deals to backend)
+  4.1. DealDetail (dumb component that has Input() of deal and a template for the deal)
+
+
+
+NgRx:
+  gamesReducer, dealsReducer, 
+  setGames, getGames, getGame, setDeals, getDeals, getDeal
+
+
+Backend:
+  getting userId = '/api/getId?name=...' or 'api/getId?email=...'
+  getting deals =
+  getting deal = 
+  getting games = 
+  getting game =
