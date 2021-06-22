@@ -15,7 +15,7 @@ export class GetGamesController {
     return await this.getGamesService.getGames(userId);
   }
 
-  @Get(":id")
+  @Get(":gameId")
   async getGame(
     @Param('gameId') gameId: string,
   ): ControllerResponse<GameModel> {

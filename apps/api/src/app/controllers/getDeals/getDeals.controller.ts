@@ -15,7 +15,7 @@ export class GetDealsController {
     return await this.getDealsService.getDeals(userId);
   }
 
-  @Get(':id')
+  @Get(':dealId')
   async getDeal(
     @Param('dealId') dealId: string,
   ): ControllerResponse<DealModel> {
