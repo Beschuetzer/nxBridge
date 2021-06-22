@@ -42,6 +42,7 @@
     "@nestjs/mongoose": "^7.2.4",
     "@nestjs/platform-express": "^7.0.0",
     "@nrwl/angular": "12.4.0",
+    "@types/mongoose": "^5.11.97",
     "reflect-metadata": "^0.1.13",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",

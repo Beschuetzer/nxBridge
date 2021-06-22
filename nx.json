@@ -28,6 +28,9 @@
     "api-interfaces": {
       "tags": []
     },
+    "api-mongoose-models": {
+      "tags": []
+    },
     "frontend": {
       "tags": []
     },

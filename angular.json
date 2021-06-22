@@ -85,6 +85,27 @@
         }
       }
     },
+    "api-mongoose-models": {
+      "root": "libs/api-mongoose-models",
+      "sourceRoot": "libs/api-mongoose-models/src",
+      "projectType": "library",
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/api-mongoose-models/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/api-mongoose-models"],
+          "options": {
+            "jestConfig": "libs/api-mongoose-models/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
     "frontend": {
       "projectType": "application",
       "root": "apps/frontend",
