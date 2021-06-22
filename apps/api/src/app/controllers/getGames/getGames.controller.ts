@@ -1,5 +1,6 @@
-import { Query, Get } from '@nestjs/common';
+import { Query, Get, Param } from '@nestjs/common';
 import { Controller } from '@nestjs/common';
+import { GameModel } from '@nx-bridge/api-mongoose-models';
 import { ControllerResponse } from '@nx-bridge/interfaces-and-types';
 import { GetGamesService } from './getGames.service';
 
@@ -8,9 +9,16 @@ export class GetGamesController {
   constructor(private readonly getGamesService: GetGamesService) {}
 
   @Get()
-  getData(
-    @Query('id') name: string,
-  ): ControllerResponse {
-    return {message: "Error", status: 404};
+  async getGames(
+    @Query('userId') userId: string,
+  ): ControllerResponse<GameModel> {
+    return await this.getGamesService.getGames(userId);
+  }
+
+  @Get(":id")
+  async getGame(
+    @Param('gameId') gameId: string,
+  ): ControllerResponse<GameModel> {
+    return await this.getGamesService.getGames(gameId);
   }
 }

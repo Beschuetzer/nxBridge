@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { InjectModel } from '@nestjs/mongoose';
 import { invalidEmailAndPassword } from '@nx-bridge/api-errors';
 import { UserModel } from '@nx-bridge/api-mongoose-models';
-import { ErrorMessage } from '@nx-bridge/interfaces-and-types';
+import { ControllerResponse, User } from '@nx-bridge/interfaces-and-types';
 import { Model } from 'mongoose';
 
 @Injectable({ providedIn: 'root'})
@@ -11,11 +11,11 @@ export class GetIdService {
     @InjectModel('User') private userModel: Model<UserModel>,
   ) {}
 
-  async getId(username: string, email: string): Promise<UserModel | ErrorMessage > {
+  async getId(username: string, email: string): ControllerResponse<UserModel> {
     const error = this.validateInputs(username, email);
     console.log('error =', error);
     if (error) return error;
-    return this.queryDB(username, email);
+    return await this.queryDB(username, email);
   }
 
   private validateInputs(username: string, email: string) {
@@ -26,7 +26,7 @@ export class GetIdService {
     return null;
   }
 
-  private async queryDB(username: string, email: string) {
+  private async queryDB(username: string, email: string): ControllerResponse<UserModel> {
     if (username) return await this.getIdFromUserName(username);
     else if (email) return await this.getIdFromEmail(email);
   }
