@@ -1,8 +1,9 @@
+
 export interface Message {
   message: string;
 }
 
-export type UserId = string;
+export type ObjectId = string;
 
 export interface ErrorMessage {
   message: string, 
@@ -76,6 +77,8 @@ export interface User {
     resetPasswordToken: string,
     resetPasswordExpires: Date,
     stats: Stats;
+    zipCode?: number;
+    hash: string;
 }
 
 export type Seating = {north: string, south: string, east: string, west: string};
@@ -87,13 +90,13 @@ export interface Room {
   usersWhoMadeSeatingChoice: string[],
   usersReady: string[], 
   seating: Seating;
-  biddingTimerDurationValue: number,
-  cardPlayTimerDurationValue: number,
+  biddingTimerDurationValue: number | "none",
+  cardPlayTimerDurationValue: number | "none",
   roundEndAnimationCompletion: {[key: string]: number},
   cardPlayAnimationCompletion: {[key: string]: number},
-  turnStartTime: number,
-  usernameOfCurrentPlayer: string,
-  usernameOfCurrentBidder: string,
+  turnStartTime: number | null,
+  usernameOfCurrentPlayer: string | null,
+  usernameOfCurrentBidder: string | null,
   shouldCountHonors: boolean,
   northSouthAbove: number,
   northSouthBelow: number,
@@ -101,60 +104,108 @@ export interface Room {
   eastWestAbove: number,
   eastWestBelow: number,
   eastWestVulnerable: boolean,
-  dealer: string,
+  dealer: string | null,
   continueFromIncomplete: boolean,
+  timesUpComplete: boolean,
+}
+
+export interface GameRoundEndingScores {
+  northSouth: number[],
+  eastWest: number[],
 }
 
 export interface Game {
-  deals: string[];
+  deals: ObjectId[];
   room: Room,
-  gameRoundEndingScores: {   
-      northSouth: [],
-      eastWest: [],
-  },
-  startDate: Date;
-  completionDate: Date;
-  players: UserId[];
+  gameRoundEndingScores: GameRoundEndingScores;
+  startDate: number;
+  completionDate: number;
+  players: ObjectId[];
   points: Points,
 }
 
-export interface Points {
-  // aboveTheLine: number,
-  //TODO: Login to MongoDB atlas and verify these interfaces
+export type UserObj = {
+  socketId: string;
+  username: string;
+  room: string;
+  status: string;
+  preferences: Preferences;
+}
+
+export interface GameIncomplete {
+  gameRoundEndingScores: GameRoundEndingScores;
+  hasMadeBid: { northSouth: boolean, eastWest: boolean };
+  hasSentIsAllowedToPlay: boolean;
+  isGameOver: boolean;
+  userObjs: UserObj[];
+
+  deals: Deal[]
+  points: Points,
+  room: Room,
+
 }
 
 export type Bid = [string, string];
+export type Hands = { [key: string]: Hand };
+export type Hand = [number[], number[], number[], number[]];
+export type Points = { [key: string]: Point };
+export type Point = {
+  distributionPoints: number[],
+  highCardPoints: number[],
+}
 
-export interface Deal {  //have to use JS types not TS types
-  players: UserId[];
+export type DealScoring = {
+  aboveTheLine: number;
+  belowTheLine: number;
+  totalBelowTheLineScore: number;
+  isVulnerable: boolean;
+  vulnerableTransitionIndex: number;
+}
+
+export type DealSummary = {
+  contractPoints: number;
+  overTrickPoints: number;
+  underTrickPoints: number;
+  rubberBonus: number;
+  honorPoints: number;
+}
+
+export interface Deal extends DealCore {  //have to use JS types not TS types
+  players: ObjectId[];
+}
+
+export interface DealGameIncomplete extends DealCore {
+  agreeWithClaim: AgreeWithClaim;
+  acceptedClaims: AcceptedClaim[];
+}
+
+type DealCore = {
   cardPlayOrder: number[];
-  hands: ...//TODO: Finish this;
-  roundWinners: string[];
-  declarer: string,
-  dealer: string,
+  hands: Hands;
+  roundWinners: string[][];
+  declarer: ObjectId,
+  dealer: ObjectId,
   bids: Bid[],
   contract: string;
-  northSouth: {
-      aboveTheLine: number;
-      belowTheLine: number;
-      totalBelowTheLineScore: number;
-      isVulnerable: boolean;
-      vulnerableTransitionIndex: number;
-  },
-  eastWest: {
-      aboveTheLine: number;
-      belowTheLine: number;
-      totalBelowTheLineScore: number;
-      isVulnerable: boolean;
-      vulnerableTransitionIndex: number;
-  },
+  northSouth: DealScoring,
+  eastWest: DealScoring,
   redealCount: number;
-  dealSummary: {
-      contractPoints: number;
-      overTrickPoints: number;
-      underTrickPoints: number;
-      rubberBonus: number;
-      honorPoints: number;
-  },
+  dealSummary: DealSummary,
   doubleValue: number;
+}
+
+export type AcceptedClaim = {
+  claimAmount: number,
+  cardsClaimed: number[],
+}
+
+export type AgreeWithClaim = {
+  claimAmount: number | null;
+  isClaimingAll: boolean;
+  socketIds: { [key: string]: string };
+  claimingCards: number[],
+  otherHandCards: number[],
+  throwInCards: { [key: string]: number[] },
+  claimSomeCardPlayOrder: number[],
+  endInHand: null | boolean,
 }

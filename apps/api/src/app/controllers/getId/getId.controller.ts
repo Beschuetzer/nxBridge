@@ -1,6 +1,6 @@
 import { Body, Post, } from '@nestjs/common';
 import { Controller, } from '@nestjs/common';
-import { ErrorMessage, UserId } from '@nx-bridge/api-interfaces';
+import { ErrorMessage, ObjectId } from '@nx-bridge/api-interfaces';
 import { error1 as invalidEmailAndPassword } from '@nx-bridge/api-errors';
 import { GetIdService } from './getId.service';
 
@@ -12,7 +12,7 @@ export class GetIdController {
   getData(
     @Body('name') name: string,
     @Body('email') email: string,
-  ): UserId | ErrorMessage {
+  ): ObjectId | ErrorMessage {
 
     if (!email && ! name) {
       return { message: invalidEmailAndPassword, status: 400};
