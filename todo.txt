@@ -17,7 +17,6 @@ Components:
   4.1. DealDetail (dumb component that has Input() of deal and a template for the deal)
 
 
-
 NgRx:
   gamesReducer, dealsReducer, 
   setGames, getGames, getGame, setDeals, getDeals, getDeal
