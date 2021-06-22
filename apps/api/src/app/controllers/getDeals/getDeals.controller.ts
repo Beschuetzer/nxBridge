@@ -12,6 +12,7 @@ export class GetDealsController {
   async getDeals(
     @Query('userId') userId: string,
   ): ControllerResponse<DealModel> {
+    console.log('userId =', userId);
     return await this.getDealsService.getDeals(userId);
   }
 

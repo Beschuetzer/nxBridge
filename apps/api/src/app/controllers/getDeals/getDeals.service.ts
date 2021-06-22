@@ -10,7 +10,8 @@ export class GetDealsService {
   ) {}
 
   async getDeals(userId: string) {
-    return await this.DealsModel.find({_id: userId});
+    console.log('userId =', userId);
+    return await this.DealsModel.find({players: userId});
   }
 
   async getDeal(dealId: string) {

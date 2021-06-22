@@ -2,16 +2,16 @@ import { Injectable } from '@angular/core';
 import { InjectModel } from '@nestjs/mongoose';
 import { invalidEmailAndPassword } from '@nx-bridge/api-errors';
 import { UserModel } from '@nx-bridge/api-mongoose-models';
-import { ControllerResponse, User } from '@nx-bridge/interfaces-and-types';
+import { ControllerResponse } from '@nx-bridge/interfaces-and-types';
 import { Model } from 'mongoose';
 
 @Injectable({ providedIn: 'root'})
-export class GetIdService {
+export class GetUserService {
   constructor(
     @InjectModel('User') private userModel: Model<UserModel>,
   ) {}
 
-  async getId(username: string, email: string): ControllerResponse<UserModel> {
+  async getUser(username: string, email: string): ControllerResponse<UserModel> {
     const error = this.validateInputs(username, email);
     console.log('error =', error);
     if (error) return error;
@@ -27,18 +27,18 @@ export class GetIdService {
   }
 
   private async queryDB(username: string, email: string): ControllerResponse<UserModel> {
-    if (username) return await this.getIdFromUserName(username);
-    else if (email) return await this.getIdFromEmail(email);
+    if (username) return await this.getUserFromUserName(username);
+    else if (email) return await this.getUserFromEmail(email);
   }
 
-  private async getIdFromUserName(username: string) {
+  private async getUserFromUserName(username: string) {
     console.log('username =', username);
     const response =  await this.userModel.findOne({username}).exec();
     console.log('response =', response);
     return response;
   }
 
-  private async getIdFromEmail(email: string) {
+  private async getUserFromEmail(email: string) {
     return await this.userModel.findOne({email});
   }
 }

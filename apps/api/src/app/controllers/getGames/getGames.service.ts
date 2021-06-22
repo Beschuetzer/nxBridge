@@ -10,7 +10,7 @@ export class GetGamesService {
   ) {}
 
   async getGames(userId: string) {
-    return await this.gamesModel.find({_id: userId});
+    return await this.gamesModel.find({players: userId});
   }
 
   async getGame(gameId: string) {
