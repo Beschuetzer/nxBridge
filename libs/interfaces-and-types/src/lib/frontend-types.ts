@@ -1,5 +1,4 @@
 export interface Deal extends DealCore {
-  //have to use JS types not TS types
   players: ObjectId[];
 }
 

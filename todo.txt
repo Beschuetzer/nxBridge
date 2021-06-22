@@ -20,11 +20,3 @@ Components:
 NgRx:
   gamesReducer, dealsReducer, 
   setGames, getGames, getGame, setDeals, getDeals, getDeal
-
-
-Backend:
-  getting userId = '/api/getId?name=...' or 'api/getId?email=...'
-  getting deals =
-  getting deal = 
-  getting games = 
-  getting game =
