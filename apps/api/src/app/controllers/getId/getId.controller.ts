@@ -1,7 +1,7 @@
-import { Body, Post, } from '@nestjs/common';
-import { Controller, } from '@nestjs/common';
-import { ErrorMessage, ObjectId } from '@nx-bridge/api-interfaces';
-import { error1 as invalidEmailAndPassword } from '@nx-bridge/api-errors';
+import { Body, Post } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
+import { UserModel } from '@nx-bridge/api-mongoose-models';
+import { ErrorMessage } from '@nx-bridge/interfaces-and-types';
 import { GetIdService } from './getId.service';
 
 @Controller('getId')
@@ -11,13 +11,10 @@ export class GetIdController {
   @Post()
   getData(
     @Body('name') name: string,
-    @Body('email') email: string,
-  ): ObjectId | ErrorMessage {
-
-    if (!email && ! name) {
-      return { message: invalidEmailAndPassword, status: 400};
-    }
-
-    return `email: ${email} and name: ${name}` 
+    @Body('email') email: string
+  ): Promise<UserModel | ErrorMessage> {
+    console.log('name =', name);
+    console.log('email =', email);
+    return this.getIdService.getId(name, email);
   }
 }

@@ -16,7 +16,7 @@
     "baseUrl": ".",
     "paths": {
       "@nx-bridge/api-errors": ["libs/api-errors/src/index"],
-      "@nx-bridge/api-interfaces": ["libs/api-interfaces/src/index"],
+      "@nx-bridge/interfaces-and-types": ["libs/interfaces-and-types/src/index"],
       "@nx-bridge/api-mongoose-models": [
         "libs/api-mongoose-models/src/index.ts"
       ]

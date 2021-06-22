@@ -25,7 +25,7 @@
     "api-errors": {
       "tags": []
     },
-    "api-interfaces": {
+    "interfaces-and-types": {
       "tags": []
     },
     "api-mongoose-models": {

@@ -11,7 +11,7 @@ dotenv.config();
   imports: [
     ControllersModule,
     MongooseModule.forRoot(
-      `mongodb+srv://${process.env.mongoDB_USER}:${process.env.mongoDB_PASSWORD}@cluster0.3trbv.mongodb.net/test?retryWrites=true&w=majority`,
+      `mongodb+srv://${process.env.mongoDB_USER}:${process.env.mongoDB_PASSWORD}@cluster0.3trbv.mongodb.net/Bridge?retryWrites=true&w=majority`,
     ),
   ],
   controllers: [AppController],

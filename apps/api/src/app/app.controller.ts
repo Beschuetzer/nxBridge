@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 
-import { Message } from '@nx-bridge/api-interfaces';
+import { Message } from '@nx-bridge/interfaces-and-types';
 
 import { AppService } from './app.service';
 

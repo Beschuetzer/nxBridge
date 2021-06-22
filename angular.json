@@ -72,15 +72,15 @@
         }
       }
     },
-    "api-interfaces": {
-      "root": "libs/api-interfaces",
-      "sourceRoot": "libs/api-interfaces/src",
+    "interfaces-and-types": {
+      "root": "libs/interfaces-and-types",
+      "sourceRoot": "libs/interfaces-and-types/src",
       "projectType": "library",
       "architect": {
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["libs/api-interfaces/**/*.ts"]
+            "lintFilePatterns": ["libs/interfaces-and-types/**/*.ts"]
           }
         }
       }
