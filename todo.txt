@@ -1,4 +1,5 @@
 Desired Flow:
+  0. Enter username or email into form
   1. get user ID from local storage if available otherwise from mongodb atlas server and then store in local storage
       (the function that retrieves the user ID from atlas can accept either an email or username: '/api/getId?name=...' or 'api/getId?email=...'
   2. user id is used to retrieve the 10 most recent games that user has played (store games in local storage with key being iso date)
