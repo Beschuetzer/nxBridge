@@ -1,6 +1,6 @@
 import * as mongoose from 'mongoose';
 
-import { User } from '@nx-bridge/interfaces-and-types';
+import { Game, User } from '@nx-bridge/interfaces-and-types';
 
 export const DealSchema = new mongoose.Schema({
     players: [
@@ -138,7 +138,12 @@ export const UserSchema = new mongoose.Schema({
 });
 
 // Telling TS that Product is inheriting from mongoose's Document Interface
-export interface UserModel extends mongoose.Document {
+export interface UserModel extends mongoose.Document, User {
+    username: string;
+    email: string;
+}
+
+export interface GameModel extends mongoose.Document, Game {
     username: string;
     email: string;
 }

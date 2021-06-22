@@ -1,1 +1,2 @@
-export * from './lib/interfaces-and-types';
+export * from './lib/frontend-types';
+export * from './lib/controller-types';

@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { InjectModel } from '@nestjs/mongoose';
 import { invalidEmailAndPassword } from '@nx-bridge/api-errors';
@@ -9,7 +8,6 @@ import { Model } from 'mongoose';
 @Injectable({ providedIn: 'root'})
 export class GetIdService {
   constructor(
-    private http: HttpClient,
     @InjectModel('User') private userModel: Model<UserModel>,
   ) {}
 
