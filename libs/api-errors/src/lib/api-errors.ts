@@ -1,0 +1,1 @@
+export const error1 = 'testing 123';

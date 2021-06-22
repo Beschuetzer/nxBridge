@@ -3,3 +3,8 @@ export interface Message {
 }
 
 export type UserId = string;
+
+export interface ErrorMessage {
+  message: string, 
+  status: number,
+}
