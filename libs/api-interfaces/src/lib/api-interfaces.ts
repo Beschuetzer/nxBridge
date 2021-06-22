@@ -3,7 +3,14 @@ export interface Message {
   message: string;
 }
 
-export type ObjectId = string;
+export interface Deal extends DealCore {  //have to use JS types not TS types
+  players: ObjectId[];
+}
+
+export interface DealGameIncomplete extends DealCore {
+  agreeWithClaim: AgreeWithClaim;
+  acceptedClaims: AcceptedClaim[];
+}
 
 export interface ErrorMessage {
   message: string, 
@@ -81,7 +88,6 @@ export interface User {
     hash: string;
 }
 
-export type Seating = {north: string, south: string, east: string, west: string};
 
 export interface Room {
   name: string;
@@ -124,6 +130,44 @@ export interface Game {
   points: Points,
 }
 
+export interface GameIncomplete {
+  gameRoundEndingScores: GameRoundEndingScores;
+  hasMadeBid: { northSouth: boolean, eastWest: boolean };
+  hasSentIsAllowedToPlay: boolean;
+  isGameOver: boolean;
+  userObjs: UserObj[];
+  deals: DealGameIncomplete[];
+  name: string;
+  startDate: number;
+  usernames: string[];
+  pencilInStart: null | number;
+  originalSocketIds: { [key: string]:string };
+  seating: Seating;
+  gameState: string;
+  room: Room;
+  undoRequest: UndoRequest;
+  roundWinSounds: { [key: string]: string };
+  points: Points,
+  users: { [key: string]: string };
+  usersReadyToContinue: { [key: string]: boolean };
+}
+
+
+type DealCore = {
+  cardPlayOrder: number[];
+  hands: Hands;
+  roundWinners: string[][];
+  declarer: ObjectId,
+  dealer: ObjectId,
+  bids: Bid[],
+  contract: string;
+  northSouth: DealScoring,
+  eastWest: DealScoring,
+  redealCount: number;
+  dealSummary: DealSummary,
+  doubleValue: number;
+}
+
 export type UserObj = {
   socketId: string;
   username: string;
@@ -132,19 +176,31 @@ export type UserObj = {
   preferences: Preferences;
 }
 
-export interface GameIncomplete {
-  gameRoundEndingScores: GameRoundEndingScores;
-  hasMadeBid: { northSouth: boolean, eastWest: boolean };
-  hasSentIsAllowedToPlay: boolean;
-  isGameOver: boolean;
-  userObjs: UserObj[];
-
-  deals: Deal[]
-  points: Points,
-  room: Room,
-
+export type AcceptedClaim = {
+  claimAmount: number,
+  cardsClaimed: number[],
 }
 
+export type AgreeWithClaim = {
+  claimAmount: number | null;
+  isClaimingAll: boolean;
+  socketIds: { [key: string]: string };
+  claimingCards: number[],
+  otherHandCards: number[],
+  throwInCards: { [key: string]: number[] },
+  claimSomeCardPlayOrder: number[],
+  endInHand: null | boolean,
+}
+
+export type UndoRequest = {
+  active: boolean,
+  responses: { [key: string]: boolean },
+  alreadyAsked: { [key: string]: 0 | 1 },
+  numberOfResponsesNeeded: number | null,
+}
+
+export type Seating = {north: string, south: string, east: string, west: string};
+export type ObjectId = string;
 export type Bid = [string, string];
 export type Hands = { [key: string]: Hand };
 export type Hand = [number[], number[], number[], number[]];
@@ -168,44 +224,4 @@ export type DealSummary = {
   underTrickPoints: number;
   rubberBonus: number;
   honorPoints: number;
-}
-
-export interface Deal extends DealCore {  //have to use JS types not TS types
-  players: ObjectId[];
-}
-
-export interface DealGameIncomplete extends DealCore {
-  agreeWithClaim: AgreeWithClaim;
-  acceptedClaims: AcceptedClaim[];
-}
-
-type DealCore = {
-  cardPlayOrder: number[];
-  hands: Hands;
-  roundWinners: string[][];
-  declarer: ObjectId,
-  dealer: ObjectId,
-  bids: Bid[],
-  contract: string;
-  northSouth: DealScoring,
-  eastWest: DealScoring,
-  redealCount: number;
-  dealSummary: DealSummary,
-  doubleValue: number;
-}
-
-export type AcceptedClaim = {
-  claimAmount: number,
-  cardsClaimed: number[],
-}
-
-export type AgreeWithClaim = {
-  claimAmount: number | null;
-  isClaimingAll: boolean;
-  socketIds: { [key: string]: string };
-  claimingCards: number[],
-  otherHandCards: number[],
-  throwInCards: { [key: string]: number[] },
-  claimSomeCardPlayOrder: number[],
-  endInHand: null | boolean,
 }
