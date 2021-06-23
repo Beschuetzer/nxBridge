@@ -3,11 +3,10 @@ import { CommonModule } from '@angular/common';
 import { LandingComponent } from './landing/landing.component';
 import { LandingService } from './landing.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatSliderModule } from '@angular/material/slider';
 
 @NgModule({
   declarations: [LandingComponent],
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, MatSliderModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   providers: [LandingService],
   exports: [LandingComponent],
 })

@@ -10,23 +10,23 @@
 html {
 	/* 62.5% of the browser supplied font-size is usually 16px */
 	/* bad practice to declarer px font-size here as it removes users ability to set font-size in browser */
-	font-size: 62.5%;
+	font-size: 87.5% !important;
 	@include respond(big-desktop) {
-		font-size: 75%;
+		font-size: 100%;
 	}
 	@include respond(tab-land) {
 		// font-size: 56.25%;
 	}
 	@include respond(tab-port) {
 		// font-size: 43.75%;
-		font-size: 56.25%;
+		font-size: 75% !important;
 	}
 	// @include respond(phone) {
 	//     font-size: 37.5%;
 	// }
 	@include respond(nav-break) {
 		// font-size: 31.25%;
-		font-size: 50%;
+		font-size: 62.5% !important;
 	}
 	@include respond(small-font) {
 		// font-size: 1.65vmin;

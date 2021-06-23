@@ -17,6 +17,10 @@ export class LandingComponent implements OnInit {
     this.initializeForm();
   }
 
+  public resetForm() {
+    this.initializeForm();
+  }
+
   private initializeForm() {
     this.initialForm = new FormGroup({
       "username": new FormControl(

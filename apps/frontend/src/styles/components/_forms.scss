@@ -1,0 +1,9 @@
+.form{ 
+  &__control
+  &__field {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: $default-font-size * 2;
+  }
+  
+}

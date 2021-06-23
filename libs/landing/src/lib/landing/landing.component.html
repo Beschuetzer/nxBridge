@@ -17,13 +17,7 @@
       placeholder="e.g. test@test.com"
     />
   </div>
-  <div class="field">
-    <!-- <div class="ui checkbox">
-      <input type="checkbox" tabindex="0" class="hidden">
-      <label>I agree to the Terms and Conditions</label>
-    </div> -->
-  </div>
-  <button class="ui button" type="submit" [disabled]="!initialForm.valid">Go</button>
+  <button class="ui button primary" type="submit" [disabled]="!initialForm.valid">Go</button>
+  <button (click)="resetForm()" class="ui button secondary" type="button" [disabled]="initialForm.get('email')?.value === '' && initialForm.get('username')?.value === ''">Reset</button>
 </form>
 
-<mat-slider min="1" max="100" step="1" value="1"></mat-slider>
