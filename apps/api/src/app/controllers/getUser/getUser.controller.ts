@@ -4,15 +4,17 @@ import { UserModel } from '@nx-bridge/api-mongoose-models';
 import { ControllerResponse } from '@nx-bridge/interfaces-and-types';
 import { GetUserService } from './getUser.service';
 
-@Controller('getId')
+@Controller('getUser')
 export class GetUserController {
   constructor(private readonly getUserService: GetUserService) {}
 
   @Post()
   async getData(
-    @Body('name') name: string,
+    @Body('username') username: string,
     @Body('email') email: string
   ): ControllerResponse<UserModel> {
-    return await this.getUserService.getUser(name, email);
+    console.log('username =', username);
+    console.log('email =', email);
+    return await this.getUserService.getUser(username, email);
   }
 }

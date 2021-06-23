@@ -1,4 +1,4 @@
-<form (ngSubmit)="onSubmit($event)" [formGroup]="initialForm" class="ui form">
+<form (ngSubmit)="onSubmit()" [formGroup]="initialForm" class="ui form">
   <div class="field">
     <label>Username</label>
     <input
@@ -28,4 +28,6 @@
   <button (click)="resetForm()" class="ui button secondary" type="button" 
   [disabled]="initialForm.get('email')?.value === '' && initialForm.get('username')?.value === ''">Reset</button>
 </form>
+
+
 

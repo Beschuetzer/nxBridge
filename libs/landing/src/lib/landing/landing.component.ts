@@ -1,5 +1,8 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, AbstractControlOptions, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { LandingService } from '../landing.service';
+import { Game } from '@nx-bridge/interfaces-and-types';
 
 @Component({
   selector: 'nx-bridge-landing',
@@ -7,6 +10,11 @@ import { AbstractControl, AbstractControlOptions, FormControl, FormGroup, Valida
   styleUrls: ['./landing.component.scss'],
 })
 export class LandingComponent implements OnInit {
+  constructor(
+    private landingService: LandingService,
+    private http: HttpClient,
+  ) {}
+
   public initialForm: FormGroup = new FormGroup({});
 
 
@@ -38,9 +46,7 @@ export class LandingComponent implements OnInit {
     else return usernameString;
   }
 
-  constructor(
-
-  ) {}
+  
 
   ngOnInit(): void {
     this.initializeForm();
@@ -56,17 +62,17 @@ export class LandingComponent implements OnInit {
         null,
         [
           Validators.maxLength(12),
-          noEmpty
+          LandingService.noEmpty
         ]
       ),
       "email": new FormControl(
         null,
         [
           Validators.email,
-          noEmpty
+          LandingService.noEmpty
         ]
       )
-    }, numberRequired(1));
+    }, LandingService.numberRequired(1));
   }
 
   // private validateRequired (formGroup: FormGroup) {
@@ -75,32 +81,17 @@ export class LandingComponent implements OnInit {
   //   return null;
   // }
 
-  onSubmit(e: Event) {
-    console.log('e =', e);
-    console.log('this.initialForm email', this.initialForm.get('email')?.value.length);
+  onSubmit() {
+    const email = this.initialForm.get('email');
+    const username = this.initialForm.get('username');
+
+    console.log('email =', email?.value);
+    console.log('username =', username?.value);
+
+    this.http.post<Game[]>('/api/getUser', { email: email?.value, username: username?.value}).subscribe(games => {
+      console.log('games =', games);
+    })
+
   }
   
-}
-
-export const noEmpty = (formControl: AbstractControl) => {
-  if (formControl.value === '') return {isEmpty: true};
-  return null;
-}
-
-//NOTE: this is how you write an ValidatorFn that accepts params
-export function numberRequired (numberRequired: number): ValidatorFn {
-  return (formGroup: AbstractControl): ValidationErrors | null => {
-
-    let haveInputCount = 0;
-    const controlKeys = Object.keys((formGroup as FormGroup).controls);
-
-    for (let i = 0; i < controlKeys.length; i++) {
-      const key = controlKeys[i];
-      const control = (formGroup as FormGroup).controls[key];
-      if (control.value !== '' && control.value !== null && control.value !== undefined) haveInputCount++;
-    }
-
-    if (haveInputCount < numberRequired) return {numberRequired: false}
-    return null;
-  }
 }

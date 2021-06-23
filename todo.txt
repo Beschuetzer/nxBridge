@@ -20,3 +20,7 @@ Components:
 NgRx:
   gamesReducer, dealsReducer, 
   setGames, getGames, getGame, setDeals, getDeals, getDeal
+
+
+-Add threejs nebular to landing
+-add ngIf to email and username fields (hide the other if one is valid)
