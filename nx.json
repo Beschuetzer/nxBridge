@@ -25,9 +25,6 @@
     "api-errors": {
       "tags": []
     },
-    "interfaces-and-types": {
-      "tags": []
-    },
     "api-mongoose-models": {
       "tags": []
     },
@@ -37,6 +34,12 @@
     "frontend-e2e": {
       "tags": [],
       "implicitDependencies": ["frontend"]
+    },
+    "interfaces-and-types": {
+      "tags": []
+    },
+    "landing": {
+      "tags": []
     }
   }
 }

@@ -72,19 +72,6 @@
         }
       }
     },
-    "interfaces-and-types": {
-      "root": "libs/interfaces-and-types",
-      "sourceRoot": "libs/interfaces-and-types/src",
-      "projectType": "library",
-      "architect": {
-        "lint": {
-          "builder": "@nrwl/linter:eslint",
-          "options": {
-            "lintFilePatterns": ["libs/interfaces-and-types/**/*.ts"]
-          }
-        }
-      }
-    },
     "api-mongoose-models": {
       "root": "libs/api-mongoose-models",
       "sourceRoot": "libs/api-mongoose-models/src",
@@ -224,6 +211,44 @@
           "builder": "@nrwl/linter:eslint",
           "options": {
             "lintFilePatterns": ["apps/frontend-e2e/**/*.{js,ts}"]
+          }
+        }
+      }
+    },
+    "interfaces-and-types": {
+      "root": "libs/interfaces-and-types",
+      "sourceRoot": "libs/interfaces-and-types/src",
+      "projectType": "library",
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["libs/interfaces-and-types/**/*.ts"]
+          }
+        }
+      }
+    },
+    "landing": {
+      "projectType": "library",
+      "root": "libs/landing",
+      "sourceRoot": "libs/landing/src",
+      "prefix": "nx-bridge",
+      "architect": {
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/landing"],
+          "options": {
+            "jestConfig": "libs/landing/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/landing/src/**/*.ts",
+              "libs/landing/src/**/*.html"
+            ]
           }
         }
       }
