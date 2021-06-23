@@ -17,8 +17,8 @@
       placeholder="e.g. test@test.com"
     />
   </div>
-  <button class="ui button primary" type="submit" [disabled]="!(initialForm.valid && initialForm.dirty && initialForm.touched)">Go</button>
+  <button class="ui button primary" type="submit" [disabled]="initialForm.invalid && (!emailIsValid && !usernameIsValid)">Go</button>
+  
   <button (click)="resetForm()" class="ui button secondary" type="button" 
   [disabled]="initialForm.get('email')?.value === '' && initialForm.get('username')?.value === ''">Reset</button>
 </form>
-

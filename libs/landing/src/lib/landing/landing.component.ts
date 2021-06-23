@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, AbstractControlOptions, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 
 @Component({
   selector: 'nx-bridge-landing',
@@ -8,6 +8,19 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 })
 export class LandingComponent implements OnInit {
   public initialForm: FormGroup = new FormGroup({});
+
+
+  get emailIsValid(): boolean | undefined {
+    const email = this.initialForm.get('email');
+    if (!email) return true;
+    return email.touched && email.value !== '' && email.valid
+  }
+
+  get usernameIsValid(): boolean | undefined {
+    const username = this.initialForm.get('username');
+    if (!username) return true;
+    return username.touched && username.value !== '' && username.valid
+  }
 
   constructor(
 
@@ -27,17 +40,17 @@ export class LandingComponent implements OnInit {
         null,
         [
           Validators.maxLength(12),
-          Validators.minLength(6),
+          canNotBeEmpty
         ]
       ),
       "email": new FormControl(
         null,
         [
           Validators.email,
-          Validators.minLength(1)
+          canNotBeEmpty
         ]
       )
-    });
+    }, numberRequired(1));
   }
 
   // private validateRequired (formGroup: FormGroup) {
@@ -53,3 +66,30 @@ export class LandingComponent implements OnInit {
   
 }
 
+
+export const canNotBeEmpty = (formControl: AbstractControl) => {
+  if (formControl.value === '') return {isEmpty: true};
+  return null;
+}
+
+export function numberRequired (numberRequired: number): ValidatorFn {
+  return (formGroup: AbstractControl): ValidationErrors | null => {
+
+    let haveInputCount = 0;
+    const controlKeys = Object.keys((formGroup as FormGroup).controls);
+
+    for (let i = 0; i < controlKeys.length; i++) {
+      const key = controlKeys[i];
+      const control = (formGroup as FormGroup).controls[key];
+      console.log('control =', control);
+      if (control.value !== '' && control.value !== null && control.value !== undefined) haveInputCount++;
+    }
+
+    console.log('haveInputCount =', haveInputCount);
+    console.log('formGroup =', formGroup);
+    console.log('numberRequired =', numberRequired);
+    if (haveInputCount < numberRequired) return {numberRequired: false}
+    return null;
+  }
+  // if (formControl.value === '') return {isEmpty: true};
+}
