@@ -1,23 +1,23 @@
 import { Deal } from '@nx-bridge/interfaces-and-types';
-import * as fromDealActions from '../actions/deal.actions';
+import * as fromGameActions from '../actions/game.actions';
 
 export interface State {
-  deals: Deal[];
+  games: Deal[];
 }
 
 const INITIAL_STATE: State = {
-  deals: [],
+  games: [],
 };
 
-export function dealReducer(
+export function gameReducer(
   state = INITIAL_STATE,
-  action: fromDealActions.Actions,
+  action: fromGameActions.Actions,
 ) {
   switch (action.type) {
-    case fromDealActions.SET_DEALS:
+    case fromGameActions.SET_GAMES:
       return {
         ...state,
-        deals: action.payload,
+        games: action.payload,
       };
    
     default:

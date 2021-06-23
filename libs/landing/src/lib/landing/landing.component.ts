@@ -125,7 +125,6 @@ export class LandingComponent implements OnInit {
           }
           else {
             localStorage.removeItem('user');
-            //TODO: what happens here?
             this.setError(
               `There is no user with the ${
                 this.usernameIsValid ? 'username' : 'email'
@@ -137,8 +136,6 @@ export class LandingComponent implements OnInit {
   }
 
   private getGames() {
-    
-    console.log('userId =', this.userId);
     const queryStringToUse = `userId=${this.userId}`;
     this.http.get<Game[]>(`/api/getGames?${queryStringToUse}`).subscribe(games => {
       console.log('games =', games);
