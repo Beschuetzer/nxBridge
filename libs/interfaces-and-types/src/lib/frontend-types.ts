@@ -68,18 +68,20 @@ export interface Stats {
 }
 
 export interface User {
+  _id: string;
   username: string;
   password: string;
-  email: string;
+  email: string | null;
   preferences: Preferences;
   date: Date;
   emailValidated: boolean;
   hasPaid: boolean;
-  resetPasswordToken: string;
-  resetPasswordExpires: Date;
+  resetPasswordToken: string | null;
+  resetPasswordExpires: Date | null;
   stats: Stats;
   zipCode?: number;
-  hash: string;
+  hash: string | null;
+  salt: string | null;
 }
 
 export interface Room {

@@ -13,8 +13,6 @@ export class GetUserController {
     @Body('username') username: string,
     @Body('email') email: string
   ): ControllerResponse<UserModel> {
-    console.log('username =', username);
-    console.log('email =', email);
     return await this.getUserService.getUser(username, email);
   }
 }

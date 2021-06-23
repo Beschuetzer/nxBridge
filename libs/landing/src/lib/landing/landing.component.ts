@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { LandingService } from '../landing.service';
-import { Game } from '@nx-bridge/interfaces-and-types';
+import { User } from '@nx-bridge/interfaces-and-types';
 
 @Component({
   selector: 'nx-bridge-landing',
@@ -84,14 +84,29 @@ export class LandingComponent implements OnInit {
   onSubmit() {
     const email = this.initialForm.get('email');
     const username = this.initialForm.get('username');
+    const emailValue = email?.value;
+    const usernameValue = username?.value;
 
-    console.log('email =', email?.value);
-    console.log('username =', username?.value);
+    const userInLocalStorage = localStorage.getItem('user');
+    const parsed = userInLocalStorage ? JSON.parse(userInLocalStorage) as User : null;
+    //todo: need to check if the userInLocalStorage data matches what is being search and the userInLocalStorage._id is valid, if so skip below 
 
-    this.http.post<Game[]>('/api/getUser', { email: email?.value, username: username?.value}).subscribe(games => {
-      console.log('games =', games);
-    })
+    console.log('email =', emailValue);
+    console.log('username =', usernameValue);
+    console.log('userInLocalStorage =', userInLocalStorage);
+    console.log('parsed =', parsed);
 
+    if (!parsed?._id || parsed?.username !== usernameValue) {
+      console.log('inside if------------------------------------------------');
+      this.http.post<User>('/api/getUser', { email: emailValue, username: usernameValue}).subscribe(user => {
+        console.log('user =', user);
+        if (user) localStorage.setItem('user', JSON.stringify({...user, email: null, salt: null, hash: null, resetPasswordExpires: null, resetPasswordToken: null} as User));
+        else {
+          localStorage.removeItem('user');
+          //todo: need to display some message to user that no match found
+        }
+      })
+    }
   }
   
 }
