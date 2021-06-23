@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'nx-bridge-landing',
   templateUrl: './landing.component.html',
-  styleUrls: ['./landing.component.scss']
+  styleUrls: ['./landing.component.scss'],
 })
 export class LandingComponent implements OnInit {
   public initialForm: FormGroup = new FormGroup({});
@@ -31,7 +31,7 @@ export class LandingComponent implements OnInit {
           Validators.email,
         ]
       )
-    }, Validators.required);
+    }, Validators.minLength(1));
   }
 
   // private validateRequired (formGroup: FormGroup) {
@@ -39,6 +39,10 @@ export class LandingComponent implements OnInit {
   
   //   return null;
   // }
+
+  onSubmit(e: Event) {
+    console.log('e =', e);
+  }
   
 }
 

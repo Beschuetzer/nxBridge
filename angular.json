@@ -113,7 +113,7 @@
               "apps/frontend/src/favicon.ico",
               "apps/frontend/src/assets"
             ],
-            "styles": ["apps/frontend/src/styles.scss"],
+            "styles": ["./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css", "apps/frontend/src/styles.scss", "node_modules/semantic-ui/dist/semantic.min.css"],
             "scripts": []
           },
           "configurations": {
