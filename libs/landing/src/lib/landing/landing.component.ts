@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { LandingService } from '../landing.service';
-import { User } from '@nx-bridge/interfaces-and-types';
+import { User, Game } from '@nx-bridge/interfaces-and-types';
 import { exhaustMap, map, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 
@@ -18,6 +18,7 @@ export class LandingComponent implements OnInit {
   ) {}
 
   public error = '';
+  public userId = "";
   public initialForm: FormGroup = new FormGroup({});
 
   get emailIsValid(): boolean | undefined {
@@ -94,6 +95,10 @@ export class LandingComponent implements OnInit {
     console.log('userInLocalStorage =', userInLocalStorage);
     console.log('parsed =', parsed);
 
+    this.getUserId(parsed, usernameValue, emailValue);
+  }
+
+  private getUserId(parsed: User | null, usernameValue: string, emailValue: string) {
     if (!parsed?._id || parsed?.username !== usernameValue) {
       this.http
         .post<User>('/api/getUser', {
@@ -103,18 +108,21 @@ export class LandingComponent implements OnInit {
         .subscribe((user) => {
           console.log('user =', user);
 
-          if (user)
-            localStorage.setItem(
-              'user',
-              JSON.stringify({
-                ...user,
-                email: null,
-                salt: null,
-                hash: null,
-                resetPasswordExpires: null,
-                resetPasswordToken: null,
-              } as User)
-            );
+          if (user) {
+              localStorage.setItem(
+                'user',
+                JSON.stringify({
+                  ...user,
+                  email: null,
+                  salt: null,
+                  hash: null,
+                  resetPasswordExpires: null,
+                  resetPasswordToken: null,
+                } as User)
+              );
+              this.userId = user._id;
+              this.getGames();
+          }
           else {
             localStorage.removeItem('user');
             //TODO: what happens here?
@@ -126,6 +134,15 @@ export class LandingComponent implements OnInit {
           }
         });
     }
+  }
+
+  private getGames() {
+    
+    console.log('userId =', this.userId);
+    const queryStringToUse = `userId=${this.userId}`;
+    this.http.get<Game[]>(`/api/getGames?${queryStringToUse}`).subscribe(games => {
+      console.log('games =', games);
+    })
   }
 
   private setError(error: string) {
