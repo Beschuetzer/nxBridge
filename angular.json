@@ -114,6 +114,14 @@
               "apps/frontend/src/assets"
             ],
             "styles": ["./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css", "apps/frontend/src/styles.scss", "node_modules/semantic-ui/dist/semantic.min.css"],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "apps/frontend/src/styles/base",
+                "apps/frontend/src/styles/helpers",
+                "apps/frontend/src/styles/components",
+                "apps/frontend/src/styles/pages"
+              ]
+            },
             "scripts": []
           },
           "configurations": {

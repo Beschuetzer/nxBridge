@@ -1,0 +1,56 @@
+.heading{
+  font-family: $font-family-headers;
+  &--one {
+      font-size: $default-font-size * 6;
+  }
+  &--two {
+      font-size: $default-font-size * 4;
+  }
+  &--three {
+      font-size: $default-font-size * 2;
+      font-weight: 300;
+  }
+  &--four {
+      font-size: $default-font-size * 1.5;
+  }
+  &--five {
+      font-size: $default-font-size * 1.25;
+  }
+  &--six {
+      font-size: $default-font-size * 1;
+  }
+ 
+}
+  
+.paragraph {
+  font-family: $font-family-text;
+  margin-top: $default-font-size;
+  &--one {
+      font-size: $default-font-size * 2;
+  }
+  &--two {
+      font-size: $default-font-size * 1.75;
+  }
+  &--three {
+      font-size: $default-font-size * 1.5;
+  }
+  &--four {
+      font-size: $default-font-size * 1.25;
+  }
+  &--five {
+      font-size: $default-font-size * 1;
+  }
+  &--six {
+      font-size: $default-font-size * .85;
+  }
+}
+
+.code {
+  background: #111;
+  box-shadow: 0 0 10px #08c, inset 0 0 10px #000;
+  border: 0;
+  border-radius: 9px;
+  color: #fff !important;
+}
+
+// <pre class="code"><span class="lightblue">npm</span> install -g <span class="gold">browserify</span></pre>

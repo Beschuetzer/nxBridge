@@ -1,0 +1,50 @@
+$color-grey-light-1: #faf9f9;
+$color-grey-light-2: #f3f1f1;
+$color-grey-light-3: #f1efef;
+
+$color-black: #111111;
+$color-grey-20: #333333;
+$color-grey-40: #666666;
+$color-grey-60: #999999;
+$color-grey-80: #cccccc;
+$color-white: #ffffff;
+
+$color-primary-1: #28537b;
+$color-primary-1-light: #999999;
+
+$color-primary-2: #8ac6d0;
+$color-primary-3: #f4d262;
+$color-primary-4: #fbeeac;
+
+:root {
+	--color-grey-light-1: #{$color-grey-light-1};
+	--color-grey-light-2: #{$color-grey-light-2};
+	--color-grey-light-3: #{$color-grey-light-3};
+	--color-grey-light-1-rgb: #{hexToRGB($color-grey-light-1)};
+	--color-grey-light-2-rgb: #{hexToRGB($color-grey-light-2)};
+	--color-grey-light-3-rgb: #{hexToRGB($color-grey-light-3)};
+
+	--color-black: 	#{$color-black};
+  --color-grey-20: #{$color-grey-20};
+	--color-grey-40: #{$color-grey-40};
+	--color-grey-60: #{$color-grey-60};
+	--color-grey-80: #{$color-grey-80};
+	--color-white: 	#{$color-white};
+	--color-black-rgb: 	#{hexToRGB($color-black)};
+  --color-grey-20-rgb: #{hexToRGB($color-grey-20)};
+	--color-grey-40-rgb: #{hexToRGB($color-grey-40)};
+	--color-grey-60-rgb: #{hexToRGB($color-grey-60)};
+	--color-grey-80-rgb: #{hexToRGB($color-grey-80)};
+	--color-white-rgb: 	#{hexToRGB($color-white)};
+
+	--color-primary-1: #{$color-primary-1};
+	--color-primary-1-light: #{$color-primary-1-light};
+	--color-primary-2: #{$color-primary-2};
+	--color-primary-3: #{$color-primary-3};
+	--color-primary-4: #{$color-primary-4};
+	--color-primary-1-rgb: #{hexToRGB($color-primary-1)};
+	--color-primary-1-light-rgb: #{hexToRGB($color-primary-1-light)};
+	--color-primary-2-rgb: #{hexToRGB($color-primary-2)};
+	--color-primary-3-rgb: #{hexToRGB($color-primary-3)};
+	--color-primary-4-rgb: #{hexToRGB($color-primary-4)};
+}

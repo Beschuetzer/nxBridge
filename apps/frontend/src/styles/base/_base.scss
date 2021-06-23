@@ -1,3 +1,4 @@
+
 /* global reset;  box-sizing is set on body and set to inherit on all other elements */
 *,
 *::after,
@@ -36,13 +37,13 @@ html {
 	//base + typography > general + grid > page layout > components
 }
 /* everything related to font goes in body */
-// body {
-// 	font-weight: 400;
-// 	line-height: $line-height;
-// 	font-family: $font-family-headers;
-// 	color: var(--color-primary-4);
-// 	overflow-x: hidden;
-// }
+body {
+	font-weight: 400;
+	// line-height: $line-height;
+	// font-family: $font-family-headers;
+	// color: var(--color-primary-4);
+	// overflow-x: hidden;
+}
 
 //Style selected text
 ::selection {
