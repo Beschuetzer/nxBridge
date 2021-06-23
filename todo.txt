@@ -25,4 +25,5 @@ NgRx:
 -Add threejs nebular to landing
 -add ngIf to email and username fields (hide the other if one is valid)
 -figure out how to move landing service validators to a new service folder in the frontend project in a ValidatorsService file
+-need to immediately process games on receipt and store deals as well.
 -figure out how to efficiently store games and retrieve games (need to dispatch setGames)
