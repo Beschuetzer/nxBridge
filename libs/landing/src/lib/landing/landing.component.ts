@@ -24,18 +24,20 @@ export class LandingComponent implements OnInit {
   private initializeForm() {
     this.initialForm = new FormGroup({
       "username": new FormControl(
-        "",
+        null,
         [
           Validators.maxLength(12),
+          Validators.minLength(6),
         ]
       ),
       "email": new FormControl(
-        "",
+        null,
         [
           Validators.email,
+          Validators.minLength(1)
         ]
       )
-    }, Validators.minLength(1));
+    });
   }
 
   // private validateRequired (formGroup: FormGroup) {
@@ -46,6 +48,7 @@ export class LandingComponent implements OnInit {
 
   onSubmit(e: Event) {
     console.log('e =', e);
+    console.log('this.initialForm email', this.initialForm.get('email')?.value.length);
   }
   
 }
