@@ -22,6 +22,22 @@ export class LandingComponent implements OnInit {
     return username.touched && username.value !== '' && username.valid
   }
 
+  get stringToSearchUsing(): string | undefined {
+    const preStringUsername = 'Search for user with username of ';
+    const preStringEmail = 'Search for user with email of ';
+    
+    const email = this.initialForm.get('email')?.value;
+    const username = this.initialForm.get('username')?.value;
+
+    const usernameString = `${preStringUsername}${username}?`;
+    const emailString = `${preStringEmail}${email}?`;
+
+    if (!username && !email) return '';
+    else if (username && !email) return usernameString;
+    else if (!username && email) return emailString;
+    else return usernameString;
+  }
+
   constructor(
 
   ) {}
@@ -40,14 +56,14 @@ export class LandingComponent implements OnInit {
         null,
         [
           Validators.maxLength(12),
-          canNotBeEmpty
+          noEmpty
         ]
       ),
       "email": new FormControl(
         null,
         [
           Validators.email,
-          canNotBeEmpty
+          noEmpty
         ]
       )
     }, numberRequired(1));
@@ -66,12 +82,12 @@ export class LandingComponent implements OnInit {
   
 }
 
-
-export const canNotBeEmpty = (formControl: AbstractControl) => {
+export const noEmpty = (formControl: AbstractControl) => {
   if (formControl.value === '') return {isEmpty: true};
   return null;
 }
 
+//NOTE: this is how you write an ValidatorFn that accepts params
 export function numberRequired (numberRequired: number): ValidatorFn {
   return (formGroup: AbstractControl): ValidationErrors | null => {
 
@@ -81,15 +97,10 @@ export function numberRequired (numberRequired: number): ValidatorFn {
     for (let i = 0; i < controlKeys.length; i++) {
       const key = controlKeys[i];
       const control = (formGroup as FormGroup).controls[key];
-      console.log('control =', control);
       if (control.value !== '' && control.value !== null && control.value !== undefined) haveInputCount++;
     }
 
-    console.log('haveInputCount =', haveInputCount);
-    console.log('formGroup =', formGroup);
-    console.log('numberRequired =', numberRequired);
     if (haveInputCount < numberRequired) return {numberRequired: false}
     return null;
   }
-  // if (formControl.value === '') return {isEmpty: true};
 }
