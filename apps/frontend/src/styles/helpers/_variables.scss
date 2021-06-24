@@ -21,6 +21,14 @@ $scrollbar-box-shadow: inset 0 0 $default-font-size * 0.5
 $scrollbar-track-background: var(--color-primary-1);
 $scrollbar-thumb-background: var(--color-primary-4);
 
+
+//login-card
+$login-card-logo: '../../bridge-logo.svg';
+$logo-opacity-normal: .075;
+$logo-opacity-hover: $logo-opacity-normal / 2;
+
+
+
 //skills
 $skills-linear-gradient-original: linear-gradient(
 	to left,

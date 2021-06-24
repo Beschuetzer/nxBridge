@@ -9,7 +9,15 @@
   border-radius: $default-font-size / 2;
   box-shadow: 0 4px 8px 0px rgba(var(--color-primary-1-rgb), .33);
 
+  & * {
+    color: var(--color-primary-1) !important;
+  }
+  
   &__title {
 
   }
+  &:hover .logo {
+    opacity: $logo-opacity-hover;
+    background-image: url($login-card-logo), linear-gradient(to bottom, rgba(var(--color-primary-4-rgb), 1), rgba(var(--color-primary-3-rgb), 1));
+  } 
 }

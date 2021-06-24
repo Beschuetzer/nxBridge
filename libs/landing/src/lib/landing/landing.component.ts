@@ -17,6 +17,7 @@ export class LandingComponent implements OnInit {
 
   public isLoading = false;
   public error = '';
+  public errorHighlightedValue = '';
   public initialForm: FormGroup = new FormGroup({});
 
   get emailIsValid(): boolean | undefined {
@@ -55,27 +56,11 @@ export class LandingComponent implements OnInit {
     this.initializeForm();
   }
 
-  private initializeForm() {
-    this.initialForm = new FormGroup(
-      {
-        username: new FormControl(null, [
-          Validators.maxLength(12),
-          LandingService.noEmpty,
-        ]),
-        email: new FormControl(null, [
-          Validators.email,
-          LandingService.noEmpty,
-        ]),
-      },
-      LandingService.numberRequired(1)
-    );
+  onReset() {
+    this.error = '';
+    this.errorHighlightedValue = '';
+    this.resetForm();
   }
-
-  // private validateRequired (formGroup: FormGroup) {
-  //   if ((formGroup?.get('email') as FormGroup)?.value !== '' || (formGroup?.get('username') as FormGroup)?.value !== '') return {formValid: true};
-
-  //   return null;
-  // }
 
   onSubmit() {
     this.isLoading = true;
@@ -93,13 +78,29 @@ export class LandingComponent implements OnInit {
     console.log('username =', usernameValue);
     console.log('userInLocalStorage =', userInLocalStorage);
     console.log('parsed =', parsed);
-
     if (!parsed?._id || parsed?.username !== usernameValue) {
       this.getUserId(parsed, usernameValue, emailValue);
     } else {
       this.getGames(parsed._id);
       this.isLoading = false;
     }
+    this.resetForm();
+  }
+
+  private initializeForm() {
+    this.initialForm = new FormGroup(
+      {
+        username: new FormControl(null, [
+          Validators.maxLength(12),
+          LandingService.noEmpty,
+        ]),
+        email: new FormControl(null, [
+          Validators.email,
+          LandingService.noEmpty,
+        ]),
+      },
+      LandingService.numberRequired(1)
+    );
   }
 
   private getUserId(parsed: User | null, usernameValue: string, emailValue: string) {
@@ -127,15 +128,15 @@ export class LandingComponent implements OnInit {
         }
         else {
           localStorage.removeItem('user');
+
           this.setError(
             `There is no user with the ${
-              this.usernameIsValid ? 'username' : 'email'
-            } of ${this.usernameIsValid ? usernameValue : emailValue}.`
+              usernameValue ? 'username' : 'email'
+            } of `,
+            `'${usernameValue ? usernameValue : emailValue}'.`
           );
         }
-
         this.isLoading = false;
-        console.log('this.isLoading =', this.isLoading);
       });
   }
 
@@ -146,7 +147,10 @@ export class LandingComponent implements OnInit {
     })
   }
 
-  private setError(error: string) {
+  private setError(error: string, toHightlightValue = '') {
     this.error = error;
+    if (toHightlightValue) {
+      this.errorHighlightedValue = toHightlightValue;
+    }
   }
 }

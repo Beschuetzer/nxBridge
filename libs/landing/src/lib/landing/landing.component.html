@@ -1,4 +1,5 @@
 <form (ngSubmit)="onSubmit()" [formGroup]="initialForm" class="ui form">
+  <h2 class="header ui">A#Maj Bridge Replay Viewer</h2>
   <div class="field">
     <label>Username</label>
     <input
@@ -19,32 +20,26 @@
   </div>
 
   <div class="field" >
-    <p *ngIf="stringToSearchUsing">{{stringToSearchUsing}}</p>
-    <p *ngIf="!stringToSearchUsing">&nbsp;</p>
+    <p *ngIf="stringToSearchUsing && !error">{{stringToSearchUsing}}</p>
+    <p *ngIf="!stringToSearchUsing && !error">&nbsp;</p>
+    <div *ngIf="error" class="ui red message">
+      {{error}}<b>{{errorHighlightedValue}}</b>
+    </div>
   </div>
 
   <button class="ui button primary" type="submit" [disabled]="initialForm.invalid && (!emailIsValid && !usernameIsValid)">Go</button>
   
-  <button (click)="resetForm()" class="ui button secondary" type="button" 
-  [disabled]="initialForm.get('email')?.value === '' && initialForm.get('username')?.value === ''">Reset</button>
+  <button (click)="onReset()" class="ui button secondary" type="button" 
+  [disabled]="initialForm.get('email')?.value === '' || initialForm.get('username')?.value === ''">Reset</button>
+
   <div *ngIf="isLoading" class="ui icon message">
     <i class="notched circle loading icon"></i>
     <div *ngIf="!error"  class="content">
       <div class="header">
-        Just one second
+        Just one second..
       </div>
-      <p>We're fetching that content for you.</p>
+      <p>Looking for new games.</p>
     </div>
-
-
-    <div *ngIf="error"  class="content">
-      
-      <div class="header">
-        Error!
-      </div>
-      <p>{{error}}</p>
-    </div>
-
   </div>
 </form>
 
