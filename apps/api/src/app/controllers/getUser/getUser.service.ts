@@ -13,7 +13,6 @@ export class GetUserService {
 
   async getUser(username: string, email: string): ControllerResponse<UserModel> {
     const error = this.validateInputs(username, email);
-    console.log('error =', error);
     if (error) return error;
     return await this.queryDB(username, email);
   }
@@ -32,10 +31,7 @@ export class GetUserService {
   }
 
   private async getUserFromUserName(username: string) {
-    console.log('username =', username);
-    const response =  await this.userModel.findOne({username}).exec();
-    console.log('response =', response);
-    return response;
+    return await this.userModel.findOne({username}).exec();
   }
 
   private async getUserFromEmail(email: string) {

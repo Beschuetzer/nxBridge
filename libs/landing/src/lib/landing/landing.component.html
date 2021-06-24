@@ -44,7 +44,7 @@
     <button
       class="ui button bg-color-3 hover-bg-color-1 hover-color-3 w-100 margin-0"
       type="submit"
-      [disabled]="initialForm.invalid && !emailIsValid && !usernameIsValid"
+      [disabled]="initialForm.invalid && !emailIsValid && !usernameIsValid && !isLoading"
     >
       Search
     </button>
