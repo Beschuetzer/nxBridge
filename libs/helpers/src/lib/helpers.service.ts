@@ -68,7 +68,7 @@ export class HelpersService {
             )
           );
         }
-        this.store.dispatch(new ngrxStore.SetIsLoading(true));
+        this.store.dispatch(new ngrxStore.SetIsLoading(false));
       });
   }
 }

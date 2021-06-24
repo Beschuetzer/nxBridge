@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { LandingService } from '../landing.service';
@@ -58,7 +57,8 @@ export class LandingComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.initializeForm();
-    this.subscribeToError();
+    this.subscribeToLoadingErrorMessage();
+    this.subscribeToIsLoading();
   }
 
   ngOnDestroy() {
@@ -85,7 +85,7 @@ export class LandingComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    this.isLoading = true;
+    this.store.dispatch(new SetIsLoading(true));
     const email = this.initialForm.get('email');
     const username = this.initialForm.get('username');
     const emailValue = email?.value;
@@ -105,7 +105,7 @@ export class LandingComponent implements OnInit, OnDestroy {
       this.helpersService.getUserId(parsed, usernameValue, emailValue);
     } else {
       this.helpersService.getGames((parsed as any)._id);
-      this.isLoading = false;
+      this.store.dispatch(new SetIsLoading(false));
     }
     this.resetForm();
   }
@@ -126,7 +126,7 @@ export class LandingComponent implements OnInit, OnDestroy {
     );
   }
 
-  private subscribeToError() {
+  private subscribeToLoadingErrorMessage() {
     this.store.select('general').subscribe(generalState => {
       const errorMessageWhole = generalState.loadingError;
       const termToHighlight = errorMessageWhole.match(/'.+'/i);
@@ -147,6 +147,12 @@ export class LandingComponent implements OnInit, OnDestroy {
       } else {
         this.error = errorMessageWhole;
       }
+    })
+  }
+
+  private subscribeToIsLoading() {
+    this.store.select('general').subscribe(generalState => {
+      this.isLoading = generalState.isLoading;
     })
   }
 }
