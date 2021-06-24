@@ -7,7 +7,7 @@ export const rootRoute = 'landing';
 const routes: Routes = [
   { path: '', redirectTo: `/${rootRoute}`, pathMatch: 'full' },
   { path: 'landing', component: AppComponent},
-  { path: 'games', component: AppComponent},
+  // { path: 'games', component: GamesListComponent},
   // {
   //   path: rootRoute,
   //   loadChildren: () =>
