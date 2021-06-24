@@ -1,12 +1,14 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import { AppComponent } from './app.component';
+import { GamesListComponent } from './games-list/games-list.component';
+import { LandingPageComponent } from './landing-page/landing-page.component';
 
 export const rootRoute = 'landing';
 
 const routes: Routes = [
   { path: '', redirectTo: `/${rootRoute}`, pathMatch: 'full' },
-  { path: 'landing', component: AppComponent}
+  { path: 'landing', component: LandingPageComponent},
+  { path: 'games', component: GamesListComponent}
   // {
   //   path: rootRoute,
   //   loadChildren: () =>

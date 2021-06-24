@@ -60,6 +60,8 @@ export class HelpersService {
         } else {
           localStorage.removeItem('user');
 
+          // this.store.dispatch(new ngrxStore.SetDeals([]));
+          // this.store.dispatch(new ngrxStore.SetGames([]));
           this.store.dispatch(
             new ngrxStore.SetLoadingError(
               `There is no user with the ${
