@@ -1,1 +1,19 @@
-/* You can add global styles to this file, and also import other style files */
+
+@import "./styles/helpers/_functions.scss";
+@import "./styles/helpers/_variables.scss";
+@import "./styles/helpers/_mixins.scss";
+@import "./styles/helpers/_animations.scss";
+
+@import "./styles/base/_utilities.scss";
+@import "./styles/base/colors.scss";
+@import "./styles/base/base";
+@import "./styles/base/_typography.scss";
+@import "./styles/base/overrides";
+
+@import "./styles/components/_forms.scss";
+@import "./styles/components/login-card";
+@import "./styles/components/logo";
+
+@import "./styles/layout/_layout.scss";
+
+// @import "./styles/page/_variables.scss";

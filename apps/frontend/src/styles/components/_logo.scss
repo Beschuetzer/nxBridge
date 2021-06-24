@@ -1,0 +1,16 @@
+
+.logo {
+  background-image: url($login-card-logo), linear-gradient(to bottom, rgba(var(--color-primary-3-rgb), 1), rgba(var(--color-primary-4-rgb), 1));
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-position: bottom;
+  background-size: cover;
+  opacity: $logo-opacity-normal;
+  transition: opacity $animation-duration * 1 $animation-easing-standard;
+  // &:hover {
+  //   opacity: .5;
+  // }
+}

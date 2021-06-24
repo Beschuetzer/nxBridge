@@ -1,0 +1,192 @@
+
+@mixin clearfix {
+	&::after {
+		display: table;
+		clear: both;
+		content: "";
+	}
+}
+
+@mixin positionCenter {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+@mixin navTransitionBackground {
+	transition: transform 0.8s, width 0.8s, opacity 0.8s,
+		box-shadow 0.8s cubic-bezier(0.83, 0, 0.17, 1);
+	-webkit-transition: transform 0.8s, width 0.8s, opacity 0.8s,
+		box-shadow 0.8s cubic-bezier(0.83, 0, 0.17, 1);
+	-moz-transition: transform 0.8s, width 0.8s, opacity 0.8s,
+		box-shadow 0.8s cubic-bezier(0.83, 0, 0.17, 1);
+	-o-transition: transform 0.8s, width 0.8s, opacity 0.8s,
+		box-shadow 0.8s cubic-bezier(0.83, 0, 0.17, 1);
+}
+@mixin navTransitionButton {
+	transition: transform 0.6s, width 0.8s, opacity 0.8s,
+		box-shadow 0.8s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+	-webkit-transition: transform 0.6s, width 0.8s, opacity 0.8s,
+		box-shadow 0.8s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+	-moz-transition: transform 0.6s, width 0.8s, opacity 0.8s,
+		box-shadow 0.8s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+	-o-transition: transform 0.6s, width 0.8s, opacity 0.8s,
+		box-shadow 0.8s cubic-bezier(0.68, -0.6, 0.32, 1.6);
+}
+
+@mixin skills-popup-item-hover {
+	background-color: var(--color-primary-4);
+	border-bottom: 1px solid var(--color-primary-1);
+	// transform: translateY(-.2rem);
+	box-shadow: 0 1.6rem 3.2rem -3.2rem var(--color-primary-2);
+}
+@mixin skills-popup-link-hover {
+	// height: 23.4%;
+	// width: 87.5%;
+	// border-radius: 0 $default-font-size * 1 $default-font-size * 1 0;
+
+	height: 100%;
+	width: 100%;
+	opacity: 1;
+	border-radius: 0;
+}
+@mixin item-number {
+	font-family: ui-sans-serif;
+	font-weight: 300;
+	margin-right: 0.8rem;
+}
+@mixin link-line {
+	border-bottom-width: $default-font-size * 0.1;
+	border-bottom-style: solid;
+	border-image: linear-gradient(
+		to right,
+		rgba(var(--color-primary-4-rgb),.1) 0%,
+		rgba(var(--color-primary-1-rgb),1) 50%,
+		rgba(var(--color-primary-1-rgb),1) 50%,
+		rgba(var(--color-primary-4-rgb),.1) 100%
+	);
+	border-image-slice: 1;
+}
+@mixin link-animating(
+	$color1: var(--color-primary-1-rgb),
+	$color2: var(--color-primary-4-rgb),
+	$color3: var(--color-primary-1-rgb),
+	$color4: var(--color-primary-1-rgb),
+	$color1-opacity: 1,
+	$color2-opacity: 1,
+	$color3-opacity: 1,
+	$color4-opacity: 1
+) {
+	cursor: pointer;
+	background: linear-gradient(
+		to left,
+		rgba($color1, $color1-opacity) 0%,
+		rgba($color2, $color2-opacity) 5%,
+		rgba($color3, $color3-opacity) 10%,
+		rgba($color4, $color4-opacity) 100%
+	);
+	background-size: 200% auto;
+	background-clip: text;
+	color: transparent;
+	animation: animate-skills infinite 10s;
+}
+
+@mixin link-hover {
+	color: var(--color-primary-1);
+	text-decoration: none;
+	border-image: none;
+}
+
+@mixin card-description-visible {
+	opacity: 1;
+	visibility: visible;
+	z-index: 100;
+}
+
+@mixin site-nav-examples-expanded {
+	visibility: visible;
+	opacity: 1;
+	height: auto;
+	transform: translateY(0%) scale(1);
+}
+
+@mixin bridge-title-pics($sepia: 0.5, $blur: 5px, $contrast: 1) {
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	top: 0;
+	right: 0;
+	z-index: -1;
+	filter: sepia($sepia) contrast($contrast) blur($blur);
+
+	transition: filter $animation-duration $animation-easing-standard,
+		background $animation-duration $animation-easing-standard;
+}
+
+@mixin bridge-title-pics-hover($position: center, $contrast: 1, $sepia: 1) {
+	&:hover::before {
+		filter: sepia($sepia) contrast($contrast) blur(0px)
+			drop-shadow(
+				0 $card-image-drop-shadow-x $card-image-drop-shadow-y
+					rgba(var(--color-black-rgb), 1)
+			);
+		background-position: $position;
+	}
+}
+/* ------------------------------------------------------------------------------------------------- */
+//Media Query Manager
+@mixin respond($breakpoint) {
+	@if $breakpoint == small-font {
+		@media only screen and (max-width: $small-font-max-width) {
+			@content;
+		} //469px
+	}
+	@if $breakpoint == nav-break {
+		@media only screen and (max-width: $nav-break-max-width) {
+			@content;
+		} //561px
+	}
+	@if $breakpoint == phone {
+		@media only screen and (max-width: $phone-max-width) {
+			@content;
+		} //655px
+	}
+	@if $breakpoint == tab-port {
+		@media only screen and (max-width: $tab-port-max-width) {
+			@content;
+		} //843px
+	}
+	@if $breakpoint == tab-land {
+		@media only screen and (max-width: $tab-land-max-width) {
+			@content;
+		} //937px
+	}
+	@if $breakpoint == nav-switch {
+		@media only screen and (max-width: $nav-switch-width) {
+			@content;
+		} //1100px
+	}
+
+	@if $breakpoint == big-desktop {
+		@media only screen and (min-width: $big-desktop-min-width) {
+			@content;
+		} //1800px
+	}
+
+	@if $breakpoint == larger-than-nav-switch {
+		@media only screen and (min-width: $larger-than-nav-switch) {
+			@content;
+		}
+	}
+	@if $breakpoint == hover {
+		@media only screen and (hover) {
+			@content;
+		}
+	}
+	@if $breakpoint == mobile {
+		@media only screen and (hover: none) {
+			@content;
+		}
+	}
+}

@@ -1,0 +1,1 @@
+export const invalidEmailAndPassword = 'Please enter a valid username or email.';

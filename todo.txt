@@ -18,14 +18,8 @@ Components:
   4.1. DealDetail (dumb component that has Input() of deal and a template for the deal)
 
 
-NgRx:
-  gamesReducer, dealsReducer, 
-  setGames, getGames, getGame, setDeals, getDeals, getDeal
 
-
-Backend:
-  getting userId = '/api/getId?name=...' or 'api/getId?email=...'
-  getting deals =
-  getting deal = 
-  getting games = 
-  getting game =
+-landing reset button is messed up (disabled when valid email and no username for example)
+-Add threejs nebular to landing
+-add ngIf to email and username fields (hide the other if one is valid)
+-figure out how to move landing service validators to a new service folder in the frontend project in a ValidatorsService file

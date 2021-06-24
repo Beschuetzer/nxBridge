@@ -1,0 +1,18 @@
+.form{ 
+  &__control
+  &__field {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: $default-font-size * 2;
+  }
+  
+
+}
+
+input.ng-touched.ng-dirty.ng-valid {
+  border: 1px solid rgba(var(--color-primary-1-rgb),.5) !important;
+}
+
+input.ng-touched.ng-dirty.ng-invalid {
+  border: 1px solid rgba(var(--color-primary-3-rgb), 1) !important;
+}

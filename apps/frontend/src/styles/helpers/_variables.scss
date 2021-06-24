@@ -1,0 +1,74 @@
+//media query breakpoints
+$small-font-max-width: 29.3125em;
+$nav-break-max-width: 35.0625em;
+$phone-max-width: 40.9375em;
+$tab-port-max-width: 52.6875em;
+$tab-land-max-width: 58.5625em;
+$nav-switch-width: 68.75em;
+$larger-than-nav-switch: calc(#{$nav-switch-width} + 0.001em);
+$big-desktop-min-width: 112.5em;
+
+//font
+// $font-family-text: "Roboto", sans-serif;
+// $font-family-headers: "Cinzel", sans-serif;
+$line-height: 1.5;
+$font-family-fancy-bridge: "New Tegomin", serif;
+$font-family-text: "Open Sans", sans-serif;
+$font-family-headers: "Merriweather", serif;
+$default-font-size: 1.6rem;
+$scrollbar-box-shadow: inset 0 0 $default-font-size * 0.5
+	rgba(var(--color-primary-1-rgb), 0.5);
+$scrollbar-track-background: var(--color-primary-1);
+$scrollbar-thumb-background: var(--color-primary-4);
+
+
+//login-card
+$login-card-logo: '../../bridge-logo.svg';
+$logo-opacity-normal: .05;
+$logo-opacity-hover: $logo-opacity-normal * .75;
+
+
+
+//skills
+$skills-linear-gradient-original: linear-gradient(
+	to left,
+	var(--color-primary-1) 0%,
+	var(--color-primary-4) 5%,
+	var(--color-primary-1) 10%,
+	var(--color-primary-1) 100%
+);
+$skills-linear-gradient-hover: linear-gradient(
+	to right,
+	var(--color-primary-1),
+	var(--color-primary-1)
+);
+
+//animation
+$animation-duration: 0.5s;
+$animation-easing-standard: ease;
+$animation-easing-standard-easeInOutBack: cubic-bezier(0.68, -0.6, 0.32, 1.6);
+$animation-easing-standard-easeInOutBack-smaller: cubic-bezier(
+	0.68,
+	-0.2,
+	0.32,
+	1.2
+);
+$animation-easing-flash: cubic-bezier(0.68, -2, 0.32, 1);
+$animation-easing-modern: cubic-bezier(1, 0, 0, 1);
+$animation-navbar: $animation-duration $animation-easing-standard;
+
+:root {
+	scroll-behavior: smooth;
+	--scrollbar-width: #{$default-font-size * 1};
+	--default-font-size: #{$default-font-size};
+
+	//setting media query custom properties
+	--small-font-max-width: #{$small-font-max-width};
+	--nav-break-max-width: #{$nav-break-max-width};
+	--phone-max-width: #{$phone-max-width};
+	--tab-port-max-width: #{$tab-port-max-width};
+	--tab-land-max-width: #{$tab-land-max-width};
+	--big-desktop-min-width: #{$big-desktop-min-width};
+	--nav-switch-width: #{$nav-switch-width};
+	--larger-than-nav-switch: #{$larger-than-nav-switch};
+}

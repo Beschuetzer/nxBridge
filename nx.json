@@ -22,7 +22,10 @@
     "api": {
       "tags": []
     },
-    "api-interfaces": {
+    "api-errors": {
+      "tags": []
+    },
+    "api-mongoose-models": {
       "tags": []
     },
     "frontend": {
@@ -31,6 +34,18 @@
     "frontend-e2e": {
       "tags": [],
       "implicitDependencies": ["frontend"]
+    },
+    "helpers": {
+      "tags": []
+    },
+    "interfaces-and-types": {
+      "tags": []
+    },
+    "landing": {
+      "tags": []
+    },
+    "store": {
+      "tags": []
     }
   }
 }

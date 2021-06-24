@@ -1,0 +1,37 @@
+.login-card {
+  width: 97.5%;
+  max-width: $default-font-size * 20;
+  margin: 50vh auto 0 auto;
+  transform: translate(0, -50%);
+  padding: $default-font-size * 2;
+  
+  border: $default-font-size * .1 solid rgba(var(--color-primary-1-rgb), .5);
+  border-radius: $default-font-size / 2;
+  box-shadow: 0 4px 8px 0px rgba(var(--color-primary-1-rgb), .33);
+
+  & * {
+    color: var(--color-primary-1) !important;
+  }
+
+  &__title {
+    margin-bottom: $default-font-size * 1.2 !important;
+    border-bottom: 1px solid rgba(var(--color-primary-1-rgb), .5) !important;
+    text-align: center;
+    letter-spacing: 0.094rem;
+  }
+
+  &__buttons{ 
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: $default-font-size;
+  }
+
+  &__message-area > :nth-child(1):not(.red.message) {
+    margin: $default-font-size * 1.25 0 !important;
+  }
+
+  &:hover .logo {
+    opacity: $logo-opacity-hover;
+    background-image: url($login-card-logo), linear-gradient(to bottom, rgba(var(--color-primary-4-rgb), 1), rgba(var(--color-primary-3-rgb), 1));
+  } 
+}

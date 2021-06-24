@@ -1,0 +1,140 @@
+// replace substring with another string
+// credits: https://css-tricks.com/snippets/sass/str-replace-function/
+
+// return css color variable with different opacity value
+// @function rgba($color, $opacity) {
+// 	$color: str-replace($color, "var(");
+// 	$color: str-replace($color, ")");
+// 	$color-h: var(#{$color + "-h"});
+// 	$color-s: var(#{$color + "-s"});
+// 	$color-l: var(#{$color + "-l"});
+// 	@return hsla($color-h, $color-s, $color-l, $opacity);
+// }
+
+@function hexToRGB($hex) {
+  @return red($hex), green($hex), blue($hex);
+}
+
+@function get-resume-card-gradient($opacity) {
+	@return linear-gradient(
+		to bottom,
+		rgba($color-primary-3, $opacity) 0%,
+		rgba($color-primary-4, $opacity) 25%,
+		rgba($color-primary-4, $opacity) 75%,
+		rgba($color-primary-3, $opacity) 100%,
+	);
+}
+
+@function str-replace($string, $search, $replace: "") {
+	$index: str-index($string, $search);
+	@if $index {
+		@return str-slice($string, 1, $index - 1) + $replace +
+			str-replace(
+				str-slice($string, $index + str-length($search)),
+				$search,
+				$replace
+			);
+	}
+	@return $string;
+}
+
+@function lighten($color, $lightnessMultiplier) {
+	$color: str-replace($color, "var(");
+	$color: str-replace($color, ")");
+	$color-h: var(#{$color + "-h"});
+	$color-s: var(#{$color + "-s"});
+	$color-l: var(#{$color + "-l"});
+	@return hsl(
+		$color-h,
+		$color-s,
+		calc(#{$color-l} * 1 / #{$lightnessMultiplier})
+	);
+}
+
+@function darken($color, $multiplier) {
+	$color: str-replace($color, "var(");
+	$color: str-replace($color, ")");
+	$color-h: var(#{$color + "-h"});
+	$color-s: var(#{$color + "-s"});
+	$color-l: var(#{$color + "-l"});
+	@return hsl($color-h, $color-s, calc(#{$color-l} * (1 - #{$multiplier})));
+}
+
+// .component {
+//   background-color: lighten(var(--color-primary), 1.2);
+// }
+
+@function saturation($color, $saturationMultiplier) {
+	$color: str-replace($color, "var(");
+	$color: str-replace($color, ")");
+	$color-h: var(#{$color + "-h"});
+	$color-s: var(#{$color + "-s"});
+	$color-l: var(#{$color + "-l"});
+	@return hsl($color-h, calc(#{$color-s} * #{$saturationMultiplier}), $color-l);
+}
+
+// .component {
+//   background-color: saturation(var(--color-primary), 1.2);
+// }
+
+
+@function getTextShadow($type, $color, $color2: #000) {
+	@if $type == simple {
+		@return 2px 2px 3px rgba($color, 0.1);
+	}
+	@if $type == hard {
+		@return 6px 6px 0px rgba($color,0.2);
+	}
+	@if $type == double {
+		@return 4px 3px 0px rgba($color, .2), 9px 8px 0px rgba($color2, .15);
+	}
+	@if $type == distant {
+		@return 0px 3px 0px $color, 0px 14px 10px rgba($color2 ,0.15), 0px 24px 2px rgba($color2 ,0.1), 0px 34px 30px rgba($color2 ,0.1);
+	}
+	@if $type == outline {
+		@return 0px 3px 0px rgba($color, .5), 0px 0px 6px rgba($color2, 0.3);
+	}
+	@if $type == close {
+		@return 0px 4px 3px rgba($color ,0.4),
+		0px 8px 13px rgba($color ,0.1),
+		0px 18px 23px rgba($color ,0.1);
+	}
+	@if $type == 3d {
+		@return 
+		0 1px 0 hsl(0, 0%, 80%), 
+		0 2px 0 hsl(0, 0%, 79%),
+		0 3px 0 hsl(0, 0%, 73%),
+		0 4px 0 hsl(0, 0%, 73%),
+		0 5px 0 hsl(0, 0%, 67%),
+		0 6px 1px rgba($color2, .1),
+		0 0 5px rgba($color2, .1),
+		0 1px 3px rgba($color2, .3),
+		0 3px 5px rgba($color2, .2),
+		0 5px 10px rgba($color2, .25),
+		0 10px 10px rgba($color2, .2),
+		0 20px 20px rgba($color2, .15);
+	}
+	@if $type == inset {
+		@return rgba($color, 0.5) 0px 3px 3px;
+	}
+	@if $type == glowing {
+		@return 0px 0px 6px rgba($color, 0.5);
+	}
+	@if $type == super-hero {
+		@return 
+			-10px 10px 0px hsl(180, 100%, 45%),
+			-20px 20px 0px hsl(180, 99%, 40%),
+			-30px 30px 0px hsl(180, 100%, 37%);
+	}
+	@if $type == multiple-lights {
+		@return 
+			0px 15px 5px rgba($color, 0.1),
+			10px 20px 5px rgba($color, 0.05),
+			-10px 20px 5px rgba($color, 0.05);
+	}
+	@if $type == soft-emboss {
+		@return
+		  2px 8px 6px hsla(0, 0%, 0%, 0.2),
+			0px -5px 35px hsla(0, 0%, 100%, 0.3);
+	}
+}
