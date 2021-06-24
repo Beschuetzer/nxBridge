@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { LandingService } from '../landing.service';
 import { User, Game } from '@nx-bridge/interfaces-and-types';
+import { Store } from '@ngrx/store';
+import * as ngrxStore from '@nx-bridge/store';
 
 @Component({
   selector: 'nx-bridge-landing',
@@ -12,7 +14,8 @@ import { User, Game } from '@nx-bridge/interfaces-and-types';
 export class LandingComponent implements OnInit {
   constructor(
     private landingService: LandingService,
-    private http: HttpClient
+    private http: HttpClient,
+    private store: Store<ngrxStore.AppState>
   ) {}
 
   public isLoading = false;
@@ -149,6 +152,8 @@ export class LandingComponent implements OnInit {
     const queryStringToUse = `userId=${userId}`;
     this.http.get<Game[]>(`/api/getGames?${queryStringToUse}`).subscribe(games => {
       console.log('games =', games);
+      this.store.dispatch(new ngrxStore.SetGames(games));
+      this.setDeals(games);
     })
   }
 
@@ -157,5 +162,18 @@ export class LandingComponent implements OnInit {
     if (toHightlightValue) {
       this.errorHighlightedValue = toHightlightValue;
     }
+  }
+
+  private setDeals(games: Game[]) {
+    const deals = [];
+    for (let i = 0; i < games.length; i++) {
+      const game = games[i];
+      for (let j = 0; j < game.deals.length; j++) {
+        const deal = game.deals[j];
+        deals.push(deal);
+      }
+    }
+
+    this.store.dispatch(new ngrxStore.SetDeals(deals));
   }
 }

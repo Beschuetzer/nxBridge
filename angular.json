@@ -118,9 +118,7 @@
               "./node_modules/semantic-ui/dist/semantic.min.css"
             ],
             "stylePreprocessorOptions": {
-              "includePaths": [
-                "apps/frontend/src/styles"
-              ]
+              "includePaths": ["apps/frontend/src/styles"]
             },
             "scripts": []
           },
@@ -256,6 +254,31 @@
             "lintFilePatterns": [
               "libs/landing/src/**/*.ts",
               "libs/landing/src/**/*.html"
+            ]
+          }
+        }
+      }
+    },
+    "store": {
+      "projectType": "library",
+      "root": "libs/store",
+      "sourceRoot": "libs/store/src",
+      "prefix": "nx-bridge",
+      "architect": {
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/store"],
+          "options": {
+            "jestConfig": "libs/store/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/store/src/**/*.ts",
+              "libs/store/src/**/*.html"
             ]
           }
         }

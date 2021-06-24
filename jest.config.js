@@ -5,5 +5,6 @@ module.exports = {
     '<rootDir>/libs/api-errors',
     '<rootDir>/libs/api-mongoose-models',
     '<rootDir>/libs/landing',
+    '<rootDir>/libs/store',
   ],
 };

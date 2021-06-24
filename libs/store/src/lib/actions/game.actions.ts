@@ -10,4 +10,4 @@ export class SetGames implements Action {
   ) {}
 }
 
-export type Actions = SetGames;
+export type GameActions = SetGames;

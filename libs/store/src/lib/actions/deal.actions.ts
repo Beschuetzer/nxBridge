@@ -6,8 +6,8 @@ export const SET_DEALS = '[Auth] SET_DEALS';
 export class SetDeals implements Action {
   readonly type = SET_DEALS;
   constructor(
-    public payload: Deal[], 
+    public payload: string[], 
   ) {}
 }
 
-export type Actions = SetDeals;
+export type DealActions = SetDeals;
