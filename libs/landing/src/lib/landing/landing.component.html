@@ -20,16 +20,19 @@
   </div>
 
   <div class="field" >
-    <p *ngIf="stringToSearchUsing && !error">{{stringToSearchUsing}}</p>
-    <p *ngIf="!stringToSearchUsing && !error">&nbsp;</p>
+    <p *ngIf="stringToSearchUsing && !error && (emailIsValid || usernameIsValid); else space" else>{{stringToSearchUsing}}</p>
+    <ng-template #space>
+      <p>&nbsp;</p>
+    </ng-template>
     <div *ngIf="error" class="ui red message">
       {{error}}<b>{{errorHighlightedValue}}</b>
     </div>
   </div>
 
-  <button class="ui button primary" type="submit" [disabled]="initialForm.invalid && (!emailIsValid && !usernameIsValid)">Go</button>
+
+  <button class="ui button bg-color-3 hover-bg-color-1 hover-color-3" type="submit" [disabled]="initialForm.invalid && (!emailIsValid && !usernameIsValid)">Search</button>
   
-  <button (click)="onReset()" class="ui button secondary" type="button" 
+  <button (click)="onReset()" class="ui button bg-color-4 hover-color-4 hover-bg-color-1" type="button" 
   [disabled]="initialForm.get('email')?.value === '' || initialForm.get('username')?.value === ''">Reset</button>
 
   <div *ngIf="isLoading" class="ui icon message">
@@ -42,6 +45,3 @@
     </div>
   </div>
 </form>
-
-
-

@@ -99,3 +99,85 @@
 }
 //Dealing with SiteNav filter bug on pages like '/bridge'
 // .no-filter {filter: none !important}
+
+
+//color
+.color-1 {
+  color: var(--color-primary-1) !important;
+}
+.color-2 {
+  color: var(--color-primary-2) !important;
+}
+.color-3 {
+  color: var(--color-primary-3) !important;
+}
+.color-4 {
+  color: var(--color-primary-4) !important;
+}
+
+.hover-color-1 {
+	&:hover {
+		color: var(--color-primary-1) !important;
+	}
+}
+.hover-color-2 {
+	&:hover {
+		color: var(--color-primary-2) !important;
+	}
+}
+.hover-color-3 {
+	&:hover {
+		color: var(--color-primary-3) !important;
+	}
+}
+.hover-color-4 {
+	&:hover {
+		color: var(--color-primary-4) !important;
+	}
+}
+
+.bg-color-1 {
+  background-color: var(--color-primary-1) !important;
+	&:hover {
+		background-color: rgba(var(--color-primary-1-rgb),.5) !important;
+	}
+}
+.bg-color-2 {
+  background-color: var(--color-primary-2) !important;
+	&:hover {
+		background-color: rgba(var(--color-primary-2-rgb),.5) !important;
+	}
+}
+.bg-color-3 {
+  background-color: var(--color-primary-3) !important;
+	&:hover {
+		background-color: rgba(var(--color-primary-3-rgb),.5) !important;
+	}
+}
+.bg-color-4 {
+  background-color: var(--color-primary-4) !important;
+	&:hover {
+		background-color: rgba(var(--color-primary-4-rgb),.5) !important;
+	}
+}
+
+.hover-bg-color-1 {
+	&:hover {
+		background-color: var(--color-primary-1) !important;
+	}
+}
+.hover-bg-color-2 {
+	&:hover {
+		background-color: var(--color-primary-2) !important;
+	}
+} 
+.hover-bg-color-3 {
+	&:hover { 
+		background-color: var(--color-primary-3) !important;
+	}
+}
+.hover-bg-color-4 {
+	&:hover {
+		background-color: var(--color-primary-4) !important;
+	}
+}
