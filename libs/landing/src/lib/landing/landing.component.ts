@@ -32,20 +32,20 @@ export class LandingComponent implements OnInit {
     return username.touched && username.value !== '' && username.valid;
   }
 
-  get stringToSearchUsing(): string | undefined {
+  get stringToSearchUsing(): {pre: string, post: string} | undefined {
     const preStringUsername = 'Search for user with username of ';
     const preStringEmail = 'Search for user with email of ';
 
     const email = this.initialForm.get('email')?.value;
     const username = this.initialForm.get('username')?.value;
 
-    const usernameString = `${preStringUsername}${username}?`;
-    const emailString = `${preStringEmail}${email}?`;
+    const usernameString = `'${username}'`;
+    const emailString = `'${email}'`;
 
-    if (!username && !email) return '';
-    else if (username && !email) return usernameString;
-    else if (!username && email) return emailString;
-    else return usernameString;
+    if (!username && !email) return undefined;
+    else if (username && !email) return {pre: preStringUsername, post: usernameString};
+    else if (!username && email) return {pre: preStringEmail, post: emailString};
+    else return {pre: preStringUsername, post: usernameString};
   }
 
   ngOnInit(): void {
@@ -54,6 +54,11 @@ export class LandingComponent implements OnInit {
 
   public resetForm() {
     this.initializeForm();
+  }
+
+  onInputClick() {
+    console.log('this.error =', this.error);
+    if (this.error) this.onReset();
   }
 
   onReset() {

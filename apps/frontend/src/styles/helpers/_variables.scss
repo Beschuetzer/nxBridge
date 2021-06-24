@@ -24,8 +24,8 @@ $scrollbar-thumb-background: var(--color-primary-4);
 
 //login-card
 $login-card-logo: '../../bridge-logo.svg';
-$logo-opacity-normal: .075;
-$logo-opacity-hover: $logo-opacity-normal / 2;
+$logo-opacity-normal: .05;
+$logo-opacity-hover: $logo-opacity-normal * .75;
 
 
 
