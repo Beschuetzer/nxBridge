@@ -16,7 +16,6 @@ import { Store } from '@ngrx/store';
 })
 export class LandingComponent implements OnInit {
   constructor(
-    private landingService: LandingService,
     private helpersService: HelpersService,
     private store: Store<AppState>
   ) {}

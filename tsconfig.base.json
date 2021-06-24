@@ -23,7 +23,6 @@
       "@nx-bridge/interfaces-and-types": [
         "libs/interfaces-and-types/src/index"
       ],
-      "@nx-bridge/landing": ["libs/landing/src/index.ts"],
       "@nx-bridge/store": ["libs/store/src/index.ts"]
     }
   },
