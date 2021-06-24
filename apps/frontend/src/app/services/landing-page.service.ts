@@ -4,7 +4,7 @@ import { AbstractControl, FormGroup, ValidationErrors, ValidatorFn} from '@angul
 @Injectable({
   providedIn: 'root'
 })
-export class LandingService {
+export class LandingPageService {
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor() {}

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { LandingService } from '../landing.service';
+import { LandingPageService } from '../services/landing-page.service';
 import { User } from '@nx-bridge/interfaces-and-types';
 import { HelpersService } from '@nx-bridge/helpers';
 import { Subscription } from 'rxjs';
@@ -10,11 +10,11 @@ import { Store } from '@ngrx/store';
 
 
 @Component({
-  selector: 'nx-bridge-landing',
-  templateUrl: './landing.component.html',
-  styleUrls: ['./landing.component.scss'],
+  selector: 'nx-bridge-landing-page',
+  templateUrl: './landing-page.component.html',
+  styleUrls: ['./landing-page.component.scss'],
 })
-export class LandingComponent implements OnInit {
+export class LandingPageComponent implements OnInit {
   constructor(
     private helpersService: HelpersService,
     private store: Store<AppState>
@@ -111,14 +111,14 @@ export class LandingComponent implements OnInit {
       {
         username: new FormControl(null, [
           Validators.maxLength(12),
-          LandingService.noEmpty,
+          LandingPageService.noEmpty,
         ]),
         email: new FormControl(null, [
           Validators.email,
-          LandingService.noEmpty,
+          LandingPageService.noEmpty,
         ]),
       },
-      LandingService.numberRequired(1)
+      LandingPageService.numberRequired(1)
     );
   }
 
