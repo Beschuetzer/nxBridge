@@ -2,9 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { LandingService } from '../landing.service';
-import { User, Game } from '@nx-bridge/interfaces-and-types';
-import { Store } from '@ngrx/store';
-import * as ngrxStore from '@nx-bridge/store';
+import { User } from '@nx-bridge/interfaces-and-types';
+import { HelpersService } from '@nx-bridge/helpers';
 
 @Component({
   selector: 'nx-bridge-landing',
@@ -15,7 +14,8 @@ export class LandingComponent implements OnInit {
   constructor(
     private landingService: LandingService,
     private http: HttpClient,
-    private store: Store<ngrxStore.AppState>
+    private helpersService: HelpersService,
+
   ) {}
 
   public isLoading = false;
@@ -89,7 +89,7 @@ export class LandingComponent implements OnInit {
     if (!(parsed as any)?._id || parsed?.username !== usernameValue) {
       this.getUserId(parsed, usernameValue, emailValue);
     } else {
-      this.getGames((parsed as any)._id);
+      this.helpersService.getGames((parsed as any)._id);
       this.isLoading = false;
     }
     this.resetForm();
@@ -132,7 +132,7 @@ export class LandingComponent implements OnInit {
                 resetPasswordToken: null,
               } as User)
             );
-            this.getGames((user as any)._id);
+            this.helpersService.getGames((user as any)._id);
         }
         else {
           localStorage.removeItem('user');
@@ -148,15 +148,6 @@ export class LandingComponent implements OnInit {
       });
   }
 
-  private getGames(userId: string) {
-    const queryStringToUse = `userId=${userId}`;
-    this.http.get<Game[]>(`/api/getGames?${queryStringToUse}`).subscribe(games => {
-      console.log('games =', games);
-      this.store.dispatch(new ngrxStore.SetGames(games));
-      this.setDeals(games);
-    })
-  }
-
   private setError(error: string, toHightlightValue = '') {
     this.error = error;
     if (toHightlightValue) {
@@ -164,16 +155,4 @@ export class LandingComponent implements OnInit {
     }
   }
 
-  private setDeals(games: Game[]) {
-    const deals = [];
-    for (let i = 0; i < games.length; i++) {
-      const game = games[i];
-      for (let j = 0; j < game.deals.length; j++) {
-        const deal = game.deals[j];
-        deals.push(deal);
-      }
-    }
-
-    this.store.dispatch(new ngrxStore.SetDeals(deals));
-  }
 }

@@ -35,6 +35,9 @@
       "tags": [],
       "implicitDependencies": ["frontend"]
     },
+    "helpers": {
+      "tags": []
+    },
     "interfaces-and-types": {
       "tags": []
     },

@@ -19,6 +19,7 @@
       "@nx-bridge/api-mongoose-models": [
         "libs/api-mongoose-models/src/index.ts"
       ],
+      "@nx-bridge/helpers": ["libs/helpers/src/index.ts"],
       "@nx-bridge/interfaces-and-types": [
         "libs/interfaces-and-types/src/index"
       ],
