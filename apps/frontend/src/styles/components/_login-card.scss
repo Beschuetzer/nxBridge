@@ -1,13 +1,15 @@
 .login-card {
   width: 97.5%;
   max-width: $default-font-size * 20;
-  margin: 50vh auto 0 auto;
-  transform: translate(0, -50%);
   padding: $default-font-size * 2;
   
   border: $default-font-size * .1 solid rgba(var(--color-primary-1-rgb), .5);
   border-radius: $default-font-size / 2;
   box-shadow: 0 4px 8px 0px rgba(var(--color-primary-1-rgb), .33);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 
   & * {
     color: var(--color-primary-1) !important;
