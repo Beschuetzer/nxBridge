@@ -119,7 +119,7 @@
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
-                "apps/frontend/src/styles",
+                "apps/frontend/src/styles"
               ]
             },
             "scripts": []
