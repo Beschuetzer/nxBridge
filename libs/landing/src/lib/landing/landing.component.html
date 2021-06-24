@@ -22,7 +22,7 @@
   <div class="field" >
     <p *ngIf="stringToSearchUsing && !error && (emailIsValid || usernameIsValid); else space" else>{{stringToSearchUsing}}</p>
     <ng-template #space>
-      <p>&nbsp;</p>
+      <p *ngIf="!error">&nbsp;</p>
     </ng-template>
     <div *ngIf="error" class="ui red message">
       {{error}}<b>{{errorHighlightedValue}}</b>
