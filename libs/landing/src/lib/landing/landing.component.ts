@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { LandingService } from '../landing.service';
 import { User } from '@nx-bridge/interfaces-and-types';
@@ -14,7 +14,7 @@ import { Store } from '@ngrx/store';
   templateUrl: './landing.component.html',
   styleUrls: ['./landing.component.scss'],
 })
-export class LandingComponent implements OnInit, OnDestroy {
+export class LandingComponent implements OnInit {
   constructor(
     private landingService: LandingService,
     private helpersService: HelpersService,
@@ -59,9 +59,6 @@ export class LandingComponent implements OnInit, OnDestroy {
     this.initializeForm();
     this.subscribeToLoadingErrorMessage();
     this.subscribeToIsLoading();
-  }
-
-  ngOnDestroy() {
   }
 
   public resetForm() {
