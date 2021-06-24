@@ -30,4 +30,3 @@ NgRx:
 -figure out how to efficiently store games and retrieve games (need to dispatch setGames)
 
 -need to subscribe to isLoading and loadingError Observables in landing.component
--need to add a generalReducer that has: isLoading and loadingError

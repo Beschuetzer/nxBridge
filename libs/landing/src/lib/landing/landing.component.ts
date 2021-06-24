@@ -1,27 +1,32 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { LandingService } from '../landing.service';
 import { User } from '@nx-bridge/interfaces-and-types';
 import { HelpersService } from '@nx-bridge/helpers';
+import { Subscription } from 'rxjs';
+import { take, map } from 'rxjs/operators';
+import { AppState, SetIsLoading, SetLoadingError } from '@nx-bridge/store';
+import { Store } from '@ngrx/store';
+
 
 @Component({
   selector: 'nx-bridge-landing',
   templateUrl: './landing.component.html',
   styleUrls: ['./landing.component.scss'],
 })
-export class LandingComponent implements OnInit {
+export class LandingComponent implements OnInit, OnDestroy {
   constructor(
     private landingService: LandingService,
-    private http: HttpClient,
     private helpersService: HelpersService,
-
+    private store: Store<AppState>
   ) {}
 
   public isLoading = false;
   public error = '';
   public errorHighlightedValue = '';
   public initialForm: FormGroup = new FormGroup({});
+  errorSub = Subscription;
 
   get emailIsValid(): boolean | undefined {
     const email = this.initialForm.get('email');
@@ -53,6 +58,10 @@ export class LandingComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeForm();
+    this.subscribeToError();
+  }
+
+  ngOnDestroy() {
   }
 
   public resetForm() {
@@ -61,13 +70,18 @@ export class LandingComponent implements OnInit {
 
   onInputClick() {
     console.log('this.error =', this.error);
-    if (this.error) this.onReset();
+    this.store.select('general').pipe(
+      take(1),
+      map(generalState => {
+        if (generalState.loadingError) this.onReset();
+      })
+    ).subscribe();
   }
 
   onReset() {
-    this.error = '';
-    this.errorHighlightedValue = '';
     this.resetForm();
+    this.store.dispatch(new SetIsLoading(false));
+    this.store.dispatch(new SetLoadingError(''));
   }
 
   onSubmit() {
@@ -82,10 +96,11 @@ export class LandingComponent implements OnInit {
       ? (JSON.parse(userInLocalStorage) as User)
       : null;
 
-    console.log('email =', emailValue);
-    console.log('username =', usernameValue);
-    console.log('userInLocalStorage =', userInLocalStorage);
-    console.log('parsed =', parsed);
+    // console.log('email =', emailValue);
+    // console.log('username =', usernameValue);
+    // console.log('userInLocalStorage =', userInLocalStorage);
+    // console.log('parsed =', parsed);
+    
     if (!(parsed as any)?._id || parsed?.username !== usernameValue) {
       this.helpersService.getUserId(parsed, usernameValue, emailValue);
     } else {
@@ -111,11 +126,27 @@ export class LandingComponent implements OnInit {
     );
   }
 
-  private subscribeToError(error: string, toHightlightValue = '') {
-    this.error = error;
-    if (toHightlightValue) {
-      this.errorHighlightedValue = toHightlightValue;
-    }
-  }
+  private subscribeToError() {
+    this.store.select('general').subscribe(generalState => {
+      const errorMessageWhole = generalState.loadingError;
+      const termToHighlight = errorMessageWhole.match(/'.+'/i);
+      const punctuation = errorMessageWhole.match(/[.?]$/i);
 
+      if (termToHighlight) {
+        let term = termToHighlight[0];
+        let errorWithoutTerm = errorMessageWhole.replace(term, '')
+       
+        if (punctuation) {
+          term += punctuation[0];
+          errorWithoutTerm = errorWithoutTerm.replace(punctuation[0], '');
+        }
+
+        this.error = errorWithoutTerm;
+        this.errorHighlightedValue = term;
+
+      } else {
+        this.error = errorMessageWhole;
+      }
+    })
+  }
 }

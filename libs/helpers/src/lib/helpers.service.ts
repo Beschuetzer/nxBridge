@@ -4,11 +4,11 @@ import { Game, User } from '@nx-bridge/interfaces-and-types';
 import * as ngrxStore from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
 
-@Injectable({ providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class HelpersService {
   constructor(
     private http: HttpClient,
-    private store: Store<ngrxStore.AppState>,
+    private store: Store<ngrxStore.AppState>
   ) {}
 
   setDeals(games: Game[]) {
@@ -26,11 +26,13 @@ export class HelpersService {
 
   getGames(userId: string) {
     const queryStringToUse = `userId=${userId}`;
-    this.http.get<Game[]>(`/api/getGames?${queryStringToUse}`).subscribe(games => {
-      console.log('games =', games);
-      this.store.dispatch(new ngrxStore.SetGames(games));
-      this.setDeals(games);
-    })
+    this.http
+      .get<Game[]>(`/api/getGames?${queryStringToUse}`)
+      .subscribe((games) => {
+        console.log('games =', games);
+        this.store.dispatch(new ngrxStore.SetGames(games));
+        this.setDeals(games);
+      });
   }
 
   getUserId(parsed: User | null, usernameValue: string, emailValue: string) {
@@ -43,31 +45,30 @@ export class HelpersService {
         console.log('user =', user);
 
         if (user) {
-            localStorage.setItem(
-              'user',
-              JSON.stringify({
-                ...user,
-                email: null,
-                salt: null,
-                hash: null,
-                resetPasswordExpires: null,
-                resetPasswordToken: null,
-              } as User)
-            );
-            this.getGames((user as any)._id);
-        }
-        else {
+          localStorage.setItem(
+            'user',
+            JSON.stringify({
+              ...user,
+              email: null,
+              salt: null,
+              hash: null,
+              resetPasswordExpires: null,
+              resetPasswordToken: null,
+            } as User)
+          );
+          this.getGames((user as any)._id);
+        } else {
           localStorage.removeItem('user');
 
-          this.setError(
-            `There is no user with the ${
-              usernameValue ? 'username' : 'email'
-            } of `,
-            `'${usernameValue ? usernameValue : emailValue}'.`
+          this.store.dispatch(
+            new ngrxStore.SetLoadingError(
+              `There is no user with the ${
+                usernameValue ? 'username' : 'email'
+              } of '${usernameValue ? usernameValue : emailValue}'.`
+            )
           );
         }
-        this.isLoading = false;
+        this.store.dispatch(new ngrxStore.SetIsLoading(true));
       });
   }
 }
-
