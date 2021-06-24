@@ -3,8 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { LandingService } from '../landing.service';
 import { User, Game } from '@nx-bridge/interfaces-and-types';
-import { exhaustMap, map, switchMap } from 'rxjs/operators';
-import { of } from 'rxjs';
 
 @Component({
   selector: 'nx-bridge-landing',
@@ -17,8 +15,8 @@ export class LandingComponent implements OnInit {
     private http: HttpClient
   ) {}
 
+  public isLoading = false;
   public error = '';
-  public userId = "";
   public initialForm: FormGroup = new FormGroup({});
 
   get emailIsValid(): boolean | undefined {
@@ -80,6 +78,7 @@ export class LandingComponent implements OnInit {
   // }
 
   onSubmit() {
+    this.isLoading = true;
     const email = this.initialForm.get('email');
     const username = this.initialForm.get('username');
     const emailValue = email?.value;
@@ -95,48 +94,53 @@ export class LandingComponent implements OnInit {
     console.log('userInLocalStorage =', userInLocalStorage);
     console.log('parsed =', parsed);
 
-    this.getUserId(parsed, usernameValue, emailValue);
-  }
-
-  private getUserId(parsed: User | null, usernameValue: string, emailValue: string) {
     if (!parsed?._id || parsed?.username !== usernameValue) {
-      this.http
-        .post<User>('/api/getUser', {
-          email: emailValue,
-          username: usernameValue,
-        })
-        .subscribe((user) => {
-          console.log('user =', user);
-
-          if (user) {
-              localStorage.setItem(
-                'user',
-                JSON.stringify({
-                  ...user,
-                  email: null,
-                  salt: null,
-                  hash: null,
-                  resetPasswordExpires: null,
-                  resetPasswordToken: null,
-                } as User)
-              );
-              this.userId = user._id;
-              this.getGames();
-          }
-          else {
-            localStorage.removeItem('user');
-            this.setError(
-              `There is no user with the ${
-                this.usernameIsValid ? 'username' : 'email'
-              } of ${this.usernameIsValid ? usernameValue : emailValue}.`
-            );
-          }
-        });
+      this.getUserId(parsed, usernameValue, emailValue);
+    } else {
+      this.getGames(parsed._id);
+      this.isLoading = false;
     }
   }
 
-  private getGames() {
-    const queryStringToUse = `userId=${this.userId}`;
+  private getUserId(parsed: User | null, usernameValue: string, emailValue: string) {
+    this.http
+      .post<User>('/api/getUser', {
+        email: emailValue,
+        username: usernameValue,
+      })
+      .subscribe((user) => {
+        console.log('user =', user);
+
+        if (user) {
+            localStorage.setItem(
+              'user',
+              JSON.stringify({
+                ...user,
+                email: null,
+                salt: null,
+                hash: null,
+                resetPasswordExpires: null,
+                resetPasswordToken: null,
+              } as User)
+            );
+            this.getGames(user._id);
+        }
+        else {
+          localStorage.removeItem('user');
+          this.setError(
+            `There is no user with the ${
+              this.usernameIsValid ? 'username' : 'email'
+            } of ${this.usernameIsValid ? usernameValue : emailValue}.`
+          );
+        }
+
+        this.isLoading = false;
+        console.log('this.isLoading =', this.isLoading);
+      });
+  }
+
+  private getGames(userId: string) {
+    const queryStringToUse = `userId=${userId}`;
     this.http.get<Game[]>(`/api/getGames?${queryStringToUse}`).subscribe(games => {
       console.log('games =', games);
     })
