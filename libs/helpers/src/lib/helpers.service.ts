@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Game } from '@nx-bridge/interfaces-and-types';
+import { Game, User } from '@nx-bridge/interfaces-and-types';
 import * as ngrxStore from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
 
@@ -31,6 +31,43 @@ export class HelpersService {
       this.store.dispatch(new ngrxStore.SetGames(games));
       this.setDeals(games);
     })
+  }
+
+  getUserId(parsed: User | null, usernameValue: string, emailValue: string) {
+    this.http
+      .post<User>('/api/getUser', {
+        email: emailValue,
+        username: usernameValue,
+      })
+      .subscribe((user) => {
+        console.log('user =', user);
+
+        if (user) {
+            localStorage.setItem(
+              'user',
+              JSON.stringify({
+                ...user,
+                email: null,
+                salt: null,
+                hash: null,
+                resetPasswordExpires: null,
+                resetPasswordToken: null,
+              } as User)
+            );
+            this.getGames((user as any)._id);
+        }
+        else {
+          localStorage.removeItem('user');
+
+          this.setError(
+            `There is no user with the ${
+              usernameValue ? 'username' : 'email'
+            } of `,
+            `'${usernameValue ? usernameValue : emailValue}'.`
+          );
+        }
+        this.isLoading = false;
+      });
   }
 }
 

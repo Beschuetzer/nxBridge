@@ -87,7 +87,7 @@ export class LandingComponent implements OnInit {
     console.log('userInLocalStorage =', userInLocalStorage);
     console.log('parsed =', parsed);
     if (!(parsed as any)?._id || parsed?.username !== usernameValue) {
-      this.getUserId(parsed, usernameValue, emailValue);
+      this.helpersService.getUserId(parsed, usernameValue, emailValue);
     } else {
       this.helpersService.getGames((parsed as any)._id);
       this.isLoading = false;
@@ -111,44 +111,7 @@ export class LandingComponent implements OnInit {
     );
   }
 
-  private getUserId(parsed: User | null, usernameValue: string, emailValue: string) {
-    this.http
-      .post<User>('/api/getUser', {
-        email: emailValue,
-        username: usernameValue,
-      })
-      .subscribe((user) => {
-        console.log('user =', user);
-
-        if (user) {
-            localStorage.setItem(
-              'user',
-              JSON.stringify({
-                ...user,
-                email: null,
-                salt: null,
-                hash: null,
-                resetPasswordExpires: null,
-                resetPasswordToken: null,
-              } as User)
-            );
-            this.helpersService.getGames((user as any)._id);
-        }
-        else {
-          localStorage.removeItem('user');
-
-          this.setError(
-            `There is no user with the ${
-              usernameValue ? 'username' : 'email'
-            } of `,
-            `'${usernameValue ? usernameValue : emailValue}'.`
-          );
-        }
-        this.isLoading = false;
-      });
-  }
-
-  private setError(error: string, toHightlightValue = '') {
+  private subscribeToError(error: string, toHightlightValue = '') {
     this.error = error;
     if (toHightlightValue) {
       this.errorHighlightedValue = toHightlightValue;
