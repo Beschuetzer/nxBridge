@@ -78,10 +78,10 @@ export class LandingComponent implements OnInit {
     console.log('username =', usernameValue);
     console.log('userInLocalStorage =', userInLocalStorage);
     console.log('parsed =', parsed);
-    if (!parsed?._id || parsed?.username !== usernameValue) {
+    if (!(parsed as any)?._id || parsed?.username !== usernameValue) {
       this.getUserId(parsed, usernameValue, emailValue);
     } else {
-      this.getGames(parsed._id);
+      this.getGames((parsed as any)._id);
       this.isLoading = false;
     }
     this.resetForm();
@@ -124,7 +124,7 @@ export class LandingComponent implements OnInit {
                 resetPasswordToken: null,
               } as User)
             );
-            this.getGames(user._id);
+            this.getGames((user as any)._id);
         }
         else {
           localStorage.removeItem('user');

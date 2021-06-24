@@ -68,7 +68,7 @@ export interface Stats {
 }
 
 export interface User {
-  _id: string;
+  // _id: any;
   username: string;
   password: string;
   email: string | null;
