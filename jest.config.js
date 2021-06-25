@@ -9,5 +9,6 @@ module.exports = {
     '<rootDir>/libs/replay-viewer',
     '<rootDir>/libs/header',
     '<rootDir>/libs/grid',
+    '<rootDir>/libs/spinners',
   ],
 };

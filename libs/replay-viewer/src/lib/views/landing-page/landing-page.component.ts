@@ -154,6 +154,7 @@ export class LandingPageComponent implements OnInit {
   private subscribeToIsLoading() {
     this.store.select('general').subscribe(generalState => {
       this.isLoading = generalState.isLoading;
+      if (this.isLoading) debugger;
     })
   }
 

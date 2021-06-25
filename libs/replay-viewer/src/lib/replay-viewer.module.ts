@@ -11,6 +11,7 @@ import { DealsListComponent } from './components/deals-list/deals-list.component
 import { DealDetailComponent } from './components/deal-detail/deal-detail.component';
 import { GamesListViewComponent } from './views/games-list-view/games-list-view.component';
 import { GridModule } from '@nx-bridge/grid';
+import { SpinnersModule } from '@nx-bridge/spinners';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { GridModule } from '@nx-bridge/grid';
     ]),
     HeaderModule,
     GridModule,
+    SpinnersModule,
   ],
 })
 export class ReplayViewerModule {}

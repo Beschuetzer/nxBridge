@@ -359,6 +359,31 @@
         }
       }
     },
+    "spinners": {
+      "projectType": "library",
+      "root": "libs/spinners",
+      "sourceRoot": "libs/spinners/src",
+      "prefix": "nx-bridge",
+      "architect": {
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/spinners"],
+          "options": {
+            "jestConfig": "libs/spinners/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/spinners/src/**/*.ts",
+              "libs/spinners/src/**/*.html"
+            ]
+          }
+        }
+      }
+    },
     "store": {
       "projectType": "library",
       "root": "libs/store",

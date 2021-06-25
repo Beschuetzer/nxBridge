@@ -5,8 +5,12 @@
     type="button"
     style="width: 100%; max-width: 12.8rem"
   >
-    <p *ngIf="isLoading">Fetching...</p>
-    <p *ngIf="!isLoading">Show Deals</p>
+    <div *ngIf="isLoading">
+      Fetching...
+      <i class="notched circle loading icon"></i>
+
+    </div>
+    <div *ngIf="!isLoading">Show Deals</div>
   </button>
 
   <div
