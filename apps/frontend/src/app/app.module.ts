@@ -11,11 +11,10 @@ import { StoreRouterConnectingModule } from '@ngrx/router-store';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
-import { GamesListComponent } from './games-list/games-list.component';
 import { ReplayViewerModule } from '@nx-bridge/replay-viewer';
 
 @NgModule({
-  declarations: [AppComponent, GamesListComponent],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     StoreModule.forRoot(appReducer),

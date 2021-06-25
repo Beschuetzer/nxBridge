@@ -7,5 +7,6 @@ module.exports = {
     '<rootDir>/libs/store',
     '<rootDir>/libs/helpers',
     '<rootDir>/libs/replay-viewer',
+    '<rootDir>/libs/header',
   ],
 };
