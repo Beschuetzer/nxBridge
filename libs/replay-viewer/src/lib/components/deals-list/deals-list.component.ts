@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { Deal } from '@nx-bridge/interfaces-and-types';
 
 @Component({
   selector: 'nx-bridge-deals-list',
@@ -6,6 +7,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./deals-list.component.scss']
 })
 export class DealsListComponent implements OnInit {
+  @Input() deals: Deal[] = [];
 
   constructor() { }
 
