@@ -5,14 +5,12 @@
   padding: $default-font-size * 2;
 }
 
-.main-layout{
-  &__grid{
-    width: 100vw;
-    height: 100vh;
-    display: grid;
-    grid-template-columns: min-content repeat(2, 1fr);
-    grid-template-rows: min-content repeat(2, 1fr);
-  }
+.replay-view{
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: min-content repeat(2, 1fr);
+  grid-template-rows: min-content repeat(2, 1fr);
 }
 
 .header {
