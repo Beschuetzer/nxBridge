@@ -45,13 +45,11 @@ Components:
     'username': Game[]
   }
 -cache looked up deals (executed in DealsList) in a similar fashion
-
+-cache userObjs too (have to get 4 for each game)
 
 -Finish GamesList styling (figure out why )
 -DealsList shows up when a button on GameDetail "Show Deals" is pressed (DealsList makes backend call to get deals and puts in store)
 -Pass deals in each GameDetail to DealsList
--work on backend getting deal info
 
-
-
+-figure out why getUsers doesn't work in code but it does in postman
 

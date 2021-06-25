@@ -103,7 +103,7 @@ export class LandingPageComponent implements OnInit {
     // console.log('parsed =', parsed);
     
     if (!(parsed as any)?._id || parsed?.username !== usernameValue) {
-      this.helpersService.getUserId(parsed, usernameValue, emailValue);
+      this.helpersService.getUser(parsed, usernameValue, emailValue);
     } else {
       this.helpersService.getGames((parsed as any)._id);
       this.store.dispatch(new SetIsLoading(false));

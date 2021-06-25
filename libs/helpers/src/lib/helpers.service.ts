@@ -4,7 +4,8 @@ import { Injectable } from '@angular/core';
 import { Game, User } from '@nx-bridge/interfaces-and-types';
 import * as ngrxStore from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
-import { GET_GAMES_URL, GET_USED_ID_URL } from '@nx-bridge/constants';
+import { GET_GAMES_URL, GET_USER_URL, GET_USERS_URL } from '@nx-bridge/constants';
+import * as mongoose from 'mongoose';
 
 @Injectable({ providedIn: 'root' })
 export class HelpersService {
@@ -38,14 +39,13 @@ export class HelpersService {
       });
   }
 
-  getUserId(parsed: User | null, usernameValue: string, emailValue: string) {
+  getUser(parsed: User | null, usernameValue: string, emailValue: string) {
     this.http
-      .post<User>(`${GET_USED_ID_URL}`, {
+      .post<User>(`${GET_USER_URL}`, {
         email: emailValue,
         username: usernameValue,
       })
       .subscribe((user) => {
-        console.log('user =', user);
 
         if (user) {
           localStorage.setItem(
@@ -75,5 +75,11 @@ export class HelpersService {
         }
         this.store.dispatch(new ngrxStore.SetIsLoading(false));
       });
+  }
+
+  getUsers(users: string[]) {
+    console.log('users =', users);
+    if (!users || users.length <= 0) return;
+    return this.http.post<User[]>(`${GET_USERS_URL}`, users);
   }
 }

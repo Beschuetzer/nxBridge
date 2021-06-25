@@ -31,8 +31,6 @@ export class DealsListComponent implements OnInit {
 
       if (!this.dealsListItems) this.dealsListItems = this.elRef.nativeElement.querySelectorAll(`.${DEALS_LIST_CLASSNAME}__item`);
       this.toggleDealsListItems();
-    debugger;
-
       this.isLoading = false;
     });
   }

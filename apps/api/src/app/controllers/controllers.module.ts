@@ -6,8 +6,10 @@ import {
 
 import { Module } from '@nestjs/common';
 import { GetUserController } from './getUser/getUser.controller';
+import { GetUsersController } from './getUsers/getUsers.controller';
 import { GetGamesController } from './getGames/getGames.controller';
 import { GetUserService } from './getUser/getUser.service';
+import { GetUsersService } from './getUsers/getUsers.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { GetGamesService } from './getGames/getGames.service';
 import { GetDealsController } from './getDeals/getDeals.controller';
@@ -23,11 +25,13 @@ import { GetDealsService } from './getDeals/getDeals.service';
   ],
   controllers: [
     GetUserController,
+    GetUsersController,
     GetGamesController,
     GetDealsController,
   ],
   providers: [
     GetUserService,
+    GetUsersService,
     GetGamesService,
     GetDealsService,
   ],

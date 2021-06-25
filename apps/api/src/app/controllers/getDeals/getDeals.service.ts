@@ -1,9 +1,9 @@
-import * as mongoose from 'mongoose';
 import { Injectable } from '@angular/core';
 import { InjectModel } from '@nestjs/mongoose';
 import { DealModel } from '@nx-bridge/api-mongoose-models';
 import { Model } from 'mongoose';
 import { ControllerResponse, ErrorMessage } from '@nx-bridge/interfaces-and-types';
+import { getMongooseObjsFromStrings } from '@nx-bridge/constants';
 
 @Injectable({ providedIn: 'root'})
 export class GetDealsService {
@@ -37,12 +37,8 @@ export class GetDealsService {
         res({message: "No Deals Provided in getDealsInfo", status: 400} as ErrorMessage);
       }) 
     } else {
-      const mongooseObjs = [];
-      for (let i = 0; i < deals.length; i++) {
-        const deal = deals[i];
-        mongooseObjs.push(mongoose.Types.ObjectId(deal))
-      }
-
+      const mongooseObjs = getMongooseObjsFromStrings(deals);
+      console.log('mongooseObjs =', mongooseObjs);
       return await this.DealsModel.find({_id: {$in: mongooseObjs}});
     }
   }
