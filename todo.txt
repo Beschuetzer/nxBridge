@@ -15,10 +15,39 @@ Components:
   3.1. GameDetail (dumb component that has Input() of game and a template for the game)
   4. DealList (each GameDetail has one DealList;  displays the list of deals for a game and makes requests regarding deals to backend)
   4.1. DealDetail (dumb component that has Input() of deal and a template for the deal)
-
-
+  
 
 -landing reset button is messed up (disabled when valid email and no username for example)
 -Add threejs nebular to landing
 -add ngIf to email and username fields (hide the other if one is valid)
 -figure out how to move landing service validators to a new service folder in the frontend project in a ValidatorsService file
+
+-figure out how to sensibly cache looked up games into local storage and then when making new requests, check last search date for that userId/email and send a request to only get games since that date. 
+  -could have localStorage item 'queriesByName' and 'queriesByEmail: 
+  {
+    'username' : {
+      date: Date.now(),
+      games: localStorage.getItem('games')[username]
+    }
+  }
+  (need both email and username versions?)
+  {
+    'email' : {
+      date: Date.now(),
+      games: localStorage.getItem('games')[username]
+    }
+  }
+  -then have a separate games item where the actual games are stored:
+  {
+    'username': Game[]
+  }
+-cache looked up deals (executed in DealsList) in a similar fashion
+
+-Finish GamesList styling
+-DealsList shows up when a button on GameDetail "Show Deals" is pressed (DealsList makes backend call to get deals and puts in store)
+-Pass deals in each GameDetail to DealList
+
+
+
+
+
