@@ -18,6 +18,7 @@ Components:
   
 
 -add filter by room name option for the GameList
+-add sorting options for gameslist (ascending / descending by date and name)
 
 -landing reset button is messed up (disabled when valid email and no username for example)
 -Add threejs nebular to landing
@@ -45,9 +46,10 @@ Components:
   }
 -cache looked up deals (executed in DealsList) in a similar fashion
 
--Finish GamesList styling
+
+-Finish GamesList styling (figure out why )
 -DealsList shows up when a button on GameDetail "Show Deals" is pressed (DealsList makes backend call to get deals and puts in store)
--Pass deals in each GameDetail to DealList
+-Pass deals in each GameDetail to DealsList
 
 
 

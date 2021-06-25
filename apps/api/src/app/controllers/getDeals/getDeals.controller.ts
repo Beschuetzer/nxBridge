@@ -1,7 +1,7 @@
-import { Query, Get, Param } from '@nestjs/common';
+import { Query, Get, Param, Post, Body } from '@nestjs/common';
 import { Controller } from '@nestjs/common';
 import { DealModel } from '@nx-bridge/api-mongoose-models';
-import { ControllerResponse } from '@nx-bridge/interfaces-and-types';
+import { ControllerResponse, Deal } from '@nx-bridge/interfaces-and-types';
 import { GetDealsService } from './getDeals.service';
 
 @Controller('getDeals')
@@ -12,7 +12,6 @@ export class GetDealsController {
   async getDeals(
     @Query('userId') userId: string,
   ): ControllerResponse<DealModel> {
-    console.log('userId =', userId);
     return await this.getDealsService.getDeals(userId);
   }
 
@@ -21,5 +20,12 @@ export class GetDealsController {
     @Param('dealId') dealId: string,
   ): ControllerResponse<DealModel> {
     return await this.getDealsService.getDeal(dealId);
+  }
+
+  @Post()
+  async getDealsInfo(
+    @Body('deals') deals: string[],
+  ) {
+    console.log('deals =', deals);
   }
 }

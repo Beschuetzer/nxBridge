@@ -1,6 +1,7 @@
 <article class="deals-list">
+  <button (click)="onShowDealsClick()" class="ui button color-4 bg-color-1 hover-color-1 hover-bg-color-4" type="button">Show Deals</button>
   <div
-    class="deals-list__item"
+    [class]="DEALS_LIST_ITEM_CLASSNAME"
     *ngFor="let deal of deals; let i = index"
   >
     <p>{{deal}}</p>

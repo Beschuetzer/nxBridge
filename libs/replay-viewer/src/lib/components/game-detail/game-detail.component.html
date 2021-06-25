@@ -3,6 +3,5 @@
 >
   <h3 class="game-detail__header">'{{game?.room?.name}}'</h3>
 
-  <button (click)="onShowDealsClick()" class="ui button color-4 bg-color-1 hover-color-1 hover-bg-color-4" type="button">Show Deals</button>
-  <nx-bridge-deals-list [class]="DEALS_LIST_CLASSNAME" [deals]="game?.deals"></nx-bridge-deals-list>
+  <nx-bridge-deals-list [deals]="game?.deals"></nx-bridge-deals-list>
 </article>

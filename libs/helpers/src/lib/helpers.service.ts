@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { Game, User } from '@nx-bridge/interfaces-and-types';
 import * as ngrxStore from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
+import { GET_GAMES_URL, GET_USED_ID_URL } from '@nx-bridge/constants';
 
 @Injectable({ providedIn: 'root' })
 export class HelpersService {
@@ -29,7 +30,7 @@ export class HelpersService {
   getGames(userId: string) {
     const queryStringToUse = `userId=${userId}`;
     this.http
-      .get<Game[]>(`/api/getGames?${queryStringToUse}`)
+      .get<Game[]>(`${GET_GAMES_URL}?${queryStringToUse}`)
       .subscribe((games) => {
         console.log('games =', games);
         this.store.dispatch(new ngrxStore.SetGames(games));
@@ -39,7 +40,7 @@ export class HelpersService {
 
   getUserId(parsed: User | null, usernameValue: string, emailValue: string) {
     this.http
-      .post<User>('/api/getUser', {
+      .post<User>(`${GET_USED_ID_URL}`, {
         email: emailValue,
         username: usernameValue,
       })
