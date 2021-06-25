@@ -28,7 +28,7 @@ export class LandingPageComponent implements OnInit {
   public errorHighlightedValue = '';
   public initialForm: FormGroup = new FormGroup({});
   errorSub = Subscription;
-  private navigateCheckCount = 0;
+  public shouldNavigateToGames = false;
 
   get emailIsValid(): boolean | undefined {
     const email = this.initialForm.get('email');
@@ -109,6 +109,7 @@ export class LandingPageComponent implements OnInit {
       this.store.dispatch(new SetIsLoading(false));
     }
     this.resetForm();
+    this.shouldNavigateToGames = true;
   }
 
   private initializeForm() {
@@ -154,14 +155,15 @@ export class LandingPageComponent implements OnInit {
   private subscribeToIsLoading() {
     this.store.select('general').subscribe(generalState => {
       this.isLoading = generalState.isLoading;
-      if (this.isLoading) debugger;
     })
   }
 
   private subscribeToGames() {
-    this.store.select('games').subscribe(response => {
-      if (response.games.length > 0) {
+    this.store.select('games').subscribe(gamesState => {
+      if (gamesState.games.length > 0 && this.shouldNavigateToGames) {
+        console.log('navigating------------------------------------------------');
         this.router.navigate(['games'], {relativeTo: this.route});
+        this.shouldNavigateToGames = false;
       }
     });
   }
