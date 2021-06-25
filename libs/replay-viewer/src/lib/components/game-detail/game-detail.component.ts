@@ -1,5 +1,6 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit } from '@angular/core';
 import { Game } from '@nx-bridge/interfaces-and-types';
+import { HIDDEN_CLASSNAME, DEALS_LIST_CLASSNAME } from '@nx-bridge/constants';
 
 @Component({
   selector: 'nx-bridge-game-detail',
@@ -7,18 +8,21 @@ import { Game } from '@nx-bridge/interfaces-and-types';
   styleUrls: ['./game-detail.component.scss']
 })
 export class GameDetailComponent implements OnInit {
-  @ViewChild('dealsList') dealsList: HTMLElement | null = null;
-  @Input() game: any;
+  public DEALS_LIST_CLASSNAME = `${HIDDEN_CLASSNAME} ${DEALS_LIST_CLASSNAME}`;
+  @Input() game: Game | null = null;
+  public dealsList: HTMLElement | null = null;
 
-  constructor() { }
+
+  constructor(
+    private elRef: ElementRef
+  ) { }
 
   ngOnInit(): void {
-    
   }
 
   onShowDealsClick() {
-    debugger;
-    this.dealsList?.classList.toggle(HIDDEN_CLASSNAME)
+    if (!this.dealsList) this.dealsList = this.elRef.nativeElement.querySelector(`.${DEALS_LIST_CLASSNAME}`);
+    this.dealsList?.classList?.toggle(HIDDEN_CLASSNAME)
   }
 
 }

@@ -93,6 +93,31 @@
         }
       }
     },
+    "constants": {
+      "projectType": "library",
+      "root": "libs/constants",
+      "sourceRoot": "libs/constants/",
+      "prefix": "nx-bridge",
+      "architect": {
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/constants"],
+          "options": {
+            "jestConfig": "libs/constants/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/constants/src/**/*.ts",
+              "libs/constants/src/**/*.html"
+            ]
+          }
+        }
+      }
+    },
     "frontend": {
       "projectType": "application",
       "root": "apps/frontend",

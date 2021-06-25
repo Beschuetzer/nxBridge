@@ -17,6 +17,8 @@ Components:
   4.1. DealDetail (dumb component that has Input() of deal and a template for the deal)
   
 
+-add filter by room name option for the GameList
+
 -landing reset button is messed up (disabled when valid email and no username for example)
 -Add threejs nebular to landing
 -add ngIf to email and username fields (hide the other if one is valid)
