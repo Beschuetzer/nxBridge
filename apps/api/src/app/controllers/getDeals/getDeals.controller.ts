@@ -25,7 +25,7 @@ export class GetDealsController {
   @Post()
   async getDealsInfo(
     @Body('deals') deals: string[],
-  ) {
-    console.log('deals =', deals);
+  ): ControllerResponse<DealModel> {
+    return await this.getDealsService.getDealsInfo(deals);
   }
 }

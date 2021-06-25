@@ -13,9 +13,7 @@ export class GetGamesService {
   async getGames(userId: string): ControllerResponse<GameModel> {
     if (!userId) {
       return new Promise((res, rej) => {
-        return setTimeout(() => {
-          res({message: "No userId given", status: 400});
-        }, 1)
+        res({message: "No userId given", status: 400});
       })
     } else {
       return await this.gamesModel.find({players: userId});
@@ -25,9 +23,7 @@ export class GetGamesService {
   async getGame(gameId: string): ControllerResponse<GameModel> {
     if (!gameId) {
       return new Promise((res, rej) => {
-        setTimeout(() => {
-          res({message: "No gameId given", status: 400});
-        }, 1)
+        res({message: "No gameId given", status: 400});
       }) 
     } else {
       return await this.gamesModel.findOne({_id: gameId});
