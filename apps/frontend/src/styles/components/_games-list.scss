@@ -1,0 +1,4 @@
+.games-list{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax($default-font-size * 10, 1fr));
+}

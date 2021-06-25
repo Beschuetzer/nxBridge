@@ -221,6 +221,31 @@
         }
       }
     },
+    "grid": {
+      "projectType": "library",
+      "root": "libs/grid",
+      "sourceRoot": "libs/grid/src",
+      "prefix": "nx-bridge",
+      "architect": {
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/grid"],
+          "options": {
+            "jestConfig": "libs/grid/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/grid/src/**/*.ts",
+              "libs/grid/src/**/*.html"
+            ]
+          }
+        }
+      }
+    },
     "header": {
       "projectType": "library",
       "root": "libs/header",

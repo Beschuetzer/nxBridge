@@ -9,8 +9,9 @@ import { SearchComponent } from './components/search/search.component';
 import { GameDetailComponent } from './components/game-detail/game-detail.component';
 import { DealsListComponent } from './components/deals-list/deals-list.component';
 import { DealDetailComponent } from './components/deal-detail/deal-detail.component';
-import { ReplayViewComponent } from './views/replay-view/replay-view.component';
 import { GamesListViewComponent } from './views/games-list-view/games-list-view.component';
+import { GridModule } from '@nx-bridge/grid';
+
 @NgModule({
   declarations: [
     LandingPageComponent,
@@ -19,7 +20,6 @@ import { GamesListViewComponent } from './views/games-list-view/games-list-view.
     GameDetailComponent,
     DealsListComponent,
     DealDetailComponent,
-    ReplayViewComponent,
     GamesListViewComponent,
   ],
   imports: [
@@ -30,6 +30,7 @@ import { GamesListViewComponent } from './views/games-list-view/games-list-view.
       {path: 'games', component: GamesListViewComponent} 
     ]),
     HeaderModule,
+    GridModule,
   ],
 })
 export class ReplayViewerModule {}

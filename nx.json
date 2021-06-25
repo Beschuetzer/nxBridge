@@ -35,6 +35,9 @@
       "tags": [],
       "implicitDependencies": ["frontend"]
     },
+    "grid": {
+      "tags": []
+    },
     "header": {
       "tags": []
     },

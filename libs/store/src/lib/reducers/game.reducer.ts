@@ -1,8 +1,8 @@
-import { Deal } from '@nx-bridge/interfaces-and-types';
+import { Game } from '@nx-bridge/interfaces-and-types';
 import * as fromGameActions from '../actions/game.actions';
 
 export interface GameState {
-  games: Deal[];
+  games: Game[];
 }
 
 const INITIAL_STATE: GameState = {

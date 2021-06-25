@@ -8,5 +8,6 @@ module.exports = {
     '<rootDir>/libs/helpers',
     '<rootDir>/libs/replay-viewer',
     '<rootDir>/libs/header',
+    '<rootDir>/libs/grid',
   ],
 };

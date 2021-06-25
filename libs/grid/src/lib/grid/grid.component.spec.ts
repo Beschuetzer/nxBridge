@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ReplayViewComponent } from './replay-view.component';
+import { GridComponent } from './grid.component';
 
-describe('ReplayViewComponent', () => {
-  let component: ReplayViewComponent;
-  let fixture: ComponentFixture<ReplayViewComponent>;
+describe('GridComponent', () => {
+  let component: GridComponent;
+  let fixture: ComponentFixture<GridComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ReplayViewComponent ]
+      declarations: [ GridComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ReplayViewComponent);
+    fixture = TestBed.createComponent(GridComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

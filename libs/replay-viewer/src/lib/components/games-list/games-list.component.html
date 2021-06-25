@@ -1,1 +1,6 @@
-<p>games-list works!</p>
+<div class="games-list">
+  <nx-bridge-game-detail 
+    *ngFor="let game of games; let i = index"
+    [game]="game"
+  ></nx-bridge-game-detail>
+</div>

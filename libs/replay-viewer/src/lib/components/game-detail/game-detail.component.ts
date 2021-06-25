@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { Game } from '@nx-bridge/interfaces-and-types';
 
 @Component({
   selector: 'nx-bridge-game-detail',
@@ -7,9 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GameDetailComponent implements OnInit {
 
+  @Input() game: any;
+
   constructor() { }
 
   ngOnInit(): void {
+    
   }
 
 }
