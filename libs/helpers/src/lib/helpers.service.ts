@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Game, User } from '@nx-bridge/interfaces-and-types';
@@ -8,7 +9,8 @@ import { Store } from '@ngrx/store';
 export class HelpersService {
   constructor(
     private http: HttpClient,
-    private store: Store<ngrxStore.AppState>
+    private store: Store<ngrxStore.AppState>,
+    private router: Router,
   ) {}
 
   setDeals(games: Game[]) {

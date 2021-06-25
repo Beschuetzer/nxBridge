@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { LandingPageService } from '../services/landing-page.service';
+import { LandingPageService } from '../../services/landing-page.service';
 import { User } from '@nx-bridge/interfaces-and-types';
 import { HelpersService } from '@nx-bridge/helpers';
 import { Subscription } from 'rxjs';
 import { take, map } from 'rxjs/operators';
 import { AppState, SetIsLoading, SetLoadingError } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
+import { ActivatedRoute, Router } from '@angular/router';
 
 
 @Component({
@@ -17,7 +18,9 @@ import { Store } from '@ngrx/store';
 export class LandingPageComponent implements OnInit {
   constructor(
     private helpersService: HelpersService,
-    private store: Store<AppState>
+    private store: Store<AppState>,
+    private router: Router,
+    private route: ActivatedRoute,
   ) {}
 
   public isLoading = false;
@@ -25,6 +28,7 @@ export class LandingPageComponent implements OnInit {
   public errorHighlightedValue = '';
   public initialForm: FormGroup = new FormGroup({});
   errorSub = Subscription;
+  private navigateCheckCount = 0;
 
   get emailIsValid(): boolean | undefined {
     const email = this.initialForm.get('email');
@@ -58,6 +62,7 @@ export class LandingPageComponent implements OnInit {
     this.initializeForm();
     this.subscribeToLoadingErrorMessage();
     this.subscribeToIsLoading();
+    this.subscribeToGames();
   }
 
   public resetForm() {
@@ -150,5 +155,13 @@ export class LandingPageComponent implements OnInit {
     this.store.select('general').subscribe(generalState => {
       this.isLoading = generalState.isLoading;
     })
+  }
+
+  private subscribeToGames() {
+    this.store.select('games').subscribe(response => {
+      if (response.games.length > 0) {
+        this.router.navigate(['games'], {relativeTo: this.route});
+      }
+    });
   }
 }
