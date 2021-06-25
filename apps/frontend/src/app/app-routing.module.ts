@@ -7,7 +7,14 @@ import { GamesListComponent } from './games-list/games-list.component';
 const routes: Routes = [
   // { path: '', redirectTo: `/${rootRoute}`, pathMatch: 'full' },
   // { path: 'landing', component: LandingPageComponent},
-  { path: 'games', component: GamesListComponent}
+  { path: '', component: GamesListComponent},
+  
+  {
+    path: "replays",
+    loadChildren: () =>
+      import('@nx-bridge/replay-viewer').then((m) => m.ReplayViewerModule),
+  },
+
   // {
   //   path: rootRoute,
   //   loadChildren: () =>

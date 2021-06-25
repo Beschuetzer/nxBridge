@@ -10,13 +10,12 @@ import { environment } from '../environments/environment';
 import { StoreRouterConnectingModule } from '@ngrx/router-store';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { LandingPageComponent } from './landing-page/landing-page.component';
 import { HttpClientModule } from '@angular/common/http';
-import { ReactiveFormsModule } from '@angular/forms';
 import { GamesListComponent } from './games-list/games-list.component';
+import { ReplayViewerModule } from '@nx-bridge/replay-viewer';
 
 @NgModule({
-  declarations: [AppComponent, LandingPageComponent, GamesListComponent],
+  declarations: [AppComponent, GamesListComponent],
   imports: [
     BrowserModule,
     StoreModule.forRoot(appReducer),
@@ -24,8 +23,8 @@ import { GamesListComponent } from './games-list/games-list.component';
     StoreRouterConnectingModule.forRoot(),
     BrowserAnimationsModule,
     HttpClientModule,
-    ReactiveFormsModule,
     AppRoutingModule,
+    ReplayViewerModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

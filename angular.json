@@ -259,6 +259,31 @@
         }
       }
     },
+    "replay-viewer": {
+      "projectType": "library",
+      "root": "libs/replay-viewer",
+      "sourceRoot": "libs/replay-viewer/src",
+      "prefix": "nx-bridge",
+      "architect": {
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/replay-viewer"],
+          "options": {
+            "jestConfig": "libs/replay-viewer/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/replay-viewer/src/**/*.ts",
+              "libs/replay-viewer/src/**/*.html"
+            ]
+          }
+        }
+      }
+    },
     "store": {
       "projectType": "library",
       "root": "libs/store",

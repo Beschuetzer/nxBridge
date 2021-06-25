@@ -6,5 +6,6 @@ module.exports = {
     '<rootDir>/libs/api-mongoose-models',
     '<rootDir>/libs/store',
     '<rootDir>/libs/helpers',
+    '<rootDir>/libs/replay-viewer',
   ],
 };
