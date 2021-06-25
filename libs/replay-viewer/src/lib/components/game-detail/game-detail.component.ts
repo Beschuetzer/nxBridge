@@ -10,7 +10,6 @@ import { Game } from '@nx-bridge/interfaces-and-types';
 export class GameDetailComponent implements OnInit {
   @Input() game: Game | null = null;
 
-
   constructor(
 
   ) { }

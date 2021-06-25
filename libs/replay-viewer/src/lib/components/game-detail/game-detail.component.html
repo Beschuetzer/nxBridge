@@ -1,7 +1,7 @@
 <article
   class="game-detail"
 >
-  <h3 class="game-detail__header">'{{game?.room?.name}}'</h3>
+  <h4 class="game-detail__header">'{{game?.room?.name}}'</h4>
 
-  <nx-bridge-deals-list [deals]="game?.deals"></nx-bridge-deals-list>
+  <nx-bridge-deals-list [dealsAsStrings]="game?.deals"></nx-bridge-deals-list>
 </article>

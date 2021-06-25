@@ -1,10 +1,24 @@
 <article class="deals-list">
-  <button (click)="onShowDealsClick()" class="ui button color-4 bg-color-1 hover-color-1 hover-bg-color-4" type="button">Show Deals</button>
+  <button
+    (click)="onShowDealsClick()"
+    class="ui button color-4 bg-color-1 hover-color-1 hover-bg-color-4"
+    type="button"
+    style="width: 100%; max-width: 12.8rem"
+  >
+    <p *ngIf="isLoading">Fetching...</p>
+    <p *ngIf="!isLoading">Show Deals</p>
+  </button>
+
   <div
     [class]="DEALS_LIST_ITEM_CLASSNAME"
     *ngFor="let deal of deals; let i = index"
   >
-    <p>{{deal}}</p>
-    <button [attr.data-deal]="deal" class="ui button color-1 hover-color-4 bg-color-4 hover-bg-color-1">Watch</button>
+    <p>{{ deal }}</p>
+    <button
+      [attr.data-deal]="deal"
+      class="ui button color-1 hover-color-4 bg-color-4 hover-bg-color-1"
+    >
+      Watch
+    </button>
   </div>
 </article>
