@@ -53,3 +53,4 @@ Components:
 -DealsList shows up when a button on GameDetail "Show Deals" is pressed (DealsList makes backend call to get deals and puts in store)
 -Pass deals in each GameDetail to DealsList
 
+-add controller for getGameCount (get using userId (similar to getGames)) 
