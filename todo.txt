@@ -54,3 +54,5 @@ Components:
 -Pass deals in each GameDetail to DealsList
 
 -make usernames in gamedetail a button that pulls up a page on that user (at least add data property with userID)?
+-add get controller to get username from id (need to have gamesdetail handle and store?)
+-add controller to get number of games userId has using '{players: ObjectId("602215786180a2c060662af7")}' on GameModel
