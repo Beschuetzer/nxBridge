@@ -5,12 +5,7 @@
     '{{game?.room?.name}}' on <span>{{game?.completionDate | date:'short'}}</span>
   </h4>
   <div class="game-detail__players">
-  <button
-      *ngFor="let userId of userIds; let i = index"
-      [attr.data-id]="userId"
-    >
-      {{usernames ? usernames[i] : ""}}
-    </button>
+    {{usernames | joinNames}}
   </div>
   <!-- <div class="game-detail__players">
     <div

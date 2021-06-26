@@ -1,6 +1,6 @@
 <article class="deals-list">
   <button
-    (click)="onShowDealsClick()"
+    (click)="onDealsButtonClick($event)"
     class="ui button color-4 bg-color-1 hover-color-1 hover-bg-color-4"
     type="button"
     style="width: 100%; max-width: 12.8rem"
@@ -22,7 +22,7 @@
       [attr.data-deal]="deal"
       class="ui button color-1 hover-color-4 bg-color-4 hover-bg-color-1"
     >
-      Watch
+      View
     </button>
   </div>
 </article>
