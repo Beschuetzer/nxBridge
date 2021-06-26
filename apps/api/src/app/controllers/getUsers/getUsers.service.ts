@@ -30,8 +30,7 @@ export class GetUsersService {
   private async queryDB(users: string[]): ControllerResponse<User> {
     const mongooseObjs = getMongooseObjsFromStrings(users);
     const response = await this.userModel.find({_id: {$in: mongooseObjs}});
-    const newResponse = response.map(userObj => {return {...userObj._doc, salt: null, hash: null, email: null}})
-    console.log('response =', newResponse);
+    const newResponse = response.map(userObj => {return {...(userObj as any)._doc, salt: null, hash: null, email: null, resetPasswordToken: null} as User})
     return newResponse;
   }
 
