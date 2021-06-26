@@ -1,5 +1,14 @@
 .game-detail{
-  
+  border: $default-font-size * .1 solid var(--color-primary-1);
+  border-radius: $default-font-size * .5;
+  padding: $default-font-size * .5 $default-font-size * .5 0 $default-font-size * .5;
+  box-shadow: $scrollbar-box-shadow;
+
+  &__players {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }  
 
   &__header{
     
