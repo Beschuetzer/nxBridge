@@ -1,7 +1,7 @@
 import { Component, ElementRef, Input, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {
-  DEALS_LIST_DETAIL_CLASSNAME,
+  DEAL_DETAIL_CLASSNAME,
   DISPLAY_NONE_CLASSNAME,
   GET_DEALS_URL,
   DEALS_STRING,
@@ -34,7 +34,7 @@ export class DealsListComponent implements OnInit {
 
   onDealsButtonClick(e: Event) {
     const items = this.elRef.nativeElement.querySelectorAll(
-      `.${DEALS_LIST_DETAIL_CLASSNAME}`
+      `.${DEAL_DETAIL_CLASSNAME}`
     );
 
     if (!items || items.length <= 0) {

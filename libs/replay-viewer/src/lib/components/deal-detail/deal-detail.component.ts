@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Deal } from '@nx-bridge/interfaces-and-types';
-import { DEALS_LIST_DETAIL_CLASSNAME } from '@nx-bridge/constants';
+import { Deal, Hands } from '@nx-bridge/interfaces-and-types';
+import { DEAL_DETAIL_CLASSNAME } from '@nx-bridge/constants';
 
 @Component({
   selector: 'nx-bridge-deal-detail',
@@ -8,10 +8,11 @@ import { DEALS_LIST_DETAIL_CLASSNAME } from '@nx-bridge/constants';
   styleUrls: ['./deal-detail.component.scss']
 })
 export class DealDetailComponent implements OnInit {
+  @Input() deal: Deal | null = null;
+  public hands: Hands | null = null;
   public declarer = '';
   public dealer = '';
-  @Input() deal: Deal | null = null;
-  public DEALS_LIST_ITEM_CLASSNAME = ` ${DEALS_LIST_DETAIL_CLASSNAME}`;
+  public DEAL_DETAIL_CLASSNAME = ` ${DEAL_DETAIL_CLASSNAME}`;
 
   get getDeclarer() {
     //todo: can get this from bidding array
@@ -28,6 +29,7 @@ export class DealDetailComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    this.hands = (this.deal?.hands as Hands);
   }
 
 }
