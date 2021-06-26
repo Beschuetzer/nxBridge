@@ -28,6 +28,10 @@ export class HelpersService {
     this.store.dispatch(new ngrxStore.SetDeals(deals));
   }
 
+  getGameCount(userId: string) {
+    
+  }
+
   getGames(userId: string) {
     const queryStringToUse = `userId=${userId}`;
     this.http

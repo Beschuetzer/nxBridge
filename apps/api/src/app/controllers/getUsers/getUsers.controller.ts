@@ -1,9 +1,10 @@
 import { Body, Post } from '@nestjs/common';
 import { Controller } from '@nestjs/common';
+import { GET_USERS_CONTROLLER_STRING } from '@nx-bridge/constants';
 import { ControllerResponse, User } from '@nx-bridge/interfaces-and-types';
 import { GetUsersService } from './getUsers.service';
 
-@Controller('getUsers')
+@Controller(GET_USERS_CONTROLLER_STRING)
 export class GetUsersController {
   constructor(private getUsersService: GetUsersService) {}
 

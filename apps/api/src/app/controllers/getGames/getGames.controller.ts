@@ -1,10 +1,11 @@
 import { Query, Get, Param } from '@nestjs/common';
 import { Controller } from '@nestjs/common';
 import { GameModel } from '@nx-bridge/api-mongoose-models';
+import { GET_GAMES_CONTROLLER_STRING } from '@nx-bridge/constants';
 import { ControllerResponse } from '@nx-bridge/interfaces-and-types';
 import { GetGamesService } from './getGames.service';
 
-@Controller('getGames')
+@Controller(GET_GAMES_CONTROLLER_STRING)
 export class GetGamesController {
   constructor(private readonly getGamesService: GetGamesService) {}
 

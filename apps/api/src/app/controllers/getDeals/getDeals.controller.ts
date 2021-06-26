@@ -1,10 +1,11 @@
 import { Query, Get, Param, Post, Body } from '@nestjs/common';
 import { Controller } from '@nestjs/common';
 import { DealModel } from '@nx-bridge/api-mongoose-models';
-import { ControllerResponse, Deal } from '@nx-bridge/interfaces-and-types';
+import { GET_DEALS_CONTROLLER_STRING } from '@nx-bridge/constants';
+import { ControllerResponse } from '@nx-bridge/interfaces-and-types';
 import { GetDealsService } from './getDeals.service';
 
-@Controller('getDeals')
+@Controller(GET_DEALS_CONTROLLER_STRING)
 export class GetDealsController {
   constructor(private readonly getDealsService: GetDealsService) {}
 
