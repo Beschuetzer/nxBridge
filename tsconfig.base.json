@@ -26,6 +26,7 @@
       "@nx-bridge/interfaces-and-types": [
         "libs/interfaces-and-types/src/index"
       ],
+      "@nx-bridge/pipes": ["libs/pipes/src/index.ts"],
       "@nx-bridge/replay-viewer": ["libs/replay-viewer/src/index.ts"],
       "@nx-bridge/spinners": ["libs/spinners/src/index.ts"],
       "@nx-bridge/store": ["libs/store/src/index.ts"]

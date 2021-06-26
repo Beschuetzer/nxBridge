@@ -10,5 +10,6 @@ module.exports = {
     '<rootDir>/libs/header',
     '<rootDir>/libs/grid',
     '<rootDir>/libs/spinners',
+    '<rootDir>/libs/pipes',
   ],
 };

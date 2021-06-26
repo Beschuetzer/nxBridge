@@ -19,6 +19,8 @@ Components:
 
 -add filter by room name option for the GameList
 -add sorting options for gameslist (ascending / descending by date and name)
+-add show games between date
+-add show games played with another player or players
 
 -landing reset button is messed up (disabled when valid email and no username for example)
 -Add threejs nebular to landing

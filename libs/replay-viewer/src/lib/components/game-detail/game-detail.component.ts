@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Game, User } from '@nx-bridge/interfaces-and-types';
+import { Game } from '@nx-bridge/interfaces-and-types';
 
 @Component({
   selector: 'nx-bridge-game-detail',
