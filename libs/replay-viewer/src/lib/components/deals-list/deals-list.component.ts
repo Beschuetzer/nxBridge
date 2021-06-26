@@ -1,12 +1,21 @@
 import { Component, ElementRef, Input, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { DEALS_LIST_CLASSNAME, DISPLAY_NONE_CLASSNAME, GET_DEALS_URL, DEALS_STRING, toggleClassOnList, toggleInnerHTML } from '@nx-bridge/constants';
+import {
+  DEALS_LIST_CLASSNAME,
+  DISPLAY_NONE_CLASSNAME,
+  GET_DEALS_URL,
+  DEALS_STRING,
+  toggleClassOnList,
+  toggleInnerHTML,
+} from '@nx-bridge/constants';
 import { Deal } from '@nx-bridge/interfaces-and-types';
+import { AddFetchedDeals as AddFetchedDeals, AppState } from '@nx-bridge/store';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'nx-bridge-deals-list',
   templateUrl: './deals-list.component.html',
-  styleUrls: ['./deals-list.component.scss']
+  styleUrls: ['./deals-list.component.scss'],
 })
 export class DealsListComponent implements OnInit {
   @Input() dealsAsStrings: string[] | undefined = [];
@@ -19,19 +28,19 @@ export class DealsListComponent implements OnInit {
   constructor(
     private elRef: ElementRef,
     private http: HttpClient,
-  ) { }
+    private store: Store<AppState>
+  ) {}
 
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void {}
 
   onDealsButtonClick(e: Event) {
-    const items = this.elRef.nativeElement.querySelectorAll(`.${DEALS_LIST_CLASSNAME}__item`);
+    const items = this.elRef.nativeElement.querySelectorAll(
+      `.${DEALS_LIST_CLASSNAME}__item`
+    );
 
     if (!items || items.length <= 0) {
-      this.loadItems();
-    }
-    else {
+      this.getItemsFromDB();
+    } else {
       toggleClassOnList(items, DISPLAY_NONE_CLASSNAME);
     }
 
@@ -39,16 +48,24 @@ export class DealsListComponent implements OnInit {
     toggleInnerHTML(button, this.buttonChoices);
   }
 
-  private loadItems() {
+  private getItemsFromDB() {
+    const itemsToGet = this.getDealsToGet();
     this.isLoading = true;
-    this.http.post<Deal[]>(GET_DEALS_URL, {[`${DEALS_STRING}`]: this.dealsAsStrings}).subscribe(deals => {
-      console.log('deals =', deals);
-      this.deals = deals;
-
-      // if (!this.dealsListItems) this.dealsListItems = this.elRef.nativeElement.querySelectorAll(`.${DEALS_LIST_CLASSNAME}__item`);
-      // toggleClassOnList(this.dealsListItems as any, DISPLAY_NONE_CLASSNAME)
-      this.isLoading = false;
-    });
+    this.http
+      .post<Deal[]>(GET_DEALS_URL, { [`${DEALS_STRING}`]: itemsToGet })
+      .subscribe((deals) => {
+        this.handleGetDealsFromDBResponse(deals);
+      });
   }
 
+  private getDealsToGet() {
+    //todo: this can be optimized later to only get Deals not in localStorage already
+    return this.dealsAsStrings;
+  }
+
+  private handleGetDealsFromDBResponse(deals: Deal[]) {
+    this.deals = deals;
+    this.store.dispatch(new AddFetchedDeals(deals));
+    this.isLoading = false;
+  }
 }

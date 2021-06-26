@@ -25,7 +25,7 @@ export class HelpersService {
       }
     }
 
-    this.store.dispatch(new ngrxStore.SetDeals(deals));
+    this.store.dispatch(new ngrxStore.SetDealsAsStrings(deals));
   }
 
   getGameCount(userId: string) {
