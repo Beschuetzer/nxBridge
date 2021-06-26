@@ -78,8 +78,8 @@ export class HelpersService {
   }
 
   getUsers(users: string[]) {
-    console.log('users =', users);
     if (!users || users.length <= 0) return;
-    return this.http.post<User[]>(`${GET_USERS_URL}`, users);
+    console.log('users =', users);
+    return this.http.post<User[]>(`${GET_USERS_URL}`, {users});
   }
 }

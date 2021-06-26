@@ -2,19 +2,20 @@ import { Injectable } from '@angular/core';
 import { InjectModel } from '@nestjs/mongoose';
 import { invalidUsersArray } from '@nx-bridge/api-errors';
 import { UserModel } from '@nx-bridge/api-mongoose-models';
-import { ControllerResponse } from '@nx-bridge/interfaces-and-types';
+import { ControllerResponse, User } from '@nx-bridge/interfaces-and-types';
 import { Model } from 'mongoose';
 import {getMongooseObjsFromStrings} from '@nx-bridge/constants';
 
 @Injectable({ providedIn: 'root'})
 export class GetUsersService {
   constructor(
-    @InjectModel('User') private userModel: Model<UserModel>,
+    @InjectModel('User') private userModel: Model<User>,
   ) {}
 
-  async getUsers(users): ControllerResponse<UserModel> {
+  async getUsers(users): ControllerResponse<User> {
     const error = this.validateInputs(users);
     if (error) return error;
+    console.log('queryDB------------------------------------------------');
     return await this.queryDB(users);
   }
 
@@ -26,10 +27,12 @@ export class GetUsersService {
     return null;
   }
 
-  private async queryDB(users: string[]): ControllerResponse<UserModel> {
+  private async queryDB(users: string[]): ControllerResponse<User> {
     const mongooseObjs = getMongooseObjsFromStrings(users);
-    console.log('mongooseObjs =', mongooseObjs);
-    return await this.userModel.find({_id: {$in: mongooseObjs}});
+    const response = await this.userModel.find({_id: {$in: mongooseObjs}});
+    const newResponse = response.map(userObj => {return {...userObj._doc, salt: null, hash: null, email: null}})
+    console.log('response =', newResponse);
+    return newResponse;
   }
 
 }
