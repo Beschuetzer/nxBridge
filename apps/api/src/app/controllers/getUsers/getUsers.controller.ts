@@ -1,6 +1,6 @@
 import { Body, Post } from '@nestjs/common';
 import { Controller } from '@nestjs/common';
-import { GET_USERS_CONTROLLER_STRING } from '@nx-bridge/constants';
+import { GET_USERS_CONTROLLER_STRING, USERS_STRING } from '@nx-bridge/constants';
 import { ControllerResponse, User } from '@nx-bridge/interfaces-and-types';
 import { GetUsersService } from './getUsers.service';
 
@@ -10,7 +10,7 @@ export class GetUsersController {
 
   @Post()
   async getData(
-    @Body('users') users: string[],
+    @Body(USERS_STRING) users: string[],
   ): ControllerResponse<User> {
     return await this.getUsersService.getUsers(users);
   }

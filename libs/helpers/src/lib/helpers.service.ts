@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { Game, User } from '@nx-bridge/interfaces-and-types';
 import * as ngrxStore from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
-import { GET_GAMES_URL, GET_USER_URL, GET_USERS_URL, USER_ID_STRING } from '@nx-bridge/constants';
+import { GET_GAMES_URL, GET_USER_URL, GET_USERS_URL, USER_ID_STRING, EMAIL_STRING, USERNAME_STRING, USERS_STRING } from '@nx-bridge/constants';
 import * as mongoose from 'mongoose';
 
 @Injectable({ providedIn: 'root' })
@@ -46,8 +46,8 @@ export class HelpersService {
   getUser(parsed: User | null, usernameValue: string, emailValue: string) {
     this.http
       .post<User>(`${GET_USER_URL}`, {
-        email: emailValue,
-        username: usernameValue,
+        [`${EMAIL_STRING}`]: emailValue,
+        [`${USERNAME_STRING}`]: usernameValue,
       })
       .subscribe((user) => {
 
@@ -84,6 +84,6 @@ export class HelpersService {
   getUsers(users: string[]) {
     if (!users || users.length <= 0) return;
     console.log('users =', users);
-    return this.http.post<User[]>(`${GET_USERS_URL}`, {users});
+    return this.http.post<User[]>(`${GET_USERS_URL}`, {[`${USERS_STRING}`]: users});
   }
 }
