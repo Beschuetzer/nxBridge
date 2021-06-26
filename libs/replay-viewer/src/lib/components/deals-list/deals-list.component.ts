@@ -1,7 +1,7 @@
 import { Component, ElementRef, Input, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {
-  DEALS_LIST_CLASSNAME,
+  DEALS_LIST_DETAIL_CLASSNAME,
   DISPLAY_NONE_CLASSNAME,
   GET_DEALS_URL,
   DEALS_STRING,
@@ -20,7 +20,6 @@ import { Store } from '@ngrx/store';
 export class DealsListComponent implements OnInit {
   @Input() dealsAsStrings: string[] | undefined = [];
   public deals: Deal[] = [];
-  public DEALS_LIST_ITEM_CLASSNAME = ` ${DEALS_LIST_CLASSNAME}__item`;
   public dealsListItems: NodeList | null | undefined = null;
   public isLoading = false;
   private buttonChoices: [string, string] = ['Show Deals', 'Hide Deals'];
@@ -35,7 +34,7 @@ export class DealsListComponent implements OnInit {
 
   onDealsButtonClick(e: Event) {
     const items = this.elRef.nativeElement.querySelectorAll(
-      `.${DEALS_LIST_CLASSNAME}__item`
+      `.${DEALS_LIST_DETAIL_CLASSNAME}`
     );
 
     if (!items || items.length <= 0) {

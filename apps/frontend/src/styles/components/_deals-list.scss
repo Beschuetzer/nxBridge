@@ -1,8 +1,7 @@
 .deals-list {
 
-  &__item{
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
+  &__detail{
+    display: grid;
+    grid-template-columns: 1fr min-content;
   }
 }

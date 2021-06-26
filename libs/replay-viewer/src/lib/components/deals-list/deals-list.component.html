@@ -13,16 +13,8 @@
     <div *ngIf="!isLoading">Show Deals</div>
   </button>
 
-  <div
-    [class]="DEALS_LIST_ITEM_CLASSNAME"
-    *ngFor="let deal of deals; let i = index"
-  >
-    <p>{{ deal }}</p>
-    <button
-      [attr.data-deal]="deal"
-      class="ui button color-1 hover-color-4 bg-color-4 hover-bg-color-1"
-    >
-      View
-    </button>
-  </div>
+  <nx-bridge-deal-detail
+    *ngFor="let deal of deals"
+    [deal]="deal"
+  ></nx-bridge-deal-detail>
 </article>

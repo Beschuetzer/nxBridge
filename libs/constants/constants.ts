@@ -19,3 +19,4 @@ export const GET_USERS_URL = `/api/${GET_USERS_CONTROLLER_STRING}`;
 export const HIDDEN_CLASSNAME = 'hidden';
 export const DISPLAY_NONE_CLASSNAME = 'd-none';
 export const DEALS_LIST_CLASSNAME = 'deals-list';
+export const DEALS_LIST_DETAIL_CLASSNAME = 'deals-list__detail';

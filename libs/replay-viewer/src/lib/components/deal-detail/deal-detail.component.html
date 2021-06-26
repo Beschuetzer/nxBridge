@@ -1,1 +1,10 @@
-<p>deal-detail works!</p>
+<div [class]="DEALS_LIST_ITEM_CLASSNAME">
+    <p>Dealer:{{ getDealer }}</p>
+    <p>Declarer:{{ getDeclarer }}</p>
+    <button
+      [attr.data-deal]="deal"
+      class="ui button color-1 hover-color-4 bg-color-4 hover-bg-color-1"
+    >
+      View
+    </button>
+  </div>
