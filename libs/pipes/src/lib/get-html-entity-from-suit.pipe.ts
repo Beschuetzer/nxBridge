@@ -7,7 +7,6 @@ import { getSuitFromNumber, suitsAsCapitalizedStrings, suitsHtmlEntities } from 
 export class GetHtmlEntityFromSuitPipe implements PipeTransform {
 
   transform(suit: number[], ...args: unknown[]): string {
-    debugger;
     const suitAsString = getSuitFromNumber(suit[0]);
     const htmlEntityToUse = suitsHtmlEntities[suitsAsCapitalizedStrings.findIndex(str => str.toLowerCase() === suitAsString.toLowerCase())];
 

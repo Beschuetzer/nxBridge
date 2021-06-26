@@ -1,6 +1,6 @@
 .games-list{
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax($default-font-size * 10, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax($default-font-size * 13.75, 1fr));
   padding: $default-font-size * 2;
   grid-gap: $default-font-size;
 }

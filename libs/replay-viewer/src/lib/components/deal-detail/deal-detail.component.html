@@ -11,7 +11,17 @@
         <div 
           class="{{DEAL_DETAIL_CLASSNAME}}__details-suit"
           *ngFor="let suit of hand[1]"
-        >{{ suit | getHtmlEntityFromSuit }}: {{ suit | suitToString }}</div>
+        >
+          <span
+            [innerHtml]="suit | getHtmlEntityFromSuit | safeHtml"
+          >
+          </span>
+          <span>
+            - {{ suit | suitToString }}
+          </span>
+         
+        
+        </div>
       </div>
     </div>
     

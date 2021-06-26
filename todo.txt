@@ -57,5 +57,4 @@ Components:
 -DealsList shows up when a button on GameDetail "Show Deals" is pressed (DealsList makes backend call to get deals and puts in store)
 -Pass deals in each GameDetail to DealsList
 -finish the deal viewing stuff
--add new component or pipe that takes hands and returns Hands
--add deal-detail__summary which says something like "Adam play 3Heart and made it/went down 1/2/3"
+-how hard would it be to make deal-detail be a table with names across top and suits along left side?
