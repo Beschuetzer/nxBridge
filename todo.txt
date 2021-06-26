@@ -51,6 +51,3 @@ Components:
 -DealsList shows up when a button on GameDetail "Show Deals" is pressed (DealsList makes backend call to get deals and puts in store)
 -Pass deals in each GameDetail to DealsList
 
--figure out why getUsers doesn't work in code but it does in postman
--when using PaulaDass as the username, it gets more users than expected
-

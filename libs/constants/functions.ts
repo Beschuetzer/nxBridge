@@ -11,3 +11,11 @@ export function getMongooseObjsFromStrings(items: string[]) {
 
   return mongooseObjs;
 }
+
+export function getValueFromLocalStorage(value: string) {
+  return JSON.parse(localStorage.getItem(value) as string);
+}
+
+export function setValueInLocalStorage(value: string, valueToSet: any) {
+  return localStorage.setItem(value,  JSON.stringify(valueToSet));
+}
