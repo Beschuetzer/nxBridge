@@ -1,4 +1,4 @@
-export const GET_DEALS_CONTROLLER_STRING = 'getDeals'
+export const GET_DEALS_CONTROLLER_STRING = 'getDeals';
 export const GET_GAMES_CONTROLLER_STRING = 'getGames';
 export const GET_GAME_COUNT_CONTROLLER_STRING = 'getGameCount';
 export const GET_USER_CONTROLLER_STRING = 'getUser';
@@ -21,4 +21,5 @@ export const DISPLAY_NONE_CLASSNAME = 'd-none';
 export const DEALS_LIST_CLASSNAME = 'deals-list';
 export const DEAL_DETAIL_CLASSNAME = 'deal-detail';
 export const FULL_SIZE_CLASSNAME = 'full-size';
+
 
