@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { DEALS_LIST_CLASSNAME, DISPLAY_NONE_CLASSNAME, GET_DEALS_URL } from '@nx-bridge/constants';
+import { DEALS_LIST_CLASSNAME, DISPLAY_NONE_CLASSNAME, GET_DEALS_URL, DEALS_STRING } from '@nx-bridge/constants';
 import { Deal } from '@nx-bridge/interfaces-and-types';
 
 @Component({
@@ -25,7 +25,7 @@ export class DealsListComponent implements OnInit {
 
   onShowDealsClick() {
     this.isLoading = true;
-    this.http.post<Deal[]>(GET_DEALS_URL, {deals: this.dealsAsStrings}).subscribe(deals => {
+    this.http.post<Deal[]>(GET_DEALS_URL, {[`${DEALS_STRING}`]: this.dealsAsStrings}).subscribe(deals => {
       console.log('deals =', deals);
       this.deals = deals;
 

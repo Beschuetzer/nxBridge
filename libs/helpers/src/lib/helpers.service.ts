@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { Game, User } from '@nx-bridge/interfaces-and-types';
 import * as ngrxStore from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
-import { GET_GAMES_URL, GET_USER_URL, GET_USERS_URL } from '@nx-bridge/constants';
+import { GET_GAMES_URL, GET_USER_URL, GET_USERS_URL, USER_ID_STRING } from '@nx-bridge/constants';
 import * as mongoose from 'mongoose';
 
 @Injectable({ providedIn: 'root' })
@@ -29,11 +29,11 @@ export class HelpersService {
   }
 
   getGameCount(userId: string) {
-    
+
   }
 
   getGames(userId: string) {
-    const queryStringToUse = `userId=${userId}`;
+    const queryStringToUse = `${USER_ID_STRING}=${userId}`;
     this.http
       .get<Game[]>(`${GET_GAMES_URL}?${queryStringToUse}`)
       .subscribe((games) => {

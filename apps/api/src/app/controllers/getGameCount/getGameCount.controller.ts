@@ -1,6 +1,6 @@
 import { Query, Get } from '@nestjs/common';
 import { Controller } from '@nestjs/common';
-import { GET_GAME_COUNT_CONTROLLER_STRING } from '@nx-bridge/constants';
+import { GET_GAME_COUNT_CONTROLLER_STRING, USER_ID_STRING } from '@nx-bridge/constants';
 import { ControllerResponse } from '@nx-bridge/interfaces-and-types';
 import { GetGameCountService } from './getGameCount.service';
 
@@ -10,9 +10,8 @@ export class GetGameCountController {
 
   @Get()
   async getGameCount(
-    @Query('userId') userId: string,
+    @Query(USER_ID_STRING) userId: string
   ): ControllerResponse<number> {
     return await this.getGameCountService.getGameCount(userId);
   }
-
 }
