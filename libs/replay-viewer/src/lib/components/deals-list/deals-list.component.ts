@@ -3,10 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import {
   DEAL_DETAIL_CLASSNAME,
   DISPLAY_NONE_CLASSNAME,
+  FULL_SIZE_CLASSNAME,
   GET_DEALS_URL,
   DEALS_STRING,
   toggleClassOnList,
   toggleInnerHTML,
+  DEALS_LIST_CLASSNAME,
 } from '@nx-bridge/constants';
 import { Deal } from '@nx-bridge/interfaces-and-types';
 import { AddFetchedDeals as AddFetchedDeals, AppState } from '@nx-bridge/store';
@@ -42,6 +44,8 @@ export class DealsListComponent implements OnInit {
     } else {
       toggleClassOnList(items, DISPLAY_NONE_CLASSNAME);
     }
+
+    toggleClassOnList([this.elRef.nativeElement.children[0] as HTMLElement], FULL_SIZE_CLASSNAME);
 
     const button = (e.currentTarget || e.target) as HTMLElement;
     toggleInnerHTML(button, this.buttonChoices);

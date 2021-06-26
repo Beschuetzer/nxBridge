@@ -1,7 +1,18 @@
 <article [class]="DEAL_DETAIL_CLASSNAME">
     <div class="{{DEAL_DETAIL_CLASSNAME}}__details">
-      <p>Dealer:{{ getDealer }}</p>
-      <p>Declarer:{{ getDeclarer }}</p>
+      <div>{{ getDealSummary }}</div>
+      <div
+        class="{{DEAL_DETAIL_CLASSNAME}}__details-hand"
+        *ngFor="let hand of hands"
+      >
+        <div
+          class="{{DEAL_DETAIL_CLASSNAME}}__details-username"
+        >{{ hand[0] }}</div>
+        <div 
+          class="{{DEAL_DETAIL_CLASSNAME}}__details-suit"
+          *ngFor="let suit of hand[1]"
+        >{{ suit }}</div>
+      </div>
     </div>
     
     <button

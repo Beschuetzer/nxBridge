@@ -1,4 +1,9 @@
 .deals-list {
+  overflow: hidden;
+  height: auto;
 
-  
+  &.full-size {
+    overflow: scroll;
+    height: 50vh;
+  }
 }

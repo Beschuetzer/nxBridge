@@ -20,3 +20,5 @@ export const HIDDEN_CLASSNAME = 'hidden';
 export const DISPLAY_NONE_CLASSNAME = 'd-none';
 export const DEALS_LIST_CLASSNAME = 'deals-list';
 export const DEAL_DETAIL_CLASSNAME = 'deal-detail';
+export const FULL_SIZE_CLASSNAME = 'full-size';
+
