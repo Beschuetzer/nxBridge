@@ -1,6 +1,6 @@
 import { Component, HostBinding, Input, OnInit } from '@angular/core';
 import { Deal, Hand } from '@nx-bridge/interfaces-and-types';
-import { DEAL_DETAIL_CLASSNAME } from '@nx-bridge/constants';
+import { DEAL_DETAIL_CLASSNAME, getIsBidPlayable } from '@nx-bridge/constants';
 
 type HandsForConsumption = [string, Hand][] | null | undefined;
 
@@ -28,39 +28,47 @@ export class DealDetailComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    this.getHands();
-    this.getDealer();
-    this.getDeclarer();
-    this.getContract();
-    this.getDealSummaryMessage();
+    this.setHands();
+    this.setDealer();
+    this.setDeclarer();
+    this.setContract();
+    this.setDealSummaryMessage();
   }
 
-  
-
-  getContract() {
+  setContract() {
     //todo: return html entitity for contract suit
-    const contract = 'contract';
-    this.contract = contract;
+    const contract = this.deal?.contract;
+    this.contract = contract ? contract : '';
   }
 
-  getDealer() {
-    //todo: can get this from bidding array
-    const dealer = 'dealer';
-    this.dealer = dealer;
+  setDealer() {
+    //todo: can set this from bidding array
+    const dealer = this.deal?.bids[0][0];
+    this.dealer = dealer ? dealer : '';
   }
 
-  getDealSummaryMessage() {
+  setDealSummaryMessage() {
     const dealSummaryMessage = 'dealSummaryMessage';
     this.dealSummaryMessage = dealSummaryMessage;
   }
 
-  getDeclarer() {
-    //todo: can get this from bidding array
-    const declarer = 'declarer';
-    this.declarer = declarer;
+  setDeclarer() {
+    //todo: can set this from bidding array
+    const declarer = 'N/A';
+
+    if (this.deal) {
+      for (let i = this.deal?.bids.length - 1; i >= 0 ; i--) {
+        const bid = this.deal?.bids[i][1];
+        if (getIsBidPlayable(bid)) {
+          this.declarer = bid[0];
+          break;
+        }
+      }
+    }
+    else this.declarer = declarer;
   }
 
-  getHands() {
+  setHands() {
     const result: HandsForConsumption = [];
     const hands = this.deal?.hands;
     if (hands) {

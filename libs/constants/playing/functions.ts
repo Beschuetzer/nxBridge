@@ -49,3 +49,8 @@ export function getCharacterFromCardAsNumber(cardAsNumber: number) {
       return "";
   }
 }
+
+export function getIsBidPlayable(bid: string) {
+  if (!bid.match(/double/i) && !bid.match(/pass/i)) return true;
+  return false;
+}

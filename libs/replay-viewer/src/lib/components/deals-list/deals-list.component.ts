@@ -14,7 +14,7 @@ import {
   DEALS_STRING,
   toggleClassOnList,
   toggleInnerHTML,
-  DEALS_LIST_CLASSNAME,
+  GAME_DETAIL_CLASSNAME,
 } from '@nx-bridge/constants';
 import { Deal } from '@nx-bridge/interfaces-and-types';
 import { AddFetchedDeals as AddFetchedDeals, AppState } from '@nx-bridge/store';
@@ -55,7 +55,7 @@ export class DealsListComponent implements OnInit {
     }
 
     toggleClassOnList(
-      [this.elRef.nativeElement.closest('.game-detail') as HTMLElement],
+      [this.elRef.nativeElement.closest(`.${GAME_DETAIL_CLASSNAME}`) as HTMLElement],
       FULL_SIZE_CLASSNAME
     );
 
