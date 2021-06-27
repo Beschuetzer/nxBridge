@@ -1,31 +1,22 @@
-
-<div class="{{GAME_DETAIL_CLASSNAME}}__header">
-  <h4
-    class="{{GAME_DETAIL_CLASSNAME}}__header-room"
-  >
-  Room: '{{game?.room?.name}}'
+<div class="{{ GAME_DETAIL_CLASSNAME }}__header">
+  <h4 class="{{ GAME_DETAIL_CLASSNAME }}__header-room">
+    Room: '{{ game?.room?.name }}'
   </h4>
-  <h6
-    class="{{GAME_DETAIL_CLASSNAME}}__header-date"
-  >
-    {{game?.completionDate | date:'short'}}
+  <h6 class="{{ GAME_DETAIL_CLASSNAME }}__header-date">
+    {{ game?.completionDate | date: 'short' }}
   </h6>
 </div>
-<div class="{{GAME_DETAIL_CLASSNAME}}__players">
-  <div class="{{GAME_DETAIL_CLASSNAME}}__players-names">
-
-    <span class="{{GAME_DETAIL_CLASSNAME}}__players-ns">
-      '{{seating?.north}}' + '{{seating?.south}}'
-    </span>
-    <span>&nbsp;vs.&nbsp;</span>
-    <span class="{{GAME_DETAIL_CLASSNAME}}__players-ew">
-      '{{seating?.east}}' + '{{seating?.west}}'
-    </span>
-  </div>
-  <div class="{{GAME_DETAIL_CLASSNAME}}__players-deal-count">
-    2 games to 4
-
-  </div>
+<div class="{{ GAME_DETAIL_CLASSNAME }}__players">
+  <span class="{{ GAME_DETAIL_CLASSNAME }}__players-ns">
+    '{{ seating?.north }}' + '{{ seating?.south }}'
+  </span>
+  <span>&nbsp;vs.&nbsp;</span>
+  <span class="{{ GAME_DETAIL_CLASSNAME }}__players-ew">
+    '{{ seating?.east }}' + '{{ seating?.west }}'
+  </span>
 </div>
-<nx-bridge-deals-list [seating]="seating" [dealsAsStrings]="game?.deals"></nx-bridge-deals-list>
-
+<nx-bridge-deals-list
+  [seating]="seating"
+  [dealsAsStrings]="game?.deals"
+  [gameRoundEndingScores]="game?.gameRoundEndingScores"
+></nx-bridge-deals-list>

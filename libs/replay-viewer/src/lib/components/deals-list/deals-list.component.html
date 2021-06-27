@@ -12,6 +12,14 @@
   <div *ngIf="!isLoading">Show Deals</div>
 </button>
 
+<div class="{{DISPLAY_NONE_CLASSNAME}} {{DEALS_LIST_CLASSNAME}}__summary">
+  <span class="{{DEALS_LIST_CLASSNAME}}__score">
+    {{summaryScoreMessage}}
+  </span>
+  <span class="{{DEALS_LIST_CLASSNAME}}__deal-count">
+    {{dealCountMessage}}
+  </span>
+</div>
 <nx-bridge-deal-detail
   *ngFor="let deal of deals"
   [deal]="deal"

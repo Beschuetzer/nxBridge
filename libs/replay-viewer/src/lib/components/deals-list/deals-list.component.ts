@@ -17,9 +17,11 @@ import {
   GAME_DETAIL_CLASSNAME,
   DEALS_LIST_CLASSNAME,
 } from '@nx-bridge/constants';
-import { Deal, Seating } from '@nx-bridge/interfaces-and-types';
+import { Deal, GameRoundEndingScores, Seating } from '@nx-bridge/interfaces-and-types';
 import { AddFetchedDeals as AddFetchedDeals, AppState } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
+
+type Winner = "EW" | "NS" | '';
 
 @Component({
   selector: 'nx-bridge-deals-list',
@@ -30,13 +32,21 @@ export class DealsListComponent implements OnInit {
   @HostBinding('class.deals-list') get classname() {
     return true;
   }
+  @Input() gameRoundEndingScores: GameRoundEndingScores | null | undefined = null;
   @Input() seating: Seating | null = null;
   @Input() dealsAsStrings: string[] | undefined = [];
   public DEALS_LIST_CLASSNAME = DEALS_LIST_CLASSNAME;
+  public DISPLAY_NONE_CLASSNAME = DISPLAY_NONE_CLASSNAME;
   public deals: Deal[] = [];
   public dealsListItems: NodeList | null | undefined = null;
   public isLoading = false;
+  public summaryScoreMessage = 'Score Summary Here';
+  public dealCountMessage = 'Deal Count Here';
   private buttonChoices: [string, string] = ['Show Deals', 'Hide Deals'];
+
+  private winner: Winner = '';
+  private northSouthScore: number | undefined = -1;
+  private eastWestScore: number | undefined = -1;
 
 
   constructor(
@@ -45,7 +55,11 @@ export class DealsListComponent implements OnInit {
     private store: Store<AppState>
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.setSummaryScoreMessage();
+    this.setDealCountMessage();
+    this.setWinners();
+  }
 
   onDealsButtonClick(e: Event) {
     const items = this.elRef.nativeElement.querySelectorAll(
@@ -56,6 +70,7 @@ export class DealsListComponent implements OnInit {
       this.getItemsFromDB();
     } else {
       toggleClassOnList(items, DISPLAY_NONE_CLASSNAME);
+      // toggleClassOnList([this.elRef.nativeElement.querySelector(`${DEALS_LIST_CLASSNAME}__summary`)], DISPLAY_NONE_CLASSNAME);
     }
 
     toggleClassOnList(
@@ -86,5 +101,33 @@ export class DealsListComponent implements OnInit {
     this.deals = deals;
     this.store.dispatch(new AddFetchedDeals(deals));
     this.isLoading = false;
+  }
+
+  private setDealCountMessage() {
+    
+    const afterWinners = ' won '
+    const betweenPlayed = ' deals to ';
+    // let NSDealsPlayed: number;
+    // let EWDealsPlayed: number;
+    
+
+    // this.dealCountMessage = `${winners}${afterWinners}${NSDealsPlayed}${betweenPlayed}${EWDealsPlayed}`;
+  }
+
+  private setWinners() {
+    let winner = "NS";
+    this.northSouthScore = this.gameRoundEndingScores?.northSouth.reduce((prev, current) => {
+      return prev + current;
+    }, 0);
+    this.eastWestScore = this.gameRoundEndingScores?.eastWest.reduce((prev, current) => {
+      return prev + current;
+    }, 0);
+    
+    if (this.eastWestScore && this.northSouthScore && this.eastWestScore > this.northSouthScore) winner = "EW";
+    this.winner = winner as Winner;
+  }
+
+  private setSummaryScoreMessage() {
+    
   }
 }
