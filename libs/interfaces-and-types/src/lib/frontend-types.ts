@@ -224,3 +224,7 @@ export type DealSummary = {
   rubberBonus: number;
   honorPoints: number;
 };
+
+export type CardValuesAsString = "Ace" | "King" |  "Queen" | "Jack" | "Ten" | "Nine" | "Eight" | "Seven" | "Six" | "Five" | "Four" | "Three" | "Two";
+
+export type Suits = "Club" | "Diamond" | "Heart" | "Spade" | "No Trump";

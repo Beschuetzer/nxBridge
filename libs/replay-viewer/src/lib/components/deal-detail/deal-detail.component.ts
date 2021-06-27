@@ -1,6 +1,6 @@
 import { Component, HostBinding, Input, OnInit } from '@angular/core';
-import { Deal, Hand } from '@nx-bridge/interfaces-and-types';
-import { DEAL_DETAIL_CLASSNAME, getIsBidPlayable } from '@nx-bridge/constants';
+import { CardValuesAsString, Deal, Hand, Suits } from '@nx-bridge/interfaces-and-types';
+import { DEAL_DETAIL_CLASSNAME, getCharValueFromCardValueString, getHtmlEntityFromSuitOrCardAsNumber, getIsBidPlayable, suitsHtmlEntities } from '@nx-bridge/constants';
 
 type HandsForConsumption = [string, Hand][] | null | undefined;
 
@@ -18,7 +18,7 @@ export class DealDetailComponent implements OnInit {
   public declarer = '';
   public dealer = '';
   public dealSummaryMessage = '';
-  public contract = '';
+  public contract = {prefix: '', htmlEntity: ''};
   public DEAL_DETAIL_CLASSNAME = ` ${DEAL_DETAIL_CLASSNAME}`;
 
   get getDealSummary() {
@@ -37,8 +37,12 @@ export class DealDetailComponent implements OnInit {
 
   setContract() {
     //todo: return html entitity for contract suit
-    const contract = this.deal?.contract;
-    this.contract = contract ? contract : '';
+    const splitContract = this.deal?.contract.split(' ');
+    if (!splitContract) return;
+    const prefix = getCharValueFromCardValueString(splitContract[0] as CardValuesAsString);
+
+    const htmlEntity = getHtmlEntityFromSuitOrCardAsNumber(splitContract?.slice(1).join(' ') as Suits)
+    this.contract = {prefix, htmlEntity};
   }
 
   setDealer() {

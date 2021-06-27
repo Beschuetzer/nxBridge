@@ -58,3 +58,5 @@ Components:
 -Pass deals in each GameDetail to DealsList
 -finish the deal viewing stuff
 -how hard would it be to make deal-detail be a table with names across top and suits along left side?
+-finish deal summary message
+-convert contract to an imgHTML
