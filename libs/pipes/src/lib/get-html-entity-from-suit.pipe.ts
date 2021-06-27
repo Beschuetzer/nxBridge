@@ -7,7 +7,8 @@ import { getHtmlEntityFromSuitOrCardAsNumber } from '@nx-bridge/constants';
 export class GetHtmlEntityFromSuitPipe implements PipeTransform {
 
   transform(suit: number[], ...args: unknown[]): string {
-    return getHtmlEntityFromSuitOrCardAsNumber(suit && suit.length > 0 ? suit[0] : -1)
+    if (!suit || suit.length <= 0) return '';
+    return getHtmlEntityFromSuitOrCardAsNumber(suit[0]);
   }
 
 }

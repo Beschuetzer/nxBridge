@@ -1,43 +1,45 @@
-<div class="{{DEAL_DETAIL_CLASSNAME}}__details">
-  
-  <div
-    class="{{DEAL_DETAIL_CLASSNAME}}__summary"
-  >
-    <span>{{dealSummaryMessagePrefix}}</span>
-    <span>{{contract.prefix}}</span>
-    <span
-      [innerHtml]="contract.htmlEntity"
-    ></span>
-    <span>{{dealSummaryMessageSuffix}}</span>
-  </div>
-
-  <div
-    class="{{DEAL_DETAIL_CLASSNAME}}__details-hand"
-    *ngFor="let hand of hands"
-  >
-    <div
-      class="{{DEAL_DETAIL_CLASSNAME}}__details-username"
-    >{{ hand[0] }}</div>
-    <div 
-      class="{{DEAL_DETAIL_CLASSNAME}}__details-suit"
-      *ngFor="let suit of hand[1]"
-    >
-      <span
-        [innerHtml]="suit | getHtmlEntityFromSuit | safeHtml"
-      >
-      </span>
-      <span>
-        - {{ suit | suitToString }}
-      </span>
-      
+<!-- <div class="deal-detail"> -->
+  <div class="{{DEAL_DETAIL_CLASSNAME}}__details">
     
+    <div
+      class="{{DEAL_DETAIL_CLASSNAME}}__summary"
+    >
+      <span>{{dealSummaryMessagePrefix}}</span>
+      <span>{{contract.prefix}}</span>
+      <span
+        [innerHtml]="contract.htmlEntity"
+      ></span>
+      <span>{{dealSummaryMessageSuffix}}</span>
+    </div>
+
+    <div
+      class="{{DEAL_DETAIL_CLASSNAME}}__details-hand"
+      *ngFor="let hand of hands"
+    >
+      <div
+        class="{{DEAL_DETAIL_CLASSNAME}}__details-username"
+      >{{ hand[0] }}</div>
+      <div 
+        class="{{DEAL_DETAIL_CLASSNAME}}__details-suit"
+        *ngFor="let suit of hand[1]"
+      >
+        <span
+          [innerHtml]="suit | getHtmlEntityFromSuit"
+        >
+        </span>
+        <span>
+          - {{ suit | suitToString }}
+        </span>
+        
+      
+      </div>
     </div>
   </div>
-</div>
 
-<button
-  [attr.data-deal]="deal?._id"
-  class="ui button color-1 hover-color-4 bg-color-4 hover-bg-color-1 {{DEAL_DETAIL_CLASSNAME}}__button"
->
-  View
-</button>
+  <button
+    [attr.data-deal]="deal"
+    class="ui button color-1 hover-color-4 bg-color-4 hover-bg-color-1 {{DEAL_DETAIL_CLASSNAME}}__button"
+  >
+    View
+  </button>
+<!-- </div> -->

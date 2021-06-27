@@ -25,8 +25,9 @@ export function getSuitFromNumber(cardAsNumber: number) {
   if (cardAsNumber === null || cardAsNumber === undefined)
     throw new Error(`Error getting suit for cardAsNumber: ${cardAsNumber}.`);
 
-  const index = Math.floor(cardAsNumber / 13);
-  return suitsAsCapitalizedStrings[index].toLowerCase();
+    const index = Math.floor(cardAsNumber / 13);
+  if (index === -1) return '';
+  return suitsAsCapitalizedStrings[index]?.toLowerCase();
 }
 
 export function getCharacterFromCardAsNumber(cardAsNumber: number) {
@@ -97,12 +98,14 @@ export function getCharValueFromCardValueString(str: CardValuesAsString | "One")
   }
 }
 
-export function getHtmlEntityFromSuitOrCardAsNumber(value: Suits | number) {
+export function getHtmlEntityFromSuitOrCardAsNumber(value: Suits | number): string {
   if (typeof value === 'number') {
     const suitAsString = getSuitFromNumber(value);
+    if (!suitAsString) return '';
+
     const htmlEntityToUse = suitsHtmlEntities[suitsAsCapitalizedStrings.findIndex(str => str.toLowerCase() === suitAsString.toLowerCase())];
 
-    return htmlEntityToUse ? htmlEntityToUse : "NT";
+    return htmlEntityToUse ? htmlEntityToUse : "";
   } 
 
   const index = suitsAsCapitalizedStrings.findIndex(s => {

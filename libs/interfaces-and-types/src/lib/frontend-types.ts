@@ -1,6 +1,6 @@
 export interface Deal extends DealCore {
   players: ObjectId[];
-  _id: string;
+  // _id: string;
 }
 
 export interface DealGameIncomplete extends DealCore {

@@ -1,0 +1,133 @@
+diff --git a/apps/frontend/src/styles/components/_deal-detail.scss b/apps/frontend/src/styles/components/_deal-detail.scss
+index 7aa6e35..5580b72 100644
+--- a/apps/frontend/src/styles/components/_deal-detail.scss
++++ b/apps/frontend/src/styles/components/_deal-detail.scss
+@@ -21,7 +21,7 @@
+     }
+ 
+     &-suit {
+-      // text-align: center;
++      text-align: center;
+     }
+ 
+   }
+diff --git a/apps/frontend/src/styles/components/_games-list.scss b/apps/frontend/src/styles/components/_games-list.scss
+index 09f805a..3acb26d 100644
+--- a/apps/frontend/src/styles/components/_games-list.scss
++++ b/apps/frontend/src/styles/components/_games-list.scss
+@@ -1,6 +1,6 @@
+ .games-list{
+   display: grid;
+-  grid-template-columns: repeat(auto-fill, minmax($default-font-size * 13.75, 1fr));
++  grid-template-columns: repeat(auto-fill, minmax($default-font-size * 10, 1fr));
+   padding: $default-font-size * 2;
+   grid-gap: $default-font-size;
+ }
+\ No newline at end of file
+diff --git a/libs/pipes/src/lib/get-html-entity-from-suit.pipe.ts b/libs/pipes/src/lib/get-html-entity-from-suit.pipe.ts
+index 19850bf..b07ce1c 100644
+--- a/libs/pipes/src/lib/get-html-entity-from-suit.pipe.ts
++++ b/libs/pipes/src/lib/get-html-entity-from-suit.pipe.ts
+@@ -7,6 +7,7 @@ import { getSuitFromNumber, suitsAsCapitalizedStrings, suitsHtmlEntities } from
+ export class GetHtmlEntityFromSuitPipe implements PipeTransform {
+ 
+   transform(suit: number[], ...args: unknown[]): string {
++    debugger;
+     const suitAsString = getSuitFromNumber(suit[0]);
+     const htmlEntityToUse = suitsHtmlEntities[suitsAsCapitalizedStrings.findIndex(str => str.toLowerCase() === suitAsString.toLowerCase())];
+ 
+diff --git a/libs/pipes/src/lib/pipes.module.ts b/libs/pipes/src/lib/pipes.module.ts
+index cf305c0..e96f772 100644
+--- a/libs/pipes/src/lib/pipes.module.ts
++++ b/libs/pipes/src/lib/pipes.module.ts
+@@ -3,21 +3,18 @@ import { CommonModule } from '@angular/common';
+ import { JoinNamesPipe } from './join-names.pipe';
+ import { SuitToStringPipe } from './suit-to-string.pipe';
+ import { GetHtmlEntityFromSuitPipe } from './get-html-entity-from-suit.pipe';
+-import { SafeHtmlPipe } from './safe-html.pipe';
+ 
+ @NgModule({
+   imports: [CommonModule],
+   declarations: [
+     JoinNamesPipe,
+     SuitToStringPipe,
+-    GetHtmlEntityFromSuitPipe,
+-    SafeHtmlPipe
++    GetHtmlEntityFromSuitPipe
+   ],
+   exports: [
+     JoinNamesPipe,
+     SuitToStringPipe,
+-    GetHtmlEntityFromSuitPipe,
+-    SafeHtmlPipe,
++    GetHtmlEntityFromSuitPipe
+   ]
+ })
+ export class PipesModule {}
+diff --git a/libs/pipes/src/lib/safe-html.pipe.spec.ts b/libs/pipes/src/lib/safe-html.pipe.spec.ts
+deleted file mode 100644
+index a1904fc..0000000
+--- a/libs/pipes/src/lib/safe-html.pipe.spec.ts
++++ /dev/null
+@@ -1,8 +0,0 @@
+-import { SafeHtmlPipe } from './safe-html.pipe';
+-
+-describe('SafeHtmlPipe', () => {
+-  it('create an instance', () => {
+-    const pipe = new SafeHtmlPipe();
+-    expect(pipe).toBeTruthy();
+-  });
+-});
+diff --git a/libs/pipes/src/lib/safe-html.pipe.ts b/libs/pipes/src/lib/safe-html.pipe.ts
+deleted file mode 100644
+index 9d660a5..0000000
+--- a/libs/pipes/src/lib/safe-html.pipe.ts
++++ /dev/null
+@@ -1,10 +0,0 @@
+-import { Pipe, PipeTransform } from '@angular/core';
+-import { DomSanitizer } from '@angular/platform-browser'
+-
+-@Pipe({ name: 'safeHtml' })
+-export class SafeHtmlPipe implements PipeTransform {
+-  constructor(private sanitized: DomSanitizer) { }
+-  transform(value: string) {
+-    return this.sanitized.bypassSecurityTrustHtml(value);
+-  }
+-}
+\ No newline at end of file
+diff --git a/libs/replay-viewer/src/lib/components/deal-detail/deal-detail.component.html b/libs/replay-viewer/src/lib/components/deal-detail/deal-detail.component.html
+index 1307e4a..e494210 100644
+--- a/libs/replay-viewer/src/lib/components/deal-detail/deal-detail.component.html
++++ b/libs/replay-viewer/src/lib/components/deal-detail/deal-detail.component.html
+@@ -11,17 +11,7 @@
+         <div 
+           class="{{DEAL_DETAIL_CLASSNAME}}__details-suit"
+           *ngFor="let suit of hand[1]"
+-        >
+-          <span
+-            [innerHtml]="suit | getHtmlEntityFromSuit | safeHtml"
+-          >
+-          </span>
+-          <span>
+-            - {{ suit | suitToString }}
+-          </span>
+-         
+-        
+-        </div>
++        >{{ suit | getHtmlEntityFromSuit }}: {{ suit | suitToString }}</div>
+       </div>
+     </div>
+     
+diff --git a/todo.txt b/todo.txt
+index bd37a06..4f2a2ec 100644
+--- a/todo.txt
++++ b/todo.txt
+@@ -57,4 +57,5 @@ Components:
+ -DealsList shows up when a button on GameDetail "Show Deals" is pressed (DealsList makes backend call to get deals and puts in store)
+ -Pass deals in each GameDetail to DealsList
+ -finish the deal viewing stuff
+--how hard would it be to make deal-detail be a table with names across top and suits along left side?
+\ No newline at end of file
++-add new component or pipe that takes hands and returns Hands
++-add deal-detail__summary which says something like "Adam play 3Heart and made it/went down 1/2/3"
+\ No newline at end of file

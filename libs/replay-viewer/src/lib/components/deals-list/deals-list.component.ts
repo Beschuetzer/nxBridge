@@ -37,6 +37,7 @@ export class DealsListComponent implements OnInit {
   @Input() dealsAsStrings: string[] | undefined = [];
   public DEALS_LIST_CLASSNAME = DEALS_LIST_CLASSNAME;
   public DISPLAY_NONE_CLASSNAME = DISPLAY_NONE_CLASSNAME;
+  public DEAL_DETAIL_CLASSNAME = DEAL_DETAIL_CLASSNAME;
   public deals: Deal[] = [];
   public dealsListItems: NodeList | null | undefined = null;
   public isLoading = false;
