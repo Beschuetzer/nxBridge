@@ -1,7 +1,7 @@
 .game-detail{
   border: $default-font-size * .1 solid var(--color-primary-1);
   border-radius: $default-font-size * .5;
-  padding: $default-font-size * .5 0 0 0;
+  // padding: 00 0 0;
   box-shadow: $scrollbar-box-shadow;
   overflow: hidden;
   // height: $default-font-size * 5;
@@ -16,24 +16,26 @@
 
   &__summary {
 
-    &.sticky {
+    // &.sticky {
       width: 100%;
       position: sticky;
-      top: $default-font-size;
-      padding: $default-font-size * .25 $default-font-size * .5;
-      backdrop-filter: blur($default-font-size);
-    }
+      top: 0;
+      padding: $default-font-size * .5;
+      background-color: rgba(var(--color-primary-1-rgb), .975);
+      color: var(--color-primary-4);
+      backdrop-filter: blur(10px);
+    // }
   }
 
   &__score {
-    margin: 0 0 $default-font-size * .5 0;
+    margin: $default-font-size * .5 0;
   }
 
   &__players {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: $default-font-size * .5 0;
+    margin: $default-font-size * .5 0 0 0;
 
     &-ew {
       text-align: right;

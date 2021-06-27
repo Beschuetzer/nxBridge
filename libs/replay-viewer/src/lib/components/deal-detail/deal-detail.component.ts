@@ -39,11 +39,11 @@ export class DealDetailComponent implements OnInit {
   }
   
   setDealSummarySuffix() {
+    //todo: need to get 'went down/up 1/2/3 etc.'
     this.dealSummaryMessageSuffix = ` and ${this.dealSummaryMessageSuffix}` 
   }
 
   setContract() {
-    //todo: return html entitity for contract suit
     const splitContract = this.deal?.contract.split(' ');
     if (!splitContract) return;
     const prefix = getCharValueFromCardValueString(splitContract[0] as CardValuesAsString);
@@ -53,20 +53,17 @@ export class DealDetailComponent implements OnInit {
   }
 
   setDealer() {
-    //todo: can set this from bidding array
     const dealer = this.deal?.bids[0][0];
     this.dealer = dealer ? dealer : '';
   }
 
   setDeclarer() {
-    //todo: can set this from bidding array
     const declarer = 'N/A';
     
     if (this.deal) {
       for (let i = this.deal?.bids.length - 1; i >= 0 ; i--) {
         const bid = this.deal?.bids[i][1];
         if (getIsBidPlayable(bid)) {
-          console.log('deal =', this.deal);
           this.declarer = this.deal?.bids[i][0];
           break;
         }

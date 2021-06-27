@@ -42,8 +42,6 @@ export class DealsListComponent implements OnInit {
   public dealCountMessage = 'Deal Count Here';
   private buttonChoices: [string, string] = ['Show Deals', 'Hide Deals'];
 
-
-
   constructor(
     private elRef: ElementRef,
     private http: HttpClient,
@@ -59,11 +57,13 @@ export class DealsListComponent implements OnInit {
       `.${DEAL_DETAIL_CLASSNAME}`
     );
 
+    // let isOpen = true;
+    // if (items?.length > 0 && items[0]?.classList?.contains(DISPLAY_NONE_CLASSNAME)) isOpen = false;
+
     if (!items || items.length <= 0) {
       this.getItemsFromDB();
     } else {
       toggleClassOnList(items, DISPLAY_NONE_CLASSNAME);
-      
     }
 
     const el = this.elRef.nativeElement.querySelector(`.${DEALS_LIST_CLASSNAME}__summary`);
