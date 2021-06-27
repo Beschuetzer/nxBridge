@@ -1,44 +1,40 @@
-<!-- <div class="deal-detail"> -->
-  <div class="{{DEAL_DETAIL_CLASSNAME}}__details">
-    
-    <div
-      class="{{DEAL_DETAIL_CLASSNAME}}__summary"
-    >
-      {{dealIndex !== null ? dealIndex + 1 : 0}}): &nbsp;
-      <span>{{dealSummaryMessagePrefix}}</span>
-      <span>{{contract.prefix}}</span>
-      <span
-        [innerHtml]="contract.htmlEntity"
-      ></span>
-      <span>{{dealSummaryMessageSuffix}}</span>
-    </div>
-
-    <div
-      class="{{DEAL_DETAIL_CLASSNAME}}__details-hand"
-      *ngFor="let hand of hands"
-    >
-      <div
-        class="{{DEAL_DETAIL_CLASSNAME}}__details-username"
-      >{{ hand[0] }}</div>
-      <div 
-        class="{{DEAL_DETAIL_CLASSNAME}}__details-suit"
-        *ngFor="let suit of hand[1]"
-      >
-        <span
-          [innerHtml]="suit | getHtmlEntityFromSuit"
-        >
-        </span>
-        <span>
-          - {{ suit | suitToString }}
-        </span>
+<div class="{{ DEAL_DETAIL_CLASSNAME }}__details">
+  <div class="{{ DEAL_DETAIL_CLASSNAME }}__summary">
+    <span class="{{ DEAL_DETAIL_CLASSNAME }}__summary-number">
+      {{ dealIndex !== null ? dealIndex + 1 : 0 }}): &nbsp;
+    </span>
+    <div class="{{ DEAL_DETAIL_CLASSNAME }}__summary-text">
+      <div>
+        <span>{{ dealSummaryMessagePrefix }}</span>
+        <span>{{ contract.prefix }}</span>
+        <span [innerHtml]="contract.htmlEntity"></span>
       </div>
+      <div>{{ dealSummaryMessageSuffix }}</div>
     </div>
   </div>
 
-  <button
-    [attr.data-deal]="deal"
-    class="ui button color-1 hover-color-4 bg-color-4 hover-bg-color-1 {{DEAL_DETAIL_CLASSNAME}}__button"
+  <div
+    class="{{ DEAL_DETAIL_CLASSNAME }}__details-hand"
+    *ngFor="let hand of hands"
   >
-    View
-  </button>
-<!-- </div> -->
+    <div class="{{ DEAL_DETAIL_CLASSNAME }}__details-username">
+      {{ hand[0] }}
+    </div>
+    <div
+      class="{{ DEAL_DETAIL_CLASSNAME }}__details-suit"
+      *ngFor="let suit of hand[1]"
+    >
+      <span [innerHtml]="suit | getHtmlEntityFromSuit"> </span>
+      <span> - {{ suit | suitToString }} </span>
+    </div>
+  </div>
+</div>
+
+<button
+  [attr.data-deal]="deal"
+  class="ui button color-1 hover-color-4 bg-color-4 hover-bg-color-1 {{
+    DEAL_DETAIL_CLASSNAME
+  }}__button"
+>
+  View
+</button>

@@ -1,6 +1,6 @@
 import { Component, HostBinding, Input, OnInit } from '@angular/core';
-import { CardValuesAsString, Deal, Hand, Seating, Suits } from '@nx-bridge/interfaces-and-types';
-import { cardinalDirections, DEAL_DETAIL_CLASSNAME, getCharValueFromCardValueString, getDirectionFromSeating, getHtmlEntityFromSuitOrCardAsNumber, getIsBidPlayable, suitsHtmlEntities } from '@nx-bridge/constants';
+import { CardinalDirection, CardValuesAsString, Deal, Hand, Seating, Suits } from '@nx-bridge/interfaces-and-types';
+import { DEAL_DETAIL_CLASSNAME, getCharValueFromCardValueString, getDirectionFromSeating, getHtmlEntityFromSuitOrCardAsNumber, getIsBidPlayable, getPartnerFromDirection } from '@nx-bridge/constants';
 
 type HandsForConsumption = [string, Hand][] | null | undefined;
 
@@ -15,6 +15,7 @@ export class DealDetailComponent implements OnInit {
   }
   @Input() deal: Deal | null = null;
   @Input() dealIndex: number | null = null;
+  @Input() seating: Seating | null = null;
   public hands: HandsForConsumption = null;
   public declarer = '';
   public dealer = '';
@@ -47,7 +48,7 @@ export class DealDetailComponent implements OnInit {
   setDealSummarySuffix() {
     //todo: need to get 'went down/up 1/2/3 etc.'
     const madeAmount = this.getMadeAmountString();
-    this.dealSummaryMessageSuffix = ` and made ${madeAmount}` 
+    this.dealSummaryMessageSuffix = ` and ${madeAmount}` 
   }
 
   setContract() {
@@ -95,19 +96,42 @@ export class DealDetailComponent implements OnInit {
 
   private getMadeAmountString() {
     const playingPlayers: string[] = this.getPlayingPlayers();
-    const amountNeeded = +this.contract.prefix;
+    const amountNeeded = +this.contract.prefix + 6;
     const amountMade = this.deal?.roundWinners.reduce((count, roundWinner) => {
-      debugger;
       if (playingPlayers.includes(roundWinner[0])) return count + 1;
       return count;
-    }, 0)
+    }, 0);
+    console.log('amountMade =', amountMade);
+    console.log('amountNeeded =', amountNeeded);
+    
+    if (!amountMade) return "Error in getMadeAmountString()";
+    const difference = Math.abs(amountMade - amountNeeded);
+
+    let result = this.getMadeItString();
+    if (amountMade < amountNeeded) result = `went down ${difference}`;
+    else if (amountMade > amountNeeded) result = `made ${difference} ${difference === 1 ? "overtrick" : "overtricks"}`;
+
+    return result;
   }
   
   private getPlayingPlayers() {
     //return the declarer and the declarer's partner as an array of strings
+    if (!this.seating) throw new Error('Problem with this.seating in deal-detail');
     const declarersDirection = getDirectionFromSeating(this.seating, this.declarer);
-    const declarersPartner = getPartnerFromDirection(this.seating, declarersDirection);
+    const declarersPartner = getPartnerFromDirection(this.seating, declarersDirection as CardinalDirection);
     return [this.declarer, declarersPartner];
+  }
+
+  private getMadeItString() {
+    const options = [
+      'JUST made it',
+      'BARELY made it',
+      'almost lost the contract'
+    ]
+
+    //returns a random integer from lower_bound_inclusive to upper_bound_exclusive
+    const randomInt = 0 + Math.floor(Math.random() * (options.length - .00001));
+    return options[randomInt];
   }
 
   

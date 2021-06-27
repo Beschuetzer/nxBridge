@@ -34,9 +34,20 @@
   }
 
   &__summary {
-    font-size: $default-font-size * .75;
+    font-size: $default-font-size * .625;
     font-weight: 700;
     padding: $default-font-size $default-font-size * .5 $default-font-size 0;
+    display: grid;
+    grid-template-columns: min-content 1fr;
+    grid-column-gap: $default-font-size * .5;
+    align-items: center;
+    // text-align: center;
+
+    &-number {
+      line-height: 0;
+      font-size: $default-font-size * .85;
+      color: var(--color-primary-2);
+    }
   }
 
   & button {

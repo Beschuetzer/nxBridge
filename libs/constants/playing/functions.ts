@@ -1,4 +1,4 @@
-import { CardinalDirections, CardValuesAsString, Seating, Suits } from '@nx-bridge/interfaces-and-types';
+import { CardinalDirection, CardValuesAsString, Seating, Suits } from '@nx-bridge/interfaces-and-types';
 import { debug } from 'node:console';
 import {
   cardinalDirections,
@@ -131,7 +131,7 @@ export function getDirectionFromSeating(seating: Seating, username: string) {
   throw new Error('Invalid username or seating in getDirectionFromSeating()');
 }
 
-export function getPartnerFromDirection(seating: Seating, direction: CardinalDirections) {
+export function getPartnerFromDirection(seating: Seating, direction: CardinalDirection) {
   if (direction.toLowerCase() === cardinalDirections[0].toLowerCase()) return seating.south;
   else if (direction.toLowerCase() === cardinalDirections[1].toLowerCase()) return seating.west;
   else if (direction.toLowerCase() === cardinalDirections[2].toLowerCase()) return seating.north;
