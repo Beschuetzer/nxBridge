@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, HostBinding, Input, OnInit } from '@angular/core';
 import { Deal, Hand } from '@nx-bridge/interfaces-and-types';
 import { DEAL_DETAIL_CLASSNAME } from '@nx-bridge/constants';
 
@@ -10,6 +10,9 @@ type HandsForConsumption = [string, Hand][] | null | undefined;
   styleUrls: ['./deal-detail.component.scss'],
 })
 export class DealDetailComponent implements OnInit {
+  @HostBinding('class.deal-detail') get classname() {
+    return true;
+  }
   @Input() deal: Deal | null = null;
   public hands: HandsForConsumption = null;
   public declarer = '';

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostBinding, OnInit } from '@angular/core';
 
 @Component({
   selector: 'nx-bridge-games-list-view',
@@ -6,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./games-list-view.component.scss']
 })
 export class GamesListViewComponent implements OnInit {
+  @HostBinding('class.games-list-view') get classname() {return true};
   public username = '';
 
   constructor() { }

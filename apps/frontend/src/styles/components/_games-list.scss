@@ -1,4 +1,5 @@
-.games-list{
+.games-list {
+  width: 100%;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax($default-font-size * 13.75, 1fr));
   padding: $default-font-size * 2;

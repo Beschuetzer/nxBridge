@@ -1,19 +1,17 @@
-<article
-  class="game-detail"
->
-  <h4 class="game-detail__header">
-    '{{game?.room?.name}}' on <span>{{game?.completionDate | date:'short'}}</span>
-  </h4>
-  <div class="game-detail__players">
-    {{usernames | joinNames}}
-  </div>
-  <!-- <div class="game-detail__players">
-    <div
-      *ngFor="let username of usernames; let i = index"
-    >
-      '{{username}}'
-    </div>
-  </div> -->
 
-  <nx-bridge-deals-list [dealsAsStrings]="game?.deals"></nx-bridge-deals-list>
-</article>
+<h4 class="game-detail__header">
+  '{{game?.room?.name}}' on <span>{{game?.completionDate | date:'short'}}</span>
+</h4>
+<div class="game-detail__players">
+  {{usernames | joinNames}}
+</div>
+<!-- <div class="game-detail__players">
+  <div
+    *ngFor="let username of usernames; let i = index"
+  >
+    '{{username}}'
+  </div>
+</div> -->
+
+<nx-bridge-deals-list [dealsAsStrings]="game?.deals"></nx-bridge-deals-list>
+

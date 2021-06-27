@@ -1,4 +1,10 @@
-import { Component, ElementRef, Input, OnInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostBinding,
+  Input,
+  OnInit,
+} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {
   DEAL_DETAIL_CLASSNAME,
@@ -20,6 +26,9 @@ import { Store } from '@ngrx/store';
   styleUrls: ['./deals-list.component.scss'],
 })
 export class DealsListComponent implements OnInit {
+  @HostBinding('class.deals-list') get classname() {
+    return true;
+  }
   @Input() dealsAsStrings: string[] | undefined = [];
   public deals: Deal[] = [];
   public dealsListItems: NodeList | null | undefined = null;
@@ -45,7 +54,10 @@ export class DealsListComponent implements OnInit {
       toggleClassOnList(items, DISPLAY_NONE_CLASSNAME);
     }
 
-    toggleClassOnList([this.elRef.nativeElement.children[0] as HTMLElement], FULL_SIZE_CLASSNAME);
+    toggleClassOnList(
+      [this.elRef.nativeElement.closest('.game-detail') as HTMLElement],
+      FULL_SIZE_CLASSNAME
+    );
 
     const button = (e.currentTarget || e.target) as HTMLElement;
     toggleInnerHTML(button, this.buttonChoices);

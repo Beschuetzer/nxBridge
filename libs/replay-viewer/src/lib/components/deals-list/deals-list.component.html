@@ -1,20 +1,20 @@
-<article class="deals-list">
-  <button
-    (click)="onDealsButtonClick($event)"
-    class="ui button color-4 bg-color-1 hover-color-1 hover-bg-color-4"
-    type="button"
-    style="width: 100%; max-width: 12.8rem"
-  >
-    <div *ngIf="isLoading">
-      Fetching...
-      <i class="notched circle loading icon"></i>
 
-    </div>
-    <div *ngIf="!isLoading">Show Deals</div>
-  </button>
+<button
+  (click)="onDealsButtonClick($event)"
+  class="ui button color-4 bg-color-1 hover-color-1 hover-bg-color-4"
+  type="button"
+  style="width: 100%; max-width: 12.8rem"
+>
+  <div *ngIf="isLoading">
+    Fetching...
+    <i class="notched circle loading icon"></i>
 
-  <nx-bridge-deal-detail
-    *ngFor="let deal of deals"
-    [deal]="deal"
-  ></nx-bridge-deal-detail>
-</article>
+  </div>
+  <div *ngIf="!isLoading">Show Deals</div>
+</button>
+
+<nx-bridge-deal-detail
+  *ngFor="let deal of deals"
+  [deal]="deal"
+></nx-bridge-deal-detail>
+
