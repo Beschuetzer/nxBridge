@@ -17,13 +17,11 @@ export class DealDetailComponent implements OnInit {
   public hands: HandsForConsumption = null;
   public declarer = '';
   public dealer = '';
-  public dealSummaryMessage = '';
+  public dealSummaryMessagePrefix = '';
+  public dealSummaryMessageContract = '';
+  public dealSummaryMessageSuffix = '';
   public contract = {prefix: '', htmlEntity: ''};
   public DEAL_DETAIL_CLASSNAME = ` ${DEAL_DETAIL_CLASSNAME}`;
-
-  get getDealSummary() {
-    return `${this.dealer} played ${this.contract} and ${this.dealSummaryMessage}`;
-  }
 
   constructor() {}
 
@@ -32,7 +30,16 @@ export class DealDetailComponent implements OnInit {
     this.setDealer();
     this.setDeclarer();
     this.setContract();
-    this.setDealSummaryMessage();
+    this.setDealSummaryPrefix();
+    this.setDealSummarySuffix();
+  }
+
+  setDealSummaryPrefix() {
+    this.dealSummaryMessagePrefix = `${this.dealer} played `; 
+  }
+  
+  setDealSummarySuffix() {
+    this.dealSummaryMessageSuffix = ` and ${this.dealSummaryMessageSuffix}` 
   }
 
   setContract() {
@@ -49,11 +56,6 @@ export class DealDetailComponent implements OnInit {
     //todo: can set this from bidding array
     const dealer = this.deal?.bids[0][0];
     this.dealer = dealer ? dealer : '';
-  }
-
-  setDealSummaryMessage() {
-    const dealSummaryMessage = 'dealSummaryMessage';
-    this.dealSummaryMessage = dealSummaryMessage;
   }
 
   setDeclarer() {

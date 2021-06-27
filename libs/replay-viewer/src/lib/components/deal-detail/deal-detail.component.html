@@ -1,6 +1,17 @@
 <article [class]="DEAL_DETAIL_CLASSNAME">
     <div class="{{DEAL_DETAIL_CLASSNAME}}__details">
-      <div>{{ getDealSummary }}</div>
+      
+      <div
+        class="{{DEAL_DETAIL_CLASSNAME}}__summary"
+      >
+        <span>{{dealSummaryMessagePrefix}}</span>
+        <span>{{contract.prefix}}</span>
+        <span
+          [innerHtml]="contract.htmlEntity"
+        ></span>
+        <span>{{dealSummaryMessageSuffix}}</span>
+      </div>
+
       <div
         class="{{DEAL_DETAIL_CLASSNAME}}__details-hand"
         *ngFor="let hand of hands"
