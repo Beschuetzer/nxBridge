@@ -15,7 +15,7 @@ export class SuitToStringPipe implements PipeTransform {
 
       for (let i = 0; i < suitsLocal.length; i++) {
         const cardAsNumber = suitsLocal[i];
-        cardsAsChar.push(getCharacterFromCardAsNumber(cardAsNumber % cardsPerSuit));
+        cardsAsChar.push(getCharacterFromCardAsNumber(cardAsNumber % cardsPerSuit, true));
       }
 
       return cardsAsChar.join(',');

@@ -4,7 +4,7 @@ $game-summary-border-bottom: 1px solid var(--color-primary-3);
 
 .game-detail{
   border: $default-font-size * .1 solid var(--color-primary-1);
-  border-radius: $default-font-size * .5;
+  border-radius: 6px;
   // padding: 00 0 0;
   box-shadow: $scrollbar-box-shadow;
   overflow: hidden;
@@ -14,8 +14,12 @@ $game-summary-border-bottom: 1px solid var(--color-primary-3);
   justify-content: space-between;
   position: relative;
 
+  &::-webkit-scrollbar-thumb, &::-webkit-scrollbar-track, &::-webkit-scrollbar-track-piece {
+    border-radius: $default-font-size * .5 !important;
+  }
+
   & > * {
-    padding: 0 $default-font-size * .5;
+    padding: 0 $game-detail-padding-sides;
   }
 
   &__summary {
@@ -24,7 +28,7 @@ $game-summary-border-bottom: 1px solid var(--color-primary-3);
       width: 100%;
       position: sticky;
       top: 0;
-      padding: $default-font-size * .5;
+      padding: $game-detail-padding-sides;
       background-color: $game-summary-bg-color;
       color: $game-summary-color;
       // backdrop-filter: blur(10px);
@@ -33,10 +37,10 @@ $game-summary-border-bottom: 1px solid var(--color-primary-3);
   }
 
   &__score {
-    // margin: $default-font-size * .5 0;
+    // margin: $game-detail-padding-sides 0;
     background-color: $game-summary-bg-color;
     color: $game-summary-color;
-    // padding-bottom: $default-font-size * .5;
+    // padding-bottom: $game-detail-padding-sides;
     border-bottom: $game-summary-border-bottom;
     display: flex;
     justify-content: space-between;
@@ -47,7 +51,7 @@ $game-summary-border-bottom: 1px solid var(--color-primary-3);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: $default-font-size * .5 0 0 0;
+    margin: $game-detail-padding-sides 0 0 0;
 
     &-ew {
       text-align: right;

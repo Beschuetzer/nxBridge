@@ -48,13 +48,13 @@ export class DealDetailComponent implements OnInit {
   setDealSummarySuffix() {
     //todo: need to get 'went down/up 1/2/3 etc.'
     const madeAmount = this.getMadeAmountString();
-    this.dealSummaryMessageSuffix = ` and ${madeAmount}` 
+    this.dealSummaryMessageSuffix = ` and ${madeAmount}.` 
   }
 
   setContract() {
     const splitContract = this.deal?.contract.split(' ');
     if (!splitContract) return;
-    const prefix = getCharValueFromCardValueString(splitContract[0] as CardValuesAsString);
+    const prefix = getCharValueFromCardValueString(splitContract[0] as CardValuesAsString, true);
 
     const htmlEntity = getHtmlEntityFromSuitOrCardAsNumber(splitContract?.slice(1).join(' ') as Suits)
     this.contract = {prefix, htmlEntity};

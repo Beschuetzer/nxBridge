@@ -1,3 +1,4 @@
+
 .deal-detail {
   display: grid;
   grid-template-columns: 1fr min-content;
@@ -5,14 +6,16 @@
   border-top: 1px solid rgba(var(--color-primary-1-rgb), .5);
   // grid-column-gap: $default-font-size * .75;
 
-  & > * {
-    padding: 0 $default-font-size * .5;
-  }
+
 
   &__details{
     display: grid;
     grid-template-rows: repeat(5, min-content);
     grid-row-gap: $default-font-size * .25;
+
+    & > * {
+      padding: 0 $game-detail-padding-sides;
+    }
 
     &-hand{
       display: grid;
@@ -36,17 +39,17 @@
   &__summary {
     font-size: $default-font-size * .625;
     font-weight: 700;
-    padding: $default-font-size $default-font-size * .5 $default-font-size 0;
+    padding: $game-detail-padding-sides;
     display: grid;
     grid-template-columns: min-content 1fr;
-    grid-column-gap: $default-font-size * .5;
+    grid-column-gap: $game-detail-padding-sides;
     align-items: center;
     // text-align: center;
 
     &-number {
+      font-weight: 100;
       line-height: 0;
-      font-size: $default-font-size * .85;
-      color: var(--color-primary-2);
+      font-size: $default-font-size * 1;
     }
   }
 

@@ -31,7 +31,7 @@ export function getSuitFromNumber(cardAsNumber: number) {
   return suitsAsCapitalizedStrings[index]?.toLowerCase();
 }
 
-export function getCharacterFromCardAsNumber(cardAsNumber: number) {
+export function getCharacterFromCardAsNumber(cardAsNumber: number, getLetterForTen = false) {
   switch (cardAsNumber) {
     case 0:
       return '2';
@@ -50,6 +50,7 @@ export function getCharacterFromCardAsNumber(cardAsNumber: number) {
     case 7:
       return '9';
     case 8:
+      if (getLetterForTen) return 'T';
       return '10';
     case 9:
       return 'J';
@@ -64,7 +65,7 @@ export function getCharacterFromCardAsNumber(cardAsNumber: number) {
   }
 }
 
-export function getCharValueFromCardValueString(str: CardValuesAsString | "One") {
+export function getCharValueFromCardValueString(str: CardValuesAsString | "One", getLetterForTen = false) {
   switch (str) {
     case 'Ace':
       return 'A';
@@ -75,6 +76,7 @@ export function getCharValueFromCardValueString(str: CardValuesAsString | "One")
     case 'Jack':
       return 'J';
     case 'Ten':
+      if (getLetterForTen) return 'T';
       return '10';
     case 'Nine':
       return '9';
