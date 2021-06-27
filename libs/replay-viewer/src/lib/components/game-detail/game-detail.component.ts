@@ -1,6 +1,6 @@
 import { Component, HostBinding, Input, OnInit } from '@angular/core';
 import { GAME_DETAIL_CLASSNAME } from '@nx-bridge/constants';
-import { Game } from '@nx-bridge/interfaces-and-types';
+import { Game, Seating } from '@nx-bridge/interfaces-and-types';
 
 @Component({
   selector: 'nx-bridge-game-detail',
@@ -13,6 +13,7 @@ export class GameDetailComponent implements OnInit {
   public usernames: string[] | null = null;
   public userIds: string[] | null = null;
   public GAME_DETAIL_CLASSNAME = GAME_DETAIL_CLASSNAME;
+  public seating: Seating | null = null;
 
   constructor(
 
@@ -21,6 +22,7 @@ export class GameDetailComponent implements OnInit {
   ngOnInit(): void {
     this.usernames = this.getUsersnamesFromGame(this.game as Game);
     this.userIds = this.getUserIdsFromGame(this.game as Game);
+    this.seating = this.game?.room.seating as Seating;
   }
 
   private getUserIdsFromGame (game: Game) {

@@ -17,7 +17,7 @@ import {
   GAME_DETAIL_CLASSNAME,
   DEALS_LIST_CLASSNAME,
 } from '@nx-bridge/constants';
-import { Deal } from '@nx-bridge/interfaces-and-types';
+import { Deal, Seating } from '@nx-bridge/interfaces-and-types';
 import { AddFetchedDeals as AddFetchedDeals, AppState } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
 
@@ -30,6 +30,7 @@ export class DealsListComponent implements OnInit {
   @HostBinding('class.deals-list') get classname() {
     return true;
   }
+  @Input() seating: Seating | null = null;
   @Input() dealsAsStrings: string[] | undefined = [];
   public DEALS_LIST_CLASSNAME = DEALS_LIST_CLASSNAME;
   public deals: Deal[] = [];

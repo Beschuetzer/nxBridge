@@ -35,7 +35,7 @@ export class DealDetailComponent implements OnInit {
   }
 
   setDealSummaryPrefix() {
-    this.dealSummaryMessagePrefix = `${this.dealer} played `; 
+    this.dealSummaryMessagePrefix = `${this.declarer} played `; 
   }
   
   setDealSummarySuffix() {
@@ -61,12 +61,13 @@ export class DealDetailComponent implements OnInit {
   setDeclarer() {
     //todo: can set this from bidding array
     const declarer = 'N/A';
-
+    
     if (this.deal) {
       for (let i = this.deal?.bids.length - 1; i >= 0 ; i--) {
         const bid = this.deal?.bids[i][1];
         if (getIsBidPlayable(bid)) {
-          this.declarer = bid[0];
+          console.log('deal =', this.deal);
+          this.declarer = this.deal?.bids[i][0];
           break;
         }
       }

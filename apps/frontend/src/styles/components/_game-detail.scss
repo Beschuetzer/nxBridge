@@ -15,9 +15,10 @@
   }
 
   &__players {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    // display: flex;
+    // justify-content: space-between;
+    // align-items: center;
+    text-align: center;
     margin: $default-font-size * .5 0;
 
   }  

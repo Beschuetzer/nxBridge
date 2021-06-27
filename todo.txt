@@ -60,3 +60,5 @@ Components:
 -how hard would it be to make deal-detail be a table with names across top and suits along left side?
 -finish deal summary message
 -convert contract to an imgHTML
+
+-instaed of players: ... say 'Adam' and 'James'  vs  'Tim' and Andrew'  and below say the deal count (3 deals to 0)

@@ -36,7 +36,7 @@
 </div>
 
 <button
-  [attr.data-deal]="deal"
+  [attr.data-deal]="deal?._id"
   class="ui button color-1 hover-color-4 bg-color-4 hover-bg-color-1 {{DEAL_DETAIL_CLASSNAME}}__button"
 >
   View
