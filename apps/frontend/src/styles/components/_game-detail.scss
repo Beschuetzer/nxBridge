@@ -1,20 +1,44 @@
 .game-detail{
   border: $default-font-size * .1 solid var(--color-primary-1);
   border-radius: $default-font-size * .5;
-  padding: $default-font-size * .5 $default-font-size * .5 0 $default-font-size * .5;
+  padding: $default-font-size * .5 0 0 0;
   box-shadow: $scrollbar-box-shadow;
   overflow: hidden;
   height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+
+  & > * {
+    padding: 0 $default-font-size * .5;
+  }
 
   &__players {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin: $default-font-size * .5 0;
+
   }  
 
   &__header{
-    
-    
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-content: space-between;;
+    align-items: center;
+
+    & > * {
+      margin: 0;
+    }
+
+    &-room {
+      text-align: left;
+    }
+
+    &-date {
+      text-align: right;
+    }
   }
 
   &.full-size {

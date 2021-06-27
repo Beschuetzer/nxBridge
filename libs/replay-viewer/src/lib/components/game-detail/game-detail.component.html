@@ -1,10 +1,19 @@
 
-<h4 class="game-detail__header">
-  '{{game?.room?.name}}' on <span>{{game?.completionDate | date:'short'}}</span>
-</h4>
-<div class="game-detail__players">
-  {{usernames | joinNames}}
+<div class="{{GAME_DETAIL_CLASSNAME}}__header">
+  <h4
+    class="{{GAME_DETAIL_CLASSNAME}}__header-room"
+  >
+  Room: '{{game?.room?.name}}'
+  </h4>
+  <h6
+    class="{{GAME_DETAIL_CLASSNAME}}__header-date"
+  >
+    {{game?.completionDate | date:'short'}}
+  </h6>
 </div>
+<h5 class="{{GAME_DETAIL_CLASSNAME}}__players">
+  Players: {{usernames | joinNames}}
+</h5>
 <!-- <div class="game-detail__players">
   <div
     *ngFor="let username of usernames; let i = index"

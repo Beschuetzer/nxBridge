@@ -62,7 +62,7 @@ export function getCharacterFromCardAsNumber(cardAsNumber: number) {
   }
 }
 
-export function getCharValueFromCardValueString(str: CardValuesAsString) {
+export function getCharValueFromCardValueString(str: CardValuesAsString | "One") {
   switch (str) {
     case 'Ace':
       return 'A';
@@ -90,6 +90,8 @@ export function getCharValueFromCardValueString(str: CardValuesAsString) {
       return '3';
     case 'Two':
       return '2';
+    case 'One':
+      return '1';
     default:
       return '';
   }

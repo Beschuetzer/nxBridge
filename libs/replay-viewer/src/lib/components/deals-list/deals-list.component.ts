@@ -15,6 +15,7 @@ import {
   toggleClassOnList,
   toggleInnerHTML,
   GAME_DETAIL_CLASSNAME,
+  DEALS_LIST_CLASSNAME,
 } from '@nx-bridge/constants';
 import { Deal } from '@nx-bridge/interfaces-and-types';
 import { AddFetchedDeals as AddFetchedDeals, AppState } from '@nx-bridge/store';
@@ -30,10 +31,12 @@ export class DealsListComponent implements OnInit {
     return true;
   }
   @Input() dealsAsStrings: string[] | undefined = [];
+  public DEALS_LIST_CLASSNAME = DEALS_LIST_CLASSNAME;
   public deals: Deal[] = [];
   public dealsListItems: NodeList | null | undefined = null;
   public isLoading = false;
   private buttonChoices: [string, string] = ['Show Deals', 'Hide Deals'];
+
 
   constructor(
     private elRef: ElementRef,

@@ -1,4 +1,5 @@
 import { Component, HostBinding, Input, OnInit } from '@angular/core';
+import { GAME_DETAIL_CLASSNAME } from '@nx-bridge/constants';
 import { Game } from '@nx-bridge/interfaces-and-types';
 
 @Component({
@@ -11,6 +12,7 @@ export class GameDetailComponent implements OnInit {
   @Input() game: Game | null = null;
   public usernames: string[] | null = null;
   public userIds: string[] | null = null;
+  public GAME_DETAIL_CLASSNAME = GAME_DETAIL_CLASSNAME;
 
   constructor(
 
