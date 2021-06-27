@@ -195,6 +195,7 @@ export type UndoRequest = {
 };
 
 export type Seating = {
+  [key: string]: string,
   north: string;
   south: string;
   east: string;
@@ -227,5 +228,5 @@ export type DealSummary = {
 };
 
 export type CardValuesAsString = "Ace" | "King" |  "Queen" | "Jack" | "Ten" | "Nine" | "Eight" | "Seven" | "Six" | "Five" | "Four" | "Three" | "Two";
-
+export type CardinalDirections = "North" | "South" | "East" | "West" | "north" | "south" | "east" | "west";
 export type Suits = "Club" | "Diamond" | "Heart" | "Spade" | "No Trump";

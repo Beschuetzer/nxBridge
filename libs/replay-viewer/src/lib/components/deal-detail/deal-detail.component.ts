@@ -1,6 +1,6 @@
 import { Component, HostBinding, Input, OnInit } from '@angular/core';
-import { CardValuesAsString, Deal, Hand, Suits } from '@nx-bridge/interfaces-and-types';
-import { DEAL_DETAIL_CLASSNAME, getCharValueFromCardValueString, getHtmlEntityFromSuitOrCardAsNumber, getIsBidPlayable, suitsHtmlEntities } from '@nx-bridge/constants';
+import { CardValuesAsString, Deal, Hand, Seating, Suits } from '@nx-bridge/interfaces-and-types';
+import { cardinalDirections, DEAL_DETAIL_CLASSNAME, getCharValueFromCardValueString, getDirectionFromSeating, getHtmlEntityFromSuitOrCardAsNumber, getIsBidPlayable, suitsHtmlEntities } from '@nx-bridge/constants';
 
 type HandsForConsumption = [string, Hand][] | null | undefined;
 
@@ -14,6 +14,7 @@ export class DealDetailComponent implements OnInit {
     return true;
   }
   @Input() deal: Deal | null = null;
+  @Input() dealIndex: number | null = null;
   public hands: HandsForConsumption = null;
   public declarer = '';
   public dealer = '';
@@ -24,6 +25,11 @@ export class DealDetailComponent implements OnInit {
   public DEAL_DETAIL_CLASSNAME = ` ${DEAL_DETAIL_CLASSNAME}`;
 
   constructor() {}
+
+  // get getDealNumber() {
+  //   if (!this.dealIndex || this.dealIndex <= 0) return "N/A";
+  //   else if (this.dealIndex === 1) return "1st";
+  // }
 
   ngOnInit(): void {
     this.setHands();
@@ -40,7 +46,8 @@ export class DealDetailComponent implements OnInit {
   
   setDealSummarySuffix() {
     //todo: need to get 'went down/up 1/2/3 etc.'
-    this.dealSummaryMessageSuffix = ` and ${this.dealSummaryMessageSuffix}` 
+    const madeAmount = this.getMadeAmountString();
+    this.dealSummaryMessageSuffix = ` and made ${madeAmount}` 
   }
 
   setContract() {
@@ -85,5 +92,23 @@ export class DealDetailComponent implements OnInit {
       this.hands = result;
     }
   }
+
+  private getMadeAmountString() {
+    const playingPlayers: string[] = this.getPlayingPlayers();
+    const amountNeeded = +this.contract.prefix;
+    const amountMade = this.deal?.roundWinners.reduce((count, roundWinner) => {
+      debugger;
+      if (playingPlayers.includes(roundWinner[0])) return count + 1;
+      return count;
+    }, 0)
+  }
+  
+  private getPlayingPlayers() {
+    //return the declarer and the declarer's partner as an array of strings
+    const declarersDirection = getDirectionFromSeating(this.seating, this.declarer);
+    const declarersPartner = getPartnerFromDirection(this.seating, declarersDirection);
+    return [this.declarer, declarersPartner];
+  }
+
   
 }

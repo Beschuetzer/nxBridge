@@ -18,7 +18,8 @@
   </span>
 </div>
 <nx-bridge-deal-detail
-  *ngFor="let deal of deals"
+  *ngFor="let deal of deals; let i = index"
   [deal]="deal"
+  [dealIndex]="i"
 ></nx-bridge-deal-detail>
 

@@ -1,7 +1,8 @@
 export const cardsPerSuit = 13;
 export const minCardValue = 0;
 export const maxCardValue = 51;
-
+export const cardinalDirections = ['north', 'east', 'south', 'west'];
+export const locations = ['top', 'right', 'bottom', 'left'];
 export const suits = {
   clubs: "clubs",
   diamonds: "diamonds",

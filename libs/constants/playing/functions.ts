@@ -1,6 +1,7 @@
-import { CardValuesAsString, Suits } from '@nx-bridge/interfaces-and-types';
+import { CardinalDirections, CardValuesAsString, Seating, Suits } from '@nx-bridge/interfaces-and-types';
 import { debug } from 'node:console';
 import {
+  cardinalDirections,
   cardsPerSuit,
   cardValuesAsStrings,
   maxCardValue,
@@ -118,4 +119,22 @@ export function getHtmlEntityFromSuitOrCardAsNumber(value: Suits | number): stri
 export function getIsBidPlayable(bid: string) {
   if (!bid.match(/double/i) && !bid.match(/pass/i)) return true;
   return false;
+}
+
+export function getDirectionFromSeating(seating: Seating, username: string) {
+  for (const direction in seating) {
+    if (Object.prototype.hasOwnProperty.call(seating, direction)) {
+      const usernameInSeating = seating[direction];
+      if (username === usernameInSeating) return direction;
+    }
+  }
+  throw new Error('Invalid username or seating in getDirectionFromSeating()');
+}
+
+export function getPartnerFromDirection(seating: Seating, direction: CardinalDirections) {
+  if (direction.toLowerCase() === cardinalDirections[0].toLowerCase()) return seating.south;
+  else if (direction.toLowerCase() === cardinalDirections[1].toLowerCase()) return seating.west;
+  else if (direction.toLowerCase() === cardinalDirections[2].toLowerCase()) return seating.north;
+  else if (direction.toLowerCase() === cardinalDirections[3].toLowerCase()) return seating.east;
+  throw new Error('Invalid direction or seating in getPartnerFromDirection()');
 }

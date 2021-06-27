@@ -4,6 +4,7 @@
     <div
       class="{{DEAL_DETAIL_CLASSNAME}}__summary"
     >
+      {{dealIndex !== null ? dealIndex + 1 : 0}}): &nbsp;
       <span>{{dealSummaryMessagePrefix}}</span>
       <span>{{contract.prefix}}</span>
       <span
@@ -30,8 +31,6 @@
         <span>
           - {{ suit | suitToString }}
         </span>
-        
-      
       </div>
     </div>
   </div>
