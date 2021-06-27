@@ -20,7 +20,10 @@
 </div>
 
 <div class="{{GAME_DETAIL_CLASSNAME}}__score">
-  {{summaryScoreMessage}}
+  <ng-container *ngIf="nsScoreGreater===true"><b> <span>{{northSouthScore}}pts.</span></b></ng-container>
+  <ng-container *ngIf="nsScoreGreater===false"><span>{{northSouthScore}}pts.</span></ng-container>
+  <ng-container *ngIf="nsScoreGreater===false"><b> <span>{{eastWestScore}}pts.</span></b></ng-container>
+  <ng-container *ngIf="nsScoreGreater===true"><span>{{eastWestScore}}pts.</span></ng-container>
 </div>
 <nx-bridge-deals-list
   [seating]="seating"

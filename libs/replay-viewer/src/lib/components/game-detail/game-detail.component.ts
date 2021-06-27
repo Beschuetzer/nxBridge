@@ -17,10 +17,11 @@ export class GameDetailComponent implements OnInit {
   public GAME_DETAIL_CLASSNAME = GAME_DETAIL_CLASSNAME;
   public seating: Seating | null = null;
   public summaryScoreMessage = 'Score Summary Here';
-
+  public northSouthScore: number | undefined = -1;
+  public eastWestScore: number | undefined = -1;
+  public nsScoreGreater: number | boolean = -1;
+  
   private winner: Winner = '';
-  private northSouthScore: number | undefined = -1;
-  private eastWestScore: number | undefined = -1;
 
   constructor(
 
@@ -30,8 +31,7 @@ export class GameDetailComponent implements OnInit {
     this.usernames = this.getUsersnamesFromGame(this.game as Game);
     this.userIds = this.getUserIdsFromGame(this.game as Game);
     this.seating = this.game?.room.seating as Seating;
-    this.setSummaryScoreMessage();
-    this.setWinners();
+    this.setWinnerAndScores();
   }
 
   private getUserIdsFromGame (game: Game) {
@@ -43,7 +43,7 @@ export class GameDetailComponent implements OnInit {
     return Object.keys(game.points);
   }
 
-  private setWinners() {
+  private setWinnerAndScores() {
     let winner = "NS";
     this.northSouthScore = this.game?.gameRoundEndingScores?.northSouth.reduce((prev, current) => {
       return prev + current;
@@ -54,10 +54,11 @@ export class GameDetailComponent implements OnInit {
     
     if (this.eastWestScore && this.northSouthScore && this.eastWestScore > this.northSouthScore) winner = "EW";
     this.winner = winner as Winner;
-  }
 
-  private setSummaryScoreMessage() {
-    
+    if (this.northSouthScore !== undefined && this.eastWestScore !== undefined) {
+      this.nsScoreGreater = this.northSouthScore > this.eastWestScore
+    }
+
   }
 
 }

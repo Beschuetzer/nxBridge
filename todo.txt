@@ -61,4 +61,5 @@ Components:
 -finish deal summary message
 -convert contract to an imgHTML
 
--instaed of players: ... say 'Adam' and 'James'  vs  'Tim' and Andrew'  and below say the deal count (3 deals to 0)
+-finish deal count (3 deals to 0)
+-add 'Deal 1: Adam played...'
