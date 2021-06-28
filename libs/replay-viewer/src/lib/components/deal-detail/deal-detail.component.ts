@@ -1,9 +1,6 @@
 import { Component, ElementRef, HostBinding, Input, OnInit, Renderer2 } from '@angular/core';
 import { CardinalDirection, CardValuesAsString, Deal, HandsForConsumption, Seating, Suits } from '@nx-bridge/interfaces-and-types';
-import { DEAL_DETAIL_CLASSNAME, getCharValueFromCardValueString, getDirectionFromSeating, getHtmlEntityFromSuitOrCardAsNumber, getIsBidPlayable, getPartnerFromDirection, getSuitAsStringFromArray, suitsHtmlEntities } from '@nx-bridge/constants';
-import { empty } from 'rxjs';
-
-
+import { DEAL_DETAIL_CLASSNAME, DISPLAY_NONE_CLASSNAME, getCharValueFromCardValueString, getDirectionFromSeating, getHtmlEntityFromSuitOrCardAsNumber, getIsBidPlayable, getPartnerFromDirection, getSuitAsStringFromArray, suitsHtmlEntities, toggleClassOnList } from '@nx-bridge/constants';
 @Component({
   selector: 'nx-bridge-deal-detail',
   templateUrl: './deal-detail.component.html',
@@ -24,6 +21,10 @@ export class DealDetailComponent implements OnInit {
   public dealSummaryMessageSuffix = '';
   public contract = {prefix: '', htmlEntity: ''};
   public DEAL_DETAIL_CLASSNAME = ` ${DEAL_DETAIL_CLASSNAME}`;
+  public DISPLAY_NONE_CLASSNAME = ` ${DISPLAY_NONE_CLASSNAME}`;
+
+  private buttonChoices: [string, string] = ['Show Details', 'Hide Details'];
+
 
   constructor(
     private renderer: Renderer2,
@@ -98,10 +99,16 @@ export class DealDetailComponent implements OnInit {
     }
   }
 
+  onDetailClick() {
+    const item = this.elRef.nativeElement.querySelector(`.${DEAL_DETAIL_CLASSNAME}__details-more`);
+    toggleClassOnList([item] , DISPLAY_NONE_CLASSNAME);
+  }
+
   private setTable() {
     const handAsTable = this.getHandAsTable(this.hands);
+    const flatTable = this.flattenTable(handAsTable, 5);
     const target = this.elRef.nativeElement.querySelector(`.${DEAL_DETAIL_CLASSNAME}__hands`);
-    this.renderer.appendChild(target, handAsTable);
+    this.renderer.appendChild(target, flatTable);
   }
 
   private getMadeAmountString() {
@@ -111,8 +118,6 @@ export class DealDetailComponent implements OnInit {
       if (playingPlayers.includes(roundWinner[0])) return count + 1;
       return count;
     }, 0);
-    console.log('amountMade =', amountMade);
-    console.log('amountNeeded =', amountNeeded);
     
     if (!amountMade) return "Error in getMadeAmountString()";
     const difference = Math.abs(amountMade - amountNeeded);
@@ -144,17 +149,16 @@ export class DealDetailComponent implements OnInit {
     return options[randomInt];
   }
 
-  private getHandAsTable(hands: HandsForConsumption) {
+  private getHandAsTable(hands: HandsForConsumption): HTMLElement | null {
     // this.
     //todo: how to append div after another div?
     const table = this.getNewElement('div');
-    this.renderer.addClass(table, `${DEAL_DETAIL_CLASSNAME}__hands-table`);
 
     //todo: need the initial column then four others
     this.renderer.appendChild(table, this.getSuitColumn());
 
 
-    if (!hands) return;
+    if (!hands) return null;
     for (let i = 0; i < hands.length; i++) {
       const hand = (hands[i])[1];
       const username = (hands[i])[0];
@@ -167,10 +171,8 @@ export class DealDetailComponent implements OnInit {
 
       if (hand !== null) {
         for (let j = 0; j < hand?.length; j++) {
-          console.log('j =', j);
           const suit = hand[j];
           const suitString = getSuitAsStringFromArray(suit);
-          console.log('suitString =', suitString);
           const suitDiv = this.getNewElement('div');
           this.renderer.setProperty(suitDiv, 'innerHTML', suitString);
           this.renderer.appendChild(userColumnDiv, suitDiv);
@@ -180,6 +182,25 @@ export class DealDetailComponent implements OnInit {
     }
 
     return table;
+  }
+
+  private flattenTable(table: HTMLElement | null, tableHeight: number) {
+    if (!table) return null;
+    const flatTable = this.getNewElement('div');
+    const tableChildren = table.children;
+    
+    for (let i = 0; i < tableHeight; i++) {
+      for (let index = 0; index < tableChildren.length; index++) {
+        const child = tableChildren[index];
+        const grandChildren = child.children;
+        const newTableCell = this.getNewElement('div');
+        this.renderer.setProperty(newTableCell, 'innerHTML', grandChildren[i].innerHTML);
+        this.renderer.appendChild(flatTable, newTableCell);
+      }
+    }
+
+    this.renderer.addClass(flatTable, `${DEAL_DETAIL_CLASSNAME}__hands-table`);
+    return flatTable;
   }
 
   // getUserColumn(hand: HandForConsumption, username: string) {

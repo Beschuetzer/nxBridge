@@ -12,37 +12,23 @@
       <div>{{ dealSummaryMessageSuffix }}</div>
     </div>
     <button
+      (click)="onDetailClick()"
       class="ui button color-1 hover-color-4 bg-color-4 hover-bg-color-1 {{
         DEAL_DETAIL_CLASSNAME
       }}__view-button"
-    >Details</button>
+    >Show Details</button>
   </div>
 
-  <div class="deal-detail__hands"></div>
+  <div class="{{DISPLAY_NONE_CLASSNAME}} {{DEAL_DETAIL_CLASSNAME}}__details-more">
+    <div class="deal-detail__hands"></div>
 
-  <!-- <div
-    class="{{ DEAL_DETAIL_CLASSNAME }}__details-hand"
-    *ngFor="let hand of hands"
-  >
-    <div class="{{ DEAL_DETAIL_CLASSNAME }}__details-username">
-      {{ hand[0] }}
-    </div>
-    <div
-      class="{{ DEAL_DETAIL_CLASSNAME }}__details-suit"
-      *ngFor="let suit of hand[1]"
+    <button
+      [attr.data-deal]="deal"
+      class="ui button color-1 hover-color-4 bg-color-4 hover-bg-color-1 {{
+        DEAL_DETAIL_CLASSNAME
+      }}__watch-button"
     >
-      <span [innerHtml]="suit | getHtmlEntityFromSuit"> </span>
-      <span> - {{ suit | suitToString }} </span>
-    </div>
+      Watch Replay
+    </button>
   </div>
-</div> -->
-
-  <button
-    [attr.data-deal]="deal"
-    class="ui button color-1 hover-color-4 bg-color-4 hover-bg-color-1 {{
-      DEAL_DETAIL_CLASSNAME
-    }}__watch-button"
-  >
-    Watch Replay
-  </button>
 </div>

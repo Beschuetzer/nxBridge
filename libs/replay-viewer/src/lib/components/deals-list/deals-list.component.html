@@ -16,6 +16,11 @@
   <span class="{{DEALS_LIST_CLASSNAME}}__deal-count">
     {{dealCountMessage}}
   </span>
+  <button
+    (click)="onShowDetails()"
+  >
+    Show All Details
+  </button>
 </div>
 <nx-bridge-deal-detail
   *ngFor="let deal of deals; let i = index"

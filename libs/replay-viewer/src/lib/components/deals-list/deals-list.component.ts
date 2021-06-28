@@ -40,7 +40,8 @@ export class DealsListComponent implements OnInit {
   public dealsListItems: NodeList | null | undefined = null;
   public isLoading = false;
   public dealCountMessage = 'Deal Count Here';
-  private buttonChoices: [string, string] = ['Show Deals', 'Hide Deals'];
+  private buttonChoicesDeals: [string, string] = ['Show All Deals', 'Hide All Deals'];
+  private buttonChoicesDetails: [string, string] = ['Show All Details', 'Hide All Details'];
 
   constructor(
     private elRef: ElementRef,
@@ -74,7 +75,16 @@ export class DealsListComponent implements OnInit {
     );
 
     const button = (e.currentTarget || e.target) as HTMLElement;
-    toggleInnerHTML(button, this.buttonChoices);
+    toggleInnerHTML(button, this.buttonChoicesDeals);
+  }
+
+  onShowDetails() {
+    const items = this.elRef.nativeElement.querySelectorAll(`.${DEAL_DETAIL_CLASSNAME}__summary-more`);
+    console.log('items =', items);
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      toggleInnerHTML(item, this.buttonChoicesDetails);
+    }
   }
 
   private getItemsFromDB() {
