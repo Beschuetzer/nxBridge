@@ -3,17 +3,24 @@
   padding: 0;
 
   &__button {
-    // margin: $default-font-size * .5 0 0 0 !important;
-    width: 100%;
-    position: sticky;
-    top: $default-font-size * 3.1875;
-    left: 0;
-    margin: 0;
-    border-radius: 0 !important;
-    border-bottom: $game-summary-border-bottom !important;
 
-    @include respond(phone) {
-      top: 5.5rem;
+    &-deals{
+      // margin: $default-font-size * .5 0 0 0 !important;
+      width: 100%;
+      position: sticky;
+      top: $default-font-size * 3.1875;
+      left: 0;
+      margin: 0;
+      border-radius: 0 !important;
+      border-bottom: $game-summary-border-bottom !important;
+
+      @include respond(phone) {
+        top: 5.5rem;
+      }
+    }
+
+    &-details {
+      width: $default-font-size * 6;
     }
   }
 

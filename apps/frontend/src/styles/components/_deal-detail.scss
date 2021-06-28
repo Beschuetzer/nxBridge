@@ -2,11 +2,13 @@
 .deal-detail {
   display: grid;
   grid-template-columns: 1fr min-content;
+  border-top: $deal-detail-separator;
   // padding: 0 $default-font-size * .5;
-  border-top: 1px solid rgba(var(--color-primary-1-rgb), .5);
   // grid-column-gap: $default-font-size * .75;
 
-
+  &:last-of-type{
+    border-bottom: $deal-detail-separator;
+  }
 
   &__details{
     display: grid;
@@ -120,5 +122,9 @@
     margin-right: 0 !important;
     border-radius: 0 !important;
     // margin: $default-font-size * .5 0 $default-font-size 0;
+  }
+
+  &__view-button {
+    width: $default-font-size * 3 !important;
   }
 }

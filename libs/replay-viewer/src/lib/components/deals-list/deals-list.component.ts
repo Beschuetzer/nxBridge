@@ -40,8 +40,8 @@ export class DealsListComponent implements OnInit {
   public dealsListItems: NodeList | null | undefined = null;
   public isLoading = false;
   public dealCountMessage = 'Deal Count Here';
-  private buttonChoicesDeals: [string, string] = ['Show All Deals', 'Hide All Deals'];
-  private buttonChoicesDetails: [string, string] = ['Show All Details', 'Hide All Details'];
+  public buttonChoicesDeals: [string, string] = ['Show Deals', 'Hide Deals'];
+  public buttonChoicesDetails: [string, string] = ['Show All Details', 'Hide All Details'];
 
   constructor(
     private elRef: ElementRef,

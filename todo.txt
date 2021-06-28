@@ -65,4 +65,4 @@ Components:
 -change view details button to be absolutely positioned in the game-detail container and have hover of container show it.
 -figure out how to add '&nbsp;' to empty suits in the table ( use 'PutnamPatt' 2/12/21, 5:45 PM to test)
 -bolden the high cards ("A, k q j") in table
--need to figure out how to 
+-when clicking show all details need to determine if opening or closing first then remove all d-none on children if opening and vice versa for opening

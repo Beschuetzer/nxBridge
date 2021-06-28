@@ -1,7 +1,7 @@
 
 <button
   (click)="onDealsButtonClick($event)"
-  class="ui button color-1 bg-color-4 hover-color-4 hover-bg-color-1 {{DEALS_LIST_CLASSNAME}}__button"
+  class="ui button color-1 bg-color-4 hover-color-4 hover-bg-color-1 {{DEALS_LIST_CLASSNAME}}__button-deals"
   type="button"
 >
   <div *ngIf="isLoading">
@@ -9,7 +9,7 @@
     <i class="notched circle loading icon"></i>
 
   </div>
-  <div *ngIf="!isLoading">Show Deals</div>
+  <div *ngIf="!isLoading">{{buttonChoicesDeals[0]}}</div>
 </button>
 
 <div class="{{DISPLAY_NONE_CLASSNAME}} {{DEALS_LIST_CLASSNAME}}__summary">
@@ -18,9 +18,9 @@
   </span>
   <button
     (click)="onShowDetails($event)"
-    class="ui button color-1 hover-color-4 bg-color-4 hover-bg-color-1"
+    class="ui button color-1 hover-color-4 bg-color-4 hover-bg-color-1 {{DEALS_LIST_CLASSNAME}}__button-details"
   >
-    Show All Details
+    {{buttonChoicesDetails[0]}}
   </button>
 </div>
 <nx-bridge-deal-detail

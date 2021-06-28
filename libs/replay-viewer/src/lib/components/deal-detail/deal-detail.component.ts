@@ -1,6 +1,6 @@
 import { Component, ElementRef, HostBinding, Input, OnInit, Renderer2 } from '@angular/core';
 import { CardinalDirection, CardValuesAsString, Deal, HandsForConsumption, Seating, Suits } from '@nx-bridge/interfaces-and-types';
-import { DEAL_DETAIL_CLASSNAME, DISPLAY_NONE_CLASSNAME, getCharValueFromCardValueString, getDirectionFromSeating, getHtmlEntityFromSuitOrCardAsNumber, getIsBidPlayable, getPartnerFromDirection, getSuitAsStringFromArray, suitsHtmlEntities, toggleClassOnList } from '@nx-bridge/constants';
+import { DEAL_DETAIL_CLASSNAME, DISPLAY_NONE_CLASSNAME, getCharValueFromCardValueString, getDirectionFromSeating, getHtmlEntityFromSuitOrCardAsNumber, getIsBidPlayable, getPartnerFromDirection, getSuitAsStringFromArray, suitsHtmlEntities, toggleClassOnList, toggleInnerHTML } from '@nx-bridge/constants';
 @Component({
   selector: 'nx-bridge-deal-detail',
   templateUrl: './deal-detail.component.html',
@@ -22,9 +22,7 @@ export class DealDetailComponent implements OnInit {
   public contract = {prefix: '', htmlEntity: ''};
   public DEAL_DETAIL_CLASSNAME = ` ${DEAL_DETAIL_CLASSNAME}`;
   public DISPLAY_NONE_CLASSNAME = ` ${DISPLAY_NONE_CLASSNAME}`;
-
-  private buttonChoices: [string, string] = ['Show', 'Hide'];
-
+  public buttonChoices: [string, string] = ['Show', 'Hide'];
 
   constructor(
     private renderer: Renderer2,
@@ -99,9 +97,10 @@ export class DealDetailComponent implements OnInit {
     }
   }
 
-  onDetailClick() {
+  onDetailClick(e: Event) {
     const item = this.elRef.nativeElement.querySelector(`.${DEAL_DETAIL_CLASSNAME}__details-more`);
     toggleClassOnList([item] , DISPLAY_NONE_CLASSNAME);
+    toggleInnerHTML((e.currentTarget || e.target) as HTMLElement, this.buttonChoices);
   }
 
   private setTable() {
