@@ -67,4 +67,4 @@ Components:
 -need to add a bidding table to deal-detail
 
 -use deals-list dealResults to change deal-detail table username color (winners = green and losers = red)
--style deallist summary 
+-work on responsive styling for full-size game-detail

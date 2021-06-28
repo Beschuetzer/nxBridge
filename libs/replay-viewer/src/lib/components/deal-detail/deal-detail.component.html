@@ -1,7 +1,7 @@
 <div class="{{ DEAL_DETAIL_CLASSNAME }}__details">
   <div class="{{ DEAL_DETAIL_CLASSNAME }}__summary">
     <span class="{{ DEAL_DETAIL_CLASSNAME }}__summary-number">
-      {{ dealIndex !== null ? dealIndex + 1 : 0 }}): &nbsp;
+      Deal {{ dealIndex !== null ? dealIndex + 1 : 0 }}): &nbsp;
     </span>
     <div class="{{ DEAL_DETAIL_CLASSNAME }}__summary-text">
       <div>
@@ -11,24 +11,29 @@
       </div>
       <div>&nbsp;{{ dealSummaryMessageSuffix }}</div>
     </div>
-    <button
-      (click)="onDetailClick($event)"
-      class="ui button color-1 hover-color-4 bg-color-4 hover-bg-color-1 {{
-        DEAL_DETAIL_CLASSNAME
-      }}__view-button"
-    >{{buttonChoices[0]}}</button>
+    
+    <div class="{{ DEAL_DETAIL_CLASSNAME }}__summary-buttons">
+      <button
+        (click)="onDetailClick($event)"
+        class="ui button color-1 hover-color-4 bg-color-4 hover-bg-color-1 {{
+          DEAL_DETAIL_CLASSNAME
+        }}__view-button"
+      >{{buttonChoices[0]}}</button>
+      <button
+        [attr.data-deal]="deal"
+        class="ui button color-1 hover-color-4 bg-color-4 hover-bg-color-1 {{
+          DEAL_DETAIL_CLASSNAME
+        }}__watch-button"
+      >
+        Watch Replay
+      </button>
+      
+    </div>
+
   </div>
 
   <div class="{{DISPLAY_NONE_CLASSNAME}} {{DEAL_DETAIL_CLASSNAME}}__details-more">
     <div class="deal-detail__hands"></div>
 
-    <button
-      [attr.data-deal]="deal"
-      class="ui button color-1 hover-color-4 bg-color-4 hover-bg-color-1 {{
-        DEAL_DETAIL_CLASSNAME
-      }}__watch-button"
-    >
-      Watch Replay
-    </button>
   </div>
 </div>

@@ -47,13 +47,17 @@
     font-weight: 700;
     padding: 0 0 0 $game-detail-padding-sides;
     display: grid;
-    grid-template-columns: min-content 1fr max-content;
+    grid-template-columns: max-content 1fr max-content;
     grid-column-gap: $game-detail-padding-sides;
     align-items: center;
     // text-align: center;
 
+    &-buttons {
+      display: grid;
+      grid-template-columns: repeat(2, max-content);
+    }
+
     &-number {
-      line-height: 0;
     }
 
     &-text {
@@ -69,6 +73,7 @@
       display: grid;
       grid-template-columns: min-content repeat(4, 1fr);
       grid-template-rows: min-content repeat(4, 1fr);
+      padding: $game-detail-padding-sides;
       // grid-column-gap: $default-font-size;
       // justify-items: center;
       // align-items: center;
@@ -95,6 +100,11 @@
       //top row
       & > div:nth-child(-n + 5) {
         color: var(--color-primary-1);
+      }
+
+      //right cells
+      & > div:nth-child(5n + 5) {
+        border-right: $deal-detail-table-border;
       }
 
       //left column of table (suits)
@@ -124,7 +134,7 @@
     // margin: $default-font-size * .5 0 $default-font-size 0;
   }
 
-  &__view-button {
-    width: $default-font-size * 3 !important;
+  &__view-button, &__watch-button {
+    width: $default-font-size * 6 !important;
   }
 }

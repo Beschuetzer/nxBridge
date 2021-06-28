@@ -25,5 +25,5 @@ export const FULL_SIZE_CLASSNAME = 'full-size';
 
 export const dealsListDealsButtonChoices: [string, string] = ['Show Deals', 'Hide Deals'];
 export const dealsListDetailsButtonChoices: [string, string] = ['Show All Details', 'Hide All Details'];
-export const dealDetailButtonChoices: [string, string] = ['Show', 'Hide'];
+export const dealDetailButtonChoices: [string, string] = ['Show Details', 'Hide Details'];
 

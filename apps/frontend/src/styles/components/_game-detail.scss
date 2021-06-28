@@ -34,6 +34,8 @@
   }
 
   &__score {
+    position: sticky;
+    top: $default-font-size * 5.75;
     // margin: $game-detail-padding-sides 0;
     background-color: $game-summary-bg-color;
     color: $game-summary-color;
@@ -102,8 +104,34 @@
   }
 
   &.full-size {
-    overflow-y: scroll;
-    height: 50vh;
+    // position: absolute;
+    // top: 0;
+    // left: 0;
+    // width: 100%;
+    // height: 100%;
+    // z-index: 10000;
+    // background: rgba(var(--color-white), 1);
+    // backdrop-filter: blur(10px);
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 75%;
+    max-height: 100vh;
+    overflow: auto;
+    z-index: 10000;
+    transform: translate(-50%, -50%);
+    background: rgba(var( --color-white-rgb), 1);
+
+    // &::after {
+    //   content: '';
+    //   position: absolute;
+    //   top: 0;
+    //   left: 0;
+    //   width: 100vw;
+    //   height: 100vh;
+    //   background: rgba(var( --color-black-rgb), 1);
+    // }
   }
 
   & button {
