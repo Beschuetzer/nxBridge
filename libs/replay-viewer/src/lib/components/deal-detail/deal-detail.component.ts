@@ -1,8 +1,9 @@
-import { Component, HostBinding, Input, OnInit } from '@angular/core';
-import { CardinalDirection, CardValuesAsString, Deal, Hand, Seating, Suits } from '@nx-bridge/interfaces-and-types';
+import { Component, HostBinding, Input, OnInit, Renderer2 } from '@angular/core';
+import { CardinalDirection, CardValuesAsString, Deal, Hand, HandForConsumption, Seating, Suits } from '@nx-bridge/interfaces-and-types';
 import { DEAL_DETAIL_CLASSNAME, getCharValueFromCardValueString, getDirectionFromSeating, getHtmlEntityFromSuitOrCardAsNumber, getIsBidPlayable, getPartnerFromDirection } from '@nx-bridge/constants';
+import { ReplayViewerGameService } from '../../services/replay-viewer.game.service';
+import { ReplayViewerDealService } from '../../services/replay-viewer.deal.service';
 
-type HandsForConsumption = [string, Hand][] | null | undefined;
 
 @Component({
   selector: 'nx-bridge-deal-detail',
@@ -16,7 +17,7 @@ export class DealDetailComponent implements OnInit {
   @Input() deal: Deal | null = null;
   @Input() dealIndex: number | null = null;
   @Input() seating: Seating | null = null;
-  public hands: HandsForConsumption = null;
+  public hands: HandForConsumption = null;
   public declarer = '';
   public dealer = '';
   public dealSummaryMessagePrefix = '';
@@ -25,7 +26,11 @@ export class DealDetailComponent implements OnInit {
   public contract = {prefix: '', htmlEntity: ''};
   public DEAL_DETAIL_CLASSNAME = ` ${DEAL_DETAIL_CLASSNAME}`;
 
-  constructor() {}
+  constructor(
+    private renderer: Renderer2,
+    private replayViewerGameService: ReplayViewerGameService,
+    private replayViewerDealService: ReplayViewerDealService,
+  ) {}
 
   // get getDealNumber() {
   //   if (!this.dealIndex || this.dealIndex <= 0) return "N/A";
@@ -39,6 +44,7 @@ export class DealDetailComponent implements OnInit {
     this.setContract();
     this.setDealSummaryPrefix();
     this.setDealSummarySuffix();
+    this.setTable();
   }
 
   setDealSummaryPrefix() {
@@ -81,7 +87,7 @@ export class DealDetailComponent implements OnInit {
   }
 
   setHands() {
-    const result: HandsForConsumption = [];
+    const result: HandForConsumption = [];
     const hands = this.deal?.hands;
     if (hands) {
       for (const username in hands) {
@@ -92,6 +98,12 @@ export class DealDetailComponent implements OnInit {
       }
       this.hands = result;
     }
+  }
+
+  private setTable() {
+    const handAsTable = this.replayViewerDealService.getHandAsTable(this.hands)
+    const target= document.querySelector(`.${DEAL_DETAIL_CLASSNAME}__hands`)
+    this.renderer.appendChild(target, handAsTable);
   }
 
   private getMadeAmountString() {

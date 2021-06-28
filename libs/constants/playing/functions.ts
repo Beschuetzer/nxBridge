@@ -140,3 +140,17 @@ export function getPartnerFromDirection(seating: Seating, direction: CardinalDir
   else if (direction.toLowerCase() === cardinalDirections[3].toLowerCase()) return seating.east;
   throw new Error('Invalid direction or seating in getPartnerFromDirection()');
 }
+
+export function getSuitAsStringFromArray(suit: number[]): string | null {
+  if (suit && suit.length > 0) {
+    const cardsAsChar = [];
+
+    for (let i = 0; i < suit.length; i++) {
+      const cardAsNumber = suit[i];
+      cardsAsChar.push(getCharacterFromCardAsNumber(cardAsNumber % cardsPerSuit, true));
+    }
+
+    return cardsAsChar.join(',');
+  }
+  return null;
+}

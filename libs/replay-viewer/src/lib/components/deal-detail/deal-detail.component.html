@@ -13,7 +13,12 @@
     </div>
   </div>
 
-  <div
+  <div class="{{ DEAL_DETAIL_CLASSNAME }}__hands">
+    Hand Table goes here
+  </div>
+    
+
+  <!-- <div
     class="{{ DEAL_DETAIL_CLASSNAME }}__details-hand"
     *ngFor="let hand of hands"
   >
@@ -28,7 +33,7 @@
       <span> - {{ suit | suitToString }} </span>
     </div>
   </div>
-</div>
+</div> -->
 
 <button
   [attr.data-deal]="deal"
