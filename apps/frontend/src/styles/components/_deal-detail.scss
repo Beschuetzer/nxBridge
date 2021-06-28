@@ -39,9 +39,9 @@
   &__summary {
     font-size: $default-font-size * .625;
     font-weight: 700;
-    padding: $game-detail-padding-sides;
+    padding: $game-detail-padding-sides * .5 0 $game-detail-padding-sides * .5 $game-detail-padding-sides;
     display: grid;
-    grid-template-columns: min-content 1fr;
+    grid-template-columns: min-content 1fr min-content;
     grid-column-gap: $game-detail-padding-sides;
     align-items: center;
     // text-align: center;
@@ -75,6 +75,15 @@
       }
       & > div {
         padding: 0 $default-font-size * .25;
+
+        
+      }
+
+      @include respond(phone) {
+        font-size: $default-font-size * .85;
+      }
+      @include respond(small-font) {
+        font-size: $default-font-size * .75;
       }
     } 
     
@@ -86,6 +95,18 @@
 
       & > div {
         padding: 0 $default-font-size * .5;
+
+        @include respond(small-font) {
+          padding: 0 $default-font-size * .25;
+        }
+      }
+
+      @include respond(phone) {
+        font-size: $default-font-size * .75;
+      }
+      @include respond(small-font) {
+        font-size: $default-font-size * .5;
+
       }
     }
 
@@ -95,11 +116,14 @@
       & > div {
         border-bottom: $deal-detail-table-border;
         border-left: $deal-detail-table-border;
+        line-break: auto;
       }
 
       & > div:nth-of-type(1) {
         border-top: $deal-detail-table-border;
       }
+
+     
     }
 
     &-column-5 {
@@ -111,7 +135,8 @@
   }
 
   & button {
-    margin-top: $default-font-size * .5 !important;
+    // margin-top: $default-font-size * .5 !important;
+    width: 100%;
     margin-right: 0 !important;
     border-radius: 0 !important;
     // margin: $default-font-size * .5 0 $default-font-size 0;

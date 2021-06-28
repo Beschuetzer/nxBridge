@@ -66,3 +66,4 @@ Components:
 -figure out how to add '&nbsp;' to empty suits in the table ( use 'PutnamPatt' 2/12/21, 5:45 PM to test)
 -bolden the high cards ("A, k q j") in table
 -add styling to table
+-table needs to be redone to be flat

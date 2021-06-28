@@ -11,11 +11,14 @@
       </div>
       <div>{{ dealSummaryMessageSuffix }}</div>
     </div>
+    <button
+      class="ui button color-1 hover-color-4 bg-color-4 hover-bg-color-1 {{
+        DEAL_DETAIL_CLASSNAME
+      }}__view-button"
+    >Details</button>
   </div>
 
-  <div class="deal-detail__hands">
-  </div>
-    
+  <div class="deal-detail__hands"></div>
 
   <!-- <div
     class="{{ DEAL_DETAIL_CLASSNAME }}__details-hand"
@@ -34,11 +37,12 @@
   </div>
 </div> -->
 
-<button
-  [attr.data-deal]="deal"
-  class="ui button color-1 hover-color-4 bg-color-4 hover-bg-color-1 {{
-    DEAL_DETAIL_CLASSNAME
-  }}__button"
->
-  View
-</button>
+  <button
+    [attr.data-deal]="deal"
+    class="ui button color-1 hover-color-4 bg-color-4 hover-bg-color-1 {{
+      DEAL_DETAIL_CLASSNAME
+    }}__watch-button"
+  >
+    Watch Replay
+  </button>
+</div>
