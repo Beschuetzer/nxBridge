@@ -1,4 +1,4 @@
-import { Team } from "@nx-bridge/interfaces-and-types";
+import { Team, TeamFull } from "@nx-bridge/interfaces-and-types";
 
 export const cardsPerSuit = 13;
 export const minCardValue = 0;
@@ -30,4 +30,5 @@ export const cardValuesAsStrings = [
   'King',
   'Ace',
 ];
-export const teams: Team[] = ['NS', 'EW'];
+export const teams: [Team, Team] = ['NS', 'EW'];
+export const teamsFull: [TeamFull, TeamFull] = ["northSouth", "eastWest"];

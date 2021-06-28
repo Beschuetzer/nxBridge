@@ -68,3 +68,5 @@ Components:
 -when clicking show all details need to determine if opening or closing first then remove all d-none on children if opening and vice versa for opening
 
 -need to add a bidding table to deal-detail
+
+-use deals-list dealResults to change deal-detail table username color (winners = green and losers = red)

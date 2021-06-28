@@ -1,4 +1,5 @@
 export interface Deal extends DealCore {
+  [key: string]: any;
   players: ObjectId[];
   // _id: string;
 }
@@ -212,6 +213,7 @@ export type Point = {
 };
 
 export type DealScoring = {
+  [key: string]: any;
   aboveTheLine: number;
   belowTheLine: number;
   totalBelowTheLineScore: number;
@@ -253,3 +255,4 @@ export type CardinalDirection =
 export type Suits = 'Club' | 'Diamond' | 'Heart' | 'Spade' | 'No Trump';
 export type HandsForConsumption = [string, Hand][] | null | undefined;
 export type Team = "EW" | "NS" | '';
+export type TeamFull = "eastWest" | "northSouth";

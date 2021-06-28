@@ -20,12 +20,11 @@ import {
   dealsListDetailsButtonChoices,
   dealDetailButtonChoices,
   teams,
-  ,
+  teamsFull,
 } from '@nx-bridge/constants';
 import { Deal, Seating, Team } from '@nx-bridge/interfaces-and-types';
 import { AddFetchedDeals as AddFetchedDeals, AppState } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
-
 
 @Component({
   selector: 'nx-bridge-deals-list',
@@ -42,6 +41,7 @@ export class DealsListComponent implements OnInit {
   public DISPLAY_NONE_CLASSNAME = DISPLAY_NONE_CLASSNAME;
   public DEAL_DETAIL_CLASSNAME = DEAL_DETAIL_CLASSNAME;
   public deals: Deal[] = [];
+  public dealResults: {[key: string]: Team} = {};
   public dealsListItems: NodeList | null | undefined = null;
   public isLoading = false;
   public dealCountMessage = 'Deal Count Here';
@@ -56,8 +56,9 @@ export class DealsListComponent implements OnInit {
     private store: Store<AppState>
   ) {}
 
+  // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   ngOnInit(): void {
-    
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
   }
 
   onDealsButtonClick(e: Event) {
@@ -74,10 +75,16 @@ export class DealsListComponent implements OnInit {
       toggleClassOnList(items, DISPLAY_NONE_CLASSNAME);
     }
 
-    const el = this.elRef.nativeElement.querySelector(`.${DEALS_LIST_CLASSNAME}__summary`);
+    const el = this.elRef.nativeElement.querySelector(
+      `.${DEALS_LIST_CLASSNAME}__summary`
+    );
     toggleClassOnList([el], DISPLAY_NONE_CLASSNAME);
     toggleClassOnList(
-      [this.elRef.nativeElement.closest(`.${GAME_DETAIL_CLASSNAME}`) as HTMLElement],
+      [
+        this.elRef.nativeElement.closest(
+          `.${GAME_DETAIL_CLASSNAME}`
+        ) as HTMLElement,
+      ],
       FULL_SIZE_CLASSNAME
     );
 
@@ -86,11 +93,14 @@ export class DealsListComponent implements OnInit {
   }
 
   onShowDetails(e: Event) {
-    const itemsToChange = this.elRef.nativeElement.querySelectorAll(`.${DEAL_DETAIL_CLASSNAME}__details-more`);
+    const itemsToChange = this.elRef.nativeElement.querySelectorAll(
+      `.${DEAL_DETAIL_CLASSNAME}__details-more`
+    );
     const clickedButton = (e.currentTarget || e.target) as HTMLButtonElement;
 
     let isOpening = false;
-    if (clickedButton.innerHTML.trim() === this.buttonChoicesDetails[0]) isOpening = true;
+    if (clickedButton.innerHTML.trim() === this.buttonChoicesDetails[0])
+      isOpening = true;
 
     for (let i = 0; i < itemsToChange.length; i++) {
       const itemToChange = itemsToChange[i];
@@ -99,14 +109,18 @@ export class DealsListComponent implements OnInit {
       const itemsParent = itemToChange.parentNode;
       const buttonToToggleInnerHTML = itemsParent.querySelector('button');
 
-      if (isOpening) buttonToToggleInnerHTML.innerHTML = dealDetailButtonChoices[1];
+      if (isOpening)
+        buttonToToggleInnerHTML.innerHTML = dealDetailButtonChoices[1];
       else {
         itemToChange.classList.add(DISPLAY_NONE_CLASSNAME);
         buttonToToggleInnerHTML.innerHTML = dealDetailButtonChoices[0];
       }
     }
 
-    toggleInnerHTML((e?.currentTarget || e?.target) as HTMLElement, this.buttonChoicesDetails);
+    toggleInnerHTML(
+      (e?.currentTarget || e?.target) as HTMLElement,
+      this.buttonChoicesDetails
+    );
   }
 
   private getItemsFromDB() {
@@ -133,20 +147,19 @@ export class DealsListComponent implements OnInit {
   }
 
   private setDealCountMessage() {
-    
     let winningTeam: Team;
-    const afterWinners = ' won '
+    const afterWinners = ' won ';
     const betweenPlayed = ' deals to ';
     let nsDealsWon = 0;
     let ewDealsWon = 0;
     let winner: Team;
-    
+
     for (let i = 0; i < this.deals.length; i++) {
       const deal = this.deals[i];
       let nextDeal = null;
       if (i !== this.deals.length - 1) {
-        nextDeal = this.deals[i +  1];
-        winner = this.getDealWinnerFromScoreDifference(deal, nextDeal);
+        nextDeal = this.deals[i + 1];
+        winner = this.getDealWinnerFromScoreDifference(deal, nextDeal, i);
       } else {
         winner = this.getDealWinnerFromPureCalculation(deal);
       }
@@ -165,18 +178,65 @@ export class DealsListComponent implements OnInit {
     }
   }
 
-  private getDealWinnerFromScoreDifference(deal: Deal, dealAfterDeal: Deal): Team {
-    
+  private getDealWinnerFromScoreDifference(
+    deal: Deal,
+    dealAfterDeal: Deal,
+    nthDeal?: number,
+  ): Team {
+    const dealNorthSouth = deal[teamsFull[0]];
+    const dealAfterDealNorthSouth = dealAfterDeal[teamsFull[0]];
+    const dealEastWest = deal[teamsFull[1]];
+    const dealAfterDealEastWest = dealAfterDeal[teamsFull[1]];
+    debugger;
+
+    //note: if both the above the line scores are different, we need to go the hard way
+    if (
+      dealNorthSouth.aboveTheLine !== dealAfterDealNorthSouth.aboveTheLine &&
+      dealEastWest.aboveTheLine !== dealAfterDealEastWest.aboveTheLine
+    ) {
+      return this.getDealWinnerFromPureCalculation(deal);
+    }
+
+    const keysToCompare = [
+      'aboveTheLine',
+      'belowTheLine',
+      'totalBelowTheLineScore',
+    ];
+    for (const key of keysToCompare) {
+      const nsValue = dealNorthSouth[key];
+      const nsAfterValue = dealAfterDealNorthSouth[key];
+      const ewValue = dealEastWest[key];
+      const ewAfterValue = dealAfterDealEastWest[key];
+
+      if (
+        nsValue === undefined ||
+        ewValue === undefined ||
+        nsAfterValue === undefined ||
+        ewAfterValue === undefined
+      )
+        throw new Error('Invalid key in getDealWinnerFromScoreDifference()');
+      if (nsValue !== nsAfterValue && ewValue === ewAfterValue) {
+        this.dealResults[`${nthDeal}`] = teams[0];
+        return teams[0];
+      }
+      else if (nsValue === nsAfterValue && ewValue !== ewAfterValue){
+        this.dealResults[`${nthDeal}`] = teams[1];
+        return teams[1];
+      }
+    }
+
+    return this.getDealWinnerFromPureCalculation(deal);
   }
 
   private getDealWinnerFromPureCalculation(deal: Deal): Team {
     //todo: this is calculation intensive approach to determing which team won game
+    return 'EW';
   }
 
   private setTeams() {
-    if (!this.seating) throw new Error('Problem with this.seating in deals-list');
+    if (!this.seating)
+      throw new Error('Problem with this.seating in deals-list');
     this.northSouthPlayers = [this.seating.north, this.seating.south];
     this.eastWestPlayers = [this.seating.east, this.seating.west];
   }
-  
 }
