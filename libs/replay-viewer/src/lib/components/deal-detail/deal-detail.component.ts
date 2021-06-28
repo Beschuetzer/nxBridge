@@ -1,6 +1,6 @@
 import { Component, ElementRef, HostBinding, Input, OnInit, Renderer2 } from '@angular/core';
 import { CardinalDirection, CardValuesAsString, Deal, HandsForConsumption, Seating, Suits } from '@nx-bridge/interfaces-and-types';
-import { dealDetailButtonChoices, DEAL_DETAIL_CLASSNAME, DISPLAY_NONE_CLASSNAME, getCharValueFromCardValueString, getDirectionFromSeating, getHtmlEntityFromSuitOrCardAsNumber, getIsBidPlayable, getPartnerFromDirection, getSuitAsStringFromArray, suitsHtmlEntities, toggleClassOnList, toggleInnerHTML, tricksInABook } from '@nx-bridge/constants';
+import { dealDetailButtonChoices, DEAL_DETAIL_CLASSNAME, DISPLAY_NONE_CLASSNAME, getCharValueFromCardValueString, getDirectionFromSeating, getHtmlEntityFromSuitOrCardAsNumber, getIsBidPlayable, getPartnerFromDirection, getSuitAsStringFromArray, sortHand, suitsHtmlEntities, toggleClassOnList, toggleInnerHTML, tricksInABook } from '@nx-bridge/constants';
 @Component({
   selector: 'nx-bridge-deal-detail',
   templateUrl: './deal-detail.component.html',
@@ -168,8 +168,9 @@ export class DealDetailComponent implements OnInit {
       this.renderer.appendChild(userColumnDiv, usernameDiv);
 
       if (hand !== null) {
-        for (let j = 0; j < hand?.length; j++) {
-          const suit = hand[j];
+        const sortedHand = sortHand(hand);
+        for (let j = 0; j < sortedHand?.length; j++) {
+          const suit = sortedHand[j];
           const suitString = getSuitAsStringFromArray(suit);
           const suitDiv = this.getNewElement('div');
           this.renderer.setProperty(suitDiv, 'innerHTML', suitString);

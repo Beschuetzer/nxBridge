@@ -1,4 +1,4 @@
-import { CardinalDirection, CardValuesAsString, Seating, Suits } from '@nx-bridge/interfaces-and-types';
+import { CardinalDirection, CardValuesAsString, Hand, Seating, Suits } from '@nx-bridge/interfaces-and-types';
 import { debug } from 'node:console';
 import {
   cardinalDirections,
@@ -6,6 +6,7 @@ import {
   cardValuesAsStrings,
   maxCardValue,
   minCardValue,
+  sortOrders,
   suits,
   suitsAsCapitalizedStrings,
   suitsHtmlEntities,
@@ -153,4 +154,20 @@ export function getSuitAsStringFromArray(suit: number[]): string | null {
     return cardsAsChar.join(',');
   }
   return null;
+}
+
+export function sortHand(hand: Hand) {
+  //Sorts the hand clubs, diams, hearts, then spades (for displaying in replays)
+  let clubs: number[] = [], diamonds: number[] = [], hearts: number[] = [], spades: number[] = [];
+  for (let i = 0; i < hand.length; i++) {
+    const suit = hand[i];
+    const suitAsString = getSuitFromNumber(suit && suit.length > 0 ? suit[0] : -1);
+
+    if (suitAsString === suits.clubs) clubs = suit;
+    else if (suitAsString === suits.diamonds) diamonds = suit;
+    else if (suitAsString === suits.hearts) hearts = suit;
+    else if (suitAsString === suits.spades) spades = suit;
+  }
+
+  return [clubs, diamonds, hearts, spades];
 }

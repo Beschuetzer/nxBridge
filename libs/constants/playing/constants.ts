@@ -13,6 +13,12 @@ export const suits = {
   spades: "spades",
   noTrump: null,
 };
+export const sortOrders = {
+  Ascending: "Ascending",
+  Descending: "Descending",
+  AscendingAlternatingColors: "AscendingAlternatingColors",
+  DescendingAlternatingColors: "DescendingAlternatingColors",
+};
 
 export const suitsHtmlEntities = ["&clubs;", "&diams;", "&hearts;", "&spades;"];
 export const suitsAsCapitalizedStrings = ['Clubs', 'Diamonds', 'Hearts', 'Spades'];
