@@ -16,6 +16,9 @@ import {
   toggleInnerHTML,
   GAME_DETAIL_CLASSNAME,
   DEALS_LIST_CLASSNAME,
+  dealsListDealsButtonChoices,
+  dealsListDetailsButtonChoices,
+  dealDetailButtonChoices,
 } from '@nx-bridge/constants';
 import { Deal, Seating } from '@nx-bridge/interfaces-and-types';
 import { AddFetchedDeals as AddFetchedDeals, AppState } from '@nx-bridge/store';
@@ -40,8 +43,8 @@ export class DealsListComponent implements OnInit {
   public dealsListItems: NodeList | null | undefined = null;
   public isLoading = false;
   public dealCountMessage = 'Deal Count Here';
-  public buttonChoicesDeals: [string, string] = ['Show Deals', 'Hide Deals'];
-  public buttonChoicesDetails: [string, string] = ['Show All Details', 'Hide All Details'];
+  public buttonChoicesDeals: [string, string] = dealsListDealsButtonChoices;
+  public buttonChoicesDetails: [string, string] = dealsListDetailsButtonChoices;
 
   constructor(
     private elRef: ElementRef,
@@ -79,8 +82,26 @@ export class DealsListComponent implements OnInit {
   }
 
   onShowDetails(e: Event) {
-    const items = this.elRef.nativeElement.querySelectorAll(`.${DEAL_DETAIL_CLASSNAME}__details-more`);
-    toggleClassOnList(items, DISPLAY_NONE_CLASSNAME)
+    const itemsToChange = this.elRef.nativeElement.querySelectorAll(`.${DEAL_DETAIL_CLASSNAME}__details-more`);
+    const clickedButton = (e.currentTarget || e.target) as HTMLButtonElement;
+
+    let isOpening = false;
+    if (clickedButton.innerHTML.trim() === this.buttonChoicesDetails[0]) isOpening = true;
+
+    for (let i = 0; i < itemsToChange.length; i++) {
+      const itemToChange = itemsToChange[i];
+      itemToChange.classList.remove(DISPLAY_NONE_CLASSNAME);
+
+      const itemsParent = itemToChange.parentNode;
+      const buttonToToggleInnerHTML = itemsParent.querySelector('button');
+
+      if (isOpening) buttonToToggleInnerHTML.innerHTML = dealDetailButtonChoices[1];
+      else {
+        itemToChange.classList.add(DISPLAY_NONE_CLASSNAME);
+        buttonToToggleInnerHTML.innerHTML = dealDetailButtonChoices[0];
+      }
+    }
+
     toggleInnerHTML((e?.currentTarget || e?.target) as HTMLElement, this.buttonChoicesDetails);
   }
 
