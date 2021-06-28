@@ -3,6 +3,7 @@ import { Team, TeamFull } from "@nx-bridge/interfaces-and-types";
 export const cardsPerSuit = 13;
 export const minCardValue = 0;
 export const maxCardValue = 51;
+export const tricksInABook = 6;
 export const cardinalDirections = ['north', 'east', 'south', 'west'];
 export const locations = ['top', 'right', 'bottom', 'left'];
 export const suits = {

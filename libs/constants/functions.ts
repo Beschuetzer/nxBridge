@@ -1,4 +1,6 @@
+import { Deal } from '@nx-bridge/interfaces-and-types';
 import * as mongoose from 'mongoose';
+import { getIsBidPlayable } from './playing/functions';
 
 
 export function getMongooseObjsFromStrings(items: string[]) {
@@ -33,4 +35,14 @@ export function toggleInnerHTML(element: HTMLElement, choices: [string, string])
   if (!element || !choices) return;
   if (element.innerHTML.match(choices[0])) element.innerHTML = choices[1];
   else element.innerHTML = choices[0];
+}
+
+export function getDeclarerFromDeal(deal: Deal) {
+  for (let i = deal?.bids.length - 1; i >= 0 ; i--) {
+    const bid = deal?.bids[i][1];
+    if (getIsBidPlayable(bid)) {
+      return deal?.bids[i][0];
+    }
+  }
+  return "Error in getDeclarerFromDeal()";
 }

@@ -25,8 +25,9 @@ import {
   getCharValueFromCardValueString,
   getPartnerFromDirection,
   getDirectionFromSeating,
+  getDeclarerFromDeal,
 } from '@nx-bridge/constants';
-import { Deal, Seating, Team } from '@nx-bridge/interfaces-and-types';
+import { CardinalDirection, CardValuesAsString, Deal, Seating, Team } from '@nx-bridge/interfaces-and-types';
 import { AddFetchedDeals as AddFetchedDeals, AppState } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
 
@@ -178,7 +179,14 @@ export class DealsListComponent implements OnInit {
       if (nsDealsWon > ewDealsWon) winningTeam = teams[0];
       else winningTeam = teams[1];
 
-      this.dealCountMessage = `${winningTeam}${afterWinners}${nsDealsWon}${betweenPlayed}${ewDealsWon}`;
+      let larger = nsDealsWon;
+      let smaller = ewDealsWon;
+      if (ewDealsWon > nsDealsWon) {
+        larger = ewDealsWon;
+        smaller = nsDealsWon;
+      }
+
+      this.dealCountMessage = `${winningTeam}${afterWinners}${larger}${betweenPlayed}${smaller}`;
     }
   }
 
@@ -238,7 +246,7 @@ export class DealsListComponent implements OnInit {
     const declarersPartner = getPartnerFromDirection(this.seating as Seating, declarersDirection as CardinalDirection);
     const declaringTeamUsernames = [declarer, declarersPartner];
     const contractPrefixAsNumber = +getCharValueFromCardValueString(deal.contract.split(' ')[0] as CardValuesAsString);
-    const numberTricksNeeded = contractPrefixAsNumber + tricksInABook;
+    const numberTricksNeeded = contractPrefixAsNumber + 6;
 
     const tricksDeclarerMade = deal.roundWinners.reduce((count, roundWinner) => {
       if (declaringTeamUsernames.includes(roundWinner[0])) count++;

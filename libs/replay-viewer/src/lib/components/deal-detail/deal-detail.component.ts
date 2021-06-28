@@ -1,6 +1,6 @@
 import { Component, ElementRef, HostBinding, Input, OnInit, Renderer2 } from '@angular/core';
 import { CardinalDirection, CardValuesAsString, Deal, HandsForConsumption, Seating, Suits } from '@nx-bridge/interfaces-and-types';
-import { dealDetailButtonChoices, DEAL_DETAIL_CLASSNAME, DISPLAY_NONE_CLASSNAME, getCharValueFromCardValueString, getDirectionFromSeating, getHtmlEntityFromSuitOrCardAsNumber, getIsBidPlayable, getPartnerFromDirection, getSuitAsStringFromArray, suitsHtmlEntities, toggleClassOnList, toggleInnerHTML } from '@nx-bridge/constants';
+import { dealDetailButtonChoices, DEAL_DETAIL_CLASSNAME, DISPLAY_NONE_CLASSNAME, getCharValueFromCardValueString, getDirectionFromSeating, getHtmlEntityFromSuitOrCardAsNumber, getIsBidPlayable, getPartnerFromDirection, getSuitAsStringFromArray, suitsHtmlEntities, toggleClassOnList, toggleInnerHTML, tricksInABook } from '@nx-bridge/constants';
 @Component({
   selector: 'nx-bridge-deal-detail',
   templateUrl: './deal-detail.component.html',
@@ -112,7 +112,7 @@ export class DealDetailComponent implements OnInit {
 
   private getMadeAmountString() {
     const playingPlayers: string[] = this.getPlayingPlayers();
-    const amountNeeded = +this.contract.prefix + 6;
+    const amountNeeded = +this.contract.prefix + tricksInABook;
     const amountMade = this.deal?.roundWinners.reduce((count, roundWinner) => {
       if (playingPlayers.includes(roundWinner[0])) return count + 1;
       return count;
