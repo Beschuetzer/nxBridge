@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, Renderer2, RendererFactory2 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { LandingPageComponent } from './views/landing-page/landing-page.component';
@@ -36,5 +36,6 @@ import { PipesModule } from '@nx-bridge/pipes';
     SpinnersModule,
     PipesModule,
   ],
+
 })
 export class ReplayViewerModule {}
