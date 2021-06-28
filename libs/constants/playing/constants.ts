@@ -1,3 +1,5 @@
+import { Team } from "@nx-bridge/interfaces-and-types";
+
 export const cardsPerSuit = 13;
 export const minCardValue = 0;
 export const maxCardValue = 51;
@@ -28,3 +30,4 @@ export const cardValuesAsStrings = [
   'King',
   'Ace',
 ];
+export const teams: Team[] = ['NS', 'EW'];

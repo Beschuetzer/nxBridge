@@ -19,8 +19,10 @@ import {
   dealsListDealsButtonChoices,
   dealsListDetailsButtonChoices,
   dealDetailButtonChoices,
+  teams,
+  ,
 } from '@nx-bridge/constants';
-import { Deal, Seating } from '@nx-bridge/interfaces-and-types';
+import { Deal, Seating, Team } from '@nx-bridge/interfaces-and-types';
 import { AddFetchedDeals as AddFetchedDeals, AppState } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
 
@@ -45,6 +47,8 @@ export class DealsListComponent implements OnInit {
   public dealCountMessage = 'Deal Count Here';
   public buttonChoicesDeals: [string, string] = dealsListDealsButtonChoices;
   public buttonChoicesDetails: [string, string] = dealsListDetailsButtonChoices;
+  public northSouthPlayers: [string, string] | [] = [];
+  public eastWestPlayers: [string, string] | [] = [];
 
   constructor(
     private elRef: ElementRef,
@@ -53,7 +57,7 @@ export class DealsListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.setDealCountMessage();
+    
   }
 
   onDealsButtonClick(e: Event) {
@@ -124,18 +128,55 @@ export class DealsListComponent implements OnInit {
     this.deals = deals;
     this.store.dispatch(new AddFetchedDeals(deals));
     this.isLoading = false;
+    this.setTeams();
+    this.setDealCountMessage();
   }
 
   private setDealCountMessage() {
     
+    let winningTeam: Team;
     const afterWinners = ' won '
     const betweenPlayed = ' deals to ';
-    // let NSDealsPlayed: number;
-    // let EWDealsPlayed: number;
+    let nsDealsWon = 0;
+    let ewDealsWon = 0;
+    let winner: Team;
     
+    for (let i = 0; i < this.deals.length; i++) {
+      const deal = this.deals[i];
+      let nextDeal = null;
+      if (i !== this.deals.length - 1) {
+        nextDeal = this.deals[i +  1];
+        winner = this.getDealWinnerFromScoreDifference(deal, nextDeal);
+      } else {
+        winner = this.getDealWinnerFromPureCalculation(deal);
+      }
 
-    // this.dealCountMessage = `${winners}${afterWinners}${NSDealsPlayed}${betweenPlayed}${EWDealsPlayed}`;
+      if (winner === teams[0]) nsDealsWon++;
+      else ewDealsWon++;
+    }
+
+    if (nsDealsWon === ewDealsWon) {
+      //todo: what to display in case of tie
+    } else {
+      if (nsDealsWon > ewDealsWon) winningTeam = teams[0];
+      else winningTeam = teams[1];
+
+      this.dealCountMessage = `${winningTeam}${afterWinners}${nsDealsWon}${betweenPlayed}${ewDealsWon}`;
+    }
   }
 
+  private getDealWinnerFromScoreDifference(deal: Deal, dealAfterDeal: Deal): Team {
+    
+  }
+
+  private getDealWinnerFromPureCalculation(deal: Deal): Team {
+    //todo: this is calculation intensive approach to determing which team won game
+  }
+
+  private setTeams() {
+    if (!this.seating) throw new Error('Problem with this.seating in deals-list');
+    this.northSouthPlayers = [this.seating.north, this.seating.south];
+    this.eastWestPlayers = [this.seating.east, this.seating.west];
+  }
   
 }

@@ -1,8 +1,7 @@
 import { Component, HostBinding, Input, OnInit } from '@angular/core';
 import { GAME_DETAIL_CLASSNAME } from '@nx-bridge/constants';
-import { Game, Seating } from '@nx-bridge/interfaces-and-types';
+import { Game, Seating, Team } from '@nx-bridge/interfaces-and-types';
 
-type Winner = "EW" | "NS" | '';
 
 @Component({
   selector: 'nx-bridge-game-detail',
@@ -21,10 +20,11 @@ export class GameDetailComponent implements OnInit {
   public eastWestScore: number | undefined = -1;
   public nsScoreGreater: number | boolean = -1;
   
-  private winner: Winner = '';
+  private winner: Team = '';
 
   constructor(
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   ) { }
 
   ngOnInit(): void {
@@ -53,7 +53,7 @@ export class GameDetailComponent implements OnInit {
     }, 0);
     
     if (this.eastWestScore && this.northSouthScore && this.eastWestScore > this.northSouthScore) winner = "EW";
-    this.winner = winner as Winner;
+    this.winner = winner as Team;
 
     if (this.northSouthScore !== undefined && this.eastWestScore !== undefined) {
       this.nsScoreGreater = this.northSouthScore > this.eastWestScore
