@@ -62,4 +62,4 @@ Components:
 -convert contract to an imgHTML
 
 -finish deal count (3 deals to 0)
--add 'Deal 1: Adam played...'
+-add styling to table

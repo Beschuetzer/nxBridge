@@ -251,4 +251,4 @@ export type CardinalDirection =
   | 'east'
   | 'west';
 export type Suits = 'Club' | 'Diamond' | 'Heart' | 'Spade' | 'No Trump';
-export type HandForConsumption = [string, Hand][] | null | undefined;
+export type HandsForConsumption = [string, Hand][] | null | undefined;

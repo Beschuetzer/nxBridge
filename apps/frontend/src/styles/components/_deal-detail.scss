@@ -11,7 +11,7 @@
   &__details{
     display: grid;
     grid-template-rows: repeat(5, min-content);
-    grid-row-gap: $default-font-size * .25;
+    // grid-row-gap: $default-font-size * .25;
 
     & > * {
       padding: 0 $game-detail-padding-sides;
@@ -53,7 +53,20 @@
     }
   }
 
+  &__hands {
+
+    &-table {
+      display: grid;
+      grid-template-columns: min-content repeat(4, 1fr);
+      grid-template-rows: min-content repeat(4, 1fr);
+      grid-column-gap: $default-font-size;
+      // justify-items: center;
+      // align-items: center;
+    }
+  }
+
   & button {
+    margin-top: $default-font-size * .5 !important;
     margin-right: 0 !important;
     border-radius: 0 !important;
     // margin: $default-font-size * .5 0 $default-font-size 0;

@@ -1,8 +1,7 @@
-import { Component, HostBinding, Input, OnInit, Renderer2 } from '@angular/core';
-import { CardinalDirection, CardValuesAsString, Deal, Hand, HandForConsumption, Seating, Suits } from '@nx-bridge/interfaces-and-types';
+import { Component, ElementRef, HostBinding, Input, OnInit, Renderer2 } from '@angular/core';
+import { CardinalDirection, CardValuesAsString, Deal, HandsForConsumption, Seating, Suits } from '@nx-bridge/interfaces-and-types';
 import { DEAL_DETAIL_CLASSNAME, getCharValueFromCardValueString, getDirectionFromSeating, getHtmlEntityFromSuitOrCardAsNumber, getIsBidPlayable, getPartnerFromDirection, getSuitAsStringFromArray, suitsHtmlEntities } from '@nx-bridge/constants';
-import { ReplayViewerGameService } from '../../services/replay-viewer.game.service';
-import { ReplayViewerDealService } from '../../services/replay-viewer.deal.service';
+import { empty } from 'rxjs';
 
 
 @Component({
@@ -17,7 +16,7 @@ export class DealDetailComponent implements OnInit {
   @Input() deal: Deal | null = null;
   @Input() dealIndex: number | null = null;
   @Input() seating: Seating | null = null;
-  public hands: HandForConsumption = null;
+  public hands: HandsForConsumption = null;
   public declarer = '';
   public dealer = '';
   public dealSummaryMessagePrefix = '';
@@ -28,8 +27,7 @@ export class DealDetailComponent implements OnInit {
 
   constructor(
     private renderer: Renderer2,
-    private replayViewerGameService: ReplayViewerGameService,
-    private replayViewerDealService: ReplayViewerDealService,
+    private elRef: ElementRef,
   ) {}
 
   // get getDealNumber() {
@@ -87,7 +85,7 @@ export class DealDetailComponent implements OnInit {
   }
 
   setHands() {
-    const result: HandForConsumption = [];
+    const result: HandsForConsumption = [];
     const hands = this.deal?.hands;
     if (hands) {
       for (const username in hands) {
@@ -101,9 +99,8 @@ export class DealDetailComponent implements OnInit {
   }
 
   private setTable() {
-    console.log('this.hands =', this.hands);
-    const handAsTable = this.getHandAsTable(this.hands as any);
-    const target= document.querySelector(`.${DEAL_DETAIL_CLASSNAME}__hands`)
+    const handAsTable = this.getHandAsTable(this.hands);
+    const target = this.elRef.nativeElement.querySelector(`.${DEAL_DETAIL_CLASSNAME}__hands`);
     this.renderer.appendChild(target, handAsTable);
   }
 
@@ -147,7 +144,7 @@ export class DealDetailComponent implements OnInit {
     return options[randomInt];
   }
 
-  private getHandAsTable(hands: Hand[]) {
+  private getHandAsTable(hands: HandsForConsumption) {
     // this.
     //todo: how to append div after another div?
     const table = this.getNewElement('div');
@@ -156,30 +153,33 @@ export class DealDetailComponent implements OnInit {
     //todo: need the initial column then four others
     this.renderer.appendChild(table, this.getSuitColumn());
 
-    let i = 2;
-    for (const username in hands) {
-      if (Object.prototype.hasOwnProperty.call(hands, username)) {
-        const hand = hands[username];
-        debugger;
-        const userColumnDiv = this.getNewElement('div');
-        this.renderer.addClass(userColumnDiv, `${DEAL_DETAIL_CLASSNAME}__hands-column-${i}`)
 
-        const usernameDiv = this.getNewElement('div');
-        this.renderer.setProperty(usernameDiv, 'innerHTML', username);
-        this.renderer.appendChild(userColumnDiv, usernameDiv);
+    if (!hands) return;
+    for (let i = 0; i < hands.length; i++) {
+      const hand = (hands[i])[1];
+      const username = (hands[i])[0];
+      const userColumnDiv = this.getNewElement('div');
+      this.renderer.addClass(userColumnDiv, `${DEAL_DETAIL_CLASSNAME}__hands-column-${i + 2}`)
 
+      const usernameDiv = this.getNewElement('div');
+      this.renderer.setProperty(usernameDiv, 'innerHTML', username);
+      this.renderer.appendChild(userColumnDiv, usernameDiv);
+
+      if (hand !== null) {
         for (let j = 0; j < hand?.length; j++) {
+          console.log('j =', j);
           const suit = hand[j];
           const suitString = getSuitAsStringFromArray(suit);
+          console.log('suitString =', suitString);
           const suitDiv = this.getNewElement('div');
           this.renderer.setProperty(suitDiv, 'innerHTML', suitString);
           this.renderer.appendChild(userColumnDiv, suitDiv);
         }
       }
-      i++;
+      this.renderer.appendChild(table, userColumnDiv);
     }
 
-    this.renderer.appendChild(table, document.querySelector(`.${DEAL_DETAIL_CLASSNAME}__hands`));
+    return table;
   }
 
   // getUserColumn(hand: HandForConsumption, username: string) {
@@ -188,8 +188,10 @@ export class DealDetailComponent implements OnInit {
 
   private getSuitColumn() {
     const suitColumn = this.renderer.createElement('div');
+    const emptyDiv = this.getNewElement('div');
+    this.renderer.setProperty(emptyDiv, 'innerHTML', '&nbsp');
     this.renderer.addClass(suitColumn, `${DEAL_DETAIL_CLASSNAME}__hands-column-1`)
-    this.renderer.appendChild(suitColumn, this.getNewElement('div'));
+    this.renderer.appendChild(suitColumn, emptyDiv);
     for (let i = 0; i < suitsHtmlEntities.length; i++) {
       const htmlEntity = suitsHtmlEntities[i];
       const suitDiv = this.getNewElement('div');
