@@ -21,6 +21,10 @@ import {
   dealDetailButtonChoices,
   teams,
   teamsFull,
+  cardinalDirections,
+  getCharValueFromCardValueString,
+  getPartnerFromDirection,
+  getDirectionFromSeating,
 } from '@nx-bridge/constants';
 import { Deal, Seating, Team } from '@nx-bridge/interfaces-and-types';
 import { AddFetchedDeals as AddFetchedDeals, AppState } from '@nx-bridge/store';
@@ -229,8 +233,25 @@ export class DealsListComponent implements OnInit {
   }
 
   private getDealWinnerFromPureCalculation(deal: Deal): Team {
-    //todo: this is calculation intensive approach to determing which team won game
-    return 'EW';
+    const declarer = getDeclarerFromDeal(deal);
+    const declarersDirection = getDirectionFromSeating(this.seating as Seating, declarer);
+    const declarersPartner = getPartnerFromDirection(this.seating as Seating, declarersDirection as CardinalDirection);
+    const declaringTeamUsernames = [declarer, declarersPartner];
+    const contractPrefixAsNumber = +getCharValueFromCardValueString(deal.contract.split(' ')[0] as CardValuesAsString);
+    const numberTricksNeeded = contractPrefixAsNumber + tricksInABook;
+
+    const tricksDeclarerMade = deal.roundWinners.reduce((count, roundWinner) => {
+      if (declaringTeamUsernames.includes(roundWinner[0])) count++;
+      return count;
+    }, 0);
+
+    if (tricksDeclarerMade >= numberTricksNeeded) {
+      if (declarersDirection === cardinalDirections[0] || declarersDirection === cardinalDirections[2]) return teams[0];
+      else return teams[1];
+    } else {
+      if (declarersDirection === cardinalDirections[0] || declarersDirection === cardinalDirections[2]) return teams[1];
+      else return teams[0];
+    }
   }
 
   private setTeams() {
