@@ -8,6 +8,12 @@
       {{ game?.completionDate | date: 'short' }}
     </h6>
   </div>
+
+  <div class="{{ GAME_DETAIL_CLASSNAME }}__players-labels">
+    <span>{{teams[0]}}:</span>
+    <span>{{teams[1]}}:</span>
+  </div>
+
   <div class="{{ GAME_DETAIL_CLASSNAME }}__players">
 
     <div class="{{ GAME_DETAIL_CLASSNAME }}__players-ns">

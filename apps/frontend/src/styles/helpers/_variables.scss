@@ -29,8 +29,11 @@ $logo-opacity-hover: $logo-opacity-normal * .75;
 
 
 //game-detail
+$game-detail-border: 1px solid var(--color-primary-1);
 $game-detail-padding-sides: $default-font-size * .5;
-
+$game-summary-bg-color: rgba(var(--color-primary-1-rgb), .975);
+$game-summary-color: var(--color-primary-4);
+$game-summary-border-bottom: 1px solid var(--color-primary-3);
 
 //deal-detail
 $deal-detail-table-border: 1px solid rgba(var(--color-primary-1-rgb), 1);

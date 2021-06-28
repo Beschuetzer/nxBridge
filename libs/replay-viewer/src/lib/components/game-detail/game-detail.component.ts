@@ -1,5 +1,5 @@
 import { Component, HostBinding, Input, OnInit } from '@angular/core';
-import { GAME_DETAIL_CLASSNAME } from '@nx-bridge/constants';
+import { GAME_DETAIL_CLASSNAME, teams } from '@nx-bridge/constants';
 import { Game, Seating, Team } from '@nx-bridge/interfaces-and-types';
 
 
@@ -19,6 +19,7 @@ export class GameDetailComponent implements OnInit {
   public northSouthScore: number | undefined = -1;
   public eastWestScore: number | undefined = -1;
   public nsScoreGreater: number | boolean = -1;
+  public teams = teams;
   
   private winner: Team = '';
 

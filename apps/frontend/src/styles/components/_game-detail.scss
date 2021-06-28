@@ -1,10 +1,7 @@
-$game-summary-bg-color: rgba(var(--color-primary-1-rgb), .975);
-$game-summary-color: var(--color-primary-4);
-$game-summary-border-bottom: 1px solid var(--color-primary-3);
 
 .game-detail{
-  border: $default-font-size * .1 solid var(--color-primary-1);
-  border-radius: 6px;
+  border: $game-detail-border;
+  border-radius: 3px;
   // padding: 00 0 0;
   box-shadow: $scrollbar-box-shadow;
   overflow: hidden;
@@ -51,7 +48,6 @@ $game-summary-border-bottom: 1px solid var(--color-primary-3);
     // display: flex;
     // justify-content: space-between;
     // align-items: center;
-    margin: $game-detail-padding-sides 0 0 0;
     display: grid;
     grid-template-columns: 1fr min-content 1fr;
 
@@ -64,6 +60,14 @@ $game-summary-border-bottom: 1px solid var(--color-primary-3);
       text-align: right;
     }
 
+
+    &-labels {
+      display: flex;
+      justify-content: space-between;
+      margin: $game-detail-padding-sides 0 0 0;
+      text-decoration: underline;
+      font-weight: 1000;
+    }
 
     @include respond(small-font) {
       font-size: $default-font-size * .75;
