@@ -49,9 +49,8 @@ export class DealDetailComponent implements OnInit {
   }
   
   setDealSummarySuffix() {
-    //todo: need to get 'went down/up 1/2/3 etc.'
     const madeAmount = this.getMadeAmountString();
-    this.dealSummaryMessageSuffix = ` and ${madeAmount}.` 
+    this.dealSummaryMessageSuffix = `and ${madeAmount}.` 
   }
 
   setContract() {

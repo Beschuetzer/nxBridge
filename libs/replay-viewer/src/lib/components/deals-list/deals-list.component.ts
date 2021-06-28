@@ -199,9 +199,7 @@ export class DealsListComponent implements OnInit {
     const dealAfterDealNorthSouth = dealAfterDeal[teamsFull[0]];
     const dealEastWest = deal[teamsFull[1]];
     const dealAfterDealEastWest = dealAfterDeal[teamsFull[1]];
-    debugger;
 
-    //note: if both the above the line scores are different, we need to go the hard way
     if (
       dealNorthSouth.aboveTheLine !== dealAfterDealNorthSouth.aboveTheLine &&
       dealEastWest.aboveTheLine !== dealAfterDealEastWest.aboveTheLine
