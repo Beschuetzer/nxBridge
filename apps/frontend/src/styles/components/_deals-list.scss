@@ -11,6 +11,10 @@
     margin: 0;
     border-radius: 0 !important;
     border-bottom: $game-summary-border-bottom !important;
+
+    @include respond(phone) {
+      top: 5.5rem;
+    }
   }
 
   &__summary {

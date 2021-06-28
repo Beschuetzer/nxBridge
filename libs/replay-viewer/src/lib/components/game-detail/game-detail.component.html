@@ -9,13 +9,18 @@
     </h6>
   </div>
   <div class="{{ GAME_DETAIL_CLASSNAME }}__players">
-    <span class="{{ GAME_DETAIL_CLASSNAME }}__players-ns">
-      '{{ seating?.north }}' + '{{ seating?.south }}'
-    </span>
-    <span>&nbsp;vs.&nbsp;</span>
-    <span class="{{ GAME_DETAIL_CLASSNAME }}__players-ew">
-      '{{ seating?.east }}' + '{{ seating?.west }}'
-    </span>
+
+    <div class="{{ GAME_DETAIL_CLASSNAME }}__players-ns">
+      <span>'{{ seating?.north }}'</span>
+      &nbsp;+&nbsp;
+      <span>'{{ seating?.south }}'</span>
+    </div>
+    <span class="{{ GAME_DETAIL_CLASSNAME}}__vs">&nbsp;vs.&nbsp;</span>
+    <div class="{{ GAME_DETAIL_CLASSNAME }}__players-ew">
+      <span>'{{ seating?.east }}'</span>
+      &nbsp;+&nbsp;
+      <span>'{{ seating?.west }}'</span>
+    </div>
   </div>
 </div>
 

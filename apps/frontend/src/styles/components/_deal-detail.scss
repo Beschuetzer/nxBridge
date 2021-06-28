@@ -14,7 +14,7 @@
     // grid-row-gap: $default-font-size * .25;
 
     & > * {
-      padding: 0 $game-detail-padding-sides;
+      padding: 0 0 0 $game-detail-padding-sides;
     }
 
     &-hand{
@@ -54,15 +54,60 @@
   }
 
   &__hands {
+    padding: 0;
 
     &-table {
       display: grid;
       grid-template-columns: min-content repeat(4, 1fr);
       grid-template-rows: min-content repeat(4, 1fr);
-      grid-column-gap: $default-font-size;
+      // grid-column-gap: $default-font-size;
       // justify-items: center;
       // align-items: center;
     }
+    
+    // This is the suit html entity column
+    &-column-1 {
+      & > div:nth-of-type(2n+ 2) {
+        color: var(--color-black);
+      }
+      & > div:nth-of-type(2n+ 3) {
+        color: var(--color-red);
+      }
+      & > div {
+        padding: 0 $default-font-size * .25;
+      }
+    } 
+    
+    // bolding usernames
+    &-column-2, &-column-3, &-column-4, &-column-5 {
+      & > div:nth-of-type(1) {
+        font-weight: 700;
+      }
+
+      & > div {
+        padding: 0 $default-font-size * .5;
+      }
+    }
+
+    //add table borders
+    &-column-1, &-column-2, &-column-3, &-column-4, &-column-5 {
+      // border-
+      & > div {
+        border-bottom: $deal-detail-table-border;
+        border-left: $deal-detail-table-border;
+      }
+
+      & > div:nth-of-type(1) {
+        border-top: $deal-detail-table-border;
+      }
+    }
+
+    &-column-5 {
+      & > div {
+        border-right: $deal-detail-table-border;
+      }
+    }
+
   }
 
   & button {

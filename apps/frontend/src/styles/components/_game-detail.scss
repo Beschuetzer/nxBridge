@@ -8,7 +8,7 @@ $game-summary-border-bottom: 1px solid var(--color-primary-3);
   // padding: 00 0 0;
   box-shadow: $scrollbar-box-shadow;
   overflow: hidden;
-  height: $default-font-size * 5.9375;
+  // height: $default-font-size * 5.9375;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -48,16 +48,35 @@ $game-summary-border-bottom: 1px solid var(--color-primary-3);
   }
 
   &__players {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    // display: flex;
+    // justify-content: space-between;
+    // align-items: center;
     margin: $game-detail-padding-sides 0 0 0;
+    display: grid;
+    grid-template-columns: 1fr min-content 1fr;
+
+    
+    &-ew, &-ns {
+      display:  grid;
+    }
 
     &-ew {
       text-align: right;
     }
 
+
+    @include respond(small-font) {
+      font-size: $default-font-size * .75;
+    }
   }  
+
+  &__vs {
+    font-size: $default-font-size * 2;
+    font-weight: 700;
+    align-self: center;  
+    color: var(--color-primary-3);
+  }
+  
 
   &__header{
     display: grid;
@@ -80,7 +99,7 @@ $game-summary-border-bottom: 1px solid var(--color-primary-3);
 
   &.full-size {
     overflow-y: scroll;
-    overflow-x: hidden;
+    overflow-x: scroll;
     height: 50vh;
   }
 }
