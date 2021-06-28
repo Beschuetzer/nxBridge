@@ -101,4 +101,8 @@ $game-summary-border-bottom: 1px solid var(--color-primary-3);
     overflow-y: scroll;
     height: 50vh;
   }
+
+  & button {
+    margin: 0 !important;
+  }
 }

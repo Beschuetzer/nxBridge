@@ -23,7 +23,7 @@ export class DealDetailComponent implements OnInit {
   public DEAL_DETAIL_CLASSNAME = ` ${DEAL_DETAIL_CLASSNAME}`;
   public DISPLAY_NONE_CLASSNAME = ` ${DISPLAY_NONE_CLASSNAME}`;
 
-  private buttonChoices: [string, string] = ['Show Details', 'Hide Details'];
+  private buttonChoices: [string, string] = ['Show', 'Hide'];
 
 
   constructor(
@@ -47,7 +47,7 @@ export class DealDetailComponent implements OnInit {
   }
 
   setDealSummaryPrefix() {
-    this.dealSummaryMessagePrefix = `${this.declarer} played `; 
+    this.dealSummaryMessagePrefix = `'${this.declarer}' played `; 
   }
   
   setDealSummarySuffix() {
@@ -194,13 +194,23 @@ export class DealDetailComponent implements OnInit {
         const child = tableChildren[index];
         const grandChildren = child.children;
         const newTableCell = this.getNewElement('div');
-        this.renderer.setProperty(newTableCell, 'innerHTML', grandChildren[i].innerHTML);
+        const grandChildHTML = this.addQuotationsToUsernames(grandChildren, i);
+
+        this.renderer.setProperty(newTableCell, 'innerHTML', grandChildHTML);
         this.renderer.appendChild(flatTable, newTableCell);
       }
     }
 
     this.renderer.addClass(flatTable, `${DEAL_DETAIL_CLASSNAME}__hands-table`);
     return flatTable;
+  }
+
+  private addQuotationsToUsernames(elements: HTMLCollection, nthChildToUse: number) {
+    let result = elements[nthChildToUse].innerHTML;
+    if (nthChildToUse === 0 && result !== '&nbsp;') {
+      result = `'${elements[nthChildToUse].innerHTML}'`;
+    }
+    return result;
   }
 
   // getUserColumn(hand: HandForConsumption, username: string) {

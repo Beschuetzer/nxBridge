@@ -18,17 +18,10 @@
   }
 
   &__summary {
-    padding: $game-detail-padding-sides;
-    // width: 100%;
-    // position: sticky;
-    // top: $default-font-size;
-    // left: 0;
-    // margin: 0;
-    // border-radius: 0 !important;
-    // padding: $default-font-size * .25 $default-font-size * .5;
-    // // font-size: $default-font-size * .75;
-    // text-align: center;
-    // backdrop-filter: blur($default-font-size);
+    // padding: $game-detail-padding-sides;
+    display: grid;
+    grid-template-columns: 1fr max-content;
+    padding: 0;
   }
 
 }

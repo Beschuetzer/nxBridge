@@ -45,15 +45,13 @@
     font-weight: 700;
     padding: 0 0 0 $game-detail-padding-sides;
     display: grid;
-    grid-template-columns: min-content 1fr min-content;
+    grid-template-columns: min-content 1fr max-content;
     grid-column-gap: $game-detail-padding-sides;
     align-items: center;
     // text-align: center;
 
     &-number {
-      font-weight: 100;
       line-height: 0;
-      font-size: $default-font-size * 1;
     }
 
     &-text {

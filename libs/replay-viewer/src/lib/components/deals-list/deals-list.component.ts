@@ -78,13 +78,10 @@ export class DealsListComponent implements OnInit {
     toggleInnerHTML(button, this.buttonChoicesDeals);
   }
 
-  onShowDetails() {
-    const items = this.elRef.nativeElement.querySelectorAll(`.${DEAL_DETAIL_CLASSNAME}__summary-more`);
-    console.log('items =', items);
-    for (let i = 0; i < items.length; i++) {
-      const item = items[i];
-      toggleInnerHTML(item, this.buttonChoicesDetails);
-    }
+  onShowDetails(e: Event) {
+    const items = this.elRef.nativeElement.querySelectorAll(`.${DEAL_DETAIL_CLASSNAME}__details-more`);
+    toggleClassOnList(items, DISPLAY_NONE_CLASSNAME)
+    toggleInnerHTML((e?.currentTarget || e?.target) as HTMLElement, this.buttonChoicesDetails);
   }
 
   private getItemsFromDB() {
