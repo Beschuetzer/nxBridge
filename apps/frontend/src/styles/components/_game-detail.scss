@@ -34,8 +34,8 @@
   }
 
   &__score {
-    position: sticky;
-    top: $default-font-size * 5.75;
+    // position: sticky;
+    // top: 8.6rem;
     // margin: $game-detail-padding-sides 0;
     background-color: $game-summary-bg-color;
     color: $game-summary-color;
@@ -56,6 +56,10 @@
     
     &-ew, &-ns {
       display:  grid;
+
+      & span:nth-child(2) {
+        line-height: $default-font-size * .5;
+      }
     }
 
     &-ew {
@@ -69,6 +73,8 @@
       margin: $game-detail-padding-sides 0 0 0;
       text-decoration: underline;
       font-weight: 1000;
+
+      
     }
 
     @include respond(small-font) {
@@ -104,34 +110,73 @@
   }
 
   &.full-size {
-    // position: absolute;
-    // top: 0;
-    // left: 0;
-    // width: 100%;
-    // height: 100%;
-    // z-index: 10000;
-    // background: rgba(var(--color-white), 1);
-    // backdrop-filter: blur(10px);
-
+    font-size: $default-font-size * .75;
+    border: none;
     position: absolute;
-    top: 50%;
+    top: 0%;
     left: 50%;
-    width: 75%;
+    width: 100%;
     max-height: 100vh;
+    height: 100vh;
     overflow: auto;
     z-index: 10000;
-    transform: translate(-50%, -50%);
-    background: rgba(var( --color-white-rgb), 1);
+    transform: translate(-50%, 0%);
+    background: rgba(var( --color-white-rgb), .85);
+    backdrop-filter: blur(10px);
+    box-shadow: none;
 
-    // &::after {
-    //   content: '';
-    //   position: absolute;
-    //   top: 0;
-    //   left: 0;
-    //   width: 100vw;
-    //   height: 100vh;
-    //   background: rgba(var( --color-black-rgb), 1);
-    // }
+
+    & > * {
+      max-width: $game-detail-inner-width-full-size;
+      width: 97.5%;
+      margin: 0 auto;
+      border-left: $game-detail-border;
+      border-right: $game-detail-border;
+      // box-shadow: $scrollbar-box-shadow;
+     
+
+      &:nth-last-child(n + 2) {
+        padding: $default-font-size $default-font-size * 2;
+
+        @include respond(phone) {
+          padding: $game-detail-padding-sides;
+        }
+      }
+    }
+
+    & > *:nth-child(n + 3) {
+      background: rgba(var(--color-white-rgb), 1);
+    }
+
+    & .game-detail {
+      &__vs {
+        font-size: $default-font-size * 4;
+        align-self: auto;
+      }
+      &__header-room {
+        font-size: $default-font-size;
+      }
+      &__header-date {
+        font-size: $default-font-size;
+      }
+    }
+
+    & .deals-list__button {
+      &-deals {
+        position: sticky;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: auto;
+        font-size: $default-font-size * .875;
+      }
+    }
+
+    & .game-detail__players-labels{
+      &:nth-child(2) {
+        margin: .8rem 0;
+      }
+    }
   }
 
   & button {

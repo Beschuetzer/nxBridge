@@ -4,9 +4,9 @@
     <h4 class="{{ GAME_DETAIL_CLASSNAME }}__header-room">
       Room: '{{ game?.room?.name }}'
     </h4>
-    <h6 class="{{ GAME_DETAIL_CLASSNAME }}__header-date">
+    <h5 class="{{ GAME_DETAIL_CLASSNAME }}__header-date">
       {{ game?.completionDate | date: 'short' }}
-    </h6>
+    </h5>
   </div>
 
   <div class="{{ GAME_DETAIL_CLASSNAME }}__players-labels">
@@ -18,13 +18,13 @@
 
     <div class="{{ GAME_DETAIL_CLASSNAME }}__players-ns">
       <span>'{{ seating?.north }}'</span>
-      &nbsp;+&nbsp;
+      <span>+&nbsp;</span>
       <span>'{{ seating?.south }}'</span>
     </div>
-    <span class="{{ GAME_DETAIL_CLASSNAME}}__vs">&nbsp;vs.&nbsp;</span>
+    <span class="{{ GAME_DETAIL_CLASSNAME}}__vs">vs.</span>
     <div class="{{ GAME_DETAIL_CLASSNAME }}__players-ew">
       <span>'{{ seating?.east }}'</span>
-      &nbsp;+&nbsp;
+      <span>&nbsp;+</span>
       <span>'{{ seating?.west }}'</span>
     </div>
   </div>

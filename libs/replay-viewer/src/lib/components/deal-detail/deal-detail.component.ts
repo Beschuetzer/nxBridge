@@ -20,8 +20,8 @@ export class DealDetailComponent implements OnInit {
   public dealSummaryMessageContract = '';
   public dealSummaryMessageSuffix = '';
   public contract = {prefix: '', htmlEntity: ''};
-  public DEAL_DETAIL_CLASSNAME = ` ${DEAL_DETAIL_CLASSNAME}`;
-  public DISPLAY_NONE_CLASSNAME = ` ${DISPLAY_NONE_CLASSNAME}`;
+  public DEAL_DETAIL_CLASSNAME = DEAL_DETAIL_CLASSNAME;
+  public DISPLAY_NONE_CLASSNAME = DISPLAY_NONE_CLASSNAME;
   public buttonChoices: [string, string] = dealDetailButtonChoices;
 
   constructor(
@@ -154,7 +154,6 @@ export class DealDetailComponent implements OnInit {
 
     //todo: need the initial column then four others
     this.renderer.appendChild(table, this.getSuitColumn());
-
 
     if (!hands) return null;
     for (let i = 0; i < hands.length; i++) {

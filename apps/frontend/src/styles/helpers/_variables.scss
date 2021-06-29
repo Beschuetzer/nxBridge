@@ -34,10 +34,16 @@ $game-detail-padding-sides: $default-font-size * .5;
 $game-summary-bg-color: rgba(var(--color-primary-1-rgb), 1);
 $game-summary-color: var(--color-primary-4);
 $game-summary-border-bottom: 1px solid var(--color-primary-3);
+$game-detail-inner-width-full-size: $default-font-size * 33;
+
 
 //deal-detail
 $deal-detail-table-border: 1px solid rgba(var(--color-primary-1-rgb), 1);
 $deal-detail-separator: 1px solid rgba(var(--color-primary-1-rgb), .5);
+
+$deals-list-shadow:  0 4px 12px rgba(var(--color-black-rgb), .33);
+
+
 
 //skills
 $skills-linear-gradient-original: linear-gradient(
@@ -81,4 +87,5 @@ $animation-navbar: $animation-duration $animation-easing-standard;
 	--big-desktop-min-width: #{$big-desktop-min-width};
 	--nav-switch-width: #{$nav-switch-width};
 	--larger-than-nav-switch: #{$larger-than-nav-switch};
+	--game-detail-padding-sides: #{$game-detail-padding-sides};
 }
