@@ -66,6 +66,7 @@ Components:
 -bolden the high cards ("A, k q j") in table
 -need to add a bidding table to deal-detail
 
+-full-screen deal-detail: add click outside box of closes
 -use deals-list dealResults to change deal-detail table username color (winners = green and losers = red)
 -change deal-detal__summary-text to red or green depending on if declarer won it.
 -work on responsive styling for full-size game-detail

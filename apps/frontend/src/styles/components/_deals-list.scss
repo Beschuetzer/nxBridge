@@ -23,6 +23,8 @@
       ;
       font-size: $default-font-size * 2 !important;
 
+      
+
       &:hover {
         opacity: .75;
         border-bottom: $deal-detail-separator !important; 
@@ -30,9 +32,14 @@
     }
 
     &-details {
-      width: $default-font-size * 9.28125;
+      width: $default-font-size * 9.25;
       border-left: $deal-detail-separator !important; 
       border-radius: 0 !important;
+
+      @include respond($layout-breakpoint) {
+        border-left: none !important;
+        width: 100%;
+      }
     }
   }
 
@@ -44,11 +51,20 @@
     align-items: center;
     border-top: $deal-detail-separator !important; 
     border-bottom: $deal-detail-separator !important; 
+
+    @include respond($layout-breakpoint ) {
+      grid-template-columns: auto;
+      grid-template-rows: 1fr 1fr;
+    }
   }
 
   &__deal-count {
     padding: 0 var(--game-detail-padding-sides);
     font-weight: 700;
     text-align: center;
+    
+    @include respond($layout-breakpoint) {
+      width: max-content;
+    }
   }
 }

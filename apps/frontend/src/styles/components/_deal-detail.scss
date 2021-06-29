@@ -1,4 +1,3 @@
-$layout-breakpoint: phone;
 .deal-detail {
   display: grid;
   grid-template-columns: 1fr min-content;
@@ -54,6 +53,13 @@ $layout-breakpoint: phone;
 
     @include respond($layout-breakpoint) {
       grid-template-columns: auto;
+      padding: 0;
+      font-size: $default-font-size * .75;
+
+      & > *:nth-child(-n + 2) {
+        padding: 0 0 0 $game-detail-padding-sides;
+      }
+
     }
 
     &-text-container {
@@ -105,11 +111,14 @@ $layout-breakpoint: phone;
       display: grid;
       grid-template-columns: min-content repeat(4, 1fr);
       grid-template-rows: min-content repeat(4, 1fr);
-      padding: 0 var(--game-detail-padding-sides)
-        $default-font-size * .5  var(--game-detail-padding-sides);
+      padding: $default-font-size * .5  var(--game-detail-padding-sides);
       // grid-column-gap: $default-font-size;
       // justify-items: center;
       // align-items: center;
+
+      @include respond($layout-breakpoint) {
+        padding: $default-font-size * .5;
+      }
 
       & > div {
         display: flex;
@@ -121,9 +130,9 @@ $layout-breakpoint: phone;
         line-break: anywhere;
       }
 
-      // & > div:nth-last-child(-n + 5) {
-      //   border-bottom: $deal-detail-table-border;
-      // }
+      & > div:nth-child(-n + 5) {
+        border-top: $deal-detail-table-border;
+      }
 
       & > div:nth-child(-n + 5) {
         font-weight: 700;
@@ -161,15 +170,27 @@ $layout-breakpoint: phone;
   & button {
     // margin-top: $default-font-size * .5 !important;
     width: 100%;
+    max-width: 100%;
     margin-right: 0 !important;
     border-radius: 0 !important;
     border-top: $game-summary-border-bottom !important; 
-    border-bottom: $game-summary-border-bottom !important; 
+    border-bottom: $game-summary-border-bottom !important;
+    
+    @include respond($layout-breakpoint) {
+      border-top: $deal-detail-separator !important;
+      border-bottom: none !important;
+    }
   }
 
   &__view-button,
   &__watch-button {
     // width: $default-font-size * 6 !important;
     border-left: $deal-detail-separator !important; 
+  }
+
+  &__view-button {
+    @include respond($layout-breakpoint) {
+      border-left: none !important;
+    }
   }
 }

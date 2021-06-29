@@ -116,7 +116,7 @@
     display: grid;
     grid-template-columns: 1fr max-content 1fr;
     grid-template-rows: 1fr repeat(3, min-content) 1fr;
-    --game-detail-padding-sides: #{$default-font-size * 2};
+    --game-detail-padding-sides: #{$default-font-size * 4.25};
     font-size: $default-font-size * 0.75;
     border: none;
     position: absolute;
@@ -145,7 +145,7 @@
         padding: $default-font-size $default-font-size * 2;
 
         @include respond(phone) {
-          padding: var(--game-detail-padding-sides);
+          padding: $default-font-size * .5;
         }
       }
     }
@@ -171,27 +171,49 @@
         font-size: $default-font-size * 4;
         align-self: auto;
       }
-      &__header-room {
-        font-size: $default-font-size;
+
+      &__header {
+        grid-column-gap: 40vmin;
+
+        &-room {
+          font-size: $default-font-size;
+        }
+        &-date {
+          font-size: $default-font-size;
+  
+          @include respond($layout-breakpoint) {
+            font-size: $default-font-size * .75;
+            margin-left: auto;
+            width: max-content;
+          }
+        }
       }
-      &__header-date {
-        font-size: $default-font-size;
-      }
+      
       &__summary, &__score {
         background-color:  $game-summary-bg-color-full-size;
       }
+      &__summary {
+        border-top: $game-detail-border-thick;
+        border-radius: $border-radius-full-screen $border-radius-full-screen 0 0;
+      }
+
+      
     }
     
+    & .deals-list {
+      // overflow: hidden;
+      // border-radius: 0 0 $border-radius-full-screen $border-radius-full-screen;
 
-    & .deals-list__button {
-      &-deals {
-        position: sticky;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: auto;
-        font-size: $default-font-size * 0.875 !important;
-        opacity: 1;
+      &__button {
+        &-deals {
+          position: sticky;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: auto;
+          font-size: $default-font-size * 0.875 !important;
+          opacity: 1;
+        }
       }
     }
 
@@ -205,5 +227,10 @@
   & button {
     margin: 0 !important;
     height: 100% ;
+
+    @include respond($layout-breakpoint) {
+      font-size: $default-font-size * .75 !important;
+      
+    }
   }
 }

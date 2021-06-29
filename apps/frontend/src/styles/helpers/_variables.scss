@@ -7,6 +7,7 @@ $tab-land-max-width: 58.5625em;
 $nav-switch-width: 68.75em;
 $larger-than-nav-switch: calc(#{$nav-switch-width} + 0.001em);
 $big-desktop-min-width: 112.5em;
+$layout-breakpoint: phone;
 
 //font
 // $font-family-text: "Roboto", sans-serif;
@@ -69,6 +70,11 @@ $animation-easing-standard-easeInOutBack-smaller: cubic-bezier(
 $animation-easing-flash: cubic-bezier(0.68, -2, 0.32, 1);
 $animation-easing-modern: cubic-bezier(1, 0, 0, 1);
 $animation-navbar: $animation-duration $animation-easing-standard;
+
+
+
+$border-radius-full-screen: $default-font-size * .5;
+
 
 :root {
   scroll-behavior: smooth;
