@@ -1,5 +1,5 @@
 .game-detail {
-  border: $game-detail-border;
+  border: $game-detail-border-thick;
   border-radius: 3px;
   // padding: 00 0 0;
   box-shadow: $scrollbar-box-shadow;
@@ -52,15 +52,17 @@
   }
 
   &__players {
-    // display: flex;
-    // justify-content: space-between;
-    // align-items: center;
+    font-weight: 1000;
     display: grid;
     grid-template-columns: 1fr min-content 1fr;
 
     &-ew,
     &-ns {
       display: grid;
+
+      & span {
+        line-break: anywhere;
+      }
 
       & span:nth-child(2) {
         line-height: $default-font-size * 0.5;
@@ -135,8 +137,8 @@
       max-width: $game-detail-inner-width-full-size;
       width: 97.5%;
       margin: 0 auto;
-      border-left: $game-detail-border;
-      border-right: $game-detail-border;
+      border-left: $game-detail-border-thick;
+      border-right: $game-detail-border-thick;
       // box-shadow: $scrollbar-box-shadow;
 
       &:nth-last-child(n + 2) {
@@ -175,7 +177,11 @@
       &__header-date {
         font-size: $default-font-size;
       }
+      &__summary, &__score {
+        background-color:  $game-summary-bg-color-full-size;
+      }
     }
+    
 
     & .deals-list__button {
       &-deals {
@@ -184,7 +190,8 @@
         left: 0;
         width: 100%;
         height: auto;
-        font-size: $default-font-size * 0.875;
+        font-size: $default-font-size * 0.875 !important;
+        opacity: 1;
       }
     }
 
@@ -197,5 +204,6 @@
 
   & button {
     margin: 0 !important;
+    height: 100% ;
   }
 }

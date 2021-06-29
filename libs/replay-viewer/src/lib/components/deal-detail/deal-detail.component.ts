@@ -45,12 +45,14 @@ export class DealDetailComponent implements OnInit {
   }
 
   setDealSummaryPrefix() {
-    this.dealSummaryMessagePrefix = `'${this.declarer}' played `; 
+    this.dealSummaryMessagePrefix = `'${this.declarer}'`; 
   }
   
   setDealSummarySuffix() {
-    const madeAmount = this.getMadeAmountString();
-    this.dealSummaryMessageSuffix = `and ${madeAmount}.` 
+    const [madeAmount, difference] = this.getMadeAmountString();
+
+    // const madeAmount 
+    this.dealSummaryMessageSuffix = `${madeAmount}` 
   }
 
   setContract() {
@@ -124,7 +126,7 @@ export class DealDetailComponent implements OnInit {
     if (amountMade < amountNeeded) result = `went down ${difference}`;
     else if (amountMade > amountNeeded) result = `made ${difference} ${difference === 1 ? "overtrick" : "overtricks"}`;
 
-    return result;
+    return [result, difference];
   }
   
   private getPlayingPlayers() {

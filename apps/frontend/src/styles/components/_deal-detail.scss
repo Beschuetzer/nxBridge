@@ -50,10 +50,17 @@ $layout-breakpoint: phone;
     grid-column-gap: $default-font-size * 0.25;
     align-items: center;
     // text-align: center;
-    border-bottom: $deal-detail-separator;
+    border-bottom: $game-detail-border;
 
     @include respond($layout-breakpoint) {
       grid-template-columns: auto;
+    }
+
+    &-text {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      font-weight: 100;
     }
 
     &-buttons {
@@ -88,6 +95,7 @@ $layout-breakpoint: phone;
     padding: 0;
 
     &-table {
+      font-size: $default-font-size * 0.66;
       display: grid;
       grid-template-columns: min-content repeat(4, 1fr);
       grid-template-rows: min-content repeat(4, 1fr);
@@ -149,12 +157,13 @@ $layout-breakpoint: phone;
     width: 100%;
     margin-right: 0 !important;
     border-radius: 0 !important;
-    // margin: $default-font-size * .5 0 $default-font-size 0;
+    border-top: $game-summary-border-bottom !important; 
+    border-bottom: $game-summary-border-bottom !important; 
   }
 
   &__view-button,
   &__watch-button {
-    width: $default-font-size * 6 !important;
+    // width: $default-font-size * 6 !important;
     border-left: $deal-detail-separator !important; 
   }
 }

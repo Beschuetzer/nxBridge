@@ -23,7 +23,7 @@ export const DEAL_DETAIL_CLASSNAME = 'deal-detail';
 export const GAME_DETAIL_CLASSNAME = 'game-detail';
 export const FULL_SIZE_CLASSNAME = 'full-size';
 
-export const dealsListDealsButtonChoices: [string, string] = ['Show Deals', 'Hide Deals'];
-export const dealsListDetailsButtonChoices: [string, string] = ['Show All Details', 'Hide All Details'];
-export const dealDetailButtonChoices: [string, string] = ['Show Details', 'Hide Details'];
+export const dealsListDealsButtonChoices: [string, string] = ['Open', 'Close'];
+export const dealsListDetailsButtonChoices: [string, string] = ['Show All', 'Hide All'];
+export const dealDetailButtonChoices: [string, string] = ['Show', 'Hide'];
 

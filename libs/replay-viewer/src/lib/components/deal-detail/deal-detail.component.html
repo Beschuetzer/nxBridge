@@ -4,12 +4,17 @@
       Deal {{ dealIndex !== null ? dealIndex + 1 : 0 }}): &nbsp;
     </span>
     <div class="{{ DEAL_DETAIL_CLASSNAME }}__summary-text">
-      <span>
+      <div class="{{ DEAL_DETAIL_CLASSNAME }}__text-container">
         <span>{{ dealSummaryMessagePrefix }}</span>
-        <span>{{ contract.prefix }}</span>
-        <span [innerHtml]="contract.htmlEntity"></span>
-      </span>
-      <span>&nbsp;{{ dealSummaryMessageSuffix }}</span>
+        <span>&nbsp;played&nbsp;</span>
+        <span>
+          <span>{{ contract.prefix }}</span>
+          <span [innerHtml]="contract.htmlEntity"></span>
+        </span>
+        <span>&nbsp;and&nbsp;</span>
+        <span>&nbsp;{{ dealSummaryMessageSuffix }}</span>
+        .
+      </div>
     </div>
 
     <div class="{{ DEAL_DETAIL_CLASSNAME }}__summary-buttons">
