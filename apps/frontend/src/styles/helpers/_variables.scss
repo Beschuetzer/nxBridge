@@ -12,51 +12,46 @@ $big-desktop-min-width: 112.5em;
 // $font-family-text: "Roboto", sans-serif;
 // $font-family-headers: "Cinzel", sans-serif;
 $line-height: 1.5;
-$font-family-fancy-bridge: "New Tegomin", serif;
-$font-family-text: "Open Sans", sans-serif;
-$font-family-headers: "Merriweather", serif;
+$font-family-fancy-bridge: 'New Tegomin', serif;
+$font-family-text: 'Open Sans', sans-serif;
+$font-family-headers: 'Merriweather', serif;
 $default-font-size: 1.6rem;
 $scrollbar-box-shadow: inset 0 0 $default-font-size * 0.5
-	rgba(var(--color-primary-1-rgb), 0.5);
+  rgba(var(--color-primary-1-rgb), 0.5);
 $scrollbar-track-background: var(--color-primary-1);
 $scrollbar-thumb-background: var(--color-primary-4);
 
-
 //login-card
 $login-card-logo: '../../bridge-logo.svg';
-$logo-opacity-normal: .05;
-$logo-opacity-hover: $logo-opacity-normal * .75;
-
+$logo-opacity-normal: 0.05;
+$logo-opacity-hover: $logo-opacity-normal * 0.75;
 
 //game-detail
 $game-detail-border: 1px solid var(--color-primary-1);
-$game-detail-padding-sides: $default-font-size * .5;
+$game-detail-padding-sides: $default-font-size * 0.5;
 $game-summary-bg-color: rgba(var(--color-primary-1-rgb), 1);
 $game-summary-color: var(--color-primary-4);
 $game-summary-border-bottom: 1px solid var(--color-primary-3);
 $game-detail-inner-width-full-size: $default-font-size * 33;
 
-
 //deal-detail
 $deal-detail-table-border: 1px solid rgba(var(--color-primary-1-rgb), 1);
-$deal-detail-separator: 1px solid rgba(var(--color-primary-1-rgb), .5);
+$deal-detail-separator: 1px solid rgba(var(--color-primary-1-rgb), 0.5);
 
-$deals-list-shadow:  0 4px 12px rgba(var(--color-black-rgb), .33);
-
-
+$deals-list-shadow: 0 4px 12px rgba(var(--color-black-rgb), 0.33);
 
 //skills
 $skills-linear-gradient-original: linear-gradient(
-	to left,
-	var(--color-primary-1) 0%,
-	var(--color-primary-4) 5%,
-	var(--color-primary-1) 10%,
-	var(--color-primary-1) 100%
+  to left,
+  var(--color-primary-1) 0%,
+  var(--color-primary-4) 5%,
+  var(--color-primary-1) 10%,
+  var(--color-primary-1) 100%
 );
 $skills-linear-gradient-hover: linear-gradient(
-	to right,
-	var(--color-primary-1),
-	var(--color-primary-1)
+  to right,
+  var(--color-primary-1),
+  var(--color-primary-1)
 );
 
 //animation
@@ -64,28 +59,28 @@ $animation-duration: 0.5s;
 $animation-easing-standard: ease;
 $animation-easing-standard-easeInOutBack: cubic-bezier(0.68, -0.6, 0.32, 1.6);
 $animation-easing-standard-easeInOutBack-smaller: cubic-bezier(
-	0.68,
-	-0.2,
-	0.32,
-	1.2
+  0.68,
+  -0.2,
+  0.32,
+  1.2
 );
 $animation-easing-flash: cubic-bezier(0.68, -2, 0.32, 1);
 $animation-easing-modern: cubic-bezier(1, 0, 0, 1);
 $animation-navbar: $animation-duration $animation-easing-standard;
 
 :root {
-	scroll-behavior: smooth;
-	--scrollbar-width: #{$default-font-size * 1};
-	--default-font-size: #{$default-font-size};
+  scroll-behavior: smooth;
+  --scrollbar-width: #{$default-font-size * 1};
+  --default-font-size: #{$default-font-size};
 
-	//setting media query custom properties
-	--small-font-max-width: #{$small-font-max-width};
-	--nav-break-max-width: #{$nav-break-max-width};
-	--phone-max-width: #{$phone-max-width};
-	--tab-port-max-width: #{$tab-port-max-width};
-	--tab-land-max-width: #{$tab-land-max-width};
-	--big-desktop-min-width: #{$big-desktop-min-width};
-	--nav-switch-width: #{$nav-switch-width};
-	--larger-than-nav-switch: #{$larger-than-nav-switch};
-	--game-detail-padding-sides: #{$game-detail-padding-sides};
+  //setting media query custom properties
+  --small-font-max-width: #{$small-font-max-width};
+  --nav-break-max-width: #{$nav-break-max-width};
+  --phone-max-width: #{$phone-max-width};
+  --tab-port-max-width: #{$tab-port-max-width};
+  --tab-land-max-width: #{$tab-land-max-width};
+  --big-desktop-min-width: #{$big-desktop-min-width};
+  --nav-switch-width: #{$nav-switch-width};
+  --larger-than-nav-switch: #{$larger-than-nav-switch};
+  --game-detail-padding-sides: #{$game-detail-padding-sides};
 }

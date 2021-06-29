@@ -2,28 +2,28 @@ $layout-breakpoint: phone;
 .deal-detail {
   display: grid;
   grid-template-columns: 1fr min-content;
-  border-top: $deal-detail-separator;
+  border-top: $game-detail-border;
   // padding: 0 $default-font-size * .5;
   // grid-column-gap: $default-font-size * .75;
 
-  &:last-of-type{
+  &:last-of-type {
     border-bottom: $game-detail-border;
   }
 
-  &__details{
+  &__details {
     display: grid;
     grid-template-rows: repeat(5, min-content);
     // grid-row-gap: $default-font-size * .25;
 
     & > * {
-      padding: 0 0 0 $game-detail-padding-sides;
+      padding: 0 0 0 var(--game-detail-padding-sides);
     }
 
     &-more {
       padding: 0;
     }
 
-    &-hand{
+    &-hand {
       display: grid;
       grid-template-columns: 12ch 1fr;
       grid-template-rows: repeat(4, 1fr);
@@ -39,18 +39,18 @@ $layout-breakpoint: phone;
     &-suit {
       // text-align: center;
     }
-
   }
 
   &__summary {
-    font-size: $default-font-size * .625;
+    font-size: $default-font-size * 0.625;
     font-weight: 700;
-    padding: 0 0 0 $game-detail-padding-sides;
+    padding: 0 0 0 $default-font-size * .5;
     display: grid;
     grid-template-columns: max-content 1fr max-content;
-    grid-column-gap: $game-detail-padding-sides * .5;
+    grid-column-gap: $default-font-size * 0.25;
     align-items: center;
     // text-align: center;
+    border-bottom: $deal-detail-separator;
 
     @include respond($layout-breakpoint) {
       grid-template-columns: auto;
@@ -66,7 +66,7 @@ $layout-breakpoint: phone;
         & button {
           width: 100% !important;
           max-width: $default-font-size * 10;
-          border-radius: $default-font-size * .5 !important;
+          border-radius: $default-font-size * 0.5 !important;
 
           &:nth-of-type(2) {
             justify-self: flex-end;
@@ -91,7 +91,8 @@ $layout-breakpoint: phone;
       display: grid;
       grid-template-columns: min-content repeat(4, 1fr);
       grid-template-rows: min-content repeat(4, 1fr);
-      padding: 0 $game-detail-padding-sides $game-detail-padding-sides $game-detail-padding-sides;
+      padding: 0 var(--game-detail-padding-sides)
+        $default-font-size * .5  var(--game-detail-padding-sides);
       // grid-column-gap: $default-font-size;
       // justify-items: center;
       // align-items: center;
@@ -99,17 +100,16 @@ $layout-breakpoint: phone;
       & > div {
         display: flex;
         align-items: center;
-        border-top: $deal-detail-table-border;
+        border-bottom: $deal-detail-table-border;
         border-left: $deal-detail-table-border;
-        padding: 0 $default-font-size * .5;
+        padding: 0 $default-font-size * 0.5;
         color: var(--color-black);
         line-break: anywhere;
-
       }
 
-      & > div:nth-last-child(-n+5) {
-        border-bottom: $deal-detail-table-border;
-      }
+      // & > div:nth-last-child(-n + 5) {
+      //   border-bottom: $deal-detail-table-border;
+      // }
 
       & > div:nth-child(-n + 5) {
         font-weight: 700;
@@ -128,14 +128,14 @@ $layout-breakpoint: phone;
       //left column of table (suits)
 
       & > div:nth-child(5n + 1) {
-        padding: 0 $default-font-size * .25;
+        padding: 0 $default-font-size * 0.25;
         font-weight: 1000;
         // @include respond(phone) {
-          //   font-size: $default-font-size * .85;
-          // }
-          // @include respond(small-font) {
-          //   font-size: $default-font-size * .75;
-          // }
+        //   font-size: $default-font-size * .85;
+        // }
+        // @include respond(small-font) {
+        //   font-size: $default-font-size * .75;
+        // }
       }
 
       & > div:nth-child(n + 11):nth-last-child(n + 6) {
@@ -152,7 +152,9 @@ $layout-breakpoint: phone;
     // margin: $default-font-size * .5 0 $default-font-size 0;
   }
 
-  &__view-button, &__watch-button {
+  &__view-button,
+  &__watch-button {
     width: $default-font-size * 6 !important;
+    border-left: $deal-detail-separator !important; 
   }
 }

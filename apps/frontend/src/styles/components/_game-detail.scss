@@ -1,5 +1,4 @@
-
-.game-detail{
+.game-detail {
   border: $game-detail-border;
   border-radius: 3px;
   // padding: 00 0 0;
@@ -11,35 +10,36 @@
   // justify-content: space-between;
   position: relative;
 
-  &::-webkit-scrollbar-thumb, &::-webkit-scrollbar-track, &::-webkit-scrollbar-track-piece {
-    border-radius: $default-font-size * .5 !important;
+  &::-webkit-scrollbar-thumb,
+  &::-webkit-scrollbar-track,
+  &::-webkit-scrollbar-track-piece {
+    border-radius: $default-font-size * 0.5 !important;
   }
 
   & > * {
-    padding: 0 $game-detail-padding-sides;
+    padding: 0 var(--game-detail-padding-sides);
   }
 
   &__summary {
-
     // &.sticky {
-      width: 100%;
-      position: sticky;
-      top: 0;
-      padding: $game-detail-padding-sides;
-      background-color: $game-summary-bg-color;
-      color: $game-summary-color;
-      // backdrop-filter: blur(10px);
-      border-bottom: $game-summary-border-bottom;
+    width: 100%;
+    position: sticky;
+    top: 0;
+    padding: var(--game-detail-padding-sides);
+    background-color: $game-summary-bg-color;
+    color: $game-summary-color;
+    // backdrop-filter: blur(10px);
+    border-bottom: $game-summary-border-bottom;
     // }
   }
 
   &__score {
     // position: sticky;
     // top: 8.6rem;
-    // margin: $game-detail-padding-sides 0;
+    // margin: var(--game-detail-padding-sides) 0;
     background-color: $game-summary-bg-color;
     color: $game-summary-color;
-    // padding-bottom: $game-detail-padding-sides;
+    // padding-bottom: var(--game-detail-padding-sides);
     border-bottom: $game-summary-border-bottom;
     display: flex;
     justify-content: space-between;
@@ -53,12 +53,12 @@
     display: grid;
     grid-template-columns: 1fr min-content 1fr;
 
-    
-    &-ew, &-ns {
-      display:  grid;
+    &-ew,
+    &-ns {
+      display: grid;
 
       & span:nth-child(2) {
-        line-height: $default-font-size * .5;
+        line-height: $default-font-size * 0.5;
       }
     }
 
@@ -66,34 +66,30 @@
       text-align: right;
     }
 
-
     &-labels {
       display: flex;
       justify-content: space-between;
-      margin: $game-detail-padding-sides 0 0 0;
+      margin: var(--game-detail-padding-sides) 0 0 0;
       text-decoration: underline;
       font-weight: 1000;
-
-      
     }
 
     @include respond(small-font) {
-      font-size: $default-font-size * .75;
+      font-size: $default-font-size * 0.75;
     }
-  }  
+  }
 
   &__vs {
     font-size: $default-font-size * 2;
     font-weight: 700;
-    align-self: center;  
+    align-self: center;
     color: var(--color-primary-3);
   }
-  
 
-  &__header{
+  &__header {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    justify-content: space-between;;
+    justify-content: space-between;
     align-items: center;
 
     & > * {
@@ -110,7 +106,8 @@
   }
 
   &.full-size {
-    font-size: $default-font-size * .75;
+    --game-detail-padding-sides: #{$default-font-size * 2};
+    font-size: $default-font-size * 0.75;
     border: none;
     position: absolute;
     top: 0%;
@@ -121,10 +118,9 @@
     overflow: auto;
     z-index: 10000;
     transform: translate(-50%, 0%);
-    background: rgba(var( --color-white-rgb), .85);
+    background: rgba(var(--color-white-rgb), 0.85);
     backdrop-filter: blur(10px);
     box-shadow: none;
-
 
     & > * {
       max-width: $game-detail-inner-width-full-size;
@@ -133,13 +129,12 @@
       border-left: $game-detail-border;
       border-right: $game-detail-border;
       // box-shadow: $scrollbar-box-shadow;
-     
 
       &:nth-last-child(n + 2) {
         padding: $default-font-size $default-font-size * 2;
 
         @include respond(phone) {
-          padding: $game-detail-padding-sides;
+          padding: var(--game-detail-padding-sides);
         }
       }
     }
@@ -168,13 +163,13 @@
         left: 0;
         width: 100%;
         height: auto;
-        font-size: $default-font-size * .875;
+        font-size: $default-font-size * 0.875;
       }
     }
 
-    & .game-detail__players-labels{
+    & .game-detail__players-labels {
       &:nth-child(2) {
-        margin: .8rem 0;
+        margin: 0.8rem 0;
       }
     }
   }

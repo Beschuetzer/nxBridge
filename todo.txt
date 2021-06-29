@@ -68,3 +68,4 @@ Components:
 
 -use deals-list dealResults to change deal-detail table username color (winners = green and losers = red)
 -work on responsive styling for full-size game-detail
+

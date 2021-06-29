@@ -4,8 +4,7 @@
   box-shadow: $deals-list-shadow;
 
   &__button {
-
-    &-deals{
+    &-deals {
       // margin: $default-font-size * .5 0 0 0 !important;
       width: 100%;
       // position: sticky;
@@ -22,20 +21,24 @@
 
     &-details {
       width: $default-font-size * 12;
+      border-left: $deal-detail-separator !important; 
+      border-radius: 0 !important;
     }
   }
 
   &__summary {
-    // padding: $game-detail-padding-sides;
+    // padding: var(--game-detail-padding-sides);
     display: grid;
     grid-template-columns: 1fr max-content;
     padding: 0;
     align-items: center;
+    border-top: $deal-detail-separator !important; 
+    border-bottom: $deal-detail-separator !important; 
   }
 
-  &__deal-count{
-    padding: 0 $game-detail-padding-sides;
+  &__deal-count {
+    padding: 0 var(--game-detail-padding-sides);
     font-weight: 700;
+    text-align: center;
   }
-
 }
