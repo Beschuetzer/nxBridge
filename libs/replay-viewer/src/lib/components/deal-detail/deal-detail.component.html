@@ -12,8 +12,10 @@
           <span [innerHtml]="contract.htmlEntity"></span>
         </span>
         <span>&nbsp;and&nbsp;</span>
-        <span>&nbsp;{{ dealSummaryMessageSuffix }}</span>
-        .
+        <span>{{ dealSummaryMessageSuffixPre }}</span>
+        <span>{{ dealSummaryMessageSuffixNumber }}</span>
+        <span *ngIf="dealSummaryMessageSuffixPost">&nbsp;{{ dealSummaryMessageSuffixPost}}</span>
+        <span>.</span>
       </div>
     </div>
 

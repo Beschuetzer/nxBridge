@@ -18,7 +18,9 @@ export class DealDetailComponent implements OnInit {
   public dealer = '';
   public dealSummaryMessagePrefix = '';
   public dealSummaryMessageContract = '';
-  public dealSummaryMessageSuffix = '';
+  public dealSummaryMessageSuffixPre = '';
+  public dealSummaryMessageSuffixNumber = '';
+  public dealSummaryMessageSuffixPost = '';
   public contract = {prefix: '', htmlEntity: ''};
   public DEAL_DETAIL_CLASSNAME = DEAL_DETAIL_CLASSNAME;
   public DISPLAY_NONE_CLASSNAME = DISPLAY_NONE_CLASSNAME;
@@ -49,10 +51,24 @@ export class DealDetailComponent implements OnInit {
   }
   
   setDealSummarySuffix() {
-    const [madeAmount, difference] = this.getMadeAmountString();
+    const [entireString, difference] = this.getMadeAmountString();
 
-    // const madeAmount 
-    this.dealSummaryMessageSuffix = `${madeAmount}` 
+    if (difference > 0) {
+      const differenceAsString = `${difference}`;
+      const indexOfDifference = entireString.indexOf(differenceAsString);
+      const pre = entireString.substr(0, indexOfDifference);
+
+      if (entireString.length > indexOfDifference) {
+        this.dealSummaryMessageSuffixPost = entireString.substr(indexOfDifference + 1);
+      }
+
+      this.dealSummaryMessageSuffixPre = pre;
+      this.dealSummaryMessageSuffixNumber = differenceAsString;
+    } else {
+      this.dealSummaryMessageSuffixPre = `${entireString}` ;
+      this.dealSummaryMessageSuffixNumber = ``;
+      this.dealSummaryMessageSuffixPost = ``;
+    }
   }
 
   setContract() {
@@ -111,7 +127,7 @@ export class DealDetailComponent implements OnInit {
     this.renderer.appendChild(target, flatTable);
   }
 
-  private getMadeAmountString() {
+  private getMadeAmountString(): [string, number] {
     const playingPlayers: string[] = this.getPlayingPlayers();
     const amountNeeded = +this.contract.prefix + tricksInABook;
     const amountMade = this.deal?.roundWinners.reduce((count, roundWinner) => {
@@ -119,7 +135,7 @@ export class DealDetailComponent implements OnInit {
       return count;
     }, 0);
     
-    if (!amountMade) return "Error in getMadeAmountString()";
+    if (!amountMade) throw new Error("Error in getMadeAmountString()");
     const difference = Math.abs(amountMade - amountNeeded);
 
     let result = this.getMadeItString();
