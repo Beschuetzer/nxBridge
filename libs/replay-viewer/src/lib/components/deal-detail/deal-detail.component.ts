@@ -16,7 +16,7 @@ export class DealDetailComponent implements OnInit {
   public hands: HandsForConsumption = null;
   public declarer = '';
   public dealer = '';
-  public dealSummaryMessagePrefix = '';
+  public dealSummaryUsername = '';
   public dealSummaryMessageContract = '';
   public dealSummaryMessageSuffixPre = '';
   public dealSummaryMessageSuffixNumber = '';
@@ -47,7 +47,7 @@ export class DealDetailComponent implements OnInit {
   }
 
   setDealSummaryPrefix() {
-    this.dealSummaryMessagePrefix = `'${this.declarer}'`; 
+    this.dealSummaryUsername = `'${this.declarer}'`; 
   }
   
   setDealSummarySuffix() {

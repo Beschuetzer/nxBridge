@@ -3,9 +3,9 @@
     <span class="{{ DEAL_DETAIL_CLASSNAME }}__summary-number">
       Deal {{ dealIndex !== null ? dealIndex + 1 : 0 }}): &nbsp;
     </span>
-    <div class="{{ DEAL_DETAIL_CLASSNAME }}__summary-text">
-      <div class="{{ DEAL_DETAIL_CLASSNAME }}__text-container">
-        <span>{{ dealSummaryMessagePrefix }}</span>
+    <div class="{{ DEAL_DETAIL_CLASSNAME }}__summary-text-container">
+      <div class="{{ DEAL_DETAIL_CLASSNAME }}__summary-text">
+        <span>{{ dealSummaryUsername }}</span>
         <span>&nbsp;played&nbsp;</span>
         <span>
           <span>{{ contract.prefix }}</span>
@@ -14,7 +14,7 @@
         <span>&nbsp;and&nbsp;</span>
         <span>{{ dealSummaryMessageSuffixPre }}</span>
         <span>{{ dealSummaryMessageSuffixNumber }}</span>
-        <span *ngIf="dealSummaryMessageSuffixPost">&nbsp;{{ dealSummaryMessageSuffixPost}}</span>
+        <span *ngIf="dealSummaryMessageSuffixPost">{{ dealSummaryMessageSuffixPost}}</span>
         <span>.</span>
       </div>
     </div>
