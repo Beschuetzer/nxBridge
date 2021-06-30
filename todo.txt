@@ -71,4 +71,6 @@ Components:
 -change deal-detal__summary-text to red or green depending on if declarer won it.
 -work on responsive styling for full-size game-detail
 
+-make bidding table (have 'tableWidth' of 4 and have three actions in for loop depending on i < = > tableWidth)
+
 
