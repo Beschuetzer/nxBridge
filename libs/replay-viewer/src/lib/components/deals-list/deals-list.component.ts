@@ -71,9 +71,6 @@ export class DealsListComponent implements OnInit {
       `.${DEAL_DETAIL_CLASSNAME}`
     );
 
-    // let isOpen = true;
-    // if (items?.length > 0 && items[0]?.classList?.contains(DISPLAY_NONE_CLASSNAME)) isOpen = false;
-
     if (!items || items.length <= 0) {
       this.getItemsFromDB();
     } else {

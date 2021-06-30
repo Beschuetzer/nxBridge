@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { take } from 'rxjs/operators';
 import { Game, User } from '@nx-bridge/interfaces-and-types';
 import { HelpersService } from '@nx-bridge/helpers';
-import { getValueFromLocalStorage } from '@nx-bridge/constants';
+import { dealsListDealsButtonChoices, DEALS_LIST_CLASSNAME, DEAL_DETAIL_CLASSNAME, DISPLAY_NONE_CLASSNAME, FULL_SIZE_CLASSNAME, getValueFromLocalStorage, toggleClassOnList, toggleInnerHTML } from '@nx-bridge/constants';
 
 @Component({
   selector: 'nx-bridge-games-list',
@@ -33,6 +33,23 @@ export class GamesListComponent implements OnInit {
     // } else {
     //   this.store.dispatch(new SetUsers(usersInLocalStorage));
     // }
+  }
+
+  onClick(e: Event) {
+    console.log('e =', e);
+    const target = e.target as any;
+    if ((target)?.classList.contains(FULL_SIZE_CLASSNAME)) {
+      const items = target.querySelectorAll(`.${DEAL_DETAIL_CLASSNAME}`);
+      if (items && items.length > 0) toggleClassOnList(items, DISPLAY_NONE_CLASSNAME);
+
+      const summary = target.querySelector(`.${DEALS_LIST_CLASSNAME}__summary`);
+      toggleClassOnList([summary], DISPLAY_NONE_CLASSNAME);
+
+      const button = target.querySelector(`.${DEALS_LIST_CLASSNAME}__button-deals`);
+      toggleInnerHTML(button, dealsListDealsButtonChoices);
+      
+      target.classList.remove(FULL_SIZE_CLASSNAME);
+    }
   }
 
   // private getAndStoreUsers () {
