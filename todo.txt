@@ -71,6 +71,7 @@ Components:
 -change deal-detal__summary-text to red or green depending on if declarer won it.
 -work on responsive styling for full-size game-detail
 
+-change 'show all' button to be more like 'close'
+-change 'close' button sizing on larger viewports (make bigger to cover room name when at top)
 -2/12 9:11 pm deal 3 bug on getting username (actually that was a deal that was passed out (need to handle somehow))
-
 
