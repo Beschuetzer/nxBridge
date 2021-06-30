@@ -161,7 +161,12 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "apps/frontend/src/favicon.ico",
-              "apps/frontend/src/assets"
+              "apps/frontend/src/assets",
+              {
+                "input": "libs/deal-player/src/assets",
+                "glob": "**/*",
+                "output": "assets/deal-player"
+              }
             ],
             "styles": [
               "apps/frontend/src/styles.scss",

@@ -1,18 +1,69 @@
-<section class="{{DEAL_PLAYER_CLASSNAME}}__summary">
-  <div class="{{DEAL_PLAYER_CLASSNAME}}__summary-details">
-
-  </div>
-  <div class="{{DEAL_PLAYER_CLASSNAME}}__summary-teams">
-
-  </div>
-  <div (click)="onClose()" class="{{DEAL_PLAYER_CLASSNAME}}__summary-close">
+<section class="{{ DEAL_PLAYER_CLASSNAME }}__summary">
+  <div class="{{ DEAL_PLAYER_CLASSNAME }}__summary-details"></div>
+  <div class="{{ DEAL_PLAYER_CLASSNAME }}__summary-teams"></div>
+  <div (click)="onClose()" class="{{ DEAL_PLAYER_CLASSNAME }}__summary-close">
     &#10006;
   </div>
 </section>
-<section class="{{DEAL_PLAYER_CLASSNAME}}__canvas">
+<section class="{{ DEAL_PLAYER_CLASSNAME }}__canvas">
   Canvas here
   <canvas></canvas>
 </section>
-<section class="{{DEAL_PLAYER_CLASSNAME}}__controls">
-  controls here
+<section class="{{ DEAL_PLAYER_CLASSNAME }}__controls">
+  <svg
+    version="1.1"
+    xmlns="http://www.w3.org/2000/svg"
+    width="32"
+    height="32"
+    viewBox="0 0 32 32"
+  >
+    <title>previous</title>
+    <path d="M8 28v-24h4v11l10-10v22l-10-10v11z"></path>
+  </svg>
+
+  <svg
+    *ngIf="!isPlaying"
+    version="1.1"
+    xmlns="http://www.w3.org/2000/svg"
+    width="32"
+    height="32"
+    viewBox="0 0 32 32"
+  >
+    <title>play</title>
+    <path d="M6 4l20 12-20 12z"></path>
+  </svg>
+
+  <svg
+    *ngIf="isPlaying"
+    version="1.1"
+    xmlns="http://www.w3.org/2000/svg"
+    width="32"
+    height="32"
+    viewBox="0 0 32 32"
+  >
+    <title>pause</title>
+    <path d="M4 4h10v24h-10zM18 4h10v24h-10z"></path>
+  </svg>
+
+  <svg
+    version="1.1"
+    xmlns="http://www.w3.org/2000/svg"
+    width="32"
+    height="32"
+    viewBox="0 0 32 32"
+  >
+    <title>stop</title>
+    <path d="M4 4h24v24h-24z"></path>
+  </svg>
+
+  <svg
+    version="1.1"
+    xmlns="http://www.w3.org/2000/svg"
+    width="32"
+    height="32"
+    viewBox="0 0 32 32"
+  >
+    <title>next</title>
+    <path d="M24 4v24h-4v-11l-10 10v-22l10 10v-11z"></path>
+  </svg>
 </section>

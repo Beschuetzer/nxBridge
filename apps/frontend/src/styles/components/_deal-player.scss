@@ -42,6 +42,19 @@
   }
   
   &__controls{
+    max-width: $default-font-size * 39;
+    grid-template-columns: repeat(4, 1fr);
+    justify-items: center;
+    margin: 0 auto;
 
+    & > * {
+      fill: var(--color-primary-1);
+      height: $default-font-size * 4;
+      width: $default-font-size * 4;
+
+      &:hover {
+        fill: var(--color-primary-2);
+      }
+    }
   }
 }
