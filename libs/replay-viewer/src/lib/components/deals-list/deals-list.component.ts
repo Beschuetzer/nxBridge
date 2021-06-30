@@ -99,7 +99,7 @@ export class DealsListComponent implements OnInit {
 
   onShowDetails(e: Event) {
     const itemsToChange = this.elRef.nativeElement.querySelectorAll(
-      `.${DEAL_DETAIL_CLASSNAME}__details-more`
+      `.${DEAL_DETAIL_CLASSNAME}__tables`
     );
     const clickedButton = (e.currentTarget || e.target) as HTMLButtonElement;
 

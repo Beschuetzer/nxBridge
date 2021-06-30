@@ -13,7 +13,7 @@ import {
   Deal,
   HandsForConsumption,
   Seating,
-  Suits,
+  Suit,
 } from '@nx-bridge/interfaces-and-types';
 import {
   dealDetailButtonChoices,
@@ -71,7 +71,7 @@ export class DealDetailComponent implements OnInit {
 
   onDetailClick(e: Event) {
     const item = this.elRef.nativeElement.querySelector(
-      `.${DEAL_DETAIL_CLASSNAME}__details-more`
+      `.${DEAL_DETAIL_CLASSNAME}__tables`
     );
     toggleClassOnList([item], DISPLAY_NONE_CLASSNAME);
     toggleInnerHTML(
@@ -89,7 +89,7 @@ export class DealDetailComponent implements OnInit {
     );
 
     const htmlEntity = getHtmlEntityFromSuitOrCardAsNumber(
-      splitContract?.slice(1).join(' ') as Suits
+      splitContract?.slice(1).join(' ') as Suit
     );
     this.contract = { prefix, htmlEntity };
   }
@@ -203,18 +203,28 @@ export class DealDetailComponent implements OnInit {
         // this.addBidToTable(bid[0], biddingTable);
       } else if (i === lengthOfTable) {
         for (let j = 0; j < initialBids.length; j++) {
-          this.addBidToTable(initialBids[j], biddingTable);
+          const innerHTML = this.getInnerHTMLOfBid(initialBids[j]);
+          this.addBidToTable(innerHTML, biddingTable);
         }
       }
 
       let toAdd = bid[0];
-      //TODO: need to convert bid[1] to html entity
-      if (i >= lengthOfTable) toAdd = bid[1];
+      if (i >= lengthOfTable) toAdd = this.getInnerHTMLOfBid(bid[1]);
 
       this.addBidToTable(toAdd, biddingTable);
     }
 
     return biddingTable;
+  }
+
+  private getInnerHTMLOfBid(bid: string) {
+    if (getIsBidPlayable(bid)) {
+      const split = bid.split(' ');
+      const numberAsString = getCharValueFromCardValueString(split[0] as CardValuesAsString);
+      const htmlEntity = getHtmlEntityFromSuitOrCardAsNumber(split[1] as Suit);
+      return `${numberAsString}${htmlEntity}`;
+    } 
+    return bid;
   }
 
   private addBidToTable(innerHTML: string, tableRef: HTMLElement) {

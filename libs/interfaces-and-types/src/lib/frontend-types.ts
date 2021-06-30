@@ -252,7 +252,7 @@ export type CardinalDirection =
   | 'south'
   | 'east'
   | 'west';
-export type Suits = 'Club' | 'Diamond' | 'Heart' | 'Spade' | 'No Trump';
+export type Suit = 'Club' | 'Diamond' | 'Heart' | 'Spade' | 'No Trump';
 export type HandsForConsumption = [string, Hand][] | null | undefined;
 export type Team = "EW" | "NS" | '';
 export type TeamFull = "eastWest" | "northSouth";

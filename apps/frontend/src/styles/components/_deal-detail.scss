@@ -18,10 +18,6 @@
       padding: 0 0 0 var(--game-detail-padding-sides);
     }
 
-    &-more {
-      padding: 0;
-    }
-
     &-hand {
       display: grid;
       grid-template-columns: 12ch 1fr;
@@ -103,11 +99,15 @@
     }
   }
 
+  &__tables {
+    padding: 0;
+    font-size: $default-font-size * 0.66;
+  }
+
   &__hands {
     padding: 0;
 
     &-table {
-      font-size: $default-font-size * 0.66;
       display: grid;
       grid-template-columns: min-content repeat(4, 1fr);
       grid-template-rows: min-content repeat(4, 1fr);
@@ -121,13 +121,7 @@
       }
 
       & > div {
-        display: flex;
-        align-items: center;
-        border-bottom: $deal-detail-table-border;
-        border-left: $deal-detail-table-border;
-        padding: 0 $default-font-size * 0.5;
-        color: var(--color-black);
-        line-break: anywhere;
+        @include table-cell-styling;
       }
 
       & > div:nth-child(-n + 5) {
@@ -140,12 +134,12 @@
 
       //top row
       & > div:nth-child(-n + 5) {
-        color: var(--color-primary-1);
+        color: $deal-detail-username-color;
       }
 
       //right cells
-      & > div:nth-child(5n + 5) {
-        border-right: $deal-detail-table-border;
+      & > div:nth-child(5n + 1) {
+        border-left: $deal-detail-table-border;
       }
 
       //left column of table (suits)
@@ -163,6 +157,29 @@
 
       & > div:nth-child(n + 11):nth-last-child(n + 6) {
         color: var(--color-red);
+      }
+    }
+  }
+
+  &__bids {
+    &-table{
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      // grid-template-rows: min-content repeat(4, 1fr);
+      padding: $default-font-size * .5  var(--game-detail-padding-sides) 0 var((--game-detail-padding-sides));
+
+      & > div {
+        @include table-cell-styling;
+      }
+
+      & > div:nth-child(-n + 4) {
+        border-top: $deal-detail-table-border;
+        color: $deal-detail-username-color;
+        font-weight: 700;
+      }
+
+      & > div:nth-child(4n + 1) {
+        border-left: $deal-detail-table-border;
       }
     }
   }

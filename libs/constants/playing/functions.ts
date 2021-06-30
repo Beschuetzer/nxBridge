@@ -1,4 +1,4 @@
-import { CardinalDirection, CardValuesAsString, Hand, Seating, Suits } from '@nx-bridge/interfaces-and-types';
+import { CardinalDirection, CardValuesAsString, Hand, Seating, Suit } from '@nx-bridge/interfaces-and-types';
 import { debug } from 'node:console';
 import {
   cardinalDirections,
@@ -102,7 +102,7 @@ export function getCharValueFromCardValueString(str: CardValuesAsString | "One",
   }
 }
 
-export function getHtmlEntityFromSuitOrCardAsNumber(value: Suits | number): string {
+export function getHtmlEntityFromSuitOrCardAsNumber(value: Suit | number): string {
   if (typeof value === 'number') {
     const suitAsString = getSuitFromNumber(value);
     if (!suitAsString) return '';

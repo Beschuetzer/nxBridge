@@ -134,6 +134,16 @@
 		background-position: $position;
 	}
 }
+
+@mixin table-cell-styling {
+	display: flex;
+	align-items: center;
+	border-bottom: $deal-detail-table-border;
+	border-right: $deal-detail-table-border;
+	padding: 0 $default-font-size * 0.5;
+	color: var(--color-black);
+	line-break: anywhere;
+}
 /* ------------------------------------------------------------------------------------------------- */
 //Media Query Manager
 @mixin respond($breakpoint) {
