@@ -40,10 +40,16 @@ $game-detail-inner-width-full-size: $default-font-size * 33;
 
 //deal-detail
 $deal-detail-table-border: 1px solid rgba(var(--color-primary-1-rgb), 1);
-$deal-detail-separator: 1px solid rgba(var(--color-primary-1-rgb), 0.5);
 $deal-detail-username-color: var(--color-primary-1);
 
+$deal-detail-separator-width: 1px;
+$deal-detail-separator-color: rgba(var(--color-primary-1-rgb), 0.5);
+$deal-detail-separator: $deal-detail-separator-width solid $deal-detail-separator-color;
+$deal-detail-separator-dashed: $deal-detail-separator-width dashed $deal-detail-separator-color;
 
+
+
+//deals-list
 $deals-list-shadow: 0 4px 12px rgba(var(--color-black-rgb), 0.33);
 
 
