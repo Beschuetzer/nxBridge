@@ -85,6 +85,7 @@ export class DealDetailComponent implements OnInit {
   }
 
   setContract() {
+    if (!this.deal?.contract) return this.contract = { prefix: '', htmlEntity: ''};
     const splitContract = this.deal?.contract.split(' ');
     if (!splitContract) return;
     const prefix = getCharValueFromCardValueString(
@@ -95,7 +96,7 @@ export class DealDetailComponent implements OnInit {
     const htmlEntity = getHtmlEntityFromSuitOrCardAsNumber(
       splitContract?.slice(1).join(' ') as Suit
     );
-    this.contract = { prefix, htmlEntity };
+    return this.contract = { prefix, htmlEntity };
   }
 
   setDealer() {
@@ -104,7 +105,8 @@ export class DealDetailComponent implements OnInit {
   }
 
   setDealSummaryPrefix() {
-    this.dealSummaryUsername = `'${this.declarer}'`;
+    if (!this.declarer) this.dealSummaryUsername = '';
+    else this.dealSummaryUsername = `'${this.declarer}'`;
   }
 
   setDealSummarySuffix() {
@@ -123,11 +125,8 @@ export class DealDetailComponent implements OnInit {
 
       this.dealSummaryMessageSuffixPre = pre;
       this.dealSummaryMessageSuffixNumber = differenceAsString;
-    } else {
-      this.dealSummaryMessageSuffixPre = `${entireString}`;
-      this.dealSummaryMessageSuffixNumber = ``;
-      this.dealSummaryMessageSuffixPost = ``;
-    }
+    } 
+    else this.setDealSummaryPreOnly(entireString);
   }
 
   setDeclarer() {
@@ -158,8 +157,16 @@ export class DealDetailComponent implements OnInit {
     }
   }
 
+  private setDealSummaryPreOnly(str: string) {
+    this.dealSummaryMessageSuffixPre = `${str}`;
+    this.dealSummaryMessageSuffixNumber = ``;
+    this.dealSummaryMessageSuffixPost = ``;
+  }
+
   private getMadeAmountString(): [string, number] {
-    const playingPlayers: string[] = this.getPlayingPlayers();
+    const playingPlayers: [string, string] = this.getPlayingPlayers();
+    if (!playingPlayers[0]) return ['Deal passed out', -1];
+
     const amountNeeded = +this.contract.prefix + tricksInABook;
     const amountMade = this.deal?.roundWinners.reduce((count, roundWinner) => {
       if (playingPlayers.includes(roundWinner[0])) return count + 1;
@@ -351,19 +358,24 @@ export class DealDetailComponent implements OnInit {
     return result;
   }
   
-  private getPlayingPlayers() {
+  private getPlayingPlayers(): [string, string] {
     //return the declarer and the declarer's partner as an array of strings
     if (!this.seating)
       throw new Error('Problem with this.seating in deal-detail');
-    const declarersDirection = getDirectionFromSeating(
-      this.seating,
-      this.declarer
-    );
-    const declarersPartner = getPartnerFromDirection(
-      this.seating,
-      declarersDirection as CardinalDirection
-    );
-    return [this.declarer, declarersPartner];
+    try {
+        const declarersDirection = getDirectionFromSeating(
+        this.seating,
+        this.declarer
+      );
+      const declarersPartner = getPartnerFromDirection(
+        this.seating,
+        declarersDirection as CardinalDirection
+      );
+      return [this.declarer, declarersPartner];
+    } catch (err) {
+      console.log('err =', err);
+      return ['', ''];
+    }
   }
 
   private getMadeItString() {

@@ -5,13 +5,13 @@
     </span>
     <div class="{{ DEAL_DETAIL_CLASSNAME }}__summary-text-container">
       <div class="{{ DEAL_DETAIL_CLASSNAME }}__summary-text">
-        <span>{{ dealSummaryUsername }}</span>
-        <span>&nbsp;played&nbsp;</span>
-        <span>
+        <span *ngIf="dealSummaryUsername">{{ dealSummaryUsername }}</span>
+        <span *ngIf="dealSummaryUsername">&nbsp;played&nbsp;</span>
+        <span *ngIf="dealSummaryUsername">
           <span>{{ contract.prefix }}</span>
           <span [innerHtml]="contract.htmlEntity"></span>
         </span>
-        <span>&nbsp;and&nbsp;</span>
+        <span *ngIf="dealSummaryUsername">&nbsp;and&nbsp;</span>
         <span>{{ dealSummaryMessageSuffixPre }}</span>
         <span>{{ dealSummaryMessageSuffixNumber }}</span>
         <span *ngIf="dealSummaryMessageSuffixPost">{{
