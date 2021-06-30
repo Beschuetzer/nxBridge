@@ -29,12 +29,13 @@ import {
   getPartnerFromDirection,
   getSuitAsStringFromArray,
   sortHand,
-  suitsAsCapitalizedStrings,
   suitsHtmlEntities,
   toggleClassOnList,
   toggleInnerHTML,
   tricksInABook,
 } from '@nx-bridge/constants';
+import { Store } from '@ngrx/store';
+import { AppState, SetCurrentlyViewingDeal } from '@nx-bridge/store';
 @Component({
   selector: 'nx-bridge-deal-detail',
   templateUrl: './deal-detail.component.html',
@@ -60,7 +61,10 @@ export class DealDetailComponent implements OnInit {
   public DISPLAY_NONE_CLASSNAME = DISPLAY_NONE_CLASSNAME;
   public buttonChoices: [string, string] = dealDetailButtonChoices;
 
-  constructor(private renderer: Renderer2, private elRef: ElementRef) {}
+  constructor(
+    private renderer: Renderer2, private elRef: ElementRef,
+    private store: Store<AppState>,
+  ) {}
 
   ngOnInit(): void {
     this.setHands();
@@ -84,6 +88,11 @@ export class DealDetailComponent implements OnInit {
     );
   }
 
+  onWatchClick(e: Event) {
+    this.store.dispatch(new SetCurrentlyViewingDeal(this.deal as Deal));
+    //todo: show the DealPlayer
+  }
+
   setBiddingTable() {
     const biddingAsTable = this.getBiddingAsTable(this.deal?.bids);
     const target = this.elRef.nativeElement.querySelector(
@@ -91,9 +100,10 @@ export class DealDetailComponent implements OnInit {
     );
     this.renderer.appendChild(target, biddingAsTable);
   }
-  
+
   setContract() {
-    if (!this.deal?.contract) return this.contract = { prefix: '', htmlEntity: ''};
+    if (!this.deal?.contract)
+      return (this.contract = { prefix: '', htmlEntity: '' });
     const splitContract = this.deal?.contract.split(' ');
     if (!splitContract) return;
     const prefix = getCharValueFromCardValueString(
@@ -104,7 +114,7 @@ export class DealDetailComponent implements OnInit {
     const htmlEntity = getHtmlEntityFromSuitOrCardAsNumber(
       splitContract?.slice(1).join(' ') as Suit
     );
-    return this.contract = { prefix, htmlEntity };
+    return (this.contract = { prefix, htmlEntity });
   }
 
   setDealer() {
@@ -115,8 +125,7 @@ export class DealDetailComponent implements OnInit {
   setDealSummaryPrefix() {
     if (!this.declarer) {
       this.dealSummaryUsername = '';
-    }
-    else this.dealSummaryUsername = `'${this.declarer}'`;
+    } else this.dealSummaryUsername = `'${this.declarer}'`;
   }
 
   setDealSummarySuffix() {
@@ -135,8 +144,7 @@ export class DealDetailComponent implements OnInit {
 
       this.dealSummaryMessageSuffixPre = pre;
       this.dealSummaryMessageSuffixNumber = differenceAsString;
-    } 
-    else this.setDealSummaryPreOnly(entireString);
+    } else this.setDealSummaryPreOnly(entireString);
   }
 
   setDeclarer() {
@@ -222,7 +230,7 @@ export class DealDetailComponent implements OnInit {
       const bid = bids[i];
       if (i < lengthOfTable) {
         initialBids.push(bid[1]);
-      } 
+      }
 
       let shouldAddColor = false;
       let toAdd = `'${bid[0]}'`;
@@ -247,21 +255,28 @@ export class DealDetailComponent implements OnInit {
   private getInnerHTMLOfBid(bid: string) {
     if (getIsBidPlayable(bid)) {
       const split = bid.split(' ');
-      const numberAsString = getCharValueFromCardValueString(split[0] as CardValuesAsString);
+      const numberAsString = getCharValueFromCardValueString(
+        split[0] as CardValuesAsString
+      );
       const htmlEntity = getHtmlEntityFromSuitOrCardAsNumber(split[1] as Suit);
       // const isRed = htmlEntity === suitsHtmlEntities[1] || htmlEntity === suitsHtmlEntities[2] ? true : false;
       return `${numberAsString}${htmlEntity}`;
-    } 
+    }
     return capitalize(bid);
   }
 
-  private addBidToTable(innerHTML: string, tableRef: HTMLElement, shouldAddColor = false) {
-
+  private addBidToTable(
+    innerHTML: string,
+    tableRef: HTMLElement,
+    shouldAddColor = false
+  ) {
     const newDiv = this.getNewElement('div');
     this.renderer.setProperty(newDiv, 'innerHTML', innerHTML);
 
     if (shouldAddColor) {
-      const isRed = innerHTML.match(suitsHtmlEntities[1]) || innerHTML.match(suitsHtmlEntities[2]);
+      const isRed =
+        innerHTML.match(suitsHtmlEntities[1]) ||
+        innerHTML.match(suitsHtmlEntities[2]);
       let classToAdd = COLOR_BLACK_CLASSNAME;
       if (isRed) classToAdd = COLOR_RED_CLASSNAME;
       this.renderer.addClass(newDiv, classToAdd);
@@ -362,13 +377,13 @@ export class DealDetailComponent implements OnInit {
     }
     return result;
   }
-  
+
   private getPlayingPlayers(): [string, string] {
     //return the declarer and the declarer's partner as an array of strings
     if (!this.seating)
       throw new Error('Problem with this.seating in deal-detail');
     try {
-        const declarersDirection = getDirectionFromSeating(
+      const declarersDirection = getDirectionFromSeating(
         this.seating,
         this.declarer
       );

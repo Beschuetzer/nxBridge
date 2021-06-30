@@ -4,11 +4,13 @@ import * as fromDealActions from '../actions/deal.actions';
 export interface DealState {
   dealsAsStrings: string[];
   fetchedDeals: Deal[];
+  currentlyViewingDeal: Deal;
 }
 
 const INITIAL_STATE: DealState = {
   dealsAsStrings: [],
   fetchedDeals: [],
+  currentlyViewingDeal: {} as Deal,
 };
 
 export function dealReducer(
@@ -26,7 +28,11 @@ export function dealReducer(
         ...state,
         fetchedDeals: [...state.fetchedDeals, ...action.payload],
       };
-   
+    case fromDealActions.SET_CURRENTLY_VIEWING_DEAL:
+      return {
+        ...state,
+        currentlyViewingDeal: action.payload,
+      };
     default:
       return state;
   }

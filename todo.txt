@@ -27,6 +27,7 @@ Optimizations------------------------------------------------------
   -cache userObjs too (have to get 4 for each game)
 
 Prettification-------------------
+  -game-detail__score width is a bit 'off'
   -bolden the high cards ("A, k q j") in table
   -use deals-list dealResults to change deal-detail table username color (winners = green and losers = red)
   -change deal-detail__summary-text to red or green depending on if declarer won it.
@@ -44,3 +45,4 @@ Todos----------------------------------------------------------
   -add show games played with another player or players
 
   -create a new component called CardPlayViewer, which is a singleton with a canvas in the center and controls to navigate back and forth between card plays (bottom) and a title summarizing the deal (contract, date, room name, result (store these things in redux store from deal-detail upon clicking 'watch replay'))
+  -need to figure out how to draw the current state of the game based on hands and cardsPlayed array

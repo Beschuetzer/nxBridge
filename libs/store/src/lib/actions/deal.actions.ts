@@ -3,6 +3,8 @@ import { Deal } from '@nx-bridge/interfaces-and-types';
 
 export const SET_DEALS_AS_STRING = '[Deals] SET_DEALS_AS_STRINGS';
 export const ADD_FETCHED_DEALS = '[Deals] ADD_FETCHED_DEALS';
+export const SET_CURRENTLY_VIEWING_DEAL = '[Deals] SET_CURRENTLY_VIEWING_DEAL';
+
 
 export class SetDealsAsStrings implements Action {
   readonly type = SET_DEALS_AS_STRING;
@@ -18,4 +20,9 @@ export class AddFetchedDeals implements Action {
   ) {}
 }
 
-export type DealActions = SetDealsAsStrings | AddFetchedDeals;
+export class SetCurrentlyViewingDeal implements Action {
+  readonly type = SET_CURRENTLY_VIEWING_DEAL;
+  constructor(public payload: Deal){}
+}
+
+export type DealActions = SetDealsAsStrings | AddFetchedDeals | SetCurrentlyViewingDeal;
