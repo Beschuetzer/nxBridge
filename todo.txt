@@ -17,10 +17,11 @@ Components:
   4.1. DealDetail (dumb component that has Input() of deal and a template for the deal)
   
 
--add filter by room name option for the GameList
--add sorting options for gameslist (ascending / descending by date and name)
--add show games between date
--add show games played with another player or players
+Game Filtering stuf----------------------------------------
+  -add filter by room name option for the GameList
+  -add sorting options for gameslist (ascending / descending by date and name)
+  -add show games between date
+  -add show games played with another player or players
 
 -landing reset button is messed up (disabled when valid email and no username for example)
 -Add threejs nebular to landing
@@ -49,27 +50,8 @@ Components:
 -cache looked up deals (executed in DealsList) in a similar fashion
 -cache userObjs too (have to get 4 for each game)
 
--make usernames in gamedetail a button that pulls up a page on that user (at least add data property with userID)?
--add get controller to get username from id (need to have gamesdetail handle and store?)
--add controller to get number of games userId has using '{players: ObjectId("602215786180a2c060662af7")}' on GameModel
-
--Finish GamesList styling (figure out why )
--DealsList shows up when a button on GameDetail "Show Deals" is pressed (DealsList makes backend call to get deals and puts in store)
--Pass deals in each GameDetail to DealsList
--finish the deal viewing stuff
--how hard would it be to make deal-detail be a table with names across top and suits along left side?
--finish deal summary message
--convert contract to an imgHTML
-
--finish deal count (3 deals to 0)
--change view details button to be absolutely positioned in the game-detail container and have hover of container show it.
 -bolden the high cards ("A, k q j") in table
--need to add a bidding table to deal-detail
 
 -use deals-list dealResults to change deal-detail table username color (winners = green and losers = red)
 -change deal-detal__summary-text to red or green depending on if declarer won it.
--work on responsive styling for full-size game-detail
-
--change 'show all' button to be more like 'close'
--change 'close' button sizing on larger viewports (make bigger to cover room name when at top)
 

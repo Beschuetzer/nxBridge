@@ -25,7 +25,7 @@ export const FULL_SIZE_CLASSNAME = 'full-size';
 export const COLOR_RED_CLASSNAME = 'color-red';
 export const COLOR_BLACK_CLASSNAME = 'color-black';
 
-export const dealsListDealsButtonChoices: [string, string] = ['Open', 'Close'];
+export const dealsListDealsButtonChoices: [string, string] = ['Open', '&#10006;'];
 export const dealsListDetailsButtonChoices: [string, string] = ['Show All', 'Hide All'];
 export const dealDetailButtonChoices: [string, string] = ['Show', 'Hide'];
 

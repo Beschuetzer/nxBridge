@@ -95,7 +95,7 @@
 
   &__header {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr max-content;
     justify-content: space-between;
     align-items: center;
 
@@ -159,7 +159,14 @@
     }
 
     & > *:nth-child(2) {
+      position: sticky;
+      top: 0;
       grid-row: 3 / span 1;
+      padding: $default-font-size * 0.65625 $default-font-size * 2;
+
+      @include respond(phone) {
+        padding: $default-font-size * .375;
+      }
     }
 
     & > *:nth-child(3) {
@@ -177,7 +184,7 @@
       }
 
       &__header {
-        grid-column-gap: 39vmin;
+        // grid-column-gap: 39vmin;
 
         &-room {
           font-size: $default-font-size;
@@ -210,14 +217,27 @@
 
       &__button {
         &-deals {
+          // display: none;
           position: sticky;
           top: 0;
           left: 0;
           width: 100%;
           height: auto;
           font-size: $default-font-size * 1.5 !important;
-          padding: $default-font-size;
+          padding: $default-font-size * 0.3125;
           opacity: 1;
+          background-color: transparent !important;
+          border: none !important;
+          color: var(--color-primary-3) !important;
+
+          @include respond($layout-breakpoint) {
+            padding: $default-font-size * 0.125;
+            
+          }
+
+          &:hover {
+            color: var(--color-primary-2) !important;
+          }
         }
       }
     }
@@ -234,8 +254,7 @@
     height: 100% ;
 
     @include respond($layout-breakpoint) {
-      font-size: $default-font-size * .75 !important;
-      
+      // font-size: $default-font-size * .75 !important;
     }
   }
 }
