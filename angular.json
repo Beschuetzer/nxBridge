@@ -118,6 +118,31 @@
         }
       }
     },
+    "deal-player": {
+      "projectType": "library",
+      "root": "libs/deal-player",
+      "sourceRoot": "libs/deal-player/src",
+      "prefix": "nx-bridge",
+      "architect": {
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/deal-player"],
+          "options": {
+            "jestConfig": "libs/deal-player/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/deal-player/src/**/*.ts",
+              "libs/deal-player/src/**/*.html"
+            ]
+          }
+        }
+      }
+    },
     "frontend": {
       "projectType": "application",
       "root": "apps/frontend",

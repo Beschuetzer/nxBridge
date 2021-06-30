@@ -20,6 +20,7 @@
         "libs/api-mongoose-models/src/index.ts"
       ],
       "@nx-bridge/constants": ["libs/constants/index.ts"],
+      "@nx-bridge/deal-player": ["libs/deal-player/src/index.ts"],
       "@nx-bridge/grid": ["libs/grid/src/index.ts"],
       "@nx-bridge/header": ["libs/header/src/index.ts"],
       "@nx-bridge/helpers": ["libs/helpers/src/index.ts"],

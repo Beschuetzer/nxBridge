@@ -13,7 +13,7 @@ import { GamesListViewComponent } from './views/games-list-view/games-list-view.
 import { GridModule } from '@nx-bridge/grid';
 import { SpinnersModule } from '@nx-bridge/spinners';
 import { PipesModule } from '@nx-bridge/pipes';
-
+import { DealPlayerModule } from '@nx-bridge/deal-player';
 @NgModule({
   declarations: [
     LandingPageComponent,
@@ -35,7 +35,7 @@ import { PipesModule } from '@nx-bridge/pipes';
     GridModule,
     SpinnersModule,
     PipesModule,
+    DealPlayerModule,
   ],
-
 })
 export class ReplayViewerModule {}

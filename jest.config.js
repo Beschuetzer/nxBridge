@@ -11,5 +11,6 @@ module.exports = {
     '<rootDir>/libs/grid',
     '<rootDir>/libs/spinners',
     '<rootDir>/libs/pipes',
+    '<rootDir>/libs/deal-player',
   ],
 };
