@@ -132,6 +132,10 @@
     backdrop-filter: blur(10px);
     // box-shadow: none;
 
+    @include respond(super-small) {
+      grid-template-columns: min-content 1fr min-content;
+    }
+
     & > * {
       grid-column: 2 / span 1;
       max-width: $game-detail-inner-width-full-size;

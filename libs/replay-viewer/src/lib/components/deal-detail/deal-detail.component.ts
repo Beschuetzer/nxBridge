@@ -16,6 +16,9 @@ import {
   Suit,
 } from '@nx-bridge/interfaces-and-types';
 import {
+  capitalize,
+  COLOR_BLACK_CLASSNAME,
+  COLOR_RED_CLASSNAME,
   dealDetailButtonChoices,
   DEAL_DETAIL_CLASSNAME,
   DISPLAY_NONE_CLASSNAME,
@@ -26,6 +29,7 @@ import {
   getPartnerFromDirection,
   getSuitAsStringFromArray,
   sortHand,
+  suitsAsCapitalizedStrings,
   suitsHtmlEntities,
   toggleClassOnList,
   toggleInnerHTML,
@@ -200,18 +204,20 @@ export class DealDetailComponent implements OnInit {
       const bid = bids[i];
       if (i < lengthOfTable) {
         initialBids.push(bid[1]);
-        // this.addBidToTable(bid[0], biddingTable);
       } else if (i === lengthOfTable) {
         for (let j = 0; j < initialBids.length; j++) {
           const innerHTML = this.getInnerHTMLOfBid(initialBids[j]);
-          this.addBidToTable(innerHTML, biddingTable);
+          this.addBidToTable(innerHTML, biddingTable, true);
         }
       }
 
-      let toAdd = bid[0];
-      if (i >= lengthOfTable) toAdd = this.getInnerHTMLOfBid(bid[1]);
-
-      this.addBidToTable(toAdd, biddingTable);
+      let shouldAddColor = false;
+      let toAdd = `'${bid[0]}'`;
+      if (i >= lengthOfTable) {
+        toAdd = this.getInnerHTMLOfBid(bid[1]);
+        shouldAddColor = true;
+      }
+      this.addBidToTable(toAdd, biddingTable, shouldAddColor);
     }
 
     return biddingTable;
@@ -222,14 +228,24 @@ export class DealDetailComponent implements OnInit {
       const split = bid.split(' ');
       const numberAsString = getCharValueFromCardValueString(split[0] as CardValuesAsString);
       const htmlEntity = getHtmlEntityFromSuitOrCardAsNumber(split[1] as Suit);
+      // const isRed = htmlEntity === suitsHtmlEntities[1] || htmlEntity === suitsHtmlEntities[2] ? true : false;
       return `${numberAsString}${htmlEntity}`;
     } 
-    return bid;
+    return capitalize(bid);
   }
 
-  private addBidToTable(innerHTML: string, tableRef: HTMLElement) {
+  private addBidToTable(innerHTML: string, tableRef: HTMLElement, shouldAddColor = false) {
+
     const newDiv = this.getNewElement('div');
     this.renderer.setProperty(newDiv, 'innerHTML', innerHTML);
+
+    if (shouldAddColor) {
+      const isRed = innerHTML.match(suitsHtmlEntities[1]) || innerHTML.match(suitsHtmlEntities[2]);
+      let classToAdd = COLOR_BLACK_CLASSNAME;
+      if (isRed) classToAdd = COLOR_RED_CLASSNAME;
+      this.renderer.addClass(newDiv, classToAdd);
+    }
+
     this.renderer.appendChild(tableRef, newDiv);
   }
 
@@ -299,17 +315,6 @@ export class DealDetailComponent implements OnInit {
     return flatTable;
   }
 
-  private addQuotationsToUsernames(
-    elements: HTMLCollection,
-    nthChildToUse: number
-  ) {
-    let result = elements[nthChildToUse].innerHTML;
-    if (nthChildToUse === 0 && result !== '&nbsp;') {
-      result = `'${elements[nthChildToUse].innerHTML}'`;
-    }
-    return result;
-  }
-
   // getUserColumn(hand: HandForConsumption, username: string) {
 
   // }
@@ -335,6 +340,17 @@ export class DealDetailComponent implements OnInit {
   //#endregion
 
   //#region Misc
+  private addQuotationsToUsernames(
+    elements: HTMLCollection,
+    nthChildToUse: number
+  ) {
+    let result = elements[nthChildToUse].innerHTML;
+    if (nthChildToUse === 0 && result !== '&nbsp;') {
+      result = `'${elements[nthChildToUse].innerHTML}'`;
+    }
+    return result;
+  }
+  
   private getPlayingPlayers() {
     //return the declarer and the declarer's partner as an array of strings
     if (!this.seating)

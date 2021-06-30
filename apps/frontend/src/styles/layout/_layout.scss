@@ -11,6 +11,11 @@
   display: grid;
   grid-template-columns: min-content repeat(2, 1fr);
   grid-template-rows: min-content repeat(2, 1fr);
+
+  @include respond($layout-breakpoint) {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: min-content min-content 1fr;
+  }
 }
 
 

@@ -102,6 +102,17 @@
   &__tables {
     padding: 0;
     font-size: $default-font-size * 0.66;
+
+    &-header {
+      font-weight: 700;
+      padding: $default-font-size * .25 var(--game-detail-padding-sides);
+
+      @include respond($layout-breakpoint) {
+        padding: $default-font-size * .125 $default-font-size * .5;
+      }
+
+      
+    }
   }
 
   &__hands {
@@ -111,13 +122,13 @@
       display: grid;
       grid-template-columns: min-content repeat(4, 1fr);
       grid-template-rows: min-content repeat(4, 1fr);
-      padding: $default-font-size * .5  var(--game-detail-padding-sides);
+      padding: 0 var(--game-detail-padding-sides);
       // grid-column-gap: $default-font-size;
       // justify-items: center;
       // align-items: center;
 
       @include respond($layout-breakpoint) {
-        padding: $default-font-size * .5;
+        padding: 0 $default-font-size * .5;
       }
 
       & > div {
@@ -166,7 +177,11 @@
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       // grid-template-rows: min-content repeat(4, 1fr);
-      padding: $default-font-size * .5  var(--game-detail-padding-sides) 0 var((--game-detail-padding-sides));
+      padding: 0 var(--game-detail-padding-sides) $default-font-size * .5 var((--game-detail-padding-sides));
+
+      @include respond($layout-breakpoint) {
+        padding: 0 $default-font-size * .5 $default-font-size * .5 $default-font-size * .5;
+      }
 
       & > div {
         @include table-cell-styling;
@@ -181,6 +196,11 @@
       & > div:nth-child(4n + 1) {
         border-left: $deal-detail-table-border;
       }
+    }
+
+    & .deal-detail__tables-header {
+      margin-top: $default-font-size * .5;
+      border-top: $deal-detail-separator;
     }
   }
 

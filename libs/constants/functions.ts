@@ -2,6 +2,11 @@ import { Deal } from '@nx-bridge/interfaces-and-types';
 import * as mongoose from 'mongoose';
 import { getIsBidPlayable } from './playing/functions';
 
+export function capitalize(str: string) {
+  return str.split(" ")
+    .map((word: string) => word[0].toUpperCase() + word.slice(1))
+    .join(" ");
+};
 
 export function getMongooseObjsFromStrings(items: string[]) {
   const mongooseObjs = [];

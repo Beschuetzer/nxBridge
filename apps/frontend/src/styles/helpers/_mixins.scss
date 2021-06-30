@@ -147,6 +147,11 @@
 /* ------------------------------------------------------------------------------------------------- */
 //Media Query Manager
 @mixin respond($breakpoint) {
+	@if $breakpoint == super-small {
+		@media only screen and (max-width: $super-small-max-width) {
+			@content;
+		} //469px
+	}
 	@if $breakpoint == small-font {
 		@media only screen and (max-width: $small-font-max-width) {
 			@content;

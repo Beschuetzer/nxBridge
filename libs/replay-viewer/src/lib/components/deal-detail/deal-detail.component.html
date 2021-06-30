@@ -14,7 +14,9 @@
         <span>&nbsp;and&nbsp;</span>
         <span>{{ dealSummaryMessageSuffixPre }}</span>
         <span>{{ dealSummaryMessageSuffixNumber }}</span>
-        <span *ngIf="dealSummaryMessageSuffixPost">{{ dealSummaryMessageSuffixPost}}</span>
+        <span *ngIf="dealSummaryMessageSuffixPost">{{
+          dealSummaryMessageSuffixPost
+        }}</span>
         <span>.</span>
       </div>
     </div>
@@ -39,12 +41,12 @@
     </div>
   </div>
 
-  <div
-    class="{{ DISPLAY_NONE_CLASSNAME }} {{
-      DEAL_DETAIL_CLASSNAME
-    }}__tables"
-  >
-    <div class="deal-detail__bids"></div>
-    <div class="deal-detail__hands"></div>
+  <div class="{{ DISPLAY_NONE_CLASSNAME }} {{ DEAL_DETAIL_CLASSNAME }}__tables">
+    <div class="deal-detail__hands">
+      <div class="{{ DEAL_DETAIL_CLASSNAME }}__tables-header">Hands:</div>
+    </div>
+    <div class="deal-detail__bids">
+      <div class="{{ DEAL_DETAIL_CLASSNAME }}__tables-header">Bidding:</div>
+    </div>
   </div>
 </div>

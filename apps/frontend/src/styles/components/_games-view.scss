@@ -9,9 +9,14 @@
   align-items: center;
   flex-direction: column;
 
+  @include respond($layout-breakpoint) {
+    grid-column: 1/-1;
+    grid-row: 3/-1;
+  }
+
   &__title{
     margin: 0;
-    padding: $default-font-size;
+    padding: $default-font-size * .5 $default-font-size;
 
     & span {
       color: var(--color-primary-2);

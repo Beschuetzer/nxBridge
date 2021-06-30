@@ -72,7 +72,5 @@ Components:
 -work on responsive styling for full-size game-detail
 
 -2/12 9:11 pm deal 3 bug on getting username (actually that was a deal that was passed out (need to handle somehow))
--make usernames have ''
--change diamonds and hearts to red in bidding table
 
 

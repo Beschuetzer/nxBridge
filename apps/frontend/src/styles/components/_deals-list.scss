@@ -36,10 +36,16 @@
       border-left: $deal-detail-separator !important; 
       border-radius: 0 !important;
 
+      @include respond(tab-port) {
+        width: 14.9rem;
+      }
+
       @include respond($layout-breakpoint) {
         border-left: none !important;
         width: 100%;
       }
+
+
     }
   }
 
