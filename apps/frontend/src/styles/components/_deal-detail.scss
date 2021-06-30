@@ -226,6 +226,7 @@
   }
 
   &__view-button {
+    width: $default-font-size * 3.4375 !important;
     @include respond($layout-breakpoint) {
       border-left: none !important;
     }

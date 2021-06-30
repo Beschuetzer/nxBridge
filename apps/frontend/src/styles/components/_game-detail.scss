@@ -215,7 +215,8 @@
           left: 0;
           width: 100%;
           height: auto;
-          font-size: $default-font-size * 0.875 !important;
+          font-size: $default-font-size * 1.5 !important;
+          padding: $default-font-size;
           opacity: 1;
         }
       }

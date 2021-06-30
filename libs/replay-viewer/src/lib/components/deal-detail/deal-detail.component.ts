@@ -84,6 +84,14 @@ export class DealDetailComponent implements OnInit {
     );
   }
 
+  setBiddingTable() {
+    const biddingAsTable = this.getBiddingAsTable(this.deal?.bids);
+    const target = this.elRef.nativeElement.querySelector(
+      `.${DEAL_DETAIL_CLASSNAME}__bids`
+    );
+    this.renderer.appendChild(target, biddingAsTable);
+  }
+  
   setContract() {
     if (!this.deal?.contract) return this.contract = { prefix: '', htmlEntity: ''};
     const splitContract = this.deal?.contract.split(' ');
@@ -105,7 +113,9 @@ export class DealDetailComponent implements OnInit {
   }
 
   setDealSummaryPrefix() {
-    if (!this.declarer) this.dealSummaryUsername = '';
+    if (!this.declarer) {
+      this.dealSummaryUsername = '';
+    }
     else this.dealSummaryUsername = `'${this.declarer}'`;
   }
 
@@ -157,6 +167,15 @@ export class DealDetailComponent implements OnInit {
     }
   }
 
+  setHandsTable() {
+    const handAsTable = this.getHandAsTable(this.hands);
+    const flatTable = this.flattenTable(handAsTable, 5);
+    const target = this.elRef.nativeElement.querySelector(
+      `.${DEAL_DETAIL_CLASSNAME}__hands`
+    );
+    this.renderer.appendChild(target, flatTable);
+  }
+
   private setDealSummaryPreOnly(str: string) {
     this.dealSummaryMessageSuffixPre = `${str}`;
     this.dealSummaryMessageSuffixNumber = ``;
@@ -186,15 +205,7 @@ export class DealDetailComponent implements OnInit {
     return [result, difference];
   }
 
-  //#region setBiddingTable
-  private setBiddingTable() {
-    const biddingAsTable = this.getBiddingAsTable(this.deal?.bids);
-    const target = this.elRef.nativeElement.querySelector(
-      `.${DEAL_DETAIL_CLASSNAME}__bids`
-    );
-    this.renderer.appendChild(target, biddingAsTable);
-  }
-
+  //#region setBiddingTable Helpers
   private getBiddingAsTable(bids: Bid[] | undefined) {
     //returns table as element
     if (!bids || bids.length < 0) return this.getNewElement('div');
@@ -211,12 +222,7 @@ export class DealDetailComponent implements OnInit {
       const bid = bids[i];
       if (i < lengthOfTable) {
         initialBids.push(bid[1]);
-      } else if (i === lengthOfTable) {
-        for (let j = 0; j < initialBids.length; j++) {
-          const innerHTML = this.getInnerHTMLOfBid(initialBids[j]);
-          this.addBidToTable(innerHTML, biddingTable, true);
-        }
-      }
+      } 
 
       let shouldAddColor = false;
       let toAdd = `'${bid[0]}'`;
@@ -224,7 +230,15 @@ export class DealDetailComponent implements OnInit {
         toAdd = this.getInnerHTMLOfBid(bid[1]);
         shouldAddColor = true;
       }
+
       this.addBidToTable(toAdd, biddingTable, shouldAddColor);
+
+      if (i === lengthOfTable - 1) {
+        for (let j = 0; j < initialBids.length; j++) {
+          const innerHTML = this.getInnerHTMLOfBid(initialBids[j]);
+          this.addBidToTable(innerHTML, biddingTable, true);
+        }
+      }
     }
 
     return biddingTable;
@@ -258,16 +272,7 @@ export class DealDetailComponent implements OnInit {
 
   //#endregion
 
-  //#region setHandsTable
-  private setHandsTable() {
-    const handAsTable = this.getHandAsTable(this.hands);
-    const flatTable = this.flattenTable(handAsTable, 5);
-    const target = this.elRef.nativeElement.querySelector(
-      `.${DEAL_DETAIL_CLASSNAME}__hands`
-    );
-    this.renderer.appendChild(target, flatTable);
-  }
-
+  //#region setHandsTable Helpers
   private getHandAsTable(hands: HandsForConsumption): HTMLElement | null {
     const table = this.getNewElement('div');
     this.renderer.appendChild(table, this.getSuitColumn());
