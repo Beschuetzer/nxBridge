@@ -1,7 +1,18 @@
-<div class="{{DEAL_PLAYER_CLASSNAME}}__summary">
+<section class="{{DEAL_PLAYER_CLASSNAME}}__summary">
+  <div class="{{DEAL_PLAYER_CLASSNAME}}__summary-details">
 
-</div>
-<canvas class="{{DEAL_PLAYER_CLASSNAME}}__canvas"></canvas>
-<div class="{{DEAL_PLAYER_CLASSNAME}}__controls">
+  </div>
+  <div class="{{DEAL_PLAYER_CLASSNAME}}__summary-teams">
 
-</div>
+  </div>
+  <div (click)="onClose()" class="{{DEAL_PLAYER_CLASSNAME}}__summary-close">
+    &#10006;
+  </div>
+</section>
+<section class="{{DEAL_PLAYER_CLASSNAME}}__canvas">
+  Canvas here
+  <canvas></canvas>
+</section>
+<section class="{{DEAL_PLAYER_CLASSNAME}}__controls">
+  controls here
+</section>

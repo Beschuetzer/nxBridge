@@ -21,6 +21,7 @@ import {
   COLOR_RED_CLASSNAME,
   dealDetailButtonChoices,
   DEAL_DETAIL_CLASSNAME,
+  DEAL_PLAYER_CLASSNAME,
   DISPLAY_NONE_CLASSNAME,
   getCharValueFromCardValueString,
   getDirectionFromSeating,
@@ -33,6 +34,7 @@ import {
   toggleClassOnList,
   toggleInnerHTML,
   tricksInABook,
+  VISIBLE_CLASSNAME,
 } from '@nx-bridge/constants';
 import { Store } from '@ngrx/store';
 import { AppState, SetCurrentlyViewingDeal } from '@nx-bridge/store';
@@ -90,7 +92,7 @@ export class DealDetailComponent implements OnInit {
 
   onWatchClick(e: Event) {
     this.store.dispatch(new SetCurrentlyViewingDeal(this.deal as Deal));
-    //todo: show the DealPlayer
+    document.querySelector(`.${DEAL_PLAYER_CLASSNAME}`)?.classList.add(VISIBLE_CLASSNAME);
   }
 
   setBiddingTable() {

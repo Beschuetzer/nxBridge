@@ -17,6 +17,7 @@ export const GET_USER_URL = `/api/${GET_USER_CONTROLLER_STRING}`;
 export const GET_USERS_URL = `/api/${GET_USERS_CONTROLLER_STRING}`;
 
 export const HIDDEN_CLASSNAME = 'hidden';
+export const VISIBLE_CLASSNAME = 'visible';
 export const DISPLAY_NONE_CLASSNAME = 'd-none';
 export const DEALS_LIST_CLASSNAME = 'deals-list';
 export const DEAL_DETAIL_CLASSNAME = 'deal-detail';

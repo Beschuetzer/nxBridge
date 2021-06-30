@@ -1,14 +1,40 @@
 .deal-player {
+  font-size: $default-font-size;
+  background-color: var(--color-white);
   position: absolute;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
+  height: 99vh;
+  width: 99vw;
+  transform: translate(.5vw, .5vh);
   opacity: 0;
   visibility: hidden;
+  z-index: 10000;
+  display: grid;
+  grid-template-rows: min-content 1fr min-content;
+  transition:
+    opacity $animation-duration * 1 $animation-easing-standard,
+  ;
 
   &__summary {
-    
+    display: grid;
+    grid-template-columns: 1fr 1fr max-content;
+    &-details{
+
+    }
+    &-teams{
+
+    }
+    &-close{
+      cursor: pointer;
+      color: var(--color-primary-1);
+      font-size: $default-font-size * 4;
+      padding: $default-font-size * 2 $default-font-size;
+
+      &:hover {
+        color: rgba(var(--color-primary-1-rgb), .5);
+      }
+    }
   }
 
   &__canvas {
