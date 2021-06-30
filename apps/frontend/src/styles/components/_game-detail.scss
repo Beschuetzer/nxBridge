@@ -135,7 +135,7 @@
     & > * {
       grid-column: 2 / span 1;
       max-width: $game-detail-inner-width-full-size;
-      width: 97.5%;
+      width: 100%;
       margin: 0 auto;
       border-left: $game-detail-border-thick;
       border-right: $game-detail-border-thick;
@@ -173,7 +173,7 @@
       }
 
       &__header {
-        grid-column-gap: 40vmin;
+        grid-column-gap: 39vmin;
 
         &-room {
           font-size: $default-font-size;
