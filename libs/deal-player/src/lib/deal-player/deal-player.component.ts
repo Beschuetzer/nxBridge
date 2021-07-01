@@ -1,4 +1,4 @@
-import { Component, HostBinding, OnInit } from '@angular/core';
+import { Component, ElementRef, HostBinding, OnInit, Renderer2 } from '@angular/core';
 import {
   DEAL_PLAYER_CLASSNAME,
   VISIBLE_CLASSNAME,
@@ -41,13 +41,15 @@ export class DealPlayerComponent implements OnInit {
   private defaultCardPosition = -1000;
   private canvasHeight: number | undefined;
   private canvasWidth: number | undefined;
-  //todo: need to dynamically change this based on viewport
-  private cardScaleAmount = .4;
+  //todo: need to dynamically change this based on viewport (.7 works on lowest)
+  private cardScaleAmount = .6;
   private error = '';
 
-  constructor(private store: Store<AppState>) {}
+  constructor(private store: Store<AppState>, private elRef: ElementRef, private renderer: Renderer2) {}
 
   ngOnInit(): void {
+    window.addEventListener('resize', this.onResize.bind(this));
+
     this.store.select('games').subscribe((gameState) => {
       this.seating = gameState.currentlyViewingGameSeating;
     })
@@ -67,7 +69,7 @@ export class DealPlayerComponent implements OnInit {
         else {
           this.resetCards();
           this.renderHands();
-          document.querySelector(`.${DEAL_PLAYER_CLASSNAME}`)?.classList.add(VISIBLE_CLASSNAME);
+          this.renderer.addClass(this.elRef.nativeElement, VISIBLE_CLASSNAME)
         }
       }
     });
@@ -76,9 +78,7 @@ export class DealPlayerComponent implements OnInit {
   }
 
   onClose() {
-    document
-      .querySelector(`.${DEAL_PLAYER_CLASSNAME}`)
-      ?.classList.remove(VISIBLE_CLASSNAME);
+    this.renderer.removeClass(this.elRef.nativeElement, VISIBLE_CLASSNAME)
     this.resetCards();
     this.store.dispatch(new SetCurrentlyViewingDeal({} as Deal));
   }
@@ -109,11 +109,11 @@ export class DealPlayerComponent implements OnInit {
   }
 
   private renderHands() {
+    this.setCanvasBounds();
     this.cardWidth = (this.cards[0] as paper.Raster).bounds.width;
     this.cardHeight = (this.cards[0] as paper.Raster).bounds.height;
-    this.cardVisibleOffset = this.cardHeight / 5;
-    this.cardSpacingIncrement = this.cardWidth / 6;
-    this.setCanvasBounds();
+    this.cardVisibleOffset = this.cardHeight / 4 - 2.5;
+    this.cardSpacingIncrement = this.canvasWidth as number / 13;
 
     for (const username in this.deal?.hands) {
       if (Object.prototype.hasOwnProperty.call(this.deal?.hands, username)) {
@@ -132,8 +132,6 @@ export class DealPlayerComponent implements OnInit {
   }
 
   private renderHand(hand: Hand, direction: string) {
-    
-    
     const flatHand = flatten(hand);
     const startingPosition = this.getStartingPosition(flatHand.length, direction);
     const correctlyArrangedHand = this.getCorrectlyArrangedHand(flatHand, direction);
@@ -194,36 +192,24 @@ export class DealPlayerComponent implements OnInit {
     }
   }
 
-
-  //TODO: this can be deleted when finished
-  // private getStartingPosition(numberOfCardsInHand: number, direction: string) {
-  //   const lengthOfHand = (this.cardWidth + (numberOfCardsInHand - 1) * this.cardSpacingIncrement);
-  //   const southStartingPosition = (this.canvasWidth as number - lengthOfHand) / 2;
-
-  //   if (direction === cardinalDirections[0]) {
-  //     return southStartingPosition + lengthOfHand;
-  //   } 
-  //   else if (direction === cardinalDirections[1]) {
-  //     return -1;
-  //   } 
-  //   else if (direction === cardinalDirections[2]) {
-  //     return southStartingPosition;
-  //   } 
-  //   else if (direction === cardinalDirections[3]) {
-  //     return -1;
-  //   } 
-
-  //   return -1;
-  // }
+  private onResize(e: Event) {
+    const dealPlayerEl = document.querySelector(`.${DEAL_PLAYER_CLASSNAME}`) as HTMLElement;
+    if (dealPlayerEl.classList.contains(VISIBLE_CLASSNAME)) {
+      console.log('render on resize------------------------------------------------');
+      // this.renderHands();
+    };
+  }
 
   private getStartingPosition(numberOfCardsInHand: number, direction: string) {
     const lengthOfHand = (this.cardWidth + (numberOfCardsInHand - 1) * this.cardSpacingIncrement);
     // const southStartingPosition = (this.canvasWidth as number - lengthOfHand) / 2;
 
-    let dimensionToUse = this.canvasHeight;
-    if (direction === cardinalDirections[0] || direction === cardinalDirections[2]) dimensionToUse = this.canvasWidth;
+    // let dimensionToUse = this.canvasHeight;
+    if (direction === cardinalDirections[0]) return -(this.cardWidth - this.cardSpacingIncrement)
+    else if (direction === cardinalDirections[2])  return 0;
+    // if (direction === cardinalDirections[0] || direction === cardinalDirections[2]) dimensionToUse = this.canvasWidth;
     
-    return (dimensionToUse as number - lengthOfHand) / 2;
+    return (this.canvasHeight as number - lengthOfHand) / 2;
   }
 
   private resetCards() {

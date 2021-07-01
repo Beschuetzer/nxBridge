@@ -50,4 +50,4 @@ Todos----------------------------------------------------------
 -need center card-play boxes?
 -something is causing the cards not to reset on loading of another deal as they aren't layered correctly?
 
--bug: when clicking 'watch replay' for a deal in the 5-6 first games opened, the getDirectionFromSeating error occurs (doesn't occur if just opening game and not clicking watch replay)
+-change the cardScaleAmount on resize of window

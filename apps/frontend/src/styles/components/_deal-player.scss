@@ -2,16 +2,17 @@
   font-size: $default-font-size;
   background-color: var(--color-white);
   position: absolute;
-  top: 0;
+  top: 0px;
   left: 0;
-  height: 99vh;
-  width: 99vw;
-  transform: translate(.5vw, .5vh);
+  height: 100vh;
+  width: 100vw;
+  // transform: translate(.5vw, .5vh);
   opacity: 0;
   visibility: hidden;
   z-index: 10000;
   display: grid;
   grid-template-rows: min-content 1fr min-content;
+  grid-template-columns: 1fr max-content 1fr;
   transition:
     opacity $animation-duration * 1 $animation-easing-standard,
   ;
@@ -19,6 +20,8 @@
   &__summary {
     display: grid;
     grid-template-columns: 1fr 1fr max-content;
+    grid-column: 3 /-1;
+
     &-details{
 
     }
@@ -40,14 +43,18 @@
   &__canvas {
     display: flex;
     justify-content: center;
-    grid-column: 1/-1;
+    grid-column: 2/ span 1;
     grid-row: 2/-1;
-    
+    width: 40vh;
+
     &-element{
       width: 100%;
       height:100%;
       position: relative;
       z-index: 100000;
+      border: 1px solid var(--color-primary-1);
+      border-radius: .8rem;
+      overflow: hidden;
 
       // margin: 0 auto;
       max-width: 75vh;
@@ -60,11 +67,12 @@
     grid-template-columns: repeat(4, 1fr);
     justify-items: center;
     margin: 0 auto;
+    grid-column: 2 / span 1;
 
     & > * {
       fill: var(--color-primary-1);
-      height: $default-font-size * 4;
-      width: $default-font-size * 4;
+      height: $default-font-size * 3.5;
+      width: $default-font-size * 3.5;
 
       &:hover {
         fill: var(--color-primary-2);
