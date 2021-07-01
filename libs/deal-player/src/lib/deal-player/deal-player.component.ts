@@ -6,13 +6,14 @@ import {
   flatten,
   getDirectionFromSeating,
   cardinalDirections,
+  numberOfCardsInDeck,
 } from '@nx-bridge/constants';
 
 import { Store } from '@ngrx/store';
 import { AppState } from '@nx-bridge/store';
 import { Deal, Hand, Seating } from '@nx-bridge/interfaces-and-types';
 import * as paper from 'paper';
-import { Path, Project, Raster } from 'paper/dist/paper-core';
+import { Project, Raster } from 'paper/dist/paper-core';
 
 @Component({
   selector: 'nx-bridge-deal-player',
@@ -40,6 +41,9 @@ export class DealPlayerComponent implements OnInit {
   private defaultCardPosition = -1000;
   private canvasHeight: number | undefined;
   private canvasWidth: number | undefined;
+  //todo: need to dynamically change this based on viewport
+  private cardScaleAmount = .4;
+  private error = '';
 
   constructor(private store: Store<AppState>) {}
 
@@ -49,20 +53,25 @@ export class DealPlayerComponent implements OnInit {
     })
 
     this.store.select('deals').subscribe((dealState) => {
-      this.deal = dealState.currentlyViewingDeal;
-      if (Object.keys(this.deal).length <= 0) return;
+      if (dealState.currentlyViewingDeal) {
+        this.deal = dealState.currentlyViewingDeal;
+        if (Object.keys(this.deal).length <= 0) return;
 
-      this.project = new Project(
-        document.querySelector(
-          `#${DEAL_PLAYER_CLASSNAME}-canvas`
-        ) as HTMLCanvasElement
-      );
-  
-      if (this.cards.length < 52) this.loadCards();
-      else {
-        this.renderHands();
+        this.project = new Project(
+          document.querySelector(
+            `#${DEAL_PLAYER_CLASSNAME}-canvas`
+          ) as HTMLCanvasElement
+        );
+    
+        if (this.cards.length < numberOfCardsInDeck) this.loadCards();
+        else {
+          this.resetCards();
+          this.renderHands();
+        }
       }
     });
+
+
   }
 
   onClose() {
@@ -73,10 +82,11 @@ export class DealPlayerComponent implements OnInit {
   }
 
   private loadCards() {
-    for (let i = 0; i < 52; i++) {
+    this.cards = [];
+    for (let i = 0; i < numberOfCardsInDeck; i++) {
       const newRaster = new Raster(`card-${i}`);
       newRaster.position.x = this.defaultCardPosition;
-      newRaster.scale(.5);
+      newRaster.scale(this.cardScaleAmount);
       newRaster.onLoad = this.onCardLoad.bind(this);
       this.cards.push(newRaster);
     }
@@ -84,7 +94,7 @@ export class DealPlayerComponent implements OnInit {
 
   private onCardLoad() {
     this.cardsLoaded += 1;
-    if (this.cardsLoaded >= 52) {
+    if (this.cardsLoaded >= numberOfCardsInDeck) {
       this.renderHands();
     }
   }
@@ -97,22 +107,30 @@ export class DealPlayerComponent implements OnInit {
   }
 
   private renderHands() {
+    this.cardWidth = (this.cards[0] as paper.Raster).bounds.width;
+    this.cardHeight = (this.cards[0] as paper.Raster).bounds.height;
+    this.cardVisibleOffset = this.cardHeight / 5;
+    this.cardSpacingIncrement = this.cardWidth / 6;
     this.setCanvasBounds();
 
     for (const username in this.deal?.hands) {
       if (Object.prototype.hasOwnProperty.call(this.deal?.hands, username)) {
         const usersHand = this.deal?.hands[username];
-        const usersDirection = getDirectionFromSeating(this.seating as Seating, username);
-        this.renderHand(usersHand as Hand, usersDirection);
+        try {
+          const usersDirection = getDirectionFromSeating(this.seating as Seating, username);
+          this.renderHand(usersHand as Hand, usersDirection);
+        } catch(err) {
+
+          this.error = err;
+          this.resetCards();
+          console.log('err =', err);
+        }
       }
     }
   }
 
   private renderHand(hand: Hand, direction: string) {
-    this.cardWidth = (this.cards[0] as paper.Raster).bounds.width;
-    this.cardHeight = (this.cards[0] as paper.Raster).bounds.height;
-    this.cardVisibleOffset = this.cardHeight / 5;
-    this.cardSpacingIncrement = this.cardWidth / 6;
+    
     
     const flatHand = flatten(hand);
     const startingPosition = this.getStartingPosition(flatHand.length, direction);
@@ -127,6 +145,8 @@ export class DealPlayerComponent implements OnInit {
         return(digits).match(cardAsNumber as any);
       });
 
+      console.log('this.cardWidth =', this.cardWidth);
+      console.log('this.cardSpacingIncrement =', this.cardSpacingIncrement);
       cardsInHand.push(cardAsRaster);
 
       if (direction === cardinalDirections[0]) this.setNorthCards(cardAsRaster, i, direction, startingPosition);

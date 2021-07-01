@@ -38,6 +38,8 @@
   }
 
   &__canvas {
+    display: flex;
+    justify-content: center;
     grid-column: 1/-1;
     grid-row: 2/-1;
     
@@ -46,6 +48,9 @@
       height:100%;
       position: relative;
       z-index: 100000;
+
+      // margin: 0 auto;
+      max-width: 75vh;
     }
   }
   

@@ -67,6 +67,8 @@ export class DealsListComponent implements OnInit {
   }
 
   onDealsButtonClick(e: Event) {
+    if ((e.target as HTMLElement).innerHTML.match(dealsListDealsButtonChoices[0]))this.store.dispatch(new SetCurrentlyViewingGameSeating(this.seating as Seating));
+
     const items = this.elRef.nativeElement.querySelectorAll(
       `.${DEAL_DETAIL_CLASSNAME}`
     );
@@ -92,8 +94,6 @@ export class DealsListComponent implements OnInit {
 
     const button = (e.currentTarget || e.target) as HTMLElement;
     toggleInnerHTML(button, this.buttonChoicesDeals);
-
-    this.store.dispatch(new SetCurrentlyViewingGameSeating(this.seating as Seating));
   }
 
   onShowDetails(e: Event) {
