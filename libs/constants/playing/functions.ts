@@ -1,4 +1,10 @@
-import { CardinalDirection, CardValuesAsString, Hand, Seating, Suit } from '@nx-bridge/interfaces-and-types';
+import {
+  CardinalDirection,
+  CardValuesAsString,
+  Hand,
+  Seating,
+  Suit,
+} from '@nx-bridge/interfaces-and-types';
 import { debug } from 'node:console';
 import {
   cardinalDirections,
@@ -27,12 +33,15 @@ export function getSuitFromNumber(cardAsNumber: number) {
   if (cardAsNumber === null || cardAsNumber === undefined)
     throw new Error(`Error getting suit for cardAsNumber: ${cardAsNumber}.`);
 
-    const index = Math.floor(cardAsNumber / 13);
+  const index = Math.floor(cardAsNumber / 13);
   if (index === -1) return '';
   return suitsAsCapitalizedStrings[index]?.toLowerCase();
 }
 
-export function getCharacterFromCardAsNumber(cardAsNumber: number, getLetterForTen = false) {
+export function getCharacterFromCardAsNumber(
+  cardAsNumber: number,
+  getLetterForTen = false
+) {
   switch (cardAsNumber) {
     case 0:
       return '2';
@@ -66,7 +75,10 @@ export function getCharacterFromCardAsNumber(cardAsNumber: number, getLetterForT
   }
 }
 
-export function getCharValueFromCardValueString(str: CardValuesAsString | "One", getLetterForTen = false) {
+export function getCharValueFromCardValueString(
+  str: CardValuesAsString | 'One',
+  getLetterForTen = false
+) {
   switch (str) {
     case 'Ace':
       return 'A';
@@ -102,21 +114,27 @@ export function getCharValueFromCardValueString(str: CardValuesAsString | "One",
   }
 }
 
-export function getHtmlEntityFromSuitOrCardAsNumber(value: Suit | number): string {
+export function getHtmlEntityFromSuitOrCardAsNumber(
+  value: Suit | number
+): string {
   if (typeof value === 'number') {
     const suitAsString = getSuitFromNumber(value);
     if (!suitAsString) return '';
 
-    const htmlEntityToUse = suitsHtmlEntities[suitsAsCapitalizedStrings.findIndex(str => str.toLowerCase() === suitAsString.toLowerCase())];
+    const htmlEntityToUse =
+      suitsHtmlEntities[
+        suitsAsCapitalizedStrings.findIndex(
+          (str) => str.toLowerCase() === suitAsString.toLowerCase()
+        )
+      ];
 
-    return htmlEntityToUse ? htmlEntityToUse : "";
-  } 
+    return htmlEntityToUse ? htmlEntityToUse : '';
+  }
 
-  const index = suitsAsCapitalizedStrings.findIndex(s => {
-    return s.slice(0, s.length - 1).toLowerCase() === value.toLowerCase()
-  })
-  return index !== -1 ? suitsHtmlEntities[index] : "NT"
-
+  const index = suitsAsCapitalizedStrings.findIndex((s) => {
+    return s.slice(0, s.length - 1).toLowerCase() === value.toLowerCase();
+  });
+  return index !== -1 ? suitsHtmlEntities[index] : 'NT';
 }
 
 export function getIsBidPlayable(bid: string) {
@@ -134,11 +152,18 @@ export function getDirectionFromSeating(seating: Seating, username: string) {
   throw new Error('Invalid username or seating in getDirectionFromSeating()');
 }
 
-export function getPartnerFromDirection(seating: Seating, direction: CardinalDirection) {
-  if (direction.toLowerCase() === cardinalDirections[0].toLowerCase()) return seating.south;
-  else if (direction.toLowerCase() === cardinalDirections[1].toLowerCase()) return seating.west;
-  else if (direction.toLowerCase() === cardinalDirections[2].toLowerCase()) return seating.north;
-  else if (direction.toLowerCase() === cardinalDirections[3].toLowerCase()) return seating.east;
+export function getPartnerFromDirection(
+  seating: Seating,
+  direction: CardinalDirection
+) {
+  if (direction.toLowerCase() === cardinalDirections[0].toLowerCase())
+    return seating.south;
+  else if (direction.toLowerCase() === cardinalDirections[1].toLowerCase())
+    return seating.west;
+  else if (direction.toLowerCase() === cardinalDirections[2].toLowerCase())
+    return seating.north;
+  else if (direction.toLowerCase() === cardinalDirections[3].toLowerCase())
+    return seating.east;
   throw new Error('Invalid direction or seating in getPartnerFromDirection()');
 }
 
@@ -148,7 +173,9 @@ export function getSuitAsStringFromArray(suit: number[]): string | null {
 
     for (let i = 0; i < suit.length; i++) {
       const cardAsNumber = suit[i];
-      cardsAsChar.push(getCharacterFromCardAsNumber(cardAsNumber % cardsPerSuit, true));
+      cardsAsChar.push(
+        getCharacterFromCardAsNumber(cardAsNumber % cardsPerSuit, true)
+      );
     }
 
     return cardsAsChar.join(',');
@@ -158,10 +185,15 @@ export function getSuitAsStringFromArray(suit: number[]): string | null {
 
 export function sortHand(hand: Hand) {
   //Sorts the hand clubs, diams, hearts, then spades (for displaying in replays)
-  let clubs: number[] = [], diamonds: number[] = [], hearts: number[] = [], spades: number[] = [];
+  let clubs: number[] = [],
+    diamonds: number[] = [],
+    hearts: number[] = [],
+    spades: number[] = [];
   for (let i = 0; i < hand.length; i++) {
     const suit = hand[i];
-    const suitAsString = getSuitFromNumber(suit && suit.length > 0 ? suit[0] : -1);
+    const suitAsString = getSuitFromNumber(
+      suit && suit.length > 0 ? suit[0] : -1
+    );
 
     if (suitAsString === suits.clubs) clubs = suit;
     else if (suitAsString === suits.diamonds) diamonds = suit;
@@ -170,4 +202,14 @@ export function sortHand(hand: Hand) {
   }
 
   return [clubs, diamonds, hearts, spades];
+}
+
+export function flatten(array, depth = 1) {
+  return depth > 0
+    ? array.reduce(
+        (acc, val) =>
+          acc.concat(Array.isArray(val) ? flatDeep(val, depth - 1) : val),
+        []
+      )
+    : array.slice();
 }

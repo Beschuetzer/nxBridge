@@ -3,6 +3,7 @@ import {
   DEAL_PLAYER_CLASSNAME,
   VISIBLE_CLASSNAME,
   DISPLAY_NONE_CLASSNAME,
+  flatten,
 } from '@nx-bridge/constants';
 
 import { Store } from '@ngrx/store';
@@ -29,6 +30,8 @@ export class DealPlayerComponent implements OnInit {
   public isMobile = window.innerWidth <= 655;
   private cards: any[] = [];
   private cardsLoaded = 0;
+  private cardWidth = -1;
+  private cardSpacingIncrement = -1;
 
   constructor(private store: Store<AppState>) {}
 
@@ -45,18 +48,10 @@ export class DealPlayerComponent implements OnInit {
         ) as HTMLCanvasElement
       );
   
-      const path = new Path.Circle({
-        center: [Math.random() * window.innerWidth, Math.random() * 100],
-        radius: Math.random() * 100,
-        strokeColor: 'black',
-      });
-      // console.log('this.deal =', this.deal);
-      // // this.cardsLoaded = 0;
-      // // this.cards = [];
-      // if (this.cards.length < 52) this.loadCards();
-      // else {
-      //   this.renderHands();
-      // }
+      if (this.cards.length < 52) this.loadCards();
+      else {
+        this.renderHands();
+      }
     });
   }
 
@@ -68,15 +63,15 @@ export class DealPlayerComponent implements OnInit {
 
   private loadCards() {
     for (let i = 0; i < 52; i++) {
-      console.log('i =', i);
       const newRaster = new Raster(`card-${i}`);
+      newRaster.position.x = -1000;
+      newRaster.scale(.5);
       newRaster.onLoad = this.onCardLoad.bind(this);
       this.cards.push(newRaster);
     }
   }
 
   private onCardLoad() {
-    console.log('this.cardsLoaded =', this.cardsLoaded);
     this.cardsLoaded += 1;
     if (this.cardsLoaded >= 52) {
       this.renderHands();
@@ -84,11 +79,28 @@ export class DealPlayerComponent implements OnInit {
   }
 
   private renderHands() {
-    debugger;
-    const path = new Path.Circle({
-      center: [Math.random() * 100, Math.random() * 100],
-      radius: Math.random() * 100,
-      strokeColor: 'black',
-    });
+    for (const username in this.deal?.hands) {
+      if (Object.prototype.hasOwnProperty.call(this.deal?.hands, username)) {
+        const usersHand = this.deal?.hands[username];
+        //todo: need to get the seating from currentlyViewingGame
+        finish this
+      }
+    }
+  }
+
+  private renderHand(hand: [number[]], position: string) {
+    const flatHand = flatten(hand);
+    this.cardWidth = (flatHand[0] as paper.Raster).bounds.width;
+    this.cardSpacingIncrement = this.cardWidth / 6;
+    const startingPositionX = this.getStartingPositionX(flatHand.length);
+
+    for (let i = 0; i < 13; i++) {
+      (this.cards[i] as paper.Raster).position.y = 500;
+      (this.cards[i] as paper.Raster).position.x = startingPositionX + this.cardWidth / 2 + this.cardSpacingIncrement * i;
+    }
+  }
+
+  private getStartingPositionX(lengthOfHand: number) {
+    return (window.innerWidth - (this.cardWidth + (lengthOfHand - 1) * this.cardSpacingIncrement));
   }
 }
