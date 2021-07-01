@@ -28,7 +28,7 @@ import {
   getDeclarerFromDeal,
 } from '@nx-bridge/constants';
 import { CardinalDirection, CardValuesAsString, Deal, Seating, Team } from '@nx-bridge/interfaces-and-types';
-import { AddFetchedDeals as AddFetchedDeals, AppState } from '@nx-bridge/store';
+import { AddFetchedDeals as AddFetchedDeals, AppState, SetCurrentlyViewingGameSeating } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
 
 @Component({
@@ -92,6 +92,8 @@ export class DealsListComponent implements OnInit {
 
     const button = (e.currentTarget || e.target) as HTMLElement;
     toggleInnerHTML(button, this.buttonChoicesDeals);
+
+    this.store.dispatch(new SetCurrentlyViewingGameSeating(this.seating as Seating));
   }
 
   onShowDetails(e: Event) {

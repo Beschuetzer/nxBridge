@@ -8,7 +8,7 @@ import {
 
 import { Store } from '@ngrx/store';
 import { AppState } from '@nx-bridge/store';
-import { Deal } from '@nx-bridge/interfaces-and-types';
+import { Deal, Seating } from '@nx-bridge/interfaces-and-types';
 import * as paper from 'paper';
 import { Path, Project, Raster } from 'paper/dist/paper-core';
 
@@ -24,6 +24,7 @@ export class DealPlayerComponent implements OnInit {
   public DEAL_PLAYER_CLASSNAME = DEAL_PLAYER_CLASSNAME;
   public DISPLAY_NONE_CLASSNAME = DISPLAY_NONE_CLASSNAME;
   public deal: Deal | null = null;
+  public seating: Seating | null = null;
   public isPlaying = false;
   public scope: paper.PaperScope | null = null;
   public project: paper.Project | null = null;
@@ -36,6 +37,9 @@ export class DealPlayerComponent implements OnInit {
   constructor(private store: Store<AppState>) {}
 
   ngOnInit(): void {
+    this.store.select('games').subscribe((gameState) => {
+      this.seating = gameState.currentlyViewingGameSeating;
+    })
     
 
     this.store.select('deals').subscribe((dealState) => {
@@ -83,7 +87,7 @@ export class DealPlayerComponent implements OnInit {
       if (Object.prototype.hasOwnProperty.call(this.deal?.hands, username)) {
         const usersHand = this.deal?.hands[username];
         //todo: need to get the seating from currentlyViewingGame
-        finish this
+        
       }
     }
   }

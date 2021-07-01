@@ -204,11 +204,11 @@ export function sortHand(hand: Hand) {
   return [clubs, diamonds, hearts, spades];
 }
 
-export function flatten(array, depth = 1) {
+export function flatten(array: any, depth = 1) {
   return depth > 0
     ? array.reduce(
-        (acc, val) =>
-          acc.concat(Array.isArray(val) ? flatDeep(val, depth - 1) : val),
+        (acc: [], val: any) =>
+          acc.concat(Array.isArray(val) ? flatten(val, depth - 1) : val),
         []
       )
     : array.slice();

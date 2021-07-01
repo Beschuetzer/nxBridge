@@ -1,8 +1,15 @@
 import { Action as fromGeneralActions } from '@ngrx/store';
-import { Game } from '@nx-bridge/interfaces-and-types';
+import { Game, Seating } from '@nx-bridge/interfaces-and-types';
 
 export const SET_GAMES = '[Games] SET_GAMES';
+export const SET_CURRENTLY_VIEWING_GAME_SEATING = '[Games] SET_CURRENTLY_VIEWING_GAME_SEATING';
 
+export class SetCurrentlyViewingGameSeating implements fromGeneralActions {
+  readonly type = SET_CURRENTLY_VIEWING_GAME_SEATING;
+  constructor(
+    public payload: Seating,
+  ) {}
+}
 export class SetGames implements fromGeneralActions {
   readonly type = SET_GAMES;
   constructor(
@@ -10,4 +17,4 @@ export class SetGames implements fromGeneralActions {
   ) {}
 }
 
-export type GameActions = SetGames;
+export type GameActions = SetGames | SetCurrentlyViewingGameSeating;
