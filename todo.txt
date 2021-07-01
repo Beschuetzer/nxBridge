@@ -45,3 +45,7 @@ Todos----------------------------------------------------------
   -add show games played with another player or players
 
   -create a new component called CardPlayViewer, which is a singleton with a canvas in the center and controls to navigate back and forth between card plays (bottom) and a title summarizing the deal (contract, date, room name, result (store these things in redux store from deal-detail upon clicking 'watch replay'))
+
+-need to add resize auto-draw functionality
+-need center card-play boxes?
+-something is causing the cards not to reset on loading of another deal as they aren't layered correctly?
