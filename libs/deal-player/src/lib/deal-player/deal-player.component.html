@@ -6,7 +6,7 @@
   </div>
 </section>
 <section class="{{ DEAL_PLAYER_CLASSNAME }}__canvas">
-  <canvas id="cv1" class="{{ DEAL_PLAYER_CLASSNAME }}__canvas-element"></canvas>
+  <canvas id="{{DEAL_PLAYER_CLASSNAME}}-canvas" class="{{ DEAL_PLAYER_CLASSNAME }}__canvas-element"></canvas>
 </section>
 <section class="{{ DEAL_PLAYER_CLASSNAME }}__controls">
   <svg
@@ -72,7 +72,7 @@
   class="{{ DEAL_PLAYER_CLASSNAME }}__images {{ DISPLAY_NONE_CLASSNAME }}"
 >
   <img
-    *ngFor="let item of [].constructor(51); let i = index"
+    *ngFor="let item of [].constructor(52); let i = index"
     id="card-{{ i }}"
     src="/assets/deal-player/cards-full/{{ i }}.png"
   />
@@ -83,7 +83,7 @@
   class="{{ DEAL_PLAYER_CLASSNAME }}__images {{ DISPLAY_NONE_CLASSNAME }}"
 >
   <img
-    *ngFor="let item of [].constructor(51); let i = index"
+    *ngFor="let item of [].constructor(52); let i = index"
     id="card-{{ i }}"
     src="/assets/deal-player/cards-mobile/{{ i }}.png"
   />

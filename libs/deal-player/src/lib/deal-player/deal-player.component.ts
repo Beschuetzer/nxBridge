@@ -27,33 +27,68 @@ export class DealPlayerComponent implements OnInit {
   public scope: paper.PaperScope | null = null;
   public project: paper.Project | null = null;
   public isMobile = window.innerWidth <= 655;
+  private cards: any[] = [];
+  private cardsLoaded = 0;
 
   constructor(private store: Store<AppState>) {}
 
   ngOnInit(): void {
+    
+
     this.store.select('deals').subscribe((dealState) => {
-      console.log('dealState =', dealState);
       this.deal = dealState.currentlyViewingDeal;
-      this.updateCanvas();
+      if (Object.keys(this.deal).length <= 0) return;
+
+      this.project = new Project(
+        document.querySelector(
+          `#${DEAL_PLAYER_CLASSNAME}-canvas`
+        ) as HTMLCanvasElement
+      );
+  
+      const path = new Path.Circle({
+        center: [Math.random() * window.innerWidth, Math.random() * 100],
+        radius: Math.random() * 100,
+        strokeColor: 'black',
+      });
+      // console.log('this.deal =', this.deal);
+      // // this.cardsLoaded = 0;
+      // // this.cards = [];
+      // if (this.cards.length < 52) this.loadCards();
+      // else {
+      //   this.renderHands();
+      // }
     });
   }
 
   onClose() {
-  document
+    document
       .querySelector(`.${DEAL_PLAYER_CLASSNAME}`)
       ?.classList.remove(VISIBLE_CLASSNAME);
   }
 
-  private updateCanvas() {
-      debugger;
-      window['paper'] = paper;
-    this.scope = new paper.PaperScope();
-    const project1 = new Project(document.querySelector('#cv1') as HTMLCanvasElement);
+  private loadCards() {
+    for (let i = 0; i < 52; i++) {
+      console.log('i =', i);
+      const newRaster = new Raster(`card-${i}`);
+      newRaster.onLoad = this.onCardLoad.bind(this);
+      this.cards.push(newRaster);
+    }
+  }
+
+  private onCardLoad() {
+    console.log('this.cardsLoaded =', this.cardsLoaded);
+    this.cardsLoaded += 1;
+    if (this.cardsLoaded >= 52) {
+      this.renderHands();
+    }
+  }
+
+  private renderHands() {
+    debugger;
     const path = new Path.Circle({
-      center: [80, 50],
-      radius: 30,
-      strokeColor: 'black'
+      center: [Math.random() * 100, Math.random() * 100],
+      radius: Math.random() * 100,
+      strokeColor: 'black',
     });
-    
   }
 }
