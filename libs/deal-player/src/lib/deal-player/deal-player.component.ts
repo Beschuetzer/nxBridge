@@ -116,13 +116,15 @@ export class DealPlayerComponent implements OnInit {
     this.cardSpacingIncrement = this.cardWidth / 6;
     const startingPosition = this.getStartingPosition(flatHand.length, direction);
 
+    const correctlyArrangedHand = this.getCorrectlyArrangedHand(flatHand, direction);
+
     const cardsInHand = []
-    for (let i = 0; i < flatHand.length; i++) {
-      const cardAsNumber = flatHand[i];
+    for (let i = 0; i < correctlyArrangedHand.length; i++) {
+      const cardAsNumber = correctlyArrangedHand[i];
       const cardAsRaster = this.cards.find((card: paper.Raster) => {
         const indexOfDash = card.image.id.indexOf('-');
         const digits = card.image.id.slice(indexOfDash + 1);
-        return(digits).match(cardAsNumber);
+        return(digits).match(cardAsNumber as any);
       });
 
       cardsInHand.push(cardAsRaster);
@@ -136,6 +138,12 @@ export class DealPlayerComponent implements OnInit {
     }
 
     if (direction === cardinalDirections[0]) this.reverseHandLayering(cardsInHand);
+  }
+
+  private getCorrectlyArrangedHand(hand: number[], direction: string) {
+    if (direction === cardinalDirections[0]) return hand.reverse();
+
+    return hand;
   }
 
   private reverseHandLayering(cards: paper.Raster[]) {
@@ -165,11 +173,36 @@ export class DealPlayerComponent implements OnInit {
     // cardAsRaster.position.y = 500;
   }
 
-  private getStartingPosition(lengthOfHand: number, direction: string) {
+
+  //TODO: this can be deleted when finished
+  // private getStartingPosition(numberOfCardsInHand: number, direction: string) {
+  //   const lengthOfHand = (this.cardWidth + (numberOfCardsInHand - 1) * this.cardSpacingIncrement);
+  //   const southStartingPosition = (this.canvasWidth as number - lengthOfHand) / 2;
+
+  //   if (direction === cardinalDirections[0]) {
+  //     return southStartingPosition + lengthOfHand;
+  //   } 
+  //   else if (direction === cardinalDirections[1]) {
+  //     return -1;
+  //   } 
+  //   else if (direction === cardinalDirections[2]) {
+  //     return southStartingPosition;
+  //   } 
+  //   else if (direction === cardinalDirections[3]) {
+  //     return -1;
+  //   } 
+
+  //   return -1;
+  // }
+
+  private getStartingPosition(numberOfCardsInHand: number, direction: string) {
+    const lengthOfHand = (this.cardWidth + (numberOfCardsInHand - 1) * this.cardSpacingIncrement);
+    // const southStartingPosition = (this.canvasWidth as number - lengthOfHand) / 2;
+
     let dimensionToUse = this.canvasHeight;
     if (direction === cardinalDirections[0] || direction === cardinalDirections[2]) dimensionToUse = this.canvasWidth;
     
-    return (dimensionToUse as number - (this.cardWidth + (lengthOfHand - 1) * this.cardSpacingIncrement)) / 2;
+    return (dimensionToUse as number - lengthOfHand) / 2;
   }
 
   private resetAllCardPositions() {
