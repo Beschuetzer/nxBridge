@@ -177,12 +177,6 @@
 			@content;
 		} //937px
 	}
-	@if $breakpoint == nav-switch {
-		@media only screen and (max-width: $nav-switch-width) {
-			@content;
-		} //1100px
-	}
-
 	@if $breakpoint == big-desktop {
 		@media only screen and (min-width: $big-desktop-min-width) {
 			@content;

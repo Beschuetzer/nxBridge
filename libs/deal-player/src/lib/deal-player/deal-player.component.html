@@ -6,8 +6,7 @@
   </div>
 </section>
 <section class="{{ DEAL_PLAYER_CLASSNAME }}__canvas">
-  Canvas here
-  <canvas></canvas>
+  <canvas id="cv1" class="{{ DEAL_PLAYER_CLASSNAME }}__canvas-element"></canvas>
 </section>
 <section class="{{ DEAL_PLAYER_CLASSNAME }}__controls">
   <svg
@@ -67,3 +66,26 @@
     <path d="M24 4v24h-4v-11l-10 10v-22l10 10v-11z"></path>
   </svg>
 </section>
+
+<div 
+  *ngIf="!isMobile"
+  class="{{ DEAL_PLAYER_CLASSNAME }}__images {{ DISPLAY_NONE_CLASSNAME }}"
+>
+  <img
+    *ngFor="let item of [].constructor(51); let i = index"
+    id="card-{{ i }}"
+    src="/assets/deal-player/cards-full/{{ i }}.png"
+  />
+</div>
+
+<div 
+  *ngIf="isMobile"
+  class="{{ DEAL_PLAYER_CLASSNAME }}__images {{ DISPLAY_NONE_CLASSNAME }}"
+>
+  <img
+    *ngFor="let item of [].constructor(51); let i = index"
+    id="card-{{ i }}"
+    src="/assets/deal-player/cards-mobile/{{ i }}.png"
+  />
+</div>
+  

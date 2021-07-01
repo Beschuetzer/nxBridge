@@ -5,8 +5,6 @@ $nav-break-max-width: 35.0625em;
 $phone-max-width: 40.9375em;
 $tab-port-max-width: 52.6875em;
 $tab-land-max-width: 58.5625em;
-$nav-switch-width: 68.75em;
-$larger-than-nav-switch: calc(#{$nav-switch-width} + 0.001em);
 $big-desktop-min-width: 112.5em;
 $layout-breakpoint: phone;
 
@@ -98,7 +96,5 @@ $border-radius-full-screen: $default-font-size * .5;
   --tab-port-max-width: #{$tab-port-max-width};
   --tab-land-max-width: #{$tab-land-max-width};
   --big-desktop-min-width: #{$big-desktop-min-width};
-  --nav-switch-width: #{$nav-switch-width};
-  --larger-than-nav-switch: #{$larger-than-nav-switch};
   --game-detail-padding-sides: #{$game-detail-padding-sides};
 }
