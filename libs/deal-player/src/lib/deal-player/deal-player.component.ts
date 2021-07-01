@@ -10,7 +10,7 @@ import {
 } from '@nx-bridge/constants';
 
 import { Store } from '@ngrx/store';
-import { AppState } from '@nx-bridge/store';
+import { AppState, SetCurrentlyViewingDeal } from '@nx-bridge/store';
 import { Deal, Hand, Seating } from '@nx-bridge/interfaces-and-types';
 import * as paper from 'paper';
 import { Project, Raster } from 'paper/dist/paper-core';
@@ -67,6 +67,7 @@ export class DealPlayerComponent implements OnInit {
         else {
           this.resetCards();
           this.renderHands();
+          document.querySelector(`.${DEAL_PLAYER_CLASSNAME}`)?.classList.add(VISIBLE_CLASSNAME);
         }
       }
     });
@@ -79,6 +80,7 @@ export class DealPlayerComponent implements OnInit {
       .querySelector(`.${DEAL_PLAYER_CLASSNAME}`)
       ?.classList.remove(VISIBLE_CLASSNAME);
     this.resetCards();
+    this.store.dispatch(new SetCurrentlyViewingDeal({} as Deal));
   }
 
   private loadCards() {
@@ -145,8 +147,6 @@ export class DealPlayerComponent implements OnInit {
         return(digits).match(cardAsNumber as any);
       });
 
-      console.log('this.cardWidth =', this.cardWidth);
-      console.log('this.cardSpacingIncrement =', this.cardSpacingIncrement);
       cardsInHand.push(cardAsRaster);
 
       if (direction === cardinalDirections[0]) this.setNorthCards(cardAsRaster, i, direction, startingPosition);

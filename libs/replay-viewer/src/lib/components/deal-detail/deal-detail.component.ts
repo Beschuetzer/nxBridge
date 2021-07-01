@@ -91,7 +91,6 @@ export class DealDetailComponent implements OnInit {
   }
 
   onWatchClick(e: Event) {
-    document.querySelector(`.${DEAL_PLAYER_CLASSNAME}`)?.classList.add(VISIBLE_CLASSNAME);
     this.store.dispatch(new SetCurrentlyViewingDeal(this.deal as Deal));
   }
 
