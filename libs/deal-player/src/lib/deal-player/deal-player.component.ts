@@ -143,11 +143,13 @@ export class DealPlayerComponent implements OnInit {
       this.setCanvasMetrics();
       this.setCardMetrics();
       this.renderHands();
+      this.cardsLoaded = 0;
     }
   }
 
   private setCardMetrics() {
     const cardZero = this.cards[0] as paper.Raster;
+    if (cardZero?.rotation === undefined) return;
     const roundedRotation = Math.round(cardZero.rotation);
     this.cardWidth = roundedRotation === 0 || roundedRotation === 180 ? cardZero.bounds.width : cardZero.bounds.height;
     this.cardHeight = this.cardWidth * 1.5;
@@ -171,6 +173,11 @@ export class DealPlayerComponent implements OnInit {
             this.seating as Seating,
             username
           );
+
+          if (isNaN(this.cardWidth) || isNaN(this.cardHeight)) {
+            return this.loadCards();
+          }
+
           this.renderHand(usersHand as Hand, usersDirection);
         } catch (err) {
           this.error = err;
@@ -200,11 +207,6 @@ export class DealPlayerComponent implements OnInit {
         const digits = card.image.id.slice(indexOfDash + 1);
         return digits.match(cardAsNumber as any);
       });
-
-      if (!cardAsRaster || isNaN(this.cardWidth) || isNaN(this.cardHeight)) {
-        debugger;
-        return this.loadCards();
-      }
 
       cardsInHand.push(cardAsRaster);
 
@@ -246,11 +248,7 @@ export class DealPlayerComponent implements OnInit {
     direction: string,
     startingPosition: number
   ) {
-    console.log('this.canvasHeight =', this.canvasHeight);
-    console.log('this.cardVisibleOffset =', this.cardVisibleOffset);
-    console.log('this.cardHeight =', this.cardHeight);
-    console.log('cardAsRaster.bounds.height =', cardAsRaster.bounds.height);
-    console.log('cardAsRaster.bounds.width =', cardAsRaster.bounds.width);
+    
     cardAsRaster.position.x =
       startingPosition +
       this.cardWidth / 2 +
@@ -308,12 +306,8 @@ export class DealPlayerComponent implements OnInit {
 
   private onResize(e: Event) {
     clearTimeout(this.redrawTimeout);
-    const dealPlayerEl = document.querySelector(
-      `.${DEAL_PLAYER_CLASSNAME}`
-    ) as HTMLElement;
 
     this.isMobile = window.innerWidth <= this.mobileWidthStart;
-    if (dealPlayerEl.classList.contains(VISIBLE_CLASSNAME)) {
       this.redrawTimeout = setTimeout(() => {
         this.cardScaleAmount = this.isMobile
           ? this.MAX_SCALE_AMOUNT_MOBILE
@@ -338,7 +332,6 @@ export class DealPlayerComponent implements OnInit {
         this.setCardMetrics();
         this.renderHands();
       }, 250);
-    }
   }
 
   private getStartingPosition(numberOfCardsInHand: number, direction: string) {

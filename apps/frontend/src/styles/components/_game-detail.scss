@@ -12,7 +12,7 @@
   background-color: rgba(var(--color-white-rgb), 0);
   transition: 
     transform $animation-duration * 1 $animation-easing-standard-easeInOutBack-smaller,
-    background-color $animation-duration $animation-easing-standard $animation-duration * 2
+    background-color $animation-duration $animation-easing-standard $animation-duration * 1
   ;
 
   &::-webkit-scrollbar-thumb,
