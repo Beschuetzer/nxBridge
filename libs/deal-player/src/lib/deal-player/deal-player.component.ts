@@ -19,7 +19,7 @@ import {
 
 import { Store } from '@ngrx/store';
 import { AppState, SetCurrentlyViewingDeal } from '@nx-bridge/store';
-import { Deal, Hand, Seating } from '@nx-bridge/interfaces-and-types';
+import { Deal, Hand, Hands, Seating } from '@nx-bridge/interfaces-and-types';
 import * as paper from 'paper';
 import { Project, Raster } from 'paper/dist/paper-core';
 
@@ -35,6 +35,10 @@ export class DealPlayerComponent implements OnInit {
   public DEAL_PLAYER_CLASSNAME = DEAL_PLAYER_CLASSNAME;
   public DISPLAY_NONE_CLASSNAME = DISPLAY_NONE_CLASSNAME;
   public deal: Deal | null = null;
+  public handsToRender: Hands | null = null;
+  public playCount = 0;
+  public cardsPlayed: number[] = [];
+  public cardPlayWaitDuration = 2500;
   public seating: Seating | null = null;
   public isPlaying = false;
   public scope: paper.PaperScope | null = null;
@@ -77,6 +81,7 @@ export class DealPlayerComponent implements OnInit {
         this.MIN_SCALE_AMOUNT_ABOVE_THRESHOLD
       );
   private redrawTimeout: any;
+  private playInterval: any;
   private error = '';
 
   constructor(
@@ -95,6 +100,8 @@ export class DealPlayerComponent implements OnInit {
     this.store.select('deals').subscribe((dealState) => {
       if (dealState.currentlyViewingDeal) {
         this.deal = dealState.currentlyViewingDeal;
+        this.handsToRender = this.deal?.hands;
+
         if (Object.keys(this.deal).length <= 0) return;
 
         this.project = new Project(
@@ -116,6 +123,44 @@ export class DealPlayerComponent implements OnInit {
     this.renderer.removeClass(this.elRef.nativeElement, VISIBLE_CLASSNAME);
     this.resetCardsRotationAndPosition();
     this.store.dispatch(new SetCurrentlyViewingDeal({} as Deal));
+  }
+
+  onNext() {
+    this.playNextCard();
+  }
+
+  onPause() {
+    this.isPlaying = false;
+    clearInterval(this.playInterval);
+  }
+
+  onPlay() {
+    this.isPlaying = true;
+    this.playNextCard();
+    this.playInterval = setInterval(() => {
+       this.playNextCard();
+        if (this. playCount === cardsPerDeck) clearInterval(this.playInterval);
+    }, this.cardPlayWaitDuration)
+  }
+
+  onPrevious() {
+
+  }
+
+  onStop() {
+    this.onPause();
+    this.resetCardsPlayed();
+  }
+
+  private playNextCard() {
+    this.cardsPlayed = flatten(this.deal?.cardPlayOrder.slice(0, this. playCount + 1) as number[]);
+    this. playCount++;
+    console.log('this.cardsPlayed =', this.cardsPlayed);
+  }
+
+  private resetCardsPlayed() {
+    this.cardsPlayed = [];
+    this.playCount = 0;
   }
 
   private loadCards() {
@@ -165,9 +210,9 @@ export class DealPlayerComponent implements OnInit {
   }
 
   private renderHands() {
-    for (const username in this.deal?.hands) {
-      if (Object.prototype.hasOwnProperty.call(this.deal?.hands, username)) {
-        const usersHand = this.deal?.hands[username];
+    for (const username in this.handsToRender) {
+      if (Object.prototype.hasOwnProperty.call(this.handsToRender, username)) {
+        const usersHand = this.handsToRender[username];
         try {
           const usersDirection = getDirectionFromSeating(
             this.seating as Seating,

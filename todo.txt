@@ -38,16 +38,12 @@ Todos----------------------------------------------------------
   -add ngIf to email and username fields (hide the other if one is valid)
   -figure out how to move landing service validators to a new service folder in the frontend project in a ValidatorsService file
 
-  Game Filtering stuf----------------------------------------
+  Game Filtering stuff----------------------------------------
   -add filter by room name option for the GameList
   -add sorting options for gameslist (ascending / descending by date and name)
   -add show games between date
   -add show games played with another player or players
 
-  -create a new component called CardPlayViewer, which is a singleton with a canvas in the center and controls to navigate back and forth between card plays (bottom) and a title summarizing the deal (contract, date, room name, result (store these things in redux store from deal-detail upon clicking 'watch replay'))
-
--need to add resize auto-draw functionality
--need center card-play boxes?
--something is causing the cards not to reset on loading of another deal as they aren't layered correctly?
 
 -south is drawn funny y-wise on resize sometimes (no reason for it though...)
+-how to draw
