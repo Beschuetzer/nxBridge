@@ -42,11 +42,13 @@ export class DealPlayerComponent implements OnInit {
   private defaultCardPosition = -1000;
   private canvasHeight: number | undefined;
   private canvasWidth: number | undefined;
-  private minScaleAmount = .5875;
+  private scaleAmountThreholdViewPortWidth = 1650;
+  private minScaleAmountBelowThreshold = .525;
+  private minScaleAmountAboveThreshold = .5875;
   private maxScaleAmount = .6;
   private minTargetViewPortWidth = 340;
-  private maxTargetViewPortWidth = 1600;
-  private cardScaleAmount = getLinearPercentOfMaxMatchWithinRange(window.innerWidth as number,this.minTargetViewPortWidth, this.maxTargetViewPortWidth, this.maxScaleAmount, this.minScaleAmount)
+  private maxTargetViewPortWidth = 1800;
+  private cardScaleAmount =  window.innerWidth < this.scaleAmountThreholdViewPortWidth ? getLinearPercentOfMaxMatchWithinRange(window.innerWidth as number,this.minTargetViewPortWidth, this.scaleAmountThreholdViewPortWidth, this.maxScaleAmount, this.minScaleAmountBelowThreshold) : getLinearPercentOfMaxMatchWithinRange(window.innerWidth as number,this.minTargetViewPortWidth, this.maxTargetViewPortWidth, this.maxScaleAmount, this.minScaleAmountAboveThreshold);
   private redrawTimeout: any;
   private error = '';
 
@@ -217,7 +219,12 @@ export class DealPlayerComponent implements OnInit {
       // this.renderHands();
 
       this.redrawTimeout = setTimeout(() => {
-        this.cardScaleAmount = getLinearPercentOfMaxMatchWithinRange(window.innerWidth as number,this.minTargetViewPortWidth, this.maxTargetViewPortWidth, this.maxScaleAmount, this.minScaleAmount);
+        this.cardScaleAmount =  window.innerWidth < this.scaleAmountThreholdViewPortWidth ? getLinearPercentOfMaxMatchWithinRange(window.innerWidth as number,this.minTargetViewPortWidth, this.scaleAmountThreholdViewPortWidth, this.maxScaleAmount, this.minScaleAmountBelowThreshold) : getLinearPercentOfMaxMatchWithinRange(window.innerWidth as number,this.minTargetViewPortWidth, this.maxTargetViewPortWidth, this.maxScaleAmount, this.minScaleAmountAboveThreshold);
+
+        // let minScaleAmountToUse = this.minScaleAmountBelowThreshold;
+        // if (window.innerWidth >= this.scaleAmountThreholdViewPortWidth) minScaleAmountToUse = this.minScaleAmountAboveThreshold;
+        // this.cardScaleAmount =  getLinearPercentOfMaxMatchWithinRange(window.innerWidth as number,this.minTargetViewPortWidth, this.maxTargetViewPortWidth, this.maxScaleAmount, minScaleAmountToUse)
+
 
 
         // this.loadCards();

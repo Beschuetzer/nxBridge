@@ -33,6 +33,7 @@
       color: var(--color-primary-1);
       font-size: $default-font-size * 4;
       padding: $default-font-size * 2 $default-font-size;
+      user-select: none;
 
       &:hover {
         color: rgba(var(--color-primary-1-rgb), .5);

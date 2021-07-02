@@ -50,4 +50,4 @@ Todos----------------------------------------------------------
 -need center card-play boxes?
 -something is causing the cards not to reset on loading of another deal as they aren't layered correctly?
 
--change the cardScaleAmount on resize of window
+-how do you adjust scale to match the viewport width? or does it need to correlate with another variable?
