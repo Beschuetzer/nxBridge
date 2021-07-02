@@ -126,7 +126,7 @@ export class DealPlayerComponent implements OnInit {
   }
 
   onNext() {
-    this.playNextCard();
+    this.playCard();
   }
 
   onPause() {
@@ -136,9 +136,9 @@ export class DealPlayerComponent implements OnInit {
 
   onPlay() {
     this.isPlaying = true;
-    this.playNextCard();
+    this.playCard(0);
     this.playInterval = setInterval(() => {
-       this.playNextCard();
+       this.playCard();
         if (this. playCount === cardsPerDeck) clearInterval(this.playInterval);
     }, this.cardPlayWaitDuration)
   }
@@ -152,9 +152,9 @@ export class DealPlayerComponent implements OnInit {
     this.resetCardsPlayed();
   }
 
-  private playNextCard() {
-    this.cardsPlayed = flatten(this.deal?.cardPlayOrder.slice(0, this. playCount + 1) as number[]);
-    this. playCount++;
+  private playCard(nthCard = this.playCount) {
+    this.cardsPlayed = flatten(this.deal?.cardPlayOrder.slice(0, nthCard + 1) as number[]);
+    this. playCount = nthCard + 1;
     console.log('this.cardsPlayed =', this.cardsPlayed);
   }
 
