@@ -47,34 +47,34 @@ export class DealPlayerComponent implements OnInit {
   private cardHeight = -1;
   private cardVisibleOffset = -1;
   private cardSpacingIncrement = -1;
-  private defaultCardPosition = -1000;
+  private DEFAULT_CARD_POSITION = -1000;
   private canvasHeight: number | undefined;
   private canvasWidth: number | undefined;
-  private scaleAmountThreholdViewPortWidth = 1650;
-  private minScaleAmountBelowThreshold = 0.525;
-  private minScaleAmountAboveThreshold = 0.5875;
-  private maxScaleAmountMobile = 0.675;
-  private maxScaleAmountNormal = 0.55;
-  private minTargetViewPortWidth = 600;
-  private maxTargetViewPortWidth = 1800;
-  private cardMobilePixelWidth = 233;
-  private cardFullPixelWidth = 360;
+  private SCALE_AMOUNT_THRESHOLD_VIEW_PORT_WIDTH = 1650;
+  private MIN_SCALE_AMOUNT_BELOW_THRESHOLD = 0.525;
+  private MIN_SCALE_AMOUNT_ABOVE_THRESHOLD = 0.5875;
+  private MAX_SCALE_AMOUNT_MOBILE = 0.675;
+  private MAX_SCALE_AMOUNT_NORMAL = 0.55;
+  private MIN_TARGET_VIEW_PORT_WIDTH = 600;
+  private MAX_TARGET_VIEW_PORT_WIDTH = 1800;
+  private CARD_MOBILE_PIXEL_WIDTH = 233;
+  private CARD_FULL_PIXEL_WIDTH = 360;
   private cardScaleAmount = this.isMobile
-    ? this.maxScaleAmountMobile
-    : window.innerWidth < this.scaleAmountThreholdViewPortWidth
+    ? this.MAX_SCALE_AMOUNT_MOBILE
+    : window.innerWidth < this.SCALE_AMOUNT_THRESHOLD_VIEW_PORT_WIDTH
     ? getLinearPercentOfMaxMatchWithinRange(
         window.innerWidth as number,
         this.mobileWidthStart,
-        this.scaleAmountThreholdViewPortWidth,
-        this.maxScaleAmountNormal,
-        this.minScaleAmountBelowThreshold
+        this.SCALE_AMOUNT_THRESHOLD_VIEW_PORT_WIDTH,
+        this.MAX_SCALE_AMOUNT_NORMAL,
+        this.MIN_SCALE_AMOUNT_BELOW_THRESHOLD
       )
     : getLinearPercentOfMaxMatchWithinRange(
         window.innerWidth as number,
-        this.minTargetViewPortWidth,
-        this.maxTargetViewPortWidth,
-        this.maxScaleAmountNormal,
-        this.minScaleAmountAboveThreshold
+        this.MIN_TARGET_VIEW_PORT_WIDTH,
+        this.MAX_TARGET_VIEW_PORT_WIDTH,
+        this.MAX_SCALE_AMOUNT_NORMAL,
+        this.MIN_SCALE_AMOUNT_ABOVE_THRESHOLD
       );
   private redrawTimeout: any;
   private error = '';
@@ -123,7 +123,7 @@ export class DealPlayerComponent implements OnInit {
     this.cards = [];
     for (let i = 0; i < cardsPerDeck; i++) {
       const newRaster = new Raster(`card-${i}`);
-      newRaster.position.x = this.defaultCardPosition;
+      newRaster.position.x = this.DEFAULT_CARD_POSITION;
       newRaster.scale(this.cardScaleAmount);
       newRaster.onLoad = this.onCardLoad.bind(this);
       this.cards.push(newRaster);
@@ -201,6 +201,11 @@ export class DealPlayerComponent implements OnInit {
         return digits.match(cardAsNumber as any);
       });
 
+      if (!cardAsRaster || isNaN(this.cardWidth) || isNaN(this.cardHeight)) {
+        debugger;
+        return this.loadCards();
+      }
+
       cardsInHand.push(cardAsRaster);
 
       if (direction === cardinalDirections[0])
@@ -243,6 +248,9 @@ export class DealPlayerComponent implements OnInit {
   ) {
     console.log('this.canvasHeight =', this.canvasHeight);
     console.log('this.cardVisibleOffset =', this.cardVisibleOffset);
+    console.log('this.cardHeight =', this.cardHeight);
+    console.log('cardAsRaster.bounds.height =', cardAsRaster.bounds.height);
+    console.log('cardAsRaster.bounds.width =', cardAsRaster.bounds.width);
     cardAsRaster.position.x =
       startingPosition +
       this.cardWidth / 2 +
@@ -308,21 +316,21 @@ export class DealPlayerComponent implements OnInit {
     if (dealPlayerEl.classList.contains(VISIBLE_CLASSNAME)) {
       this.redrawTimeout = setTimeout(() => {
         this.cardScaleAmount = this.isMobile
-          ? this.maxScaleAmountMobile
-          : window.innerWidth < this.scaleAmountThreholdViewPortWidth
+          ? this.MAX_SCALE_AMOUNT_MOBILE
+          : window.innerWidth < this.SCALE_AMOUNT_THRESHOLD_VIEW_PORT_WIDTH
           ? getLinearPercentOfMaxMatchWithinRange(
               window.innerWidth as number,
               this.mobileWidthStart,
-              this.scaleAmountThreholdViewPortWidth,
-              this.maxScaleAmountNormal,
-              this.minScaleAmountBelowThreshold
+              this.SCALE_AMOUNT_THRESHOLD_VIEW_PORT_WIDTH,
+              this.MAX_SCALE_AMOUNT_NORMAL,
+              this.MIN_SCALE_AMOUNT_BELOW_THRESHOLD
             )
           : getLinearPercentOfMaxMatchWithinRange(
               window.innerWidth as number,
-              this.minTargetViewPortWidth,
-              this.maxTargetViewPortWidth,
-              this.maxScaleAmountNormal,
-              this.minScaleAmountAboveThreshold
+              this.MIN_TARGET_VIEW_PORT_WIDTH,
+              this.MAX_TARGET_VIEW_PORT_WIDTH,
+              this.MAX_SCALE_AMOUNT_NORMAL,
+              this.MIN_SCALE_AMOUNT_ABOVE_THRESHOLD
             );
 
         this.setCardsSize();
@@ -350,7 +358,7 @@ export class DealPlayerComponent implements OnInit {
   private resetCardsRotationAndPosition() {
     for (let i = 0; i < this.cards.length; i++) {
       const card = this.cards[i] as paper.Raster;
-      card.position.x = this.defaultCardPosition;
+      card.position.x = this.DEFAULT_CARD_POSITION;
       card.rotation = 0;
     }
   }
@@ -361,8 +369,8 @@ export class DealPlayerComponent implements OnInit {
       let currentWidth = card.bounds.width;
       if (card.rotation > 89 && card.rotation <= 91 || card.rotation < -89 && card.rotation > -91) currentWidth = card.bounds.height;
       const desiredWidth = this.isMobile
-        ? this.cardMobilePixelWidth
-        : this.cardFullPixelWidth;
+        ? this.CARD_MOBILE_PIXEL_WIDTH
+        : this.CARD_FULL_PIXEL_WIDTH;
       card.scale(desiredWidth / currentWidth);
       card.scale(this.cardScaleAmount);
     }
