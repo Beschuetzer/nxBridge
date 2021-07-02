@@ -1,4 +1,10 @@
-import { Component, ElementRef, HostBinding, OnInit, Renderer2 } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostBinding,
+  OnInit,
+  Renderer2,
+} from '@angular/core';
 import {
   DEAL_PLAYER_CLASSNAME,
   VISIBLE_CLASSNAME,
@@ -32,7 +38,8 @@ export class DealPlayerComponent implements OnInit {
   public isPlaying = false;
   public scope: paper.PaperScope | null = null;
   public project: paper.Project | null = null;
-  public isMobile = window.innerWidth <= 655;
+  private mobileWidthStart = 655;
+  public isMobile = window.innerWidth <= this.mobileWidthStart;
   private cards: any[] = [];
   private cardsLoaded = 0;
   private cardWidth = -1;
@@ -43,23 +50,46 @@ export class DealPlayerComponent implements OnInit {
   private canvasHeight: number | undefined;
   private canvasWidth: number | undefined;
   private scaleAmountThreholdViewPortWidth = 1650;
-  private minScaleAmountBelowThreshold = .525;
-  private minScaleAmountAboveThreshold = .5875;
-  private maxScaleAmount = .6;
-  private minTargetViewPortWidth = 340;
+  private minScaleAmountBelowThreshold = 0.525;
+  private minScaleAmountAboveThreshold = 0.5875;
+  private maxScaleAmountMobile = 0.675;
+  private maxScaleAmountNormal = 0.55;
+  private minTargetViewPortWidth = 600;
   private maxTargetViewPortWidth = 1800;
-  private cardScaleAmount =  window.innerWidth < this.scaleAmountThreholdViewPortWidth ? getLinearPercentOfMaxMatchWithinRange(window.innerWidth as number,this.minTargetViewPortWidth, this.scaleAmountThreholdViewPortWidth, this.maxScaleAmount, this.minScaleAmountBelowThreshold) : getLinearPercentOfMaxMatchWithinRange(window.innerWidth as number,this.minTargetViewPortWidth, this.maxTargetViewPortWidth, this.maxScaleAmount, this.minScaleAmountAboveThreshold);
+  private cardMobilePixelWidth = 233;
+  private cardFullPixelWidth = 360;
+  private cardScaleAmount = this.isMobile
+    ? this.maxScaleAmountMobile
+    : window.innerWidth < this.scaleAmountThreholdViewPortWidth
+    ? getLinearPercentOfMaxMatchWithinRange(
+        window.innerWidth as number,
+        this.mobileWidthStart,
+        this.scaleAmountThreholdViewPortWidth,
+        this.maxScaleAmountNormal,
+        this.minScaleAmountBelowThreshold
+      )
+    : getLinearPercentOfMaxMatchWithinRange(
+        window.innerWidth as number,
+        this.minTargetViewPortWidth,
+        this.maxTargetViewPortWidth,
+        this.maxScaleAmountNormal,
+        this.minScaleAmountAboveThreshold
+      );
   private redrawTimeout: any;
   private error = '';
 
-  constructor(private store: Store<AppState>, private elRef: ElementRef, private renderer: Renderer2) {}
+  constructor(
+    private store: Store<AppState>,
+    private elRef: ElementRef,
+    private renderer: Renderer2
+  ) {}
 
   ngOnInit(): void {
     window.addEventListener('resize', this.onResize.bind(this));
 
     this.store.select('games').subscribe((gameState) => {
       this.seating = gameState.currentlyViewingGameSeating;
-    })
+    });
 
     this.store.select('deals').subscribe((dealState) => {
       if (dealState.currentlyViewingDeal) {
@@ -71,22 +101,19 @@ export class DealPlayerComponent implements OnInit {
             `#${DEAL_PLAYER_CLASSNAME}-canvas`
           ) as HTMLCanvasElement
         );
-    
+
         if (this.cards.length < numberOfCardsInDeck) this.loadCards();
         else {
-          this.resetCards();
           this.renderHands();
-          this.renderer.addClass(this.elRef.nativeElement, VISIBLE_CLASSNAME)
+          this.renderer.addClass(this.elRef.nativeElement, VISIBLE_CLASSNAME);
         }
       }
     });
-
-
   }
 
   onClose() {
-    this.renderer.removeClass(this.elRef.nativeElement, VISIBLE_CLASSNAME)
-    this.resetCards();
+    this.renderer.removeClass(this.elRef.nativeElement, VISIBLE_CLASSNAME);
+    this.resetCardsRotationAndPosition();
     this.store.dispatch(new SetCurrentlyViewingDeal({} as Deal));
   }
 
@@ -112,6 +139,8 @@ export class DealPlayerComponent implements OnInit {
   private onCardLoad() {
     this.cardsLoaded += 1;
     if (this.cardsLoaded >= numberOfCardsInDeck) {
+      this.setCanvasMetrics();
+      this.setCardMetrics();
       this.renderHands();
     }
   }
@@ -120,7 +149,7 @@ export class DealPlayerComponent implements OnInit {
     this.cardWidth = (this.cards[0] as paper.Raster).bounds.width;
     this.cardHeight = (this.cards[0] as paper.Raster).bounds.height;
     this.cardVisibleOffset = this.cardHeight / 4 - 2.5;
-    this.cardSpacingIncrement = this.canvasWidth as number / 13;
+    this.cardSpacingIncrement = (this.canvasWidth as number) / 13;
   }
 
   private setCanvasMetrics() {
@@ -131,19 +160,18 @@ export class DealPlayerComponent implements OnInit {
   }
 
   private renderHands() {
-    this.setCanvasMetrics();
-    this.setCardMetrics();
-
     for (const username in this.deal?.hands) {
       if (Object.prototype.hasOwnProperty.call(this.deal?.hands, username)) {
         const usersHand = this.deal?.hands[username];
         try {
-          const usersDirection = getDirectionFromSeating(this.seating as Seating, username);
+          const usersDirection = getDirectionFromSeating(
+            this.seating as Seating,
+            username
+          );
           this.renderHand(usersHand as Hand, usersDirection);
-        } catch(err) {
-
+        } catch (err) {
           this.error = err;
-          this.resetCards();
+          this.resetCardsRotationAndPosition();
           console.log('err =', err);
         }
       }
@@ -152,8 +180,14 @@ export class DealPlayerComponent implements OnInit {
 
   private renderHand(hand: Hand, direction: string) {
     const flatHand = flatten(hand);
-    const startingPosition = this.getStartingPosition(flatHand.length, direction);
-    const correctlyArrangedHand = this.getCorrectlyArrangedHand(flatHand, direction);
+    const startingPosition = this.getStartingPosition(
+      flatHand.length,
+      direction
+    );
+    const correctlyArrangedHand = this.getCorrectlyArrangedHand(
+      flatHand,
+      direction
+    );
     const cardsInHand = [];
 
     for (let i = 0; i < correctlyArrangedHand.length; i++) {
@@ -161,52 +195,99 @@ export class DealPlayerComponent implements OnInit {
       const cardAsRaster = this.cards.find((card: paper.Raster) => {
         const indexOfDash = card.image.id.indexOf('-');
         const digits = card.image.id.slice(indexOfDash + 1);
-        return(digits).match(cardAsNumber as any);
+        return digits.match(cardAsNumber as any);
       });
 
       cardsInHand.push(cardAsRaster);
 
-      if (direction === cardinalDirections[0]) this.setNorthCards(cardAsRaster, i, direction, startingPosition);
-      else if (direction === cardinalDirections[1]) this.setEastCards(cardAsRaster, i, direction, startingPosition);
-      else if (direction === cardinalDirections[2]) this.setSouthCards(cardAsRaster, i, direction, startingPosition);
-      else if (direction === cardinalDirections[3]) this.setWestCards(cardAsRaster, i, direction, startingPosition);
+      if (direction === cardinalDirections[0])
+        this.setNorthCards(cardAsRaster, i, direction, startingPosition);
+      else if (direction === cardinalDirections[1])
+        this.setEastCards(cardAsRaster, i, direction, startingPosition);
+      else if (direction === cardinalDirections[2])
+        this.setSouthCards(cardAsRaster, i, direction, startingPosition);
+      else if (direction === cardinalDirections[3])
+        this.setWestCards(cardAsRaster, i, direction, startingPosition);
 
       this.project?.activeLayer.addChild(cardAsRaster);
     }
 
-    if (direction === cardinalDirections[0] || direction === cardinalDirections[1]) this.reverseHandLayering(cardsInHand);
+    if (
+      direction === cardinalDirections[0] ||
+      direction === cardinalDirections[1]
+    )
+      this.reverseHandLayering(cardsInHand);
   }
 
-  private setNorthCards(cardAsRaster: paper.Raster, nthCard: number, direction: string, startingPosition: number) {
-    cardAsRaster.position.x = startingPosition + this.cardWidth / 2 + this.cardSpacingIncrement * nthCard;
+  private setNorthCards(
+    cardAsRaster: paper.Raster,
+    nthCard: number,
+    direction: string,
+    startingPosition: number
+  ) {
+    cardAsRaster.position.x =
+      startingPosition +
+      this.cardWidth / 2 +
+      this.cardSpacingIncrement * nthCard;
     cardAsRaster.position.y = -this.cardVisibleOffset;
   }
 
-  private setSouthCards(cardAsRaster: paper.Raster, nthCard: number, direction: string, startingPosition: number) {
-    cardAsRaster.position.x = startingPosition + this.cardWidth / 2 + this.cardSpacingIncrement * nthCard;
-    cardAsRaster.position.y = this.canvasHeight as number + this.cardVisibleOffset;
+  private setSouthCards(
+    cardAsRaster: paper.Raster,
+    nthCard: number,
+    direction: string,
+    startingPosition: number
+  ) {
+    cardAsRaster.position.x =
+      startingPosition +
+      this.cardWidth / 2 +
+      this.cardSpacingIncrement * nthCard;
+    cardAsRaster.position.y =
+      (this.canvasHeight as number) + this.cardVisibleOffset;
   }
 
-  private setEastCards(cardAsRaster: paper.Raster, nthCard: number, direction: string, startingPosition: number) {
-    cardAsRaster.position.y = startingPosition + this.cardWidth / 2 + this.cardSpacingIncrement * nthCard;
-    cardAsRaster.position.x = this.canvasWidth as number + this.cardVisibleOffset;
-    if (cardAsRaster.rotation > -89.5 || cardAsRaster.rotation < -90.5) cardAsRaster.rotate(-90);
+  private setEastCards(
+    cardAsRaster: paper.Raster,
+    nthCard: number,
+    direction: string,
+    startingPosition: number
+  ) {
+    cardAsRaster.position.y =
+      startingPosition +
+      this.cardWidth / 2 +
+      this.cardSpacingIncrement * nthCard;
+    cardAsRaster.position.x =
+      (this.canvasWidth as number) + this.cardVisibleOffset;
+    if (cardAsRaster.rotation > -89.5 || cardAsRaster.rotation < -90.5)
+      cardAsRaster.rotate(-90);
   }
 
-  private setWestCards(cardAsRaster: paper.Raster, nthCard: number, direction: string, startingPosition: number) {
-    cardAsRaster.position.y = startingPosition + this.cardWidth / 2 + this.cardSpacingIncrement * nthCard;
+  private setWestCards(
+    cardAsRaster: paper.Raster,
+    nthCard: number,
+    direction: string,
+    startingPosition: number
+  ) {
+    cardAsRaster.position.y =
+      startingPosition +
+      this.cardWidth / 2 +
+      this.cardSpacingIncrement * nthCard;
     cardAsRaster.position.x = -this.cardVisibleOffset;
-    if (cardAsRaster.rotation < 89.5 || cardAsRaster.rotation > 90.5) cardAsRaster.rotate(90);
-
+    if (cardAsRaster.rotation < 89.5 || cardAsRaster.rotation > 90.5)
+      cardAsRaster.rotate(90);
   }
 
   private getCorrectlyArrangedHand(hand: number[], direction: string) {
-    if (direction === cardinalDirections[0] || direction === cardinalDirections[1]) return hand.reverse();
+    if (
+      direction === cardinalDirections[0] ||
+      direction === cardinalDirections[1]
+    )
+      return hand.reverse();
     return hand;
   }
 
   private reverseHandLayering(cards: paper.Raster[]) {
-    for (let i = cards.length - 1; i >= 0 ; i--) {
+    for (let i = cards.length - 1; i >= 0; i--) {
       const card = cards[i];
       this.project?.activeLayer.addChild(card);
     }
@@ -214,43 +295,73 @@ export class DealPlayerComponent implements OnInit {
 
   private onResize(e: Event) {
     clearTimeout(this.redrawTimeout);
-    const dealPlayerEl = document.querySelector(`.${DEAL_PLAYER_CLASSNAME}`) as HTMLElement;
+    const dealPlayerEl = document.querySelector(
+      `.${DEAL_PLAYER_CLASSNAME}`
+    ) as HTMLElement;
     if (dealPlayerEl.classList.contains(VISIBLE_CLASSNAME)) {
-      // this.renderHands();
+      
 
       this.redrawTimeout = setTimeout(() => {
-        this.cardScaleAmount =  window.innerWidth < this.scaleAmountThreholdViewPortWidth ? getLinearPercentOfMaxMatchWithinRange(window.innerWidth as number,this.minTargetViewPortWidth, this.scaleAmountThreholdViewPortWidth, this.maxScaleAmount, this.minScaleAmountBelowThreshold) : getLinearPercentOfMaxMatchWithinRange(window.innerWidth as number,this.minTargetViewPortWidth, this.maxTargetViewPortWidth, this.maxScaleAmount, this.minScaleAmountAboveThreshold);
+        
+        // this.cardScaleAmount =
+        //   window.innerWidth < this.scaleAmountThreholdViewPortWidth
+        //     ? getLinearPercentOfMaxMatchWithinRange(
+        //         window.innerWidth as number,
+        //         this.minTargetViewPortWidth,
+        //         this.scaleAmountThreholdViewPortWidth,
+        //         this.maxScaleAmountNormal,
+        //         this.minScaleAmountBelowThreshold
+        //       )
+        //     : getLinearPercentOfMaxMatchWithinRange(
+        //         window.innerWidth as number,
+        //         this.minTargetViewPortWidth,
+        //         this.maxTargetViewPortWidth,
+        //         this.maxScaleAmountNormal,
+        //         this.minScaleAmountAboveThreshold
+        //       );
+
+        this.resetCardsSize();
+        this.renderHands();
 
         // let minScaleAmountToUse = this.minScaleAmountBelowThreshold;
         // if (window.innerWidth >= this.scaleAmountThreholdViewPortWidth) minScaleAmountToUse = this.minScaleAmountAboveThreshold;
         // this.cardScaleAmount =  getLinearPercentOfMaxMatchWithinRange(window.innerWidth as number,this.minTargetViewPortWidth, this.maxTargetViewPortWidth, this.maxScaleAmount, minScaleAmountToUse)
 
-
-
         // this.loadCards();
         // this.renderHands();
         console.log('this.cardScaleAmount =', this.cardScaleAmount);
-      }, 250)
-    };
+      }, 250);
+    }
   }
 
   private getStartingPosition(numberOfCardsInHand: number, direction: string) {
-    const lengthOfHand = (this.cardWidth + (numberOfCardsInHand - 1) * this.cardSpacingIncrement);
+    const lengthOfHand =
+      this.cardWidth + (numberOfCardsInHand - 1) * this.cardSpacingIncrement;
     // const southStartingPosition = (this.canvasWidth as number - lengthOfHand) / 2;
 
     // let dimensionToUse = this.canvasHeight;
-    if (direction === cardinalDirections[0]) return -(this.cardWidth - this.cardSpacingIncrement)
-    else if (direction === cardinalDirections[2])  return 0;
+    if (direction === cardinalDirections[0])
+      return -(this.cardWidth - this.cardSpacingIncrement);
+    else if (direction === cardinalDirections[2]) return 0;
     // if (direction === cardinalDirections[0] || direction === cardinalDirections[2]) dimensionToUse = this.canvasWidth;
-    
-    return (this.canvasHeight as number - lengthOfHand) / 2;
+
+    return ((this.canvasHeight as number) - lengthOfHand) / 2;
   }
 
-  private resetCards() {
+  private resetCardsRotationAndPosition() {
     for (let i = 0; i < this.cards.length; i++) {
-      const card = this.cards[i];
+      const card = this.cards[i] as paper.Raster;
       card.position.x = this.defaultCardPosition;
       card.rotation = 0;
+    }
+  }
+
+  private resetCardsSize() {
+    for (let i = 0; i < this.cards.length; i++) {
+      const card = this.cards[i] as paper.Raster;
+      const currentWidth = card.bounds.width;
+      const desiredWidth = this.isMobile ? this.cardMobilePixelWidth : this.cardFullPixelWidth;
+      card.scale(desiredWidth / currentWidth);
     }
   }
 }
