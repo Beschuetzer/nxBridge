@@ -36,7 +36,6 @@ export class GamesListComponent implements OnInit {
   }
 
   onClick(e: Event) {
-    console.log('e =', e);
     const target = e.target as any;
     if ((target)?.classList.contains(FULL_SIZE_CLASSNAME)) {
       const items = target.querySelectorAll(`.${DEAL_DETAIL_CLASSNAME}`);

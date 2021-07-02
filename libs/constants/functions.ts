@@ -51,3 +51,21 @@ export function getDeclarerFromDeal(deal: Deal) {
   }
   return "Error in getDeclarerFromDeal()";
 }
+
+export function getLinearPercentOfMaxMatchWithinRange(currentTrackedValue: number, minTrackedValue: number, maxTrackedValue: number, startOutputValue: number, endOutputValue: number) {
+  //returns a value between a given input range that correlates to the value of variable as it changes within a different range.  If the tracked variable goes about the maxCutoff then it assumes the max value possible.  If it goes anywhere below the min value.  Any where inbetween is linearly correlated to the trackedValue.
+
+
+  if (currentTrackedValue >= maxTrackedValue) return endOutputValue;
+  if (currentTrackedValue <= minTrackedValue) return startOutputValue;
+
+  var trackedValueRange = Math.abs(maxTrackedValue - minTrackedValue);
+  var outputValueRange = Math.abs(endOutputValue - startOutputValue) ;
+  var amountAboveMin = currentTrackedValue - minTrackedValue;
+  var percentOfRange = amountAboveMin / trackedValueRange;
+
+  if (startOutputValue <= endOutputValue) return startOutputValue + (percentOfRange * outputValueRange);
+  else {
+    return startOutputValue - (percentOfRange * outputValueRange);
+  }
+}

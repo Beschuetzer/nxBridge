@@ -47,6 +47,10 @@
     grid-row: 2/-1;
     width: 40vh;
 
+    @include respond(super-small) {
+      // width: 37vh;
+    }
+
     &-element{
       width: 100%;
       height:100%;

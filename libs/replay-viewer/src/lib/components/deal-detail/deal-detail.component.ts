@@ -21,7 +21,6 @@ import {
   COLOR_RED_CLASSNAME,
   dealDetailButtonChoices,
   DEAL_DETAIL_CLASSNAME,
-  DEAL_PLAYER_CLASSNAME,
   DISPLAY_NONE_CLASSNAME,
   getCharValueFromCardValueString,
   getDirectionFromSeating,
@@ -34,7 +33,6 @@ import {
   toggleClassOnList,
   toggleInnerHTML,
   tricksInABook,
-  VISIBLE_CLASSNAME,
 } from '@nx-bridge/constants';
 import { Store } from '@ngrx/store';
 import { AppState, SetCurrentlyViewingDeal } from '@nx-bridge/store';
