@@ -46,7 +46,7 @@
     justify-content: center;
     grid-column: 2/ span 1;
     grid-row: 2/-1;
-    width: 40vh;
+    // width: 40vh;
 
     @include respond(super-small) {
       // width: 37vh;
@@ -67,7 +67,7 @@
       overflow: hidden;
 
       // margin: 0 auto;
-      max-width: 75vh;
+      // max-width: 75vh;
     }
   }
   

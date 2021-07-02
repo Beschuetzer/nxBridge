@@ -218,6 +218,8 @@ export class DealPlayerComponent implements OnInit {
   }
 
   private renderHands() {
+    const handsWithDirectionAsKey: Hands = {};
+
     for (const username in this.handsToRender) {
       if (Object.prototype.hasOwnProperty.call(this.handsToRender, username)) {
         const usersHand = this.handsToRender[username];
@@ -231,7 +233,7 @@ export class DealPlayerComponent implements OnInit {
             return this.loadCards();
           }
 
-          this.renderHand(usersHand as Hand, usersDirection);
+          handsWithDirectionAsKey[usersDirection] = usersHand;
         } catch (err) {
           this.error = err;
           this.resetCardsRotationAndPosition();
@@ -239,6 +241,11 @@ export class DealPlayerComponent implements OnInit {
         }
       }
     }
+
+    if (handsWithDirectionAsKey.east) this.renderHand(handsWithDirectionAsKey.east, cardinalDirections[1]);
+    if (handsWithDirectionAsKey.west) this.renderHand(handsWithDirectionAsKey.west, cardinalDirections[3]);
+    if (handsWithDirectionAsKey.north) this.renderHand(handsWithDirectionAsKey.north, cardinalDirections[0]);
+    if (handsWithDirectionAsKey.south) this.renderHand(handsWithDirectionAsKey.south, cardinalDirections[2]);
   }
 
   private renderHand(hand: Hand, direction: string) {
@@ -264,13 +271,13 @@ export class DealPlayerComponent implements OnInit {
       cardsInHand.push(cardAsRaster);
 
       if (direction === cardinalDirections[0])
-        this.setNorthCards(cardAsRaster, i, direction, startingPosition);
+        this.setNorthCard(cardAsRaster, i, direction, startingPosition);
       else if (direction === cardinalDirections[1])
-        this.setEastCards(cardAsRaster, i, direction, startingPosition);
+        this.setEastCard(cardAsRaster, i, direction, startingPosition);
       else if (direction === cardinalDirections[2])
-        this.setSouthCards(cardAsRaster, i, direction, startingPosition);
+        this.setSouthCard(cardAsRaster, i, direction, startingPosition);
       else if (direction === cardinalDirections[3])
-        this.setWestCards(cardAsRaster, i, direction, startingPosition);
+        this.setWestCard(cardAsRaster, i, direction, startingPosition);
 
       this.project?.activeLayer.addChild(cardAsRaster);
     }
@@ -282,7 +289,7 @@ export class DealPlayerComponent implements OnInit {
       this.reverseHandLayering(cardsInHand);
   }
 
-  private setNorthCards(
+  private setNorthCard(
     cardAsRaster: paper.Raster,
     nthCard: number,
     direction: string,
@@ -295,13 +302,12 @@ export class DealPlayerComponent implements OnInit {
     cardAsRaster.position.y = -this.cardVisibleOffset;
   }
 
-  private setSouthCards(
+  private setSouthCard(
     cardAsRaster: paper.Raster,
     nthCard: number,
     direction: string,
     startingPosition: number
   ) {
-    
     cardAsRaster.position.x =
       startingPosition +
       this.cardWidth / 2 +
@@ -310,7 +316,7 @@ export class DealPlayerComponent implements OnInit {
       (this.canvasHeight as number) + this.cardVisibleOffset;
   }
 
-  private setEastCards(
+  private setEastCard(
     cardAsRaster: paper.Raster,
     nthCard: number,
     direction: string,
@@ -326,7 +332,7 @@ export class DealPlayerComponent implements OnInit {
       cardAsRaster.rotate(-90);
   }
 
-  private setWestCards(
+  private setWestCard(
     cardAsRaster: paper.Raster,
     nthCard: number,
     direction: string,
@@ -340,6 +346,21 @@ export class DealPlayerComponent implements OnInit {
     if (cardAsRaster.rotation < 89.5 || cardAsRaster.rotation > 90.5)
       cardAsRaster.rotate(90);
   }
+
+  // private putNorthAndSouthOnTop() {
+  //   debugger;
+  //   for (const username in this.deal?.hands) {
+  //     if (Object.prototype.hasOwnProperty.call(this.deal?.hands, username)) {
+  //       const hand = this.deal?.hands[username];
+  //       const usersDirection = getDirectionFromSeating(
+  //         this.seating as Seating,
+  //         username
+  //       );
+
+  //       if (usersDirection === cardinalDirections[0])
+  //     }
+  //   }
+  // }
 
   private getCorrectlyArrangedHand(hand: number[], direction: string) {
     if (
