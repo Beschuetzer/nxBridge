@@ -12,8 +12,9 @@ import {
   flatten,
   getDirectionFromSeating,
   cardinalDirections,
-  numberOfCardsInDeck,
+  cardsPerDeck,
   getLinearPercentOfMaxMatchWithinRange,
+  cardsPerSuit,
 } from '@nx-bridge/constants';
 
 import { Store } from '@ngrx/store';
@@ -102,7 +103,7 @@ export class DealPlayerComponent implements OnInit {
           ) as HTMLCanvasElement
         );
 
-        if (this.cards.length < numberOfCardsInDeck) this.loadCards();
+        if (this.cards.length < cardsPerDeck) this.loadCards();
         else {
           this.renderHands();
           this.renderer.addClass(this.elRef.nativeElement, VISIBLE_CLASSNAME);
@@ -120,7 +121,7 @@ export class DealPlayerComponent implements OnInit {
   private loadCards() {
     if (this.cards.length > 0) this.removeCards();
     this.cards = [];
-    for (let i = 0; i < numberOfCardsInDeck; i++) {
+    for (let i = 0; i < cardsPerDeck; i++) {
       const newRaster = new Raster(`card-${i}`);
       newRaster.position.x = this.defaultCardPosition;
       newRaster.scale(this.cardScaleAmount);
@@ -138,7 +139,7 @@ export class DealPlayerComponent implements OnInit {
 
   private onCardLoad() {
     this.cardsLoaded += 1;
-    if (this.cardsLoaded >= numberOfCardsInDeck) {
+    if (this.cardsLoaded >= cardsPerDeck) {
       this.setCanvasMetrics();
       this.setCardMetrics();
       this.renderHands();
@@ -146,10 +147,12 @@ export class DealPlayerComponent implements OnInit {
   }
 
   private setCardMetrics() {
-    this.cardWidth = (this.cards[0] as paper.Raster).bounds.width;
-    this.cardHeight = (this.cards[0] as paper.Raster).bounds.height;
+    const cardZero = this.cards[0] as paper.Raster;
+    const roundedRotation = Math.round(cardZero.rotation);
+    this.cardWidth = roundedRotation === 0 || roundedRotation === 180 ? cardZero.bounds.width : cardZero.bounds.height;
+    this.cardHeight = this.cardWidth * 1.5;
     this.cardVisibleOffset = this.cardHeight / 4 - 2.5;
-    this.cardSpacingIncrement = (this.canvasWidth as number) / 13;
+    this.cardSpacingIncrement = (this.canvasWidth as number) / cardsPerSuit;
   }
 
   private setCanvasMetrics() {
@@ -238,6 +241,8 @@ export class DealPlayerComponent implements OnInit {
     direction: string,
     startingPosition: number
   ) {
+    console.log('this.canvasHeight =', this.canvasHeight);
+    console.log('this.cardVisibleOffset =', this.cardVisibleOffset);
     cardAsRaster.position.x =
       startingPosition +
       this.cardWidth / 2 +
@@ -298,38 +303,32 @@ export class DealPlayerComponent implements OnInit {
     const dealPlayerEl = document.querySelector(
       `.${DEAL_PLAYER_CLASSNAME}`
     ) as HTMLElement;
+
+    this.isMobile = window.innerWidth <= this.mobileWidthStart;
     if (dealPlayerEl.classList.contains(VISIBLE_CLASSNAME)) {
-      
-
       this.redrawTimeout = setTimeout(() => {
-        
-        // this.cardScaleAmount =
-        //   window.innerWidth < this.scaleAmountThreholdViewPortWidth
-        //     ? getLinearPercentOfMaxMatchWithinRange(
-        //         window.innerWidth as number,
-        //         this.minTargetViewPortWidth,
-        //         this.scaleAmountThreholdViewPortWidth,
-        //         this.maxScaleAmountNormal,
-        //         this.minScaleAmountBelowThreshold
-        //       )
-        //     : getLinearPercentOfMaxMatchWithinRange(
-        //         window.innerWidth as number,
-        //         this.minTargetViewPortWidth,
-        //         this.maxTargetViewPortWidth,
-        //         this.maxScaleAmountNormal,
-        //         this.minScaleAmountAboveThreshold
-        //       );
+        this.cardScaleAmount = this.isMobile
+          ? this.maxScaleAmountMobile
+          : window.innerWidth < this.scaleAmountThreholdViewPortWidth
+          ? getLinearPercentOfMaxMatchWithinRange(
+              window.innerWidth as number,
+              this.mobileWidthStart,
+              this.scaleAmountThreholdViewPortWidth,
+              this.maxScaleAmountNormal,
+              this.minScaleAmountBelowThreshold
+            )
+          : getLinearPercentOfMaxMatchWithinRange(
+              window.innerWidth as number,
+              this.minTargetViewPortWidth,
+              this.maxTargetViewPortWidth,
+              this.maxScaleAmountNormal,
+              this.minScaleAmountAboveThreshold
+            );
 
-        this.resetCardsSize();
+        this.setCardsSize();
+        this.setCanvasMetrics();
+        this.setCardMetrics();
         this.renderHands();
-
-        // let minScaleAmountToUse = this.minScaleAmountBelowThreshold;
-        // if (window.innerWidth >= this.scaleAmountThreholdViewPortWidth) minScaleAmountToUse = this.minScaleAmountAboveThreshold;
-        // this.cardScaleAmount =  getLinearPercentOfMaxMatchWithinRange(window.innerWidth as number,this.minTargetViewPortWidth, this.maxTargetViewPortWidth, this.maxScaleAmount, minScaleAmountToUse)
-
-        // this.loadCards();
-        // this.renderHands();
-        console.log('this.cardScaleAmount =', this.cardScaleAmount);
       }, 250);
     }
   }
@@ -356,12 +355,16 @@ export class DealPlayerComponent implements OnInit {
     }
   }
 
-  private resetCardsSize() {
+  private setCardsSize() {
     for (let i = 0; i < this.cards.length; i++) {
       const card = this.cards[i] as paper.Raster;
-      const currentWidth = card.bounds.width;
-      const desiredWidth = this.isMobile ? this.cardMobilePixelWidth : this.cardFullPixelWidth;
+      let currentWidth = card.bounds.width;
+      if (card.rotation > 89 && card.rotation <= 91 || card.rotation < -89 && card.rotation > -91) currentWidth = card.bounds.height;
+      const desiredWidth = this.isMobile
+        ? this.cardMobilePixelWidth
+        : this.cardFullPixelWidth;
       card.scale(desiredWidth / currentWidth);
+      card.scale(this.cardScaleAmount);
     }
   }
 }

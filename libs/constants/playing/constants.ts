@@ -1,6 +1,6 @@
 import { Team, TeamFull } from "@nx-bridge/interfaces-and-types";
 
-export const numberOfCardsInDeck = 52;
+export const cardsPerDeck = 52;
 export const cardsPerSuit = 13;
 export const minCardValue = 0;
 export const maxCardValue = 51;
