@@ -52,8 +52,8 @@ export class DealPlayerComponent implements OnInit {
   private cardVisibleOffset = -1;
   private cardSpacingIncrement = -1;
   private DEFAULT_CARD_POSITION = -1000;
-  private canvasHeight: number | undefined;
-  private canvasWidth: number | undefined;
+  private canvasHeight = -1;
+  private canvasWidth = -1;
   private SCALE_AMOUNT_THRESHOLD_VIEW_PORT_WIDTH = 1650;
   private MIN_SCALE_AMOUNT_BELOW_THRESHOLD = 0.525;
   private MIN_SCALE_AMOUNT_ABOVE_THRESHOLD = 0.5875;
@@ -161,7 +161,10 @@ export class DealPlayerComponent implements OnInit {
   }
 
   private playCard(nthCard = this.playCount) {
-    this.cardsPlayed = flatten(this.deal?.cardPlayOrder.slice(0, nthCard + 1) as number[]);
+    const cardPlayOrder = this.deal?.cardPlayOrder;
+    if (!cardPlayOrder || cardPlayOrder.length < cardsPerDeck) return;
+    
+    this.cardsPlayed = flatten(cardPlayOrder.slice(0, nthCard + 1) as number[]);
     this. playCount = nthCard + 1;
     console.log('this.cardsPlayed =', this.cardsPlayed);
   }
@@ -212,9 +215,9 @@ export class DealPlayerComponent implements OnInit {
 
   private setCanvasMetrics() {
     const canvasEl = document.getElementById(`${DEAL_PLAYER_CLASSNAME}-canvas`);
-    const canvasBounds = canvasEl?.getBoundingClientRect();
-    this.canvasHeight = canvasBounds?.height;
-    this.canvasWidth = canvasBounds?.width;
+    const canvasBounds = canvasEl?.getBoundingClientRect() as DOMRect;
+    this.canvasHeight = canvasBounds.height as number;
+    this.canvasWidth = canvasBounds.width as number;
   }
 
   private renderHands() {
@@ -271,13 +274,13 @@ export class DealPlayerComponent implements OnInit {
       cardsInHand.push(cardAsRaster);
 
       if (direction === cardinalDirections[0])
-        this.setNorthCard(cardAsRaster, i, direction, startingPosition);
+        this.setNorthCard(cardAsRaster, i, startingPosition);
       else if (direction === cardinalDirections[1])
-        this.setEastCard(cardAsRaster, i, direction, startingPosition);
+        this.setEastCard(cardAsRaster, i, startingPosition);
       else if (direction === cardinalDirections[2])
-        this.setSouthCard(cardAsRaster, i, direction, startingPosition);
+        this.setSouthCard(cardAsRaster, i, startingPosition);
       else if (direction === cardinalDirections[3])
-        this.setWestCard(cardAsRaster, i, direction, startingPosition);
+        this.setWestCard(cardAsRaster, i, startingPosition);
 
       this.project?.activeLayer.addChild(cardAsRaster);
     }
@@ -292,7 +295,6 @@ export class DealPlayerComponent implements OnInit {
   private setNorthCard(
     cardAsRaster: paper.Raster,
     nthCard: number,
-    direction: string,
     startingPosition: number
   ) {
     cardAsRaster.position.x =
@@ -305,7 +307,6 @@ export class DealPlayerComponent implements OnInit {
   private setSouthCard(
     cardAsRaster: paper.Raster,
     nthCard: number,
-    direction: string,
     startingPosition: number
   ) {
     cardAsRaster.position.x =
@@ -319,7 +320,6 @@ export class DealPlayerComponent implements OnInit {
   private setEastCard(
     cardAsRaster: paper.Raster,
     nthCard: number,
-    direction: string,
     startingPosition: number
   ) {
     cardAsRaster.position.y =
@@ -335,7 +335,6 @@ export class DealPlayerComponent implements OnInit {
   private setWestCard(
     cardAsRaster: paper.Raster,
     nthCard: number,
-    direction: string,
     startingPosition: number
   ) {
     cardAsRaster.position.y =
@@ -409,17 +408,32 @@ export class DealPlayerComponent implements OnInit {
   }
 
   private getStartingPosition(numberOfCardsInHand: number, direction: string) {
-    const lengthOfHand =
-      this.cardWidth + (numberOfCardsInHand - 1) * this.cardSpacingIncrement;
-    // const southStartingPosition = (this.canvasWidth as number - lengthOfHand) / 2;
-
-    // let dimensionToUse = this.canvasHeight;
     if (direction === cardinalDirections[0])
       return -(this.cardWidth - this.cardSpacingIncrement);
     else if (direction === cardinalDirections[2]) return 0;
-    // if (direction === cardinalDirections[0] || direction === cardinalDirections[2]) dimensionToUse = this.canvasWidth;
+    else return this.getCalculatedStart(numberOfCardsInHand, direction);
+  }
 
-    return ((this.canvasHeight as number) - lengthOfHand) / 2;
+  private getCalculatedStart(numberOfCardsInHand: number, direction: string) {
+    let lengthOfHand = this.cardWidth + (numberOfCardsInHand - 1) * this.cardSpacingIncrement;
+    let usedSpace = this.cardVisibleOffset * 2 + lengthOfHand;
+    const usableSpace = this.canvasHeight - (2 * this.cardSpacingIncrement);
+
+    if (usableSpace >= lengthOfHand) return this.cardVisibleOffset + (this.canvasHeight as number - (usedSpace)) / 2;
+    else {
+      lengthOfHand = numberOfCardsInHand * this.cardSpacingIncrement;
+      usedSpace = this.cardVisibleOffset * 2 + lengthOfHand;
+      if (direction === cardinalDirections[1]) {
+        return (this.cardVisibleOffset + ((this.canvasHeight as number - (usedSpace)) / 2)) - (this.cardWidth - this.cardSpacingIncrement);
+
+      } 
+      else if (direction === cardinalDirections[3]) {
+        return this.cardVisibleOffset + (this.canvasHeight as number - (usedSpace)) / 2;
+      }
+    }
+
+
+    throw new Error('Invalid direction in getCalculatedStart');
   }
 
   private resetCardsRotationAndPosition() {
