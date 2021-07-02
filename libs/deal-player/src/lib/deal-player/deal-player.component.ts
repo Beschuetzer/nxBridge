@@ -136,7 +136,7 @@ export class DealPlayerComponent implements OnInit {
 
   onPlay() {
     this.isPlaying = true;
-    this.playCard(0);
+    this.playCard();
     this.playInterval = setInterval(() => {
        this.playCard();
         if (this. playCount === cardsPerDeck) clearInterval(this.playInterval);
@@ -144,7 +144,7 @@ export class DealPlayerComponent implements OnInit {
   }
 
   onPrevious() {
-
+    this.playCard(this.playCount - 2);
   }
 
   onStop() {

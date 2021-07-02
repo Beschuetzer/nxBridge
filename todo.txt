@@ -46,4 +46,6 @@ Todos----------------------------------------------------------
 
 
 -south is drawn funny y-wise on resize sometimes (no reason for it though...)
--how to draw
+
+-add goto nth card played text box?
+-this.cardsPlayed could contain "N/A" indicating where claim all was made
