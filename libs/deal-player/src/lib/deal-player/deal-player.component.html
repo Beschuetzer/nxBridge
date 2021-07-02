@@ -6,73 +6,52 @@
   </div>
 </section>
 <section class="{{ DEAL_PLAYER_CLASSNAME }}__canvas">
-  <canvas id="{{DEAL_PLAYER_CLASSNAME}}-canvas" class="{{ DEAL_PLAYER_CLASSNAME }}__canvas-element"></canvas>
+  <canvas
+    id="{{ DEAL_PLAYER_CLASSNAME }}-canvas"
+    class="{{ DEAL_PLAYER_CLASSNAME }}__canvas-element"
+  ></canvas>
 </section>
 <section class="{{ DEAL_PLAYER_CLASSNAME }}__controls">
   <svg
-    (click)="onPrevious()"
-    version="1.1"
-    xmlns="http://www.w3.org/2000/svg"
-    width="32"
-    height="32"
-    viewBox="0 0 32 32"
+    (click)="onPreviousFive()"
   >
-    <title>previous</title>
-    <path d="M8 28v-24h4v11l10-10v22l-10-10v11z"></path>
+    <use xlink:href="assets/deal-player/sprite.svg#icon-previous-five"></use>
   </svg>
-
+  <svg
+    (click)="onPrevious()"
+  >
+    <use xlink:href="assets/deal-player/sprite.svg#icon-previous"></use>
+  </svg>
   <svg
     (click)="onPlay()"
     *ngIf="!isPlaying"
-    version="1.1"
-    xmlns="http://www.w3.org/2000/svg"
-    width="32"
-    height="32"
-    viewBox="0 0 32 32"
   >
-    <title>play</title>
-    <path d="M6 4l20 12-20 12z"></path>
+    <use xlink:href="assets/deal-player/sprite.svg#icon-play"></use>
   </svg>
-
   <svg
     (click)="onPause()"
     *ngIf="isPlaying"
-    version="1.1"
-    xmlns="http://www.w3.org/2000/svg"
-    width="32"
-    height="32"
-    viewBox="0 0 32 32"
   >
-    <title>pause</title>
-    <path d="M4 4h10v24h-10zM18 4h10v24h-10z"></path>
+    <use xlink:href="assets/deal-player/sprite.svg#icon-pause"></use>
   </svg>
-
   <svg
     (click)="onStop()"
-    version="1.1"
-    xmlns="http://www.w3.org/2000/svg"
-    width="32"
-    height="32"
-    viewBox="0 0 32 32"
   >
-    <title>stop</title>
-    <path d="M4 4h24v24h-24z"></path>
+    <use xlink:href="assets/deal-player/sprite.svg#icon-stop"></use>
   </svg>
-
   <svg
     (click)="onNext()"
-    version="1.1"
-    xmlns="http://www.w3.org/2000/svg"
-    width="32"
-    height="32"
-    viewBox="0 0 32 32"
   >
-    <title>next</title>
-    <path d="M24 4v24h-4v-11l-10 10v-22l10 10v-11z"></path>
+    <use xlink:href="assets/deal-player/sprite.svg#icon-next"></use>
+  </svg>
+  <svg
+    (click)="onNextFive()"
+  >
+    <use xlink:href="assets/deal-player/sprite.svg#icon-next-five"></use>
   </svg>
 </section>
 
-<div 
+<div
   *ngIf="!isMobile"
   class="{{ DEAL_PLAYER_CLASSNAME }}__images {{ DISPLAY_NONE_CLASSNAME }}"
 >
@@ -83,7 +62,7 @@
   />
 </div>
 
-<div 
+<div
   *ngIf="isMobile"
   class="{{ DEAL_PLAYER_CLASSNAME }}__images {{ DISPLAY_NONE_CLASSNAME }}"
 >
@@ -93,4 +72,3 @@
     src="/assets/deal-player/cards-mobile/{{ i }}.png"
   />
 </div>
-  

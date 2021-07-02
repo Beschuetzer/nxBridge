@@ -129,6 +129,10 @@ export class DealPlayerComponent implements OnInit {
     this.playCard();
   }
 
+  onNextFive(){
+    this.playCard(this.playCount + 4);
+  }
+
   onPause() {
     this.isPlaying = false;
     clearInterval(this.playInterval);
@@ -145,6 +149,10 @@ export class DealPlayerComponent implements OnInit {
 
   onPrevious() {
     this.playCard(this.playCount - 2);
+  }
+
+  onPreviousFive() {
+    this.playCard(this.playCount - 6);
   }
 
   onStop() {
