@@ -91,8 +91,6 @@ export class DealPlayerComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    window.addEventListener('resize', this.onResize.bind(this));
-
     this.store.select('games').subscribe((gameState) => {
       this.seating = gameState.currentlyViewingGameSeating;
     });
@@ -109,6 +107,7 @@ export class DealPlayerComponent implements OnInit {
             `#${DEAL_PLAYER_CLASSNAME}-canvas`
           ) as HTMLCanvasElement
         );
+        this.project.view.onResize = this.onResize.bind(this);
 
         if (this.cards.length < cardsPerDeck) this.loadCards();
         else {
@@ -415,9 +414,10 @@ export class DealPlayerComponent implements OnInit {
   }
 
   private getCalculatedStart(numberOfCardsInHand: number, direction: string) {
+    const spaceUsedByTopAndBottomHands = this.cardVisibleOffset * 2;
+    const usableSpace = this.canvasHeight - (spaceUsedByTopAndBottomHands);
     let lengthOfHand = this.cardWidth + (numberOfCardsInHand - 1) * this.cardSpacingIncrement;
-    let usedSpace = this.cardVisibleOffset * 2 + lengthOfHand;
-    const usableSpace = this.canvasHeight - (2 * this.cardSpacingIncrement);
+    let usedSpace = spaceUsedByTopAndBottomHands + lengthOfHand;
 
     if (usableSpace >= lengthOfHand) return this.cardVisibleOffset + (this.canvasHeight as number - (usedSpace)) / 2;
     else {
