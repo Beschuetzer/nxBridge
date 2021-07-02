@@ -1,5 +1,5 @@
 import { Component, HostBinding, OnInit } from '@angular/core';
-import { AppState, SetUsers } from '@nx-bridge/store';
+import { AppState, SetIsViewingGame, SetUsers } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
 import { take } from 'rxjs/operators';
 import { Game, User } from '@nx-bridge/interfaces-and-types';
@@ -48,6 +48,7 @@ export class GamesListComponent implements OnInit {
       toggleInnerHTML(button, dealsListDealsButtonChoices);
       
       target.classList.remove(FULL_SIZE_CLASSNAME);
+      this.store.dispatch(new SetIsViewingGame(false));
     }
   }
 

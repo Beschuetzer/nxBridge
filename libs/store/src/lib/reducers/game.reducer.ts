@@ -4,11 +4,13 @@ import * as fromGameActions from '../actions/game.actions';
 export interface GameState {
   games: Game[];
   currentlyViewingGameSeating: Seating,
+  isViewingGame: boolean,
 }
 
 const INITIAL_STATE: GameState = {
   games: [],
   currentlyViewingGameSeating: {} as Seating,
+  isViewingGame: false,
 };
 
 export function gameReducer(
@@ -25,6 +27,11 @@ export function gameReducer(
       return {
         ...state,
         currentlyViewingGameSeating: action.payload,
+      };
+    case fromGameActions.SET_IS_VIEWING_GAME:
+      return {
+        ...state,
+        isViewingGame: action.payload,
       };
     default:
       return state;

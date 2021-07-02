@@ -51,4 +51,3 @@ Todos----------------------------------------------------------
 -something is causing the cards not to reset on loading of another deal as they aren't layered correctly?
 
 -south is drawn funny y-wise on resize sometimes (no reason for it though...)
--it's possible to open two games if you double click (remove this behaviour using a check to see if there is already a loaded game in gameslist?)

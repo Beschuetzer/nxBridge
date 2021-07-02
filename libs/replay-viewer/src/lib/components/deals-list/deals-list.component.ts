@@ -27,9 +27,21 @@ import {
   getDirectionFromSeating,
   getDeclarerFromDeal,
 } from '@nx-bridge/constants';
-import { CardinalDirection, CardValuesAsString, Deal, Seating, Team } from '@nx-bridge/interfaces-and-types';
-import { AddFetchedDeals as AddFetchedDeals, AppState, SetCurrentlyViewingGameSeating } from '@nx-bridge/store';
+import {
+  CardinalDirection,
+  CardValuesAsString,
+  Deal,
+  Seating,
+  Team,
+} from '@nx-bridge/interfaces-and-types';
+import {
+  AddFetchedDeals as AddFetchedDeals,
+  AppState,
+  SetCurrentlyViewingGameSeating,
+  SetIsViewingGame,
+} from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'nx-bridge-deals-list',
@@ -46,7 +58,7 @@ export class DealsListComponent implements OnInit {
   public DISPLAY_NONE_CLASSNAME = DISPLAY_NONE_CLASSNAME;
   public DEAL_DETAIL_CLASSNAME = DEAL_DETAIL_CLASSNAME;
   public deals: Deal[] = [];
-  public dealResults: {[key: string]: Team} = {};
+  public dealResults: { [key: string]: Team } = {};
   public dealsListItems: NodeList | null | undefined = null;
   public isLoading = false;
   public dealCountMessage = 'Deal Count Here';
@@ -67,7 +79,19 @@ export class DealsListComponent implements OnInit {
   }
 
   onDealsButtonClick(e: Event) {
-    if ((e.target as HTMLElement).innerHTML.match(dealsListDealsButtonChoices[0]))this.store.dispatch(new SetCurrentlyViewingGameSeating(this.seating as Seating));
+    let isGameOpen = null;
+    this.store.select('games').pipe(take(1)).subscribe((gameState) => {
+      isGameOpen = gameState.isViewingGame;
+    });
+
+    if (isGameOpen) return;
+
+    if (
+      (e.target as HTMLElement).innerHTML.match(dealsListDealsButtonChoices[0])
+    )
+      this.store.dispatch(
+        new SetCurrentlyViewingGameSeating(this.seating as Seating)
+      );
 
     const items = this.elRef.nativeElement.querySelectorAll(
       `.${DEAL_DETAIL_CLASSNAME}`
@@ -83,7 +107,7 @@ export class DealsListComponent implements OnInit {
       `.${DEALS_LIST_CLASSNAME}__summary`
     );
     toggleClassOnList([el], DISPLAY_NONE_CLASSNAME);
-    toggleClassOnList(
+    const isFullSize = toggleClassOnList(
       [
         this.elRef.nativeElement.closest(
           `.${GAME_DETAIL_CLASSNAME}`
@@ -91,6 +115,9 @@ export class DealsListComponent implements OnInit {
       ],
       FULL_SIZE_CLASSNAME
     );
+
+    if (isFullSize) this.store.dispatch(new SetIsViewingGame(true));
+    else this.store.dispatch(new SetIsViewingGame(false));
 
     const button = (e.currentTarget || e.target) as HTMLElement;
     toggleInnerHTML(button, this.buttonChoicesDeals);
@@ -113,9 +140,9 @@ export class DealsListComponent implements OnInit {
       const itemsParent = itemToChange.parentNode;
       const buttonToToggleInnerHTML = itemsParent.querySelector('button');
 
-      if (isOpening)
+      if (isOpening) {
         buttonToToggleInnerHTML.innerHTML = dealDetailButtonChoices[1];
-      else {
+      } else {
         itemToChange.classList.add(DISPLAY_NONE_CLASSNAME);
         buttonToToggleInnerHTML.innerHTML = dealDetailButtonChoices[0];
       }
@@ -192,7 +219,7 @@ export class DealsListComponent implements OnInit {
   private getDealWinnerFromScoreDifference(
     deal: Deal,
     dealAfterDeal: Deal,
-    nthDeal?: number,
+    nthDeal?: number
   ): Team {
     const dealNorthSouth = deal[teamsFull[0]];
     const dealAfterDealNorthSouth = dealAfterDeal[teamsFull[0]];
@@ -227,8 +254,7 @@ export class DealsListComponent implements OnInit {
       if (nsValue !== nsAfterValue && ewValue === ewAfterValue) {
         this.dealResults[`${nthDeal}`] = teams[0];
         return teams[0];
-      }
-      else if (nsValue === nsAfterValue && ewValue !== ewAfterValue){
+      } else if (nsValue === nsAfterValue && ewValue !== ewAfterValue) {
         this.dealResults[`${nthDeal}`] = teams[1];
         return teams[1];
       }
@@ -239,22 +265,41 @@ export class DealsListComponent implements OnInit {
 
   private getDealWinnerFromPureCalculation(deal: Deal): Team {
     const declarer = getDeclarerFromDeal(deal);
-    const declarersDirection = getDirectionFromSeating(this.seating as Seating, declarer);
-    const declarersPartner = getPartnerFromDirection(this.seating as Seating, declarersDirection as CardinalDirection);
+    const declarersDirection = getDirectionFromSeating(
+      this.seating as Seating,
+      declarer
+    );
+    const declarersPartner = getPartnerFromDirection(
+      this.seating as Seating,
+      declarersDirection as CardinalDirection
+    );
     const declaringTeamUsernames = [declarer, declarersPartner];
-    const contractPrefixAsNumber = +getCharValueFromCardValueString(deal.contract.split(' ')[0] as CardValuesAsString);
+    const contractPrefixAsNumber = +getCharValueFromCardValueString(
+      deal.contract.split(' ')[0] as CardValuesAsString
+    );
     const numberTricksNeeded = contractPrefixAsNumber + 6;
 
-    const tricksDeclarerMade = deal.roundWinners.reduce((count, roundWinner) => {
-      if (declaringTeamUsernames.includes(roundWinner[0])) count++;
-      return count;
-    }, 0);
+    const tricksDeclarerMade = deal.roundWinners.reduce(
+      (count, roundWinner) => {
+        if (declaringTeamUsernames.includes(roundWinner[0])) count++;
+        return count;
+      },
+      0
+    );
 
     if (tricksDeclarerMade >= numberTricksNeeded) {
-      if (declarersDirection === cardinalDirections[0] || declarersDirection === cardinalDirections[2]) return teams[0];
+      if (
+        declarersDirection === cardinalDirections[0] ||
+        declarersDirection === cardinalDirections[2]
+      )
+        return teams[0];
       else return teams[1];
     } else {
-      if (declarersDirection === cardinalDirections[0] || declarersDirection === cardinalDirections[2]) return teams[1];
+      if (
+        declarersDirection === cardinalDirections[0] ||
+        declarersDirection === cardinalDirections[2]
+      )
+        return teams[1];
       else return teams[0];
     }
   }

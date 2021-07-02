@@ -29,11 +29,12 @@ export function setValueInLocalStorage(value: string, valueToSet: any) {
 }
 
 export function toggleClassOnList(items: HTMLElement[], classListToToggle: string) {
-  console.log('toggling------------------------------------------------');
+  let result = null;
   for (let i = 0; i < items.length; i++) {
     const item = items[i];
-    item?.classList?.toggle(classListToToggle);
+    result = item?.classList?.toggle(classListToToggle);
   }
+  return result;
 }
 
 export function toggleInnerHTML(element: HTMLElement, choices: [string, string]) {
