@@ -82,7 +82,6 @@ export class DealsListComponent implements OnInit {
   onDealsButtonClick(e: Event) {
     const button = (e.currentTarget || e.target) as HTMLElement;
     if (button.innerHTML.match(dealsListDealsButtonChoices[0])) {
-      debugger;
       const gameDetail = (this.elRef.nativeElement as HTMLElement).closest(
         `.${GAME_DETAIL_CLASSNAME}`
       );

@@ -3,19 +3,15 @@
     <div>{{ name }}</div>
     <div>{{ date }}</div>
   </div>
-  <div class="{{ DEAL_PLAYER_CLASSNAME }}__summary-teams">
-    <div>
-      NS:&nbsp; <span>{{seating?.north}}</span>&nbsp;+&nbsp;<span>{{seating?.south}}</span>
-    </div>
-    <div>
-      EW:&nbsp; <span>{{seating?.east}}</span>&nbsp;+&nbsp;<span>{{seating?.west}}</span>
-    </div>
-  </div>
   <div (click)="onClose()" class="{{ DEAL_PLAYER_CLASSNAME }}__summary-close">
     &#10006;
   </div>
 </section>
 <section class="{{ DEAL_PLAYER_CLASSNAME }}__canvas">
+  <div class="{{ DEAL_PLAYER_CLASSNAME }}__canvas-north">{{seating?.north}}</div>
+  <div class="{{ DEAL_PLAYER_CLASSNAME }}__canvas-south">{{seating?.south}}</div>
+  <div class="{{ DEAL_PLAYER_CLASSNAME }}__canvas-east">{{seating?.east}}</div>
+  <div class="{{ DEAL_PLAYER_CLASSNAME }}__canvas-west">{{seating?.west}}</div>
   <div *ngIf="trickNumber" class="{{ DEAL_PLAYER_CLASSNAME }}__trick">
     <span>Trick #:&nbsp;</span>
     <span class="{{ DEAL_PLAYER_CLASSNAME }}__trick-number">{{

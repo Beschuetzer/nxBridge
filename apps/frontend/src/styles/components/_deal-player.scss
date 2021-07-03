@@ -159,6 +159,38 @@
         width: 100vw !important;
       }
     }
+
+    $location: 12.5%;
+    &-north, &-south, &-east, &-west {
+      font-weight: 700;
+      position: absolute;
+    }
+
+    &-north {
+      top: $location;
+      left: 50%;
+      transform: translate(-50%, 50%);
+
+    }
+
+    &-south {
+      bottom: $location;
+      left: 50%;
+      transform: translate(-50%, -50%);
+
+    }
+
+    &-east {
+      transform: rotate(-90deg) translateY(-50%);
+      right: $location;
+      top: 50%;
+    }
+
+    &-west {
+      transform: rotate(90deg) translateY(-50%);
+      left: $location;
+      top: 50%;
+    }
   }
   
   &__controls{

@@ -49,5 +49,4 @@ Todos----------------------------------------------------------
 -add goto nth card played text box?
 -need to handle deals with 'n/a' (could just display) use 2/12/21, 5:45 PM 2nd deal to test
 
--add player labels
--try to make cards a bit bigger 
+-figure out how to make closing deal-player reset everything
