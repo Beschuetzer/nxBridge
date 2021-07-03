@@ -8,10 +8,20 @@
   </div>
 </section>
 <section class="{{ DEAL_PLAYER_CLASSNAME }}__canvas">
-  <div class="{{ DEAL_PLAYER_CLASSNAME }}__canvas-north">{{seating?.north}}</div>
-  <div class="{{ DEAL_PLAYER_CLASSNAME }}__canvas-south">{{seating?.south}}</div>
-  <div class="{{ DEAL_PLAYER_CLASSNAME }}__canvas-east">{{seating?.east}}</div>
-  <div class="{{ DEAL_PLAYER_CLASSNAME }}__canvas-west">{{seating?.west}}</div>
+  <div class="{{ DEAL_PLAYER_CLASSNAME }}__play">
+    <span>Play a card every&nbsp;</span>
+    <input
+      type="number"
+      (change)="onSpeedChange($event)"
+      class="ui input {{ DEAL_PLAYER_CLASSNAME }}__play-duration"
+      value="{{ cardPlayWaitDuration / 1000 }}"
+      step=".5"
+      min=".5"
+      max="10"
+    />
+    <span>&nbsp;seconds.</span>
+  </div>
+
   <div *ngIf="trickNumber" class="{{ DEAL_PLAYER_CLASSNAME }}__trick">
     <span>Trick #:&nbsp;</span>
     <span class="{{ DEAL_PLAYER_CLASSNAME }}__trick-number">{{
@@ -20,39 +30,38 @@
   </div>
   <div class="{{ DEAL_PLAYER_CLASSNAME }}__played">
     <div class="{{ DEAL_PLAYER_CLASSNAME }}__played-north">
-      <span class="{{ DEAL_PLAYER_CLASSNAME }}__played-north-number"></span>
-      <span class="{{ DEAL_PLAYER_CLASSNAME }}__played-north-suit"></span>
+      <div>{{ seating?.north }}</div>
+      <div>
+        <span class="{{ DEAL_PLAYER_CLASSNAME }}__played-north-number"></span>
+        <span class="{{ DEAL_PLAYER_CLASSNAME }}__played-north-suit"></span>
+      </div>
     </div>
     <div class="{{ DEAL_PLAYER_CLASSNAME }}__played-east">
-      <span class="{{ DEAL_PLAYER_CLASSNAME }}__played-east-number"></span>
-      <span class="{{ DEAL_PLAYER_CLASSNAME }}__played-east-suit"></span>
+      <div>{{ seating?.east }}</div>
+      <div>
+        <span class="{{ DEAL_PLAYER_CLASSNAME }}__played-east-number"></span>
+        <span class="{{ DEAL_PLAYER_CLASSNAME }}__played-east-suit"></span>
+      </div>
     </div>
     <div class="{{ DEAL_PLAYER_CLASSNAME }}__played-south">
-      <span class="{{ DEAL_PLAYER_CLASSNAME }}__played-south-number"></span>
-      <span class="{{ DEAL_PLAYER_CLASSNAME }}__played-south-suit"></span>
+      <div>{{ seating?.south }}</div>
+      <div>
+        <span class="{{ DEAL_PLAYER_CLASSNAME }}__played-south-number"></span>
+        <span class="{{ DEAL_PLAYER_CLASSNAME }}__played-south-suit"></span>
+      </div>
     </div>
     <div class="{{ DEAL_PLAYER_CLASSNAME }}__played-west">
-      <span class="{{ DEAL_PLAYER_CLASSNAME }}__played-west-number"></span>
-      <span class="{{ DEAL_PLAYER_CLASSNAME }}__played-west-suit"></span>
+      <div>{{ seating?.west }}</div>
+      <div>
+        <span class="{{ DEAL_PLAYER_CLASSNAME }}__played-west-number"></span>
+        <span class="{{ DEAL_PLAYER_CLASSNAME }}__played-west-suit"></span>
+      </div>
     </div>
   </div>
   <canvas
     id="{{ DEAL_PLAYER_CLASSNAME }}-canvas"
     class="{{ DEAL_PLAYER_CLASSNAME }}__canvas-element"
   ></canvas>
-</section>
-<section class="{{ DEAL_PLAYER_CLASSNAME }}__play">
-  <span>Play a card every&nbsp;</span>
-  <input 
-    type="number" 
-    (change)="onSpeedChange($event)"  
-    class="ui input {{ DEAL_PLAYER_CLASSNAME }}__play-duration"
-    value="{{cardPlayWaitDuration / 1000}}"
-    step=".5"
-    min=".5"
-    max="10"
-  />
-  <span>&nbsp;seconds.</span>
 </section>
 <section class="{{ DEAL_PLAYER_CLASSNAME }}__controls">
   <svg (click)="onPreviousFive()">

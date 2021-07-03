@@ -96,9 +96,15 @@
 
     & > * {
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       padding: $default-font-size $default-font-size * 2;
+    }
+
+    &-north, &-south, &-east, &-west {
+      font-size: $default-font-size;
+      padding-bottom: $default-font-size;
     }
 
     &-north {
