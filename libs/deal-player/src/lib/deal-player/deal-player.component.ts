@@ -17,6 +17,10 @@ import {
   getLinearPercentOfMaxMatchWithinRange,
   cardsPerSuit,
   getSuitFromNumber,
+  getCardStringFromNumber,
+  getCharacterFromCardAsNumber,
+  getHtmlEntityFromSuitOrCardAsNumber,
+  getUserWhoPlayedCard,
 } from '@nx-bridge/constants';
 
 import { Store } from '@ngrx/store';
@@ -176,41 +180,65 @@ export class DealPlayerComponent implements OnInit {
   }
 
   private displayCardsInTable() {
-    this.setFirstCardPlayer();
+    this.setFirstCardPlayedAndPlayer();
     this.setCardPlayOrderAsDirections();
-    //todo: need to call displayCardInTable for the last four cards in this.cardsPlayed;
-  }
 
-  private displayCardInTable(card: number) {
-    const directionToUse
-    const elementToAddNumberTo = document.querySelector(`.${DEAL_PLAYER_CLASSNAME}__played-${directionToUse}-number`);
-    const elementToAddSuitTo = document.querySelector(`.${DEAL_PLAYER_CLASSNAME}__played-${directionToUse}-suit`);
-
-    const number = 
-    const suit = getSuitFromNumber()
-
-    this.renderer.setProperty(elementToAddNumberTo, 'innerHTML', )
-  }
-
-  private setFirstCardPlayer() {
-    if (this.firstCardPlayed === -1) this.firstCardPlayed = flatten(this.deal?.cardPlayOrder)[0];
-
-    for (const username in this.deal?.hands) {
-      if (Object.prototype.hasOwnProperty.call(this.deal?.hands, username)) {
-        const hand = this.deal?.hands[username];
-        const flatHand = flatten(hand);
-        if (flatHand?.includes(this.firstCardPlayed as any)) {
-          this.firstCardPlayer = username;
-          return;
-        }
+    if ((this.cardsPlayed.length - 1) % 4 === 0) {
+      for (let i = 0; i < cardinalDirections.length; i++) {
+        const direction = cardinalDirections[i];
+        this.setDirectionContent('', '', direction);
       }
     }
+
+    const currentTrick = this.getCurrentTrick();
+    console.log('currentTrick =', currentTrick);
+
+    let cardsDisplayed = 0;
+    for (let i = currentTrick.length -1; i >= 0; i--) {
+      if (cardsDisplayed === 4) break;
+      const card = currentTrick[i];
+      this.displayCardInTable(card);
+      cardsDisplayed++;
+    }
+  }
+
+  private getCurrentTrick() {
+    const numberOfCardsPlayed = this.cardsPlayed.length;
+    const startIndex = Math.floor((numberOfCardsPlayed - 1) / 4) * 4;
+    const endIndex = startIndex + 4;
+
+    if (endIndex > numberOfCardsPlayed - 1) return this.cardsPlayed.slice(startIndex);
+    else return this.cardsPlayed.slice(startIndex, endIndex);
+    return this.cardsPlayed.slice(startIndex, endIndex);
+  }
+
+  private displayCardInTable(cardAsNumber: number) {
+    const numberToUse = getCharacterFromCardAsNumber(cardAsNumber);
+    const suitHtmlEntity = getHtmlEntityFromSuitOrCardAsNumber(cardAsNumber);
+    const userWhoPlayedCard = getUserWhoPlayedCard(this.deal?.hands as Hands, cardAsNumber);
+    const directionToUse = getDirectionFromSeating(this.seating as Seating, userWhoPlayedCard);
+
+    this.setDirectionContent(numberToUse, suitHtmlEntity, directionToUse);
+  }
+
+  private setFirstCardPlayedAndPlayer() {
+    if (this.firstCardPlayed === -1) this.firstCardPlayed = flatten(this.deal?.cardPlayOrder)[0];
+    this.firstCardPlayer = getUserWhoPlayedCard(this.deal?.hands as Hands, this.firstCardPlayed);
   }
 
   private setCardPlayOrderAsDirections() {
     const directionOfPersonWhoPlayedFirst = getDirectionFromSeating(this.seating as Seating, this.firstCardPlayer);
     const index = cardinalDirections.indexOf(directionOfPersonWhoPlayedFirst);
     this.cardPlayerOrder = [...cardinalDirections.slice(index), ...cardinalDirections.slice(0, index)] as [string, string, string, string];
+  }
+
+  private setDirectionContent(number: string | number, suitHtmlEntity: string, direction: string) {
+    const numberElement = document.querySelector(`.${DEAL_PLAYER_CLASSNAME}__played-${direction}-number`);
+    const suitEntityElement = document.querySelector(`.${DEAL_PLAYER_CLASSNAME}__played-${direction}-suit`);
+    
+    if (!numberElement || !suitEntityElement) return;
+    this.renderer.setProperty(numberElement, 'innerHTML', number);
+    this.renderer.setProperty(suitEntityElement, 'innerHTML', suitHtmlEntity);
   }
 
   private resetCardsPlayed() {

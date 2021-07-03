@@ -2,6 +2,7 @@ import {
   CardinalDirection,
   CardValuesAsString,
   Hand,
+  Hands,
   Seating,
   Suit,
 } from '@nx-bridge/interfaces-and-types';
@@ -42,7 +43,7 @@ export function getCharacterFromCardAsNumber(
   cardAsNumber: number,
   getLetterForTen = false
 ) {
-  switch (cardAsNumber) {
+  switch (cardAsNumber % 13) {
     case 0:
       return '2';
     case 1:
@@ -212,4 +213,17 @@ export function flatten(array: any, depth = 1) {
         []
       )
     : array.slice();
+}
+
+export function getUserWhoPlayedCard(hands: Hands, card: number) {
+  for (const username in hands) {
+    if (Object.prototype.hasOwnProperty.call(hands, username)) {
+      const hand = hands[username];
+      const flatHand = flatten(hand);
+      if (flatHand?.includes(card)) {
+        return username;
+      }
+    }
+  }
+  return '';
 }
