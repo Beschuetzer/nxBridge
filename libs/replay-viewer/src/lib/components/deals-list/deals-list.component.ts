@@ -79,17 +79,17 @@ export class DealsListComponent implements OnInit {
   }
 
   onDealsButtonClick(e: Event) {
-    const isFullSize = this.toggleDeals(e);
-
-    if (isFullSize) this.store.dispatch(new SetIsViewingGame(true));
-    else this.store.dispatch(new SetIsViewingGame(false));
-
-    if (
-      (e.target as HTMLElement).innerHTML.match(dealsListDealsButtonChoices[0])
-    )
+    const button = ((e.currentTarget || e.target) as HTMLElement);
+    if (button.innerHTML.match(dealsListDealsButtonChoices[0]))
       this.store.dispatch(
         new SetCurrentlyViewingGameSeating(this.seating as Seating)
       );
+    else this.store.dispatch(new SetCurrentlyViewingGameSeating({} as Seating));
+
+    const isFullSize = this.toggleDeals(button);
+
+    if (isFullSize) this.store.dispatch(new SetIsViewingGame(true));
+    else this.store.dispatch(new SetIsViewingGame(false));
   }
 
   onShowDetails(e: Event) {
@@ -280,8 +280,7 @@ export class DealsListComponent implements OnInit {
     this.eastWestPlayers = [this.seating.east, this.seating.west];
   }
 
-  private toggleDeals(e: Event) {
-    const button = (e.currentTarget || e.target) as HTMLElement;
+  private toggleDeals(button: HTMLElement) {
     toggleInnerHTML(button, this.buttonChoicesDeals);
 
     const items = this.elRef.nativeElement.querySelectorAll(
