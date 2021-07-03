@@ -45,9 +45,9 @@ Todos----------------------------------------------------------
   -add show games played with another player or players
 
 
--south is drawn funny y-wise on resize sometimes (no reason for it though...)
 
 -add goto nth card played text box?
 -need to handle deals with 'n/a' (could just display) use 2/12/21, 5:45 PM 2nd deal to test
 
 -add player labels
+-try to make cards a bit bigger 

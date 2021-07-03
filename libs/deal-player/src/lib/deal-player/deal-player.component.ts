@@ -66,31 +66,31 @@ export class DealPlayerComponent implements OnInit {
   private DEFAULT_CARD_POSITION = -1000;
   private canvasHeight = -1;
   private canvasWidth = -1;
-  private SCALE_AMOUNT_THRESHOLD_VIEW_PORT_WIDTH = 1650;
-  private MIN_SCALE_AMOUNT_BELOW_THRESHOLD = 0.525;
-  private MIN_SCALE_AMOUNT_ABOVE_THRESHOLD = 0.5875;
-  private MAX_SCALE_AMOUNT_MOBILE = 0.675;
-  private MAX_SCALE_AMOUNT_NORMAL = 0.55;
+  private SCALE_AMOUNT_THRESHOLD_VIEW_PORT_WIDTH = 1350;
+  private MAX_SCALE_AMOUNT_BELOW_THRESHOLD = 0.7;
+  private MAX_SCALE_AMOUNT_ABOVE_THRESHOLD = 0.7;
+  private MIN_SCALE_AMOUNT_MOBILE = .7;
+  private MIN_SCALE_AMOUNT_NORMAL = .5;
   private MIN_TARGET_VIEW_PORT_WIDTH = 600;
   private MAX_TARGET_VIEW_PORT_WIDTH = 1800;
   private CARD_MOBILE_PIXEL_WIDTH = 233;
   private CARD_FULL_PIXEL_WIDTH = 360;
   private cardScaleAmount = this.isMobile
-    ? this.MAX_SCALE_AMOUNT_MOBILE
+    ? this.MIN_SCALE_AMOUNT_MOBILE
     : window.innerWidth < this.SCALE_AMOUNT_THRESHOLD_VIEW_PORT_WIDTH
     ? getLinearPercentOfMaxMatchWithinRange(
         window.innerWidth as number,
         this.mobileWidthStart,
         this.SCALE_AMOUNT_THRESHOLD_VIEW_PORT_WIDTH,
-        this.MAX_SCALE_AMOUNT_NORMAL,
-        this.MIN_SCALE_AMOUNT_BELOW_THRESHOLD
+        this.MIN_SCALE_AMOUNT_NORMAL,
+        this.MAX_SCALE_AMOUNT_BELOW_THRESHOLD
       )
     : getLinearPercentOfMaxMatchWithinRange(
         window.innerWidth as number,
         this.MIN_TARGET_VIEW_PORT_WIDTH,
         this.MAX_TARGET_VIEW_PORT_WIDTH,
-        this.MAX_SCALE_AMOUNT_NORMAL,
-        this.MIN_SCALE_AMOUNT_ABOVE_THRESHOLD
+        this.MIN_SCALE_AMOUNT_NORMAL,
+        this.MAX_SCALE_AMOUNT_ABOVE_THRESHOLD
       );
   private redrawTimeout: any;
   private playInterval: any;
@@ -509,22 +509,24 @@ export class DealPlayerComponent implements OnInit {
     this.isMobile = window.innerWidth <= this.mobileWidthStart;
     this.redrawTimeout = setTimeout(() => {
       this.cardScaleAmount = this.isMobile
-        ? this.MAX_SCALE_AMOUNT_MOBILE
+        ? this.MIN_SCALE_AMOUNT_MOBILE
         : window.innerWidth < this.SCALE_AMOUNT_THRESHOLD_VIEW_PORT_WIDTH
         ? getLinearPercentOfMaxMatchWithinRange(
             window.innerWidth as number,
             this.mobileWidthStart,
             this.SCALE_AMOUNT_THRESHOLD_VIEW_PORT_WIDTH,
-            this.MAX_SCALE_AMOUNT_NORMAL,
-            this.MIN_SCALE_AMOUNT_BELOW_THRESHOLD
+            this.MIN_SCALE_AMOUNT_NORMAL,
+            this.MAX_SCALE_AMOUNT_BELOW_THRESHOLD
           )
         : getLinearPercentOfMaxMatchWithinRange(
             window.innerWidth as number,
             this.MIN_TARGET_VIEW_PORT_WIDTH,
             this.MAX_TARGET_VIEW_PORT_WIDTH,
-            this.MAX_SCALE_AMOUNT_NORMAL,
-            this.MIN_SCALE_AMOUNT_ABOVE_THRESHOLD
+            this.MIN_SCALE_AMOUNT_NORMAL,
+            this.MAX_SCALE_AMOUNT_ABOVE_THRESHOLD
           );
+        
+      console.log('this.cardScaleAmount =', this.cardScaleAmount);
 
       this.setCardsSize();
       this.setCanvasMetrics();
