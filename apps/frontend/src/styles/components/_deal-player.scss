@@ -103,8 +103,14 @@
     }
 
     &-north, &-south, &-east, &-west {
-      font-size: $default-font-size;
-      padding-bottom: $default-font-size;
+      font-size: $default-font-size * 2;
+
+      & > div:nth-child(1) {
+        padding-bottom: $default-font-size;
+      }
+      &> div:nth-child(n + 2) {
+        font-size: $default-font-size * 3;
+      }
     }
 
     &-north {

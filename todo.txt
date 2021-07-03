@@ -50,3 +50,6 @@ Todos----------------------------------------------------------
 -need to handle deals with 'n/a' (could just display) use 2/12/21, 5:45 PM 2nd deal to test
 
 -figure out how to make closing deal-player reset everything
+
+-finish label styling?
+-Deal 1 trick 6 of yougurt 2/16 7:24pm bug in play order?
