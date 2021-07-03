@@ -20,11 +20,18 @@ import {
   COLOR_RED_CLASSNAME,
   COLOR_BLACK_CLASSNAME,
   cardsPerHand,
+  getLinearPercentOfMaxMatchWithinRange,
 } from '@nx-bridge/constants';
 
 import { Store } from '@ngrx/store';
 import { AppState, SetCurrentlyViewingDeal } from '@nx-bridge/store';
-import { Contract, Deal, Hand, Hands, Seating } from '@nx-bridge/interfaces-and-types';
+import {
+  Contract,
+  Deal,
+  Hand,
+  Hands,
+  Seating,
+} from '@nx-bridge/interfaces-and-types';
 import * as paper from 'paper';
 import { Project, Raster } from 'paper/dist/paper-core';
 import { debug } from 'node:console';
@@ -71,8 +78,8 @@ export class DealPlayerComponent implements OnInit {
   private SCALE_AMOUNT_THRESHOLD_VIEW_PORT_WIDTH = 1350;
   private MAX_SCALE_AMOUNT_BELOW_THRESHOLD = 0.7;
   private MAX_SCALE_AMOUNT_ABOVE_THRESHOLD = 0.75;
-  private MIN_SCALE_AMOUNT_MOBILE = .7;
-  private MIN_SCALE_AMOUNT_NORMAL = .5;
+  private MIN_SCALE_AMOUNT_MOBILE = 0.7;
+  private MIN_SCALE_AMOUNT_NORMAL = 0.5;
   private MIN_TARGET_VIEW_PORT_WIDTH = 600;
   private MAX_TARGET_VIEW_PORT_WIDTH = 1800;
   private CARD_MOBILE_PIXEL_WIDTH = 233;
@@ -88,10 +95,10 @@ export class DealPlayerComponent implements OnInit {
     private renderer: Renderer2
   ) {}
 
-  draw () {
+  draw() {
     this.setCanvasMetrics();
     this.setCardMetrics();
-    this.setCardScaleAmount();        
+    this.setCardScaleAmount();
     this.setCardsSize();
     this.renderHands();
   }
@@ -103,7 +110,9 @@ export class DealPlayerComponent implements OnInit {
 
     this.store.select('deals').subscribe((dealState) => {
       if (dealState.currentlyViewingDeal?.bids && !this.hasLoadedDeal) {
-        console.log('loading deal------------------------------------------------');
+        console.log(
+          'loading deal------------------------------------------------'
+        );
         this.deal = dealState.currentlyViewingDeal;
         if (Object.keys(this.deal).length <= 0) return;
 
@@ -120,10 +129,9 @@ export class DealPlayerComponent implements OnInit {
           this.setCardsSize();
           this.renderHands();
         }
-        
+
         this.renderer.addClass(this.elRef.nativeElement, VISIBLE_CLASSNAME);
         this.hasLoadedDeal = true;
-        
       } else if (dealState.currentlyViewingDeal?.bids) {
         this.renderer.addClass(this.elRef.nativeElement, VISIBLE_CLASSNAME);
       }
@@ -187,7 +195,6 @@ export class DealPlayerComponent implements OnInit {
   }
 
   onSpeedChange(e: Event) {
-    
     // debugger;
     // console.log('this.deal =', this.deal);
     // console.log('this.cardSpacingIncrement =', this.cardSpacingIncrement);
@@ -208,16 +215,24 @@ export class DealPlayerComponent implements OnInit {
 
   private playCard(nthCard = this.playCount) {
     const cardPlayOrder = this.deal?.cardPlayOrder;
-    if (!this.deal || !cardPlayOrder || cardPlayOrder.length < cardsPerDeck) return;
+    if (!this.deal || !cardPlayOrder || cardPlayOrder.length < cardsPerDeck)
+      return;
 
     if (nthCard >= cardsPerDeck) return this.onPause();
-    if (nthCard === -2 || nthCard === 51) this.cardsPlayed = flatten(cardPlayOrder);
-    else if (nthCard < -2) this.cardsPlayed = flatten(cardPlayOrder.slice(0, nthCard + 2) as number[]);
-    else this.cardsPlayed = flatten(cardPlayOrder.slice(0, nthCard + 1) as number[]);
+    if (nthCard === -2 || nthCard === 51)
+      this.cardsPlayed = flatten(cardPlayOrder);
+    else if (nthCard < -2)
+      this.cardsPlayed = flatten(
+        cardPlayOrder.slice(0, nthCard + 2) as number[]
+      );
+    else
+      this.cardsPlayed = flatten(
+        cardPlayOrder.slice(0, nthCard + 1) as number[]
+      );
 
     this.playCount = nthCard + 1;
     this.displayCardsInTable();
-    
+
     console.log('nthCard =', nthCard);
     console.log('this.cardsPlayed =', this.cardsPlayed);
   }
@@ -233,7 +248,7 @@ export class DealPlayerComponent implements OnInit {
     console.log('currentTrick =', currentTrick);
 
     let cardsDisplayed = 0;
-    for (let i = currentTrick.length -1; i >= 0; i--) {
+    for (let i = currentTrick.length - 1; i >= 0; i--) {
       if (cardsDisplayed === 4) break;
       const card = currentTrick[i];
       this.displayCardInTable(card);
@@ -247,7 +262,8 @@ export class DealPlayerComponent implements OnInit {
     const startIndex = (this.trickNumber - 1) * 4;
     const endIndex = startIndex + 4;
 
-    if (endIndex > numberOfCardsPlayed - 1) return this.cardsPlayed.slice(startIndex);
+    if (endIndex > numberOfCardsPlayed - 1)
+      return this.cardsPlayed.slice(startIndex);
     else return this.cardsPlayed.slice(startIndex, endIndex);
     return this.cardsPlayed.slice(startIndex, endIndex);
   }
@@ -255,37 +271,65 @@ export class DealPlayerComponent implements OnInit {
   private displayCardInTable(cardAsNumber: number) {
     const numberToUse = getCharacterFromCardAsNumber(cardAsNumber);
     const suitHtmlEntity = getHtmlEntityFromSuitOrCardAsNumber(cardAsNumber);
-    const userWhoPlayedCard = getUserWhoPlayedCard(this.deal?.hands as Hands, cardAsNumber);
-    const directionToUse = getDirectionFromSeating(this.seating as Seating, userWhoPlayedCard);
+    const userWhoPlayedCard = getUserWhoPlayedCard(
+      this.deal?.hands as Hands,
+      cardAsNumber
+    );
+    const directionToUse = getDirectionFromSeating(
+      this.seating as Seating,
+      userWhoPlayedCard
+    );
 
     this.setDirectionContent(numberToUse, suitHtmlEntity, directionToUse);
   }
 
   private setFirstCardPlayedAndPlayer() {
-    if (this.firstCardPlayed === -1) this.firstCardPlayed = flatten(this.deal?.cardPlayOrder)[0];
-    this.firstCardPlayer = getUserWhoPlayedCard(this.deal?.hands as Hands, this.firstCardPlayed);
+    if (this.firstCardPlayed === -1)
+      this.firstCardPlayed = flatten(this.deal?.cardPlayOrder)[0];
+    this.firstCardPlayer = getUserWhoPlayedCard(
+      this.deal?.hands as Hands,
+      this.firstCardPlayed
+    );
   }
 
   private setCardPlayOrderAsDirections() {
-    const directionOfPersonWhoPlayedFirst = getDirectionFromSeating(this.seating as Seating, this.firstCardPlayer);
+    const directionOfPersonWhoPlayedFirst = getDirectionFromSeating(
+      this.seating as Seating,
+      this.firstCardPlayer
+    );
     const index = cardinalDirections.indexOf(directionOfPersonWhoPlayedFirst);
-    this.cardPlayerOrder = [...cardinalDirections.slice(index), ...cardinalDirections.slice(0, index)] as [string, string, string, string];
+    this.cardPlayerOrder = [
+      ...cardinalDirections.slice(index),
+      ...cardinalDirections.slice(0, index),
+    ] as [string, string, string, string];
   }
 
-  private setDirectionContent(number: string | number, suitHtmlEntity: string, direction: string) {
-    const numberElement = document.querySelector(`.${DEAL_PLAYER_CLASSNAME}__played-${direction}-number`);
-    const suitEntityElement = document.querySelector(`.${DEAL_PLAYER_CLASSNAME}__played-${direction}-suit`);
-    
+  private setDirectionContent(
+    number: string | number,
+    suitHtmlEntity: string,
+    direction: string
+  ) {
+    const numberElement = document.querySelector(
+      `.${DEAL_PLAYER_CLASSNAME}__played-${direction}-number`
+    );
+    const suitEntityElement = document.querySelector(
+      `.${DEAL_PLAYER_CLASSNAME}__played-${direction}-suit`
+    );
+
     if (!numberElement || !suitEntityElement) return;
 
     let colorClass = COLOR_RED_CLASSNAME;
-    if (suitHtmlEntity === suitsHtmlEntities[0] || suitHtmlEntity === suitsHtmlEntities[3]) colorClass = COLOR_BLACK_CLASSNAME;
+    if (
+      suitHtmlEntity === suitsHtmlEntities[0] ||
+      suitHtmlEntity === suitsHtmlEntities[3]
+    )
+      colorClass = COLOR_BLACK_CLASSNAME;
     this.renderer.removeClass(numberElement, COLOR_BLACK_CLASSNAME);
     this.renderer.removeClass(suitEntityElement, COLOR_BLACK_CLASSNAME);
     this.renderer.removeClass(numberElement, COLOR_RED_CLASSNAME);
     this.renderer.removeClass(suitEntityElement, COLOR_RED_CLASSNAME);
-    this.renderer.addClass(numberElement, colorClass)
-    this.renderer.addClass(suitEntityElement, colorClass)
+    this.renderer.addClass(numberElement, colorClass);
+    this.renderer.addClass(suitEntityElement, colorClass);
     this.renderer.setProperty(numberElement, 'innerHTML', number);
     this.renderer.setProperty(suitEntityElement, 'innerHTML', suitHtmlEntity);
   }
@@ -523,11 +567,15 @@ export class DealPlayerComponent implements OnInit {
 
     let usedSpace = spaceUsedByTopAndBottomHands + lengthOfHand;
     if (usableSpace >= lengthOfHand)
-      if (direction === cardinalDirections[0] || direction === cardinalDirections[2]) return (
-        ((dimensionToUse as number) - usedSpace) / 2
-        
-      );
-      else return this.cardVisibleOffset + ((dimensionToUse as number) - usedSpace) / 2;
+      if (
+        direction === cardinalDirections[0] ||
+        direction === cardinalDirections[2]
+      )
+        return ((dimensionToUse as number) - usedSpace) / 2;
+      else
+        return (
+          this.cardVisibleOffset + ((dimensionToUse as number) - usedSpace) / 2
+        );
     else {
       lengthOfHand = numberOfCardsInHand * this.cardSpacingIncrement;
       usedSpace = this.cardVisibleOffset * 2 + lengthOfHand;
@@ -561,9 +609,11 @@ export class DealPlayerComponent implements OnInit {
     }
   }
 
-  private setCardsSize(desiredWidth = this.isMobile
-    ? this.CARD_MOBILE_PIXEL_WIDTH
-    : this.CARD_FULL_PIXEL_WIDTH) {
+  private setCardsSize(
+    desiredWidth = this.isMobile
+      ? this.CARD_MOBILE_PIXEL_WIDTH
+      : this.CARD_FULL_PIXEL_WIDTH
+  ) {
     for (let i = 0; i < this.cards.length; i++) {
       const card = this.cards[i] as paper.Raster;
       let currentWidth = card.bounds.width;
@@ -572,7 +622,7 @@ export class DealPlayerComponent implements OnInit {
         (card.rotation < -89 && card.rotation > -91)
       )
         currentWidth = card.bounds.height;
-     
+
       card.scale(desiredWidth / currentWidth);
       card.scale(this.cardScaleAmount);
     }
@@ -590,8 +640,24 @@ export class DealPlayerComponent implements OnInit {
 
     // const desiredCardwith = this.fractionOfCardWidthShown / cardsPerHand * smallerDimension;
 
-    
     // this.cardScaleAmount = desiredCardwith / this.cardWidth;
-    this.cardScaleAmount = .7;
+    if (this.isMobile)
+      return (this.cardScaleAmount = this.MIN_SCALE_AMOUNT_MOBILE);
+
+    if (window.innerWidth < this.SCALE_AMOUNT_THRESHOLD_VIEW_PORT_WIDTH)
+      return getLinearPercentOfMaxMatchWithinRange(
+        window.innerWidth as number,
+        this.mobileWidthStart,
+        this.SCALE_AMOUNT_THRESHOLD_VIEW_PORT_WIDTH,
+        this.MIN_SCALE_AMOUNT_NORMAL,
+        this.MAX_SCALE_AMOUNT_BELOW_THRESHOLD
+      );
+    else return getLinearPercentOfMaxMatchWithinRange(
+      window.innerWidth as number,
+      this.MIN_TARGET_VIEW_PORT_WIDTH,
+      this.MAX_TARGET_VIEW_PORT_WIDTH,
+      this.MIN_SCALE_AMOUNT_NORMAL,
+      this.MAX_SCALE_AMOUNT_ABOVE_THRESHOLD
+    );
   }
 }
