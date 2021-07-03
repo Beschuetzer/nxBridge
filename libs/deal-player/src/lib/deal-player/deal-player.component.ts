@@ -75,23 +75,7 @@ export class DealPlayerComponent implements OnInit {
   private MAX_TARGET_VIEW_PORT_WIDTH = 1800;
   private CARD_MOBILE_PIXEL_WIDTH = 233;
   private CARD_FULL_PIXEL_WIDTH = 360;
-  private cardScaleAmount = this.isMobile
-    ? this.MIN_SCALE_AMOUNT_MOBILE
-    : window.innerWidth < this.SCALE_AMOUNT_THRESHOLD_VIEW_PORT_WIDTH
-    ? getLinearPercentOfMaxMatchWithinRange(
-        window.innerWidth as number,
-        this.mobileWidthStart,
-        this.SCALE_AMOUNT_THRESHOLD_VIEW_PORT_WIDTH,
-        this.MIN_SCALE_AMOUNT_NORMAL,
-        this.MAX_SCALE_AMOUNT_BELOW_THRESHOLD
-      )
-    : getLinearPercentOfMaxMatchWithinRange(
-        window.innerWidth as number,
-        this.MIN_TARGET_VIEW_PORT_WIDTH,
-        this.MAX_TARGET_VIEW_PORT_WIDTH,
-        this.MIN_SCALE_AMOUNT_NORMAL,
-        this.MAX_SCALE_AMOUNT_ABOVE_THRESHOLD
-      );
+  private cardScaleAmount = -1;
   private redrawTimeout: any;
   private playInterval: any;
   private error = '';
@@ -101,6 +85,14 @@ export class DealPlayerComponent implements OnInit {
     private elRef: ElementRef,
     private renderer: Renderer2
   ) {}
+
+  draw () {
+    this.setCardScaleAmount();        
+    this.setCardsSize();
+    this.setCanvasMetrics();
+    this.setCardMetrics();
+    this.renderHands();
+  }
 
   ngOnInit(): void {
     this.store.select('games').subscribe((gameState) => {
@@ -123,6 +115,7 @@ export class DealPlayerComponent implements OnInit {
 
         if (this.cards.length < cardsPerDeck) this.loadCards();
         else {
+          this.setCardsSize();
           this.renderHands();
         }
         
@@ -313,7 +306,6 @@ export class DealPlayerComponent implements OnInit {
     for (let i = 0; i < cardsPerDeck; i++) {
       const newRaster = new Raster(`card-${i}`);
       newRaster.position.x = this.DEFAULT_CARD_POSITION;
-      newRaster.scale(this.cardScaleAmount);
       newRaster.onLoad = this.onCardLoad.bind(this);
       this.cards.push(newRaster);
     }
@@ -329,9 +321,7 @@ export class DealPlayerComponent implements OnInit {
   private onCardLoad() {
     this.cardsLoaded += 1;
     if (this.cardsLoaded >= cardsPerDeck) {
-      this.setCanvasMetrics();
-      this.setCardMetrics();
-      this.renderHands();
+      this.draw();
       this.cardsLoaded = 0;
     }
   }
@@ -508,30 +498,7 @@ export class DealPlayerComponent implements OnInit {
 
     this.isMobile = window.innerWidth <= this.mobileWidthStart;
     this.redrawTimeout = setTimeout(() => {
-      this.cardScaleAmount = this.isMobile
-        ? this.MIN_SCALE_AMOUNT_MOBILE
-        : window.innerWidth < this.SCALE_AMOUNT_THRESHOLD_VIEW_PORT_WIDTH
-        ? getLinearPercentOfMaxMatchWithinRange(
-            window.innerWidth as number,
-            this.mobileWidthStart,
-            this.SCALE_AMOUNT_THRESHOLD_VIEW_PORT_WIDTH,
-            this.MIN_SCALE_AMOUNT_NORMAL,
-            this.MAX_SCALE_AMOUNT_BELOW_THRESHOLD
-          )
-        : getLinearPercentOfMaxMatchWithinRange(
-            window.innerWidth as number,
-            this.MIN_TARGET_VIEW_PORT_WIDTH,
-            this.MAX_TARGET_VIEW_PORT_WIDTH,
-            this.MIN_SCALE_AMOUNT_NORMAL,
-            this.MAX_SCALE_AMOUNT_ABOVE_THRESHOLD
-          );
-        
-      console.log('this.cardScaleAmount =', this.cardScaleAmount);
-
-      this.setCardsSize();
-      this.setCanvasMetrics();
-      this.setCardMetrics();
-      this.renderHands();
+      this.draw();
     }, 250);
   }
 
@@ -592,7 +559,9 @@ export class DealPlayerComponent implements OnInit {
     }
   }
 
-  private setCardsSize() {
+  private setCardsSize(desiredWidth = this.isMobile
+    ? this.CARD_MOBILE_PIXEL_WIDTH
+    : this.CARD_FULL_PIXEL_WIDTH) {
     for (let i = 0; i < this.cards.length; i++) {
       const card = this.cards[i] as paper.Raster;
       let currentWidth = card.bounds.width;
@@ -601,11 +570,22 @@ export class DealPlayerComponent implements OnInit {
         (card.rotation < -89 && card.rotation > -91)
       )
         currentWidth = card.bounds.height;
-      const desiredWidth = this.isMobile
-        ? this.CARD_MOBILE_PIXEL_WIDTH
-        : this.CARD_FULL_PIXEL_WIDTH;
+     
       card.scale(desiredWidth / currentWidth);
       card.scale(this.cardScaleAmount);
     }
+  }
+
+  private setCardScaleAmount() {
+    //two dimensions
+    let smallerDimension = this.canvasWidth;
+    const heightDimension = this.canvasHeight - 2 * this.cardVisibleOffset;
+    if (heightDimension < smallerDimension) smallerDimension = heightDimension;
+
+
+    const desiredCardwith = 6/13 * smallerDimension;
+    // this.setCardsSize()
+
+    this.cardScaleAmount = .7;
   }
 }
