@@ -44,8 +44,9 @@
   }
 
   &__played {
+    user-select: none;
     font-size: $default-font-size * 3;
-    width: 66.666%;
+    width: 60%;
     text-align: center;
     display: grid;
     grid-template-columns: repeat(4, 1fr);

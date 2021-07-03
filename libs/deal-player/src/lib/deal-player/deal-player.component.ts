@@ -128,16 +128,20 @@ export class DealPlayerComponent implements OnInit {
   }
 
   onClose() {
+    this.resetCardsPlayed();
+    this.resetTable();
     this.renderer.removeClass(this.elRef.nativeElement, VISIBLE_CLASSNAME);
     this.resetCardsRotationAndPosition();
     this.store.dispatch(new SetCurrentlyViewingDeal({} as Deal));
   }
 
   onNext() {
+    this.resetTable();
     this.playCard();
   }
 
   onNextFive() {
+    this.resetTable();
     this.playCard(this.playCount + 4);
   }
 
@@ -156,14 +160,17 @@ export class DealPlayerComponent implements OnInit {
   }
 
   onPrevious() {
+    this.resetTable();
     this.playCard(this.playCount - 2);
   }
 
   onPreviousFive() {
+    this.resetTable();
     this.playCard(this.playCount - 6);
   }
 
   onStop() {
+    this.resetTable();
     this.onPause();
     this.resetCardsPlayed();
   }
@@ -172,10 +179,15 @@ export class DealPlayerComponent implements OnInit {
     const cardPlayOrder = this.deal?.cardPlayOrder;
     if (!this.deal || !cardPlayOrder || cardPlayOrder.length < cardsPerDeck) return;
 
-    this.cardsPlayed = flatten(cardPlayOrder.slice(0, nthCard + 1) as number[]);
+    if (nthCard >= cardsPerDeck) return this.onPause();
+    if (nthCard === -2 || nthCard === 51) this.cardsPlayed = flatten(cardPlayOrder);
+    else if (nthCard < -2) this.cardsPlayed = flatten(cardPlayOrder.slice(0, nthCard + 2) as number[]);
+    else this.cardsPlayed = flatten(cardPlayOrder.slice(0, nthCard + 1) as number[]);
+
     this.playCount = nthCard + 1;
     this.displayCardsInTable();
     
+    console.log('nthCard =', nthCard);
     console.log('this.cardsPlayed =', this.cardsPlayed);
   }
 
@@ -183,14 +195,10 @@ export class DealPlayerComponent implements OnInit {
     this.setFirstCardPlayedAndPlayer();
     this.setCardPlayOrderAsDirections();
 
-    if ((this.cardsPlayed.length - 1) % 4 === 0) {
-      for (let i = 0; i < cardinalDirections.length; i++) {
-        const direction = cardinalDirections[i];
-        this.setDirectionContent('', '', direction);
-      }
-    }
+    if ((this.cardsPlayed.length - 1) % 4 === 0) this.resetTable();
 
     const currentTrick = this.getCurrentTrick();
+    console.log('this.deal.cardPlayerOrder =', this.deal?.cardPlayerOrder);
     console.log('currentTrick =', currentTrick);
 
     let cardsDisplayed = 0;
@@ -239,6 +247,13 @@ export class DealPlayerComponent implements OnInit {
     if (!numberElement || !suitEntityElement) return;
     this.renderer.setProperty(numberElement, 'innerHTML', number);
     this.renderer.setProperty(suitEntityElement, 'innerHTML', suitHtmlEntity);
+  }
+
+  private resetTable() {
+    for (let i = 0; i < cardinalDirections.length; i++) {
+      const direction = cardinalDirections[i];
+      this.setDirectionContent('', '', direction);
+    }
   }
 
   private resetCardsPlayed() {
