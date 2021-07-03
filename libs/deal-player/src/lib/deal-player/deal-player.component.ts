@@ -21,6 +21,9 @@ import {
   getCharacterFromCardAsNumber,
   getHtmlEntityFromSuitOrCardAsNumber,
   getUserWhoPlayedCard,
+  suitsHtmlEntities,
+  COLOR_RED_CLASSNAME,
+  COLOR_BLACK_CLASSNAME,
 } from '@nx-bridge/constants';
 
 import { Store } from '@ngrx/store';
@@ -128,6 +131,7 @@ export class DealPlayerComponent implements OnInit {
   }
 
   onClose() {
+    this.onPause();
     this.resetCardsPlayed();
     this.resetTable();
     this.renderer.removeClass(this.elRef.nativeElement, VISIBLE_CLASSNAME);
@@ -138,11 +142,13 @@ export class DealPlayerComponent implements OnInit {
   onNext() {
     this.resetTable();
     this.playCard();
+    this.onPause();
   }
 
   onNextFive() {
     this.resetTable();
     this.playCard(this.playCount + 4);
+    this.onPause();
   }
 
   onPause() {
@@ -160,16 +166,19 @@ export class DealPlayerComponent implements OnInit {
   }
 
   onPrevious() {
+    this.onPause();
     this.resetTable();
     this.playCard(this.playCount - 2);
   }
 
   onPreviousFive() {
+    this.onPause();
     this.resetTable();
     this.playCard(this.playCount - 6);
   }
 
   onStop() {
+    this.onPause();
     this.resetTable();
     this.onPause();
     this.resetCardsPlayed();
@@ -245,6 +254,15 @@ export class DealPlayerComponent implements OnInit {
     const suitEntityElement = document.querySelector(`.${DEAL_PLAYER_CLASSNAME}__played-${direction}-suit`);
     
     if (!numberElement || !suitEntityElement) return;
+
+    let colorClass = COLOR_RED_CLASSNAME;
+    if (suitHtmlEntity === suitsHtmlEntities[0] || suitHtmlEntity === suitsHtmlEntities[3]) colorClass = COLOR_BLACK_CLASSNAME;
+    this.renderer.removeClass(numberElement, COLOR_BLACK_CLASSNAME);
+    this.renderer.removeClass(suitEntityElement, COLOR_BLACK_CLASSNAME);
+    this.renderer.removeClass(numberElement, COLOR_RED_CLASSNAME);
+    this.renderer.removeClass(suitEntityElement, COLOR_RED_CLASSNAME);
+    this.renderer.addClass(numberElement, colorClass)
+    this.renderer.addClass(suitEntityElement, colorClass)
     this.renderer.setProperty(numberElement, 'innerHTML', number);
     this.renderer.setProperty(suitEntityElement, 'innerHTML', suitHtmlEntity);
   }
