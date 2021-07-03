@@ -6,47 +6,37 @@
   </div>
 </section>
 <section class="{{ DEAL_PLAYER_CLASSNAME }}__canvas">
+  <div class="{{ DEAL_PLAYER_CLASSNAME }}__played">
+    <div class="{{ DEAL_PLAYER_CLASSNAME }}__played-north">3&clubs;</div>
+    <div class="{{ DEAL_PLAYER_CLASSNAME }}__played-east">3&clubs;</div>
+    <div class="{{ DEAL_PLAYER_CLASSNAME }}__played-south">3&clubs;</div>
+    <div class="{{ DEAL_PLAYER_CLASSNAME }}__played-west">3&clubs;</div>
+  </div>
   <canvas
     id="{{ DEAL_PLAYER_CLASSNAME }}-canvas"
     class="{{ DEAL_PLAYER_CLASSNAME }}__canvas-element"
   ></canvas>
 </section>
 <section class="{{ DEAL_PLAYER_CLASSNAME }}__controls">
-  <svg
-    (click)="onPreviousFive()"
-  >
+  <svg (click)="onPreviousFive()">
     <use xlink:href="assets/deal-player/sprite.svg#icon-previous-five"></use>
   </svg>
-  <svg
-    (click)="onPrevious()"
-  >
+  <svg (click)="onPrevious()">
     <use xlink:href="assets/deal-player/sprite.svg#icon-previous"></use>
   </svg>
-  <svg
-    (click)="onPlay()"
-    *ngIf="!isPlaying"
-  >
+  <svg (click)="onPlay()" *ngIf="!isPlaying">
     <use xlink:href="assets/deal-player/sprite.svg#icon-play"></use>
   </svg>
-  <svg
-    (click)="onPause()"
-    *ngIf="isPlaying"
-  >
+  <svg (click)="onPause()" *ngIf="isPlaying">
     <use xlink:href="assets/deal-player/sprite.svg#icon-pause"></use>
   </svg>
-  <svg
-    (click)="onStop()"
-  >
+  <svg (click)="onStop()">
     <use xlink:href="assets/deal-player/sprite.svg#icon-stop"></use>
   </svg>
-  <svg
-    (click)="onNext()"
-  >
+  <svg (click)="onNext()">
     <use xlink:href="assets/deal-player/sprite.svg#icon-next"></use>
   </svg>
-  <svg
-    (click)="onNextFive()"
-  >
+  <svg (click)="onNextFive()">
     <use xlink:href="assets/deal-player/sprite.svg#icon-next-five"></use>
   </svg>
 </section>
