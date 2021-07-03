@@ -50,4 +50,4 @@ Todos----------------------------------------------------------
 -add goto nth card played text box?
 -this.cardsPlayed could contain "N/A" indicating where claim all was made
 -clicking "Watch replay" for one deal then doing it for another (only on first load) causes problems (reset card rotations on "watch replay" click)
--
+-clicking 'X' on game-detail doesn't close it

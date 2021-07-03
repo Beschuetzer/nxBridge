@@ -8,7 +8,9 @@
 <section class="{{ DEAL_PLAYER_CLASSNAME }}__canvas">
   <div *ngIf="trickNumber" class="{{ DEAL_PLAYER_CLASSNAME }}__trick">
     <span>Trick #:&nbsp;</span>
-    <span class="{{ DEAL_PLAYER_CLASSNAME }}__trick-number">{{ trickNumber }}</span>
+    <span class="{{ DEAL_PLAYER_CLASSNAME }}__trick-number">{{
+      trickNumber
+    }}</span>
   </div>
   <div class="{{ DEAL_PLAYER_CLASSNAME }}__played">
     <div class="{{ DEAL_PLAYER_CLASSNAME }}__played-north">
@@ -32,6 +34,19 @@
     id="{{ DEAL_PLAYER_CLASSNAME }}-canvas"
     class="{{ DEAL_PLAYER_CLASSNAME }}__canvas-element"
   ></canvas>
+</section>
+<section class="{{ DEAL_PLAYER_CLASSNAME }}__play">
+  <span>Play a card every&nbsp;</span>
+  <input 
+    type="number" 
+    (change)="onSpeedChange($event)"  
+    class="ui input {{ DEAL_PLAYER_CLASSNAME }}__play-duration"
+    value="{{cardPlayWaitDuration / 1000}}"
+    step=".5"
+    min=".5"
+    max="10"
+  />
+  <span>&nbsp;seconds.</span>
 </section>
 <section class="{{ DEAL_PLAYER_CLASSNAME }}__controls">
   <svg (click)="onPreviousFive()">

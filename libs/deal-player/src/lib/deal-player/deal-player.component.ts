@@ -55,6 +55,7 @@ export class DealPlayerComponent implements OnInit {
   public project: paper.Project | null = null;
   private mobileWidthStart = 655;
   public isMobile = window.innerWidth <= this.mobileWidthStart;
+  private shouldChangePlaySpeed = false;
   private firstCardPlayed = -1;
   private firstCardPlayer = '';
   private cardPlayerOrder: [string, string, string, string] | null = null;
@@ -161,6 +162,10 @@ export class DealPlayerComponent implements OnInit {
     this.isPlaying = true;
     this.playCard();
     this.playInterval = setInterval(() => {
+      if (this.shouldChangePlaySpeed) {
+        clearInterval(this.playInterval);
+        return this.onPlay();
+      }
       this.playCard();
       if (this.playCount === cardsPerDeck) clearInterval(this.playInterval);
     }, this.cardPlayWaitDuration);
@@ -176,6 +181,19 @@ export class DealPlayerComponent implements OnInit {
     this.onPause();
     this.resetTable();
     this.playCard(this.playCount - 6);
+  }
+
+  onSpeedChange(e: Event) {
+    
+    // debugger;
+    // console.log('this.deal =', this.deal);
+    // console.log('this.cardSpacingIncrement =', this.cardSpacingIncrement);
+
+    this.cardPlayWaitDuration = +(e.target as HTMLInputElement)?.value * 1000;
+    console.log('this.cardPlayWaitDuration =', this.cardPlayWaitDuration);
+    if (this.isPlaying) this.shouldChangePlaySpeed = true;
+    // clearInterval(this.playInterval);
+    // this.onPlay()
   }
 
   onStop() {
