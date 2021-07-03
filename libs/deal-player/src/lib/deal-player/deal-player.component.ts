@@ -128,7 +128,7 @@ export class DealPlayerComponent implements OnInit {
     this.playCard();
   }
 
-  onNextFive(){
+  onNextFive() {
     this.playCard(this.playCount + 4);
   }
 
@@ -141,9 +141,9 @@ export class DealPlayerComponent implements OnInit {
     this.isPlaying = true;
     this.playCard();
     this.playInterval = setInterval(() => {
-       this.playCard();
-        if (this. playCount === cardsPerDeck) clearInterval(this.playInterval);
-    }, this.cardPlayWaitDuration)
+      this.playCard();
+      if (this.playCount === cardsPerDeck) clearInterval(this.playInterval);
+    }, this.cardPlayWaitDuration);
   }
 
   onPrevious() {
@@ -162,9 +162,9 @@ export class DealPlayerComponent implements OnInit {
   private playCard(nthCard = this.playCount) {
     const cardPlayOrder = this.deal?.cardPlayOrder;
     if (!cardPlayOrder || cardPlayOrder.length < cardsPerDeck) return;
-    
+
     this.cardsPlayed = flatten(cardPlayOrder.slice(0, nthCard + 1) as number[]);
-    this. playCount = nthCard + 1;
+    this.playCount = nthCard + 1;
     console.log('this.cardsPlayed =', this.cardsPlayed);
   }
 
@@ -206,7 +206,10 @@ export class DealPlayerComponent implements OnInit {
     const cardZero = this.cards[0] as paper.Raster;
     if (cardZero?.rotation === undefined) return;
     const roundedRotation = Math.round(cardZero.rotation);
-    this.cardWidth = roundedRotation === 0 || roundedRotation === 180 ? cardZero.bounds.width : cardZero.bounds.height;
+    this.cardWidth =
+      roundedRotation === 0 || roundedRotation === 180
+        ? cardZero.bounds.width
+        : cardZero.bounds.height;
     this.cardHeight = this.cardWidth * 1.5;
     this.cardVisibleOffset = this.cardHeight / 4 - 2.5;
     this.cardSpacingIncrement = this.cardWidth / 6;
@@ -244,13 +247,18 @@ export class DealPlayerComponent implements OnInit {
       }
     }
 
-    if (handsWithDirectionAsKey.east) this.renderHand(handsWithDirectionAsKey.east, cardinalDirections[1]);
-    if (handsWithDirectionAsKey.west) this.renderHand(handsWithDirectionAsKey.west, cardinalDirections[3]);
-    if (handsWithDirectionAsKey.north) this.renderHand(handsWithDirectionAsKey.north, cardinalDirections[0]);
-    if (handsWithDirectionAsKey.south) this.renderHand(handsWithDirectionAsKey.south, cardinalDirections[2]);
+    if (handsWithDirectionAsKey.east)
+      this.renderHand(handsWithDirectionAsKey.east, cardinalDirections[1]);
+    if (handsWithDirectionAsKey.west)
+      this.renderHand(handsWithDirectionAsKey.west, cardinalDirections[3]);
+    if (handsWithDirectionAsKey.north)
+      this.renderHand(handsWithDirectionAsKey.north, cardinalDirections[0]);
+    if (handsWithDirectionAsKey.south)
+      this.renderHand(handsWithDirectionAsKey.south, cardinalDirections[2]);
   }
 
   private renderHand(hand: Hand, direction: string) {
+    if (this.cardSpacingIncrement === -1) return;
     const flatHand = flatten(hand);
     const startingPosition = this.getStartingPosition(
       flatHand.length,
@@ -365,30 +373,30 @@ export class DealPlayerComponent implements OnInit {
     clearTimeout(this.redrawTimeout);
 
     this.isMobile = window.innerWidth <= this.mobileWidthStart;
-      this.redrawTimeout = setTimeout(() => {
-        this.cardScaleAmount = this.isMobile
-          ? this.MAX_SCALE_AMOUNT_MOBILE
-          : window.innerWidth < this.SCALE_AMOUNT_THRESHOLD_VIEW_PORT_WIDTH
-          ? getLinearPercentOfMaxMatchWithinRange(
-              window.innerWidth as number,
-              this.mobileWidthStart,
-              this.SCALE_AMOUNT_THRESHOLD_VIEW_PORT_WIDTH,
-              this.MAX_SCALE_AMOUNT_NORMAL,
-              this.MIN_SCALE_AMOUNT_BELOW_THRESHOLD
-            )
-          : getLinearPercentOfMaxMatchWithinRange(
-              window.innerWidth as number,
-              this.MIN_TARGET_VIEW_PORT_WIDTH,
-              this.MAX_TARGET_VIEW_PORT_WIDTH,
-              this.MAX_SCALE_AMOUNT_NORMAL,
-              this.MIN_SCALE_AMOUNT_ABOVE_THRESHOLD
-            );
+    this.redrawTimeout = setTimeout(() => {
+      this.cardScaleAmount = this.isMobile
+        ? this.MAX_SCALE_AMOUNT_MOBILE
+        : window.innerWidth < this.SCALE_AMOUNT_THRESHOLD_VIEW_PORT_WIDTH
+        ? getLinearPercentOfMaxMatchWithinRange(
+            window.innerWidth as number,
+            this.mobileWidthStart,
+            this.SCALE_AMOUNT_THRESHOLD_VIEW_PORT_WIDTH,
+            this.MAX_SCALE_AMOUNT_NORMAL,
+            this.MIN_SCALE_AMOUNT_BELOW_THRESHOLD
+          )
+        : getLinearPercentOfMaxMatchWithinRange(
+            window.innerWidth as number,
+            this.MIN_TARGET_VIEW_PORT_WIDTH,
+            this.MAX_TARGET_VIEW_PORT_WIDTH,
+            this.MAX_SCALE_AMOUNT_NORMAL,
+            this.MIN_SCALE_AMOUNT_ABOVE_THRESHOLD
+          );
 
-        this.setCardsSize();
-        this.setCanvasMetrics();
-        this.setCardMetrics();
-        this.renderHands();
-      }, 250);
+      this.setCardsSize();
+      this.setCanvasMetrics();
+      this.setCardMetrics();
+      this.renderHands();
+    }, 250);
   }
 
   private getStartingPosition(numberOfCardsInHand: number, direction: string) {
@@ -400,33 +408,48 @@ export class DealPlayerComponent implements OnInit {
   }
 
   private getCalculatedStart(numberOfCardsInHand: number, direction: string) {
-    let lengthOfHand = this.cardWidth + (numberOfCardsInHand - 1) * this.cardSpacingIncrement;
+    let lengthOfHand =
+      this.cardWidth + (numberOfCardsInHand - 1) * this.cardSpacingIncrement;
 
     let dimensionToUse = this.canvasWidth;
     let spaceUsedByTopAndBottomHands = 0;
     let usableSpace = this.canvasWidth;
 
-    if (direction === cardinalDirections[1] || direction === cardinalDirections[3]) {
+    if (
+      direction === cardinalDirections[1] ||
+      direction === cardinalDirections[3]
+    ) {
       dimensionToUse = this.canvasHeight;
       spaceUsedByTopAndBottomHands = this.cardVisibleOffset * 2;
-      usableSpace = dimensionToUse - (spaceUsedByTopAndBottomHands);
-
+      usableSpace = dimensionToUse - spaceUsedByTopAndBottomHands;
     }
 
     let usedSpace = spaceUsedByTopAndBottomHands + lengthOfHand;
-    if (usableSpace >= lengthOfHand) return this.cardVisibleOffset + (dimensionToUse as number - (usedSpace)) / 2;
+    if (usableSpace >= lengthOfHand)
+      return (
+        this.cardVisibleOffset + ((dimensionToUse as number) - usedSpace) / 2
+      );
     else {
       lengthOfHand = numberOfCardsInHand * this.cardSpacingIncrement;
       usedSpace = this.cardVisibleOffset * 2 + lengthOfHand;
-      if (direction === cardinalDirections[1]) {
-        return (this.cardVisibleOffset + ((this.canvasHeight as number - (usedSpace)) / 2)) - (this.cardWidth - this.cardSpacingIncrement);
-
-      } 
-      else if (direction === cardinalDirections[3]) {
-        return this.cardVisibleOffset + (this.canvasHeight as number - (usedSpace)) / 2;
+      if (
+        direction === cardinalDirections[0] ||
+        direction === cardinalDirections[1]
+      ) {
+        return (
+          this.cardVisibleOffset +
+          ((dimensionToUse as number) - usedSpace) / 2 -
+          (this.cardWidth - this.cardSpacingIncrement)
+        );
+      } else if (
+        direction === cardinalDirections[2] ||
+        direction === cardinalDirections[3]
+      ) {
+        return (
+          this.cardVisibleOffset + ((dimensionToUse as number) - usedSpace) / 2
+        );
       }
     }
-
 
     throw new Error('Invalid direction in getCalculatedStart');
   }
@@ -443,7 +466,11 @@ export class DealPlayerComponent implements OnInit {
     for (let i = 0; i < this.cards.length; i++) {
       const card = this.cards[i] as paper.Raster;
       let currentWidth = card.bounds.width;
-      if (card.rotation > 89 && card.rotation <= 91 || card.rotation < -89 && card.rotation > -91) currentWidth = card.bounds.height;
+      if (
+        (card.rotation > 89 && card.rotation <= 91) ||
+        (card.rotation < -89 && card.rotation > -91)
+      )
+        currentWidth = card.bounds.height;
       const desiredWidth = this.isMobile
         ? this.CARD_MOBILE_PIXEL_WIDTH
         : this.CARD_FULL_PIXEL_WIDTH;
