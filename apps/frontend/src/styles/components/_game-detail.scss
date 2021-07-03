@@ -132,6 +132,10 @@
     backdrop-filter: blur(10px);
     // box-shadow: none;
 
+    @include respond(big-desktop) {
+      padding: 0 $default-font-size * .5 $default-font-size * .5 $default-font-size * .5;
+    }
+
     @include respond(super-small) {
       grid-template-columns: min-content 1fr min-content;
     }
@@ -163,6 +167,10 @@
       top: 0;
       grid-row: 3 / span 1;
       padding: $default-font-size * 0.65625 $default-font-size * 2;
+
+      @include respond(big-desktop) {
+        padding: $default-font-size * .8;
+      }
 
       @include respond(phone) {
         padding: $default-font-size * .375;
@@ -229,6 +237,10 @@
           background-color: transparent !important;
           border: none !important;
           color: var(--color-primary-3) !important;
+
+          @include respond(big-desktop) {
+            // padding: $default-font-size * .5;
+          }
 
           @include respond($layout-breakpoint) {
             padding: $default-font-size * 0.125;

@@ -158,12 +158,9 @@
       & > div:nth-child(5n + 1) {
         padding: 0 $default-font-size * 0.25;
         font-weight: 1000;
-        // @include respond(phone) {
-        //   font-size: $default-font-size * .85;
-        // }
-        // @include respond(small-font) {
-        //   font-size: $default-font-size * .75;
-        // }
+        @include respond(big-desktop) {
+          padding: $default-font-size * .5;
+        }
       }
 
       & > div:nth-child(n + 11):nth-last-child(n + 6) {
@@ -185,12 +182,18 @@
 
       & > div {
         @include table-cell-styling;
+
+        @include respond(big-desktop) {
+          padding: $default-font-size * .5;
+        }
       }
 
       & > div:nth-child(-n + 4) {
         border-top: $deal-detail-table-border;
         color: $deal-detail-username-color;
         font-weight: 700;
+
+       
       }
 
       & > div:nth-child(4n + 1) {

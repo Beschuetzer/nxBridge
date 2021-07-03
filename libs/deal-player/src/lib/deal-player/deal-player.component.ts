@@ -68,7 +68,7 @@ export class DealPlayerComponent implements OnInit {
   private canvasWidth = -1;
   private SCALE_AMOUNT_THRESHOLD_VIEW_PORT_WIDTH = 1350;
   private MAX_SCALE_AMOUNT_BELOW_THRESHOLD = 0.7;
-  private MAX_SCALE_AMOUNT_ABOVE_THRESHOLD = 0.7;
+  private MAX_SCALE_AMOUNT_ABOVE_THRESHOLD = 0.75;
   private MIN_SCALE_AMOUNT_MOBILE = .7;
   private MIN_SCALE_AMOUNT_NORMAL = .5;
   private MIN_TARGET_VIEW_PORT_WIDTH = 600;
@@ -536,14 +536,6 @@ export class DealPlayerComponent implements OnInit {
   }
 
   private getStartingPosition(numberOfCardsInHand: number, direction: string) {
-    // if (direction === cardinalDirections[0])
-    //   return -(this.cardWidth - this.cardSpacingIncrement);
-    // else if (direction === cardinalDirections[2]) return 0;
-    // else return this.getCalculatedStart(numberOfCardsInHand, direction);
-    return this.getCalculatedStart(numberOfCardsInHand, direction);
-  }
-
-  private getCalculatedStart(numberOfCardsInHand: number, direction: string) {
     let lengthOfHand =
       this.cardWidth + (numberOfCardsInHand - 1) * this.cardSpacingIncrement;
 
@@ -562,9 +554,11 @@ export class DealPlayerComponent implements OnInit {
 
     let usedSpace = spaceUsedByTopAndBottomHands + lengthOfHand;
     if (usableSpace >= lengthOfHand)
-      return (
-        this.cardVisibleOffset + ((dimensionToUse as number) - usedSpace) / 2
+      if (direction === cardinalDirections[0] || direction === cardinalDirections[2]) return (
+        ((dimensionToUse as number) - usedSpace) / 2
+        
       );
+      else return this.cardVisibleOffset + ((dimensionToUse as number) - usedSpace) / 2;
     else {
       lengthOfHand = numberOfCardsInHand * this.cardSpacingIncrement;
       usedSpace = this.cardVisibleOffset * 2 + lengthOfHand;
