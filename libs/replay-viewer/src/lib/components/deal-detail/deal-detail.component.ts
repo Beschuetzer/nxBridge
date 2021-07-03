@@ -10,6 +10,7 @@ import {
   Bid,
   CardinalDirection,
   CardValuesAsString,
+  Contract,
   Deal,
   HandsForConsumption,
   Seating,
@@ -35,7 +36,7 @@ import {
   tricksInABook,
 } from '@nx-bridge/constants';
 import { Store } from '@ngrx/store';
-import { AppState, SetCurrentlyViewingDeal } from '@nx-bridge/store';
+import { AppState, SetCurrentlyViewingDeal, SetCurrentlyViewingDealContract } from '@nx-bridge/store';
 @Component({
   selector: 'nx-bridge-deal-detail',
   templateUrl: './deal-detail.component.html',
@@ -56,7 +57,7 @@ export class DealDetailComponent implements OnInit {
   public dealSummaryMessageSuffixPre = '';
   public dealSummaryMessageSuffixNumber = '';
   public dealSummaryMessageSuffixPost = '';
-  public contract = { prefix: '', htmlEntity: '' };
+  public contract: Contract = { prefix: '', htmlEntity: '' };
   public DEAL_DETAIL_CLASSNAME = DEAL_DETAIL_CLASSNAME;
   public DISPLAY_NONE_CLASSNAME = DISPLAY_NONE_CLASSNAME;
   public buttonChoices: [string, string] = dealDetailButtonChoices;
@@ -89,6 +90,7 @@ export class DealDetailComponent implements OnInit {
   }
 
   onWatchClick(e: Event) {
+    this.store.dispatch(new SetCurrentlyViewingDealContract(this.contract as Contract));
     this.store.dispatch(new SetCurrentlyViewingDeal(this.deal as Deal));
   }
 

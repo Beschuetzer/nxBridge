@@ -4,6 +4,7 @@ export interface Deal extends DealCore {
   // _id: string;
 }
 
+
 export interface DealGameIncomplete extends DealCore {
   agreeWithClaim: AgreeWithClaim;
   acceptedClaims: AcceptedClaim[];
@@ -256,3 +257,4 @@ export type Suit = 'Club' | 'Diamond' | 'Heart' | 'Spade' | 'No Trump';
 export type HandsForConsumption = [string, Hand][] | null | undefined;
 export type Team = "EW" | "NS" | '';
 export type TeamFull = "eastWest" | "northSouth";
+export type Contract = { prefix: string, htmlEntity: string };

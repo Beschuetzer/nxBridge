@@ -1,16 +1,18 @@
-import { Deal } from '@nx-bridge/interfaces-and-types';
+import { Contract, Deal } from '@nx-bridge/interfaces-and-types';
 import * as fromDealActions from '../actions/deal.actions';
 
 export interface DealState {
   dealsAsStrings: string[];
   fetchedDeals: Deal[];
   currentlyViewingDeal: Deal;
+  currentlyViewingDealContract: Contract;
 }
 
 const INITIAL_STATE: DealState = {
   dealsAsStrings: [],
   fetchedDeals: [],
   currentlyViewingDeal: {} as Deal,
+  currentlyViewingDealContract: {prefix: '', htmlEntity: ''},
 };
 
 export function dealReducer(
@@ -32,6 +34,11 @@ export function dealReducer(
       return {
         ...state,
         currentlyViewingDeal: action.payload,
+      };
+    case fromDealActions.SET_CURRENTLY_VIEWING_DEAL_CONTRACT:
+      return {
+        ...state,
+        currentlyViewingDealContract: action.payload,
       };
     default:
       return state;

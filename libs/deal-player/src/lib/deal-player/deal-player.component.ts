@@ -4,7 +4,6 @@ import {
   HostBinding,
   OnInit,
   Renderer2,
-  ViewChild,
 } from '@angular/core';
 import {
   DEAL_PLAYER_CLASSNAME,
@@ -15,9 +14,6 @@ import {
   cardinalDirections,
   cardsPerDeck,
   getLinearPercentOfMaxMatchWithinRange,
-  cardsPerSuit,
-  getSuitFromNumber,
-  getCardStringFromNumber,
   getCharacterFromCardAsNumber,
   getHtmlEntityFromSuitOrCardAsNumber,
   getUserWhoPlayedCard,
@@ -28,7 +24,7 @@ import {
 
 import { Store } from '@ngrx/store';
 import { AppState, SetCurrentlyViewingDeal } from '@nx-bridge/store';
-import { Deal, Hand, Hands, Seating } from '@nx-bridge/interfaces-and-types';
+import { Contract, Deal, Hand, Hands, Seating } from '@nx-bridge/interfaces-and-types';
 import * as paper from 'paper';
 import { Project, Raster } from 'paper/dist/paper-core';
 
@@ -44,6 +40,7 @@ export class DealPlayerComponent implements OnInit {
   public DEAL_PLAYER_CLASSNAME = DEAL_PLAYER_CLASSNAME;
   public DISPLAY_NONE_CLASSNAME = DISPLAY_NONE_CLASSNAME;
   public deal: Deal | null = null;
+  public contract: Contract | null = null;
   public handsToRender: Hands | null = null;
   public playCount = 0;
   public trickNumber = 0;
@@ -55,6 +52,7 @@ export class DealPlayerComponent implements OnInit {
   public project: paper.Project | null = null;
   private mobileWidthStart = 655;
   public isMobile = window.innerWidth <= this.mobileWidthStart;
+  private hasLoadedDeal = false;
   private shouldChangePlaySpeed = false;
   private firstCardPlayed = -1;
   private firstCardPlayer = '';
@@ -110,12 +108,12 @@ export class DealPlayerComponent implements OnInit {
     });
 
     this.store.select('deals').subscribe((dealState) => {
-      if (dealState.currentlyViewingDeal) {
+      if (dealState.currentlyViewingDeal?.bids && !this.hasLoadedDeal) {
+        console.log('loading deal------------------------------------------------');
         this.deal = dealState.currentlyViewingDeal;
-        this.handsToRender = this.deal?.hands;
-
         if (Object.keys(this.deal).length <= 0) return;
 
+        this.handsToRender = this.deal?.hands;
         this.project = new Project(
           document.querySelector(
             `#${DEAL_PLAYER_CLASSNAME}-canvas`
@@ -128,11 +126,21 @@ export class DealPlayerComponent implements OnInit {
           this.renderHands();
           this.renderer.addClass(this.elRef.nativeElement, VISIBLE_CLASSNAME);
         }
+
+        this.hasLoadedDeal = true;
+        
+      } else if (dealState.currentlyViewingDeal?.bids) {
+        this.renderer.addClass(this.elRef.nativeElement, VISIBLE_CLASSNAME);
+      }
+
+      if (dealState.currentlyViewingDealContract?.prefix) {
+        this.contract = dealState.currentlyViewingDealContract;
       }
     });
   }
 
   onClose() {
+    this.hasLoadedDeal = false;
     this.onPause();
     this.resetCardsPlayed();
     this.resetTable();
