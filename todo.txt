@@ -51,4 +51,3 @@ Todos----------------------------------------------------------
 -need to handle deals with 'n/a' (could just display) use 2/12/21, 5:45 PM 2nd deal to test
 
 -add player labels
--add click "Show" on deal detail scrolls to that section

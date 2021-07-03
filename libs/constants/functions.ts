@@ -70,3 +70,16 @@ export function getLinearPercentOfMaxMatchWithinRange(currentTrackedValue: numbe
     return startOutputValue - (percentOfRange * outputValueRange);
   }
 }
+
+
+export const scrollToSection = (sectionToScrollTo: HTMLElement, headerHeight: number, isScrollableContainer = false) => {
+  const topScrollAmount =  window.scrollY + sectionToScrollTo.getBoundingClientRect().top - headerHeight;
+
+  if (isScrollableContainer) return topScrollAmount;
+
+  return window.scroll({
+    top: topScrollAmount,
+    left: 0, 
+    behavior: 'smooth' 
+  });
+}

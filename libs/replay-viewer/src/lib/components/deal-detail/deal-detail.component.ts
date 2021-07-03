@@ -23,12 +23,14 @@ import {
   dealDetailButtonChoices,
   DEAL_DETAIL_CLASSNAME,
   DISPLAY_NONE_CLASSNAME,
+  GAME_DETAIL_CLASSNAME,
   getCharValueFromCardValueString,
   getDirectionFromSeating,
   getHtmlEntityFromSuitOrCardAsNumber,
   getIsBidPlayable,
   getPartnerFromDirection,
   getSuitAsStringFromArray,
+  scrollToSection,
   sortHand,
   suitsHtmlEntities,
   toggleClassOnList,
@@ -79,14 +81,28 @@ export class DealDetailComponent implements OnInit {
   }
 
   onDetailClick(e: Event) {
+    const button = (e.currentTarget || e.target) as HTMLElement;
     const item = this.elRef.nativeElement.querySelector(
       `.${DEAL_DETAIL_CLASSNAME}__tables`
     );
     toggleClassOnList([item], DISPLAY_NONE_CLASSNAME);
     toggleInnerHTML(
-      (e.currentTarget || e.target) as HTMLElement,
+      button,
       this.buttonChoices
     );
+
+    if (button.innerHTML.match(this.buttonChoices[1])) {
+      const gameDetail = button.closest(`.${GAME_DETAIL_CLASSNAME}`);
+      const gameDetailSummary = gameDetail?.querySelector(`.${GAME_DETAIL_CLASSNAME}__summary`);
+      const gameDetailSummaryClientRect = gameDetailSummary?.getBoundingClientRect();
+      const gameDetailSummaryBottom = gameDetailSummaryClientRect?.bottom as number;
+      
+      console.log('gameDetailSummaryBottom =', gameDetailSummaryBottom);
+      console.log('gameDetailSummaryClientRect =', gameDetailSummaryClientRect);
+
+      const scrollAmount = scrollToSection(button, gameDetailSummaryBottom ? gameDetailSummaryBottom : 0, true);
+      if (gameDetail) gameDetail.scrollTop = scrollAmount as number;
+    }
   }
 
   onWatchClick(e: Event) {
