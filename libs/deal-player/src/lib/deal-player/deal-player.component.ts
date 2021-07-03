@@ -209,7 +209,7 @@ export class DealPlayerComponent implements OnInit {
     this.cardWidth = roundedRotation === 0 || roundedRotation === 180 ? cardZero.bounds.width : cardZero.bounds.height;
     this.cardHeight = this.cardWidth * 1.5;
     this.cardVisibleOffset = this.cardHeight / 4 - 2.5;
-    this.cardSpacingIncrement = (this.canvasWidth as number) / cardsPerSuit;
+    this.cardSpacingIncrement = this.cardWidth / 6;
   }
 
   private setCanvasMetrics() {
@@ -345,21 +345,6 @@ export class DealPlayerComponent implements OnInit {
       cardAsRaster.rotate(90);
   }
 
-  // private putNorthAndSouthOnTop() {
-  //   debugger;
-  //   for (const username in this.deal?.hands) {
-  //     if (Object.prototype.hasOwnProperty.call(this.deal?.hands, username)) {
-  //       const hand = this.deal?.hands[username];
-  //       const usersDirection = getDirectionFromSeating(
-  //         this.seating as Seating,
-  //         username
-  //       );
-
-  //       if (usersDirection === cardinalDirections[0])
-  //     }
-  //   }
-  // }
-
   private getCorrectlyArrangedHand(hand: number[], direction: string) {
     if (
       direction === cardinalDirections[0] ||
@@ -407,19 +392,29 @@ export class DealPlayerComponent implements OnInit {
   }
 
   private getStartingPosition(numberOfCardsInHand: number, direction: string) {
-    if (direction === cardinalDirections[0])
-      return -(this.cardWidth - this.cardSpacingIncrement);
-    else if (direction === cardinalDirections[2]) return 0;
-    else return this.getCalculatedStart(numberOfCardsInHand, direction);
+    // if (direction === cardinalDirections[0])
+    //   return -(this.cardWidth - this.cardSpacingIncrement);
+    // else if (direction === cardinalDirections[2]) return 0;
+    // else return this.getCalculatedStart(numberOfCardsInHand, direction);
+    return this.getCalculatedStart(numberOfCardsInHand, direction);
   }
 
   private getCalculatedStart(numberOfCardsInHand: number, direction: string) {
-    const spaceUsedByTopAndBottomHands = this.cardVisibleOffset * 2;
-    const usableSpace = this.canvasHeight - (spaceUsedByTopAndBottomHands);
     let lengthOfHand = this.cardWidth + (numberOfCardsInHand - 1) * this.cardSpacingIncrement;
-    let usedSpace = spaceUsedByTopAndBottomHands + lengthOfHand;
 
-    if (usableSpace >= lengthOfHand) return this.cardVisibleOffset + (this.canvasHeight as number - (usedSpace)) / 2;
+    let dimensionToUse = this.canvasWidth;
+    let spaceUsedByTopAndBottomHands = 0;
+    let usableSpace = this.canvasWidth;
+
+    if (direction === cardinalDirections[1] || direction === cardinalDirections[3]) {
+      dimensionToUse = this.canvasHeight;
+      spaceUsedByTopAndBottomHands = this.cardVisibleOffset * 2;
+      usableSpace = dimensionToUse - (spaceUsedByTopAndBottomHands);
+
+    }
+
+    let usedSpace = spaceUsedByTopAndBottomHands + lengthOfHand;
+    if (usableSpace >= lengthOfHand) return this.cardVisibleOffset + (dimensionToUse as number - (usedSpace)) / 2;
     else {
       lengthOfHand = numberOfCardsInHand * this.cardSpacingIncrement;
       usedSpace = this.cardVisibleOffset * 2 + lengthOfHand;
