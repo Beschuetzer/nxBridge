@@ -20,7 +20,7 @@
   &__summary {
     display: grid;
     // grid-template-columns: 1fr 1fr max-content;
-    grid-template-columns: repeat(auto-fill, minmax(5rem, 33.333333vw))  min-content;
+    grid-template-columns: repeat(auto-fill, minmax(5rem, 33.333333vw));
     grid-column: 1 /-1;
 
     &-details{
@@ -30,6 +30,7 @@
 
     }
     &-close{
+      justify-self: flex-end;
       cursor: pointer;
       color: var(--color-primary-1);
       font-size: $default-font-size * 4;

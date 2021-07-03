@@ -4,6 +4,7 @@ import {
   HostBinding,
   OnInit,
   Renderer2,
+  ViewChild,
 } from '@angular/core';
 import {
   DEAL_PLAYER_CLASSNAME,
@@ -15,6 +16,7 @@ import {
   cardsPerDeck,
   getLinearPercentOfMaxMatchWithinRange,
   cardsPerSuit,
+  getSuitFromNumber,
 } from '@nx-bridge/constants';
 
 import { Store } from '@ngrx/store';
@@ -45,6 +47,9 @@ export class DealPlayerComponent implements OnInit {
   public project: paper.Project | null = null;
   private mobileWidthStart = 655;
   public isMobile = window.innerWidth <= this.mobileWidthStart;
+  private firstCardPlayed = -1;
+  private firstCardPlayer = '';
+  private cardPlayerOrder: [string, string, string, string] | null = null;
   private cards: any[] = [];
   private cardsLoaded = 0;
   private cardWidth = -1;
@@ -161,11 +166,51 @@ export class DealPlayerComponent implements OnInit {
 
   private playCard(nthCard = this.playCount) {
     const cardPlayOrder = this.deal?.cardPlayOrder;
-    if (!cardPlayOrder || cardPlayOrder.length < cardsPerDeck) return;
+    if (!this.deal || !cardPlayOrder || cardPlayOrder.length < cardsPerDeck) return;
 
     this.cardsPlayed = flatten(cardPlayOrder.slice(0, nthCard + 1) as number[]);
     this.playCount = nthCard + 1;
+    this.displayCardsInTable();
+    
     console.log('this.cardsPlayed =', this.cardsPlayed);
+  }
+
+  private displayCardsInTable() {
+    this.setFirstCardPlayer();
+    this.setCardPlayOrderAsDirections();
+    //todo: need to call displayCardInTable for the last four cards in this.cardsPlayed;
+  }
+
+  private displayCardInTable(card: number) {
+    const directionToUse
+    const elementToAddNumberTo = document.querySelector(`.${DEAL_PLAYER_CLASSNAME}__played-${directionToUse}-number`);
+    const elementToAddSuitTo = document.querySelector(`.${DEAL_PLAYER_CLASSNAME}__played-${directionToUse}-suit`);
+
+    const number = 
+    const suit = getSuitFromNumber()
+
+    this.renderer.setProperty(elementToAddNumberTo, 'innerHTML', )
+  }
+
+  private setFirstCardPlayer() {
+    if (this.firstCardPlayed === -1) this.firstCardPlayed = flatten(this.deal?.cardPlayOrder)[0];
+
+    for (const username in this.deal?.hands) {
+      if (Object.prototype.hasOwnProperty.call(this.deal?.hands, username)) {
+        const hand = this.deal?.hands[username];
+        const flatHand = flatten(hand);
+        if (flatHand?.includes(this.firstCardPlayed as any)) {
+          this.firstCardPlayer = username;
+          return;
+        }
+      }
+    }
+  }
+
+  private setCardPlayOrderAsDirections() {
+    const directionOfPersonWhoPlayedFirst = getDirectionFromSeating(this.seating as Seating, this.firstCardPlayer);
+    const index = cardinalDirections.indexOf(directionOfPersonWhoPlayedFirst);
+    this.cardPlayerOrder = [...cardinalDirections.slice(index), ...cardinalDirections.slice(0, index)] as [string, string, string, string];
   }
 
   private resetCardsPlayed() {
@@ -242,7 +287,7 @@ export class DealPlayerComponent implements OnInit {
         } catch (err) {
           this.error = err;
           this.resetCardsRotationAndPosition();
-          console.log('err =', err);
+          console.error('err =', err);
         }
       }
     }
