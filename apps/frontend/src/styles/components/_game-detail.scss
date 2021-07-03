@@ -27,6 +27,7 @@
 
   &__summary {
     // &.sticky {
+    height: 80%;
     width: 100%;
     position: sticky;
     top: 0;
@@ -39,6 +40,7 @@
   }
 
   &__score {
+    height: 20%;
     // position: sticky;
     // top: 8.6rem;
     // margin: var(--game-detail-padding-sides) 0;
@@ -55,6 +57,11 @@
     font-weight: 1000;
     display: grid;
     grid-template-columns: 1fr min-content 1fr;
+
+    @include respond(big-desktop) {
+      grid-auto-rows: $default-font-size * 2;
+      padding: $default-font-size * .5 0 0 0;
+    }
 
     &-ew,
     &-ns {
@@ -209,6 +216,7 @@
       }
       
       &__summary, &__score {
+        height: auto;
         background-color:  $game-summary-bg-color-full-size;
       }
       &__summary {

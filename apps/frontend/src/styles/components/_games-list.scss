@@ -1,8 +1,15 @@
 .games-list {
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax($default-font-size * 15, 1fr));
   grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr));
   padding: 0 0 0 $default-font-size * 1;
   grid-gap: $default-font-size * .5;
+
+  @include respond(big-desktop) {
+    grid-auto-rows: $default-font-size * 7;
+    
+    & > *, .game-detail__header > * {
+      font-size: $default-font-size * .75 !important;
+    }
+  }
 }
