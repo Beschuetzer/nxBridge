@@ -79,12 +79,10 @@ export class DealsListComponent implements OnInit {
   }
 
   onDealsButtonClick(e: Event) {
-    let isGameOpen = null;
-    this.store.select('games').pipe(take(1)).subscribe((gameState) => {
-      isGameOpen = gameState.isViewingGame;
-    });
+    const isFullSize = this.toggleDeals(e);
 
-    if (isGameOpen) return;
+    if (isFullSize) this.store.dispatch(new SetIsViewingGame(true));
+    else this.store.dispatch(new SetIsViewingGame(false));
 
     if (
       (e.target as HTMLElement).innerHTML.match(dealsListDealsButtonChoices[0])
@@ -92,35 +90,6 @@ export class DealsListComponent implements OnInit {
       this.store.dispatch(
         new SetCurrentlyViewingGameSeating(this.seating as Seating)
       );
-
-    const items = this.elRef.nativeElement.querySelectorAll(
-      `.${DEAL_DETAIL_CLASSNAME}`
-    );
-
-    if (!items || items.length <= 0) {
-      this.getItemsFromDB();
-    } else {
-      toggleClassOnList(items, DISPLAY_NONE_CLASSNAME);
-    }
-
-    const el = this.elRef.nativeElement.querySelector(
-      `.${DEALS_LIST_CLASSNAME}__summary`
-    );
-    toggleClassOnList([el], DISPLAY_NONE_CLASSNAME);
-    const isFullSize = toggleClassOnList(
-      [
-        this.elRef.nativeElement.closest(
-          `.${GAME_DETAIL_CLASSNAME}`
-        ) as HTMLElement,
-      ],
-      FULL_SIZE_CLASSNAME
-    );
-
-    if (isFullSize) this.store.dispatch(new SetIsViewingGame(true));
-    else this.store.dispatch(new SetIsViewingGame(false));
-
-    const button = (e.currentTarget || e.target) as HTMLElement;
-    toggleInnerHTML(button, this.buttonChoicesDeals);
   }
 
   onShowDetails(e: Event) {
@@ -309,5 +278,33 @@ export class DealsListComponent implements OnInit {
       throw new Error('Problem with this.seating in deals-list');
     this.northSouthPlayers = [this.seating.north, this.seating.south];
     this.eastWestPlayers = [this.seating.east, this.seating.west];
+  }
+
+  private toggleDeals(e: Event) {
+    const button = (e.currentTarget || e.target) as HTMLElement;
+    toggleInnerHTML(button, this.buttonChoicesDeals);
+
+    const items = this.elRef.nativeElement.querySelectorAll(
+      `.${DEAL_DETAIL_CLASSNAME}`
+    );
+
+    if (!items || items.length <= 0) {
+      this.getItemsFromDB();
+    } else {
+      toggleClassOnList(items, DISPLAY_NONE_CLASSNAME);
+    }
+
+    const el = this.elRef.nativeElement.querySelector(
+      `.${DEALS_LIST_CLASSNAME}__summary`
+    );
+    toggleClassOnList([el], DISPLAY_NONE_CLASSNAME);
+    return toggleClassOnList(
+      [
+        this.elRef.nativeElement.closest(
+          `.${GAME_DETAIL_CLASSNAME}`
+        ) as HTMLElement,
+      ],
+      FULL_SIZE_CLASSNAME
+    );
   }
 }

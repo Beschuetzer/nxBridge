@@ -124,9 +124,9 @@ export class DealPlayerComponent implements OnInit {
         if (this.cards.length < cardsPerDeck) this.loadCards();
         else {
           this.renderHands();
-          this.renderer.addClass(this.elRef.nativeElement, VISIBLE_CLASSNAME);
         }
-
+        
+        this.renderer.addClass(this.elRef.nativeElement, VISIBLE_CLASSNAME);
         this.hasLoadedDeal = true;
         
       } else if (dealState.currentlyViewingDeal?.bids) {
