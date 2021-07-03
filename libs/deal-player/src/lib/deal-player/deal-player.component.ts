@@ -13,13 +13,13 @@ import {
   getDirectionFromSeating,
   cardinalDirections,
   cardsPerDeck,
-  getLinearPercentOfMaxMatchWithinRange,
   getCharacterFromCardAsNumber,
   getHtmlEntityFromSuitOrCardAsNumber,
   getUserWhoPlayedCard,
   suitsHtmlEntities,
   COLOR_RED_CLASSNAME,
   COLOR_BLACK_CLASSNAME,
+  cardsPerHand,
 } from '@nx-bridge/constants';
 
 import { Store } from '@ngrx/store';
@@ -27,6 +27,7 @@ import { AppState, SetCurrentlyViewingDeal } from '@nx-bridge/store';
 import { Contract, Deal, Hand, Hands, Seating } from '@nx-bridge/interfaces-and-types';
 import * as paper from 'paper';
 import { Project, Raster } from 'paper/dist/paper-core';
+import { debug } from 'node:console';
 
 @Component({
   selector: 'nx-bridge-deal-player',
@@ -59,6 +60,7 @@ export class DealPlayerComponent implements OnInit {
   private cardPlayerOrder: [string, string, string, string] | null = null;
   private cards: any[] = [];
   private cardsLoaded = 0;
+  private fractionOfCardWidthShown = 6;
   private cardWidth = -1;
   private cardHeight = -1;
   private cardVisibleOffset = -1;
@@ -87,10 +89,10 @@ export class DealPlayerComponent implements OnInit {
   ) {}
 
   draw () {
-    this.setCardScaleAmount();        
-    this.setCardsSize();
     this.setCanvasMetrics();
     this.setCardMetrics();
+    this.setCardScaleAmount();        
+    this.setCardsSize();
     this.renderHands();
   }
 
@@ -336,7 +338,7 @@ export class DealPlayerComponent implements OnInit {
         : cardZero.bounds.height;
     this.cardHeight = this.cardWidth * 1.5;
     this.cardVisibleOffset = this.cardHeight / 4 - 2.5;
-    this.cardSpacingIncrement = this.cardWidth / 6;
+    this.cardSpacingIncrement = this.cardWidth / this.fractionOfCardWidthShown;
   }
 
   private setCanvasMetrics() {
@@ -577,15 +579,19 @@ export class DealPlayerComponent implements OnInit {
   }
 
   private setCardScaleAmount() {
-    //two dimensions
-    let smallerDimension = this.canvasWidth;
-    const heightDimension = this.canvasHeight - 2 * this.cardVisibleOffset;
-    if (heightDimension < smallerDimension) smallerDimension = heightDimension;
+    //note: not sure how to dynamically set cardScaleAmount based on smaller dimension
+    // let cardWidth = (this.cards[0] as paper.Raster).bounds.width;
+    // const cardHeight = (this.cards[0] as paper.Raster).bounds.height;
+    // if (cardHeight < cardWidth) cardWidth = cardHeight;
 
+    // let smallerDimension = this.canvasWidth;
+    // const heightDimension = this.canvasHeight - 2 * cardHeight / 4;
+    // if (heightDimension < smallerDimension) smallerDimension = heightDimension;
 
-    const desiredCardwith = 6/13 * smallerDimension;
-    // this.setCardsSize()
+    // const desiredCardwith = this.fractionOfCardWidthShown / cardsPerHand * smallerDimension;
 
+    
+    // this.cardScaleAmount = desiredCardwith / this.cardWidth;
     this.cardScaleAmount = .7;
   }
 }

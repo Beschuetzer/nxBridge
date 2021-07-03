@@ -175,7 +175,7 @@ export function getSuitAsStringFromArray(suit: number[]): string | null {
     for (let i = 0; i < suit.length; i++) {
       const cardAsNumber = suit[i];
       cardsAsChar.push(
-        getCharacterFromCardAsNumber(cardAsNumber % cardsPerSuit, true)
+        getCharacterFromCardAsNumber(cardAsNumber, true)
       );
     }
 
