@@ -46,6 +46,7 @@ export class DealPlayerComponent implements OnInit {
   public deal: Deal | null = null;
   public handsToRender: Hands | null = null;
   public playCount = 0;
+  public trickNumber = 0;
   public cardsPlayed: number[] = [];
   public cardPlayWaitDuration = 2500;
   public seating: Seating | null = null;
@@ -221,7 +222,8 @@ export class DealPlayerComponent implements OnInit {
 
   private getCurrentTrick() {
     const numberOfCardsPlayed = this.cardsPlayed.length;
-    const startIndex = Math.floor((numberOfCardsPlayed - 1) / 4) * 4;
+    this.trickNumber = Math.floor((numberOfCardsPlayed - 1) / 4) + 1;
+    const startIndex = (this.trickNumber - 1) * 4;
     const endIndex = startIndex + 4;
 
     if (endIndex > numberOfCardsPlayed - 1) return this.cardsPlayed.slice(startIndex);

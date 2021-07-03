@@ -6,22 +6,26 @@
   </div>
 </section>
 <section class="{{ DEAL_PLAYER_CLASSNAME }}__canvas">
+  <div *ngIf="trickNumber" class="{{ DEAL_PLAYER_CLASSNAME }}__trick">
+    <span>Trick #:&nbsp;</span>
+    <span class="{{ DEAL_PLAYER_CLASSNAME }}__trick-number">{{ trickNumber }}</span>
+  </div>
   <div class="{{ DEAL_PLAYER_CLASSNAME }}__played">
     <div class="{{ DEAL_PLAYER_CLASSNAME }}__played-north">
-      <span class="{{DEAL_PLAYER_CLASSNAME}}__played-north-number"></span>
-      <span class="{{DEAL_PLAYER_CLASSNAME}}__played-north-suit"></span>
+      <span class="{{ DEAL_PLAYER_CLASSNAME }}__played-north-number"></span>
+      <span class="{{ DEAL_PLAYER_CLASSNAME }}__played-north-suit"></span>
     </div>
     <div class="{{ DEAL_PLAYER_CLASSNAME }}__played-east">
-      <span class="{{DEAL_PLAYER_CLASSNAME}}__played-east-number"></span>
-      <span class="{{DEAL_PLAYER_CLASSNAME}}__played-east-suit"></span>
+      <span class="{{ DEAL_PLAYER_CLASSNAME }}__played-east-number"></span>
+      <span class="{{ DEAL_PLAYER_CLASSNAME }}__played-east-suit"></span>
     </div>
     <div class="{{ DEAL_PLAYER_CLASSNAME }}__played-south">
-      <span class="{{DEAL_PLAYER_CLASSNAME}}__played-south-number"></span>
-      <span class="{{DEAL_PLAYER_CLASSNAME}}__played-south-suit"></span>
+      <span class="{{ DEAL_PLAYER_CLASSNAME }}__played-south-number"></span>
+      <span class="{{ DEAL_PLAYER_CLASSNAME }}__played-south-suit"></span>
     </div>
     <div class="{{ DEAL_PLAYER_CLASSNAME }}__played-west">
-      <span class="{{DEAL_PLAYER_CLASSNAME}}__played-west-number"></span>
-      <span class="{{DEAL_PLAYER_CLASSNAME}}__played-west-suit"></span>
+      <span class="{{ DEAL_PLAYER_CLASSNAME }}__played-west-number"></span>
+      <span class="{{ DEAL_PLAYER_CLASSNAME }}__played-west-suit"></span>
     </div>
   </div>
   <canvas

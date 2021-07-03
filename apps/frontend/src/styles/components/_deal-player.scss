@@ -43,6 +43,19 @@
     }
   }
 
+  &__trick {
+    font-weight: 700;
+    font-size: $default-font-size * 2;
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    &-number {
+
+    }
+  }
+
   &__played {
     user-select: none;
     font-size: $default-font-size * 3;
@@ -107,7 +120,7 @@
     &-element{
       position: relative;
       z-index: 100000;
-      border: 1px solid var(--color-primary-1);
+      border: 3px solid var(--color-primary-1);
       border-radius: .8rem;
       overflow: hidden;
 
