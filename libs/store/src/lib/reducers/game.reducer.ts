@@ -1,15 +1,15 @@
-import { Game, Seating } from '@nx-bridge/interfaces-and-types';
+import { Game } from '@nx-bridge/interfaces-and-types';
 import * as fromGameActions from '../actions/game.actions';
 
 export interface GameState {
   games: Game[];
-  currentlyViewingGameSeating: Seating,
+  currentlyViewingGame: fromGameActions.CurrentlyViewingGame,
   isViewingGame: boolean,
 }
 
 const INITIAL_STATE: GameState = {
   games: [],
-  currentlyViewingGameSeating: {} as Seating,
+  currentlyViewingGame: {} as fromGameActions.CurrentlyViewingGame,
   isViewingGame: false,
 };
 
@@ -23,10 +23,10 @@ export function gameReducer(
         ...state,
         games: action.payload,
       };
-    case fromGameActions.SET_CURRENTLY_VIEWING_GAME_SEATING:
+    case fromGameActions.SET_CURRENTLY_VIEWING_GAME:
       return {
         ...state,
-        currentlyViewingGameSeating: action.payload,
+        currentlyViewingGame: action.payload,
       };
     case fromGameActions.SET_IS_VIEWING_GAME:
       return {

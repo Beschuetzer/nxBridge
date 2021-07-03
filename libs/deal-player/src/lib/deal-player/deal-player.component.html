@@ -1,6 +1,16 @@
 <section class="{{ DEAL_PLAYER_CLASSNAME }}__summary">
-  <div class="{{ DEAL_PLAYER_CLASSNAME }}__summary-details">Details here</div>
-  <div class="{{ DEAL_PLAYER_CLASSNAME }}__summary-teams">Teams here</div>
+  <div class="{{ DEAL_PLAYER_CLASSNAME }}__summary-details">
+    <div>{{ name }}</div>
+    <div>{{ date }}</div>
+  </div>
+  <div class="{{ DEAL_PLAYER_CLASSNAME }}__summary-teams">
+    <div>
+      NS:&nbsp; <span>{{seating?.north}}</span>&nbsp;+&nbsp;<span>{{seating?.south}}</span>
+    </div>
+    <div>
+      EW:&nbsp; <span>{{seating?.east}}</span>&nbsp;+&nbsp;<span>{{seating?.west}}</span>
+    </div>
+  </div>
   <div (click)="onClose()" class="{{ DEAL_PLAYER_CLASSNAME }}__summary-close">
     &#10006;
   </div>

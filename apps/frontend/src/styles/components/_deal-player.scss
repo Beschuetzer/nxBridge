@@ -30,7 +30,10 @@
 
     }
     &-close{
-      justify-self: flex-end;
+      position: absolute;
+      right: 0;
+      top: 0;
+      z-index: 1000000;
       cursor: pointer;
       color: var(--color-primary-1);
       font-size: $default-font-size * 3;

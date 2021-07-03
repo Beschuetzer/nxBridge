@@ -47,6 +47,8 @@ export class DealPlayerComponent implements OnInit {
   public cardsPlayed: number[] = [];
   public cardPlayWaitDuration = 2500;
   public seating: Seating | null = null;
+  public name: string | null = null;
+  public date: number | string | null = null;
   public isPlaying = false;
   public scope: paper.PaperScope | null = null;
   public project: paper.Project | null = null;
@@ -104,12 +106,13 @@ export class DealPlayerComponent implements OnInit {
 
   ngOnInit(): void {
     this.store.select('games').subscribe((gameState) => {
-      this.seating = gameState.currentlyViewingGameSeating;
+      this.seating = gameState.currentlyViewingGame.seating;
+      this.name = gameState.currentlyViewingGame.name;
+      this.date = gameState.currentlyViewingGame.date;
     });
 
     this.store.select('deals').subscribe((dealState) => {
       if (dealState.currentlyViewingDeal?.bids && !this.hasLoadedDeal) {
-        console.log('loading deal------------------------------------------------');
         this.deal = dealState.currentlyViewingDeal;
         if (Object.keys(this.deal).length <= 0) return;
 

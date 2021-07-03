@@ -37,7 +37,8 @@ import {
 import {
   AddFetchedDeals as AddFetchedDeals,
   AppState,
-  SetCurrentlyViewingGameSeating,
+  CurrentlyViewingGame,
+  SetCurrentlyViewingGame,
   SetIsViewingGame,
 } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
@@ -79,12 +80,34 @@ export class DealsListComponent implements OnInit {
   }
 
   onDealsButtonClick(e: Event) {
-    const button = ((e.currentTarget || e.target) as HTMLElement);
-    if (button.innerHTML.match(dealsListDealsButtonChoices[0]))
-      this.store.dispatch(
-        new SetCurrentlyViewingGameSeating(this.seating as Seating)
+    const button = (e.currentTarget || e.target) as HTMLElement;
+    if (button.innerHTML.match(dealsListDealsButtonChoices[0])) {
+      debugger;
+      const gameDetail = (this.elRef.nativeElement as HTMLElement).closest(
+        `.${GAME_DETAIL_CLASSNAME}`
       );
-    else this.store.dispatch(new SetCurrentlyViewingGameSeating({} as Seating));
+      const name = gameDetail
+        ?.querySelector(`.${GAME_DETAIL_CLASSNAME}__header-room`)
+        ?.innerHTML?.trim();
+      const date = gameDetail
+        ?.querySelector(`.${GAME_DETAIL_CLASSNAME}__header-date`)
+        ?.innerHTML?.trim();
+
+      this.store.dispatch(
+        new SetCurrentlyViewingGame({
+          seating: this.seating,
+          name: name,
+          date,
+        } as CurrentlyViewingGame)
+      );
+    } else
+      this.store.dispatch(
+        new SetCurrentlyViewingGame({
+          seating: {} as Seating,
+          name: '',
+          date: -1,
+        } as CurrentlyViewingGame)
+      );
 
     const isFullSize = this.toggleDeals(button);
 
