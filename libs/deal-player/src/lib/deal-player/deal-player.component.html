@@ -53,17 +53,28 @@
   ></canvas>
 </section>
 <section class="{{ DEAL_PLAYER_CLASSNAME }}__play">
-  <span>Play a card every&nbsp;</span>
-  <input
-    type="number"
-    (change)="onSpeedChange($event)"
-    class="ui input {{ DEAL_PLAYER_CLASSNAME }}__play-duration"
-    value="{{ cardPlayWaitDuration / 1000 }}"
-    step=".5"
-    min=".5"
-    max="10"
-  />
-  <span>&nbsp;seconds.</span>
+  <div>
+    <span>Play a card every&nbsp;</span>
+    <input
+      type="number"
+      (change)="onSpeedChange($event)"
+      class="ui input {{ DEAL_PLAYER_CLASSNAME }}__play-duration"
+      value="{{ cardPlayWaitDuration / 1000 }}"
+      step=".5"
+      min=".5"
+      max="10"
+    />
+    <span>&nbsp;seconds.</span>
+  </div>
+  <div>
+    <span>&nbsp;&nbsp;Keep cards centered?&nbsp;</span>
+    <input
+      type="checkbox"
+      (change)="onCenteredChange($event)"
+      class="ui input {{ DEAL_PLAYER_CLASSNAME }}__play-centered"
+      [value]="keepCardsCentered"
+    />
+  </div>
 </section>
 <section class="{{ DEAL_PLAYER_CLASSNAME }}__controls">
   <svg (click)="onPreviousFive()">
