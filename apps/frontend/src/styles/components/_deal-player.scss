@@ -19,7 +19,7 @@
 
   &__summary {
     position: absolute;
-    top: 77.5%;
+    top: 75.25%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -53,7 +53,7 @@
     top: 0;
     z-index: 1000000;
     cursor: pointer;
-    color: var(--color-primary-1);
+    color: rgba(var(--color-primary-1-rgb), .33);
     font-size: $default-font-size * 3;
     padding: $default-font-size * .875 $default-font-size * .125;
     user-select: none;
@@ -63,11 +63,23 @@
     }
   }
 
-  &__trick {
-    font-weight: 700;
-    font-size: $default-font-size * 2;
+  &__contract, &__trick {
+    font-size: $default-font-size * 1.25;
+
+  } 
+
+  &__contract {
     position: absolute;
-    top: 21.7%;
+    top: 14%;
+    left: 50%;
+    transform: translate(-50%, -0%);
+  }
+
+
+  &__trick {
+    // font-weight: 700;
+    position: absolute;
+    top: 22.5%;
     left: 50%;
     transform: translate(-50%, -50%);
 
@@ -165,7 +177,7 @@
     font-size: $default-font-size * 3;
 
     @include respond(super-small) {
-      font-size: $default-font-size * 2.5;
+      font-size: $default-font-size * 2;
     }
   }
 

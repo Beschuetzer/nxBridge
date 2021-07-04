@@ -106,6 +106,8 @@ export class DealPlayerComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    window.addEventListener('resize', this.onResize.bind(this));
+
     this.store.select('games').subscribe((gameState) => {
       this.seating = gameState.currentlyViewingGame.seating;
       this.name = gameState.currentlyViewingGame.name;
@@ -124,7 +126,6 @@ export class DealPlayerComponent implements OnInit {
             `#${DEAL_PLAYER_CLASSNAME}-canvas`
           ) as HTMLCanvasElement
         );
-        this.project.view.onResize = this.onResize.bind(this);
 
         if (this.cards.length < cardsPerDeck) this.loadCards();
         else {
@@ -140,6 +141,7 @@ export class DealPlayerComponent implements OnInit {
 
       if (dealState.currentlyViewingDealContract?.prefix) {
         this.contract = dealState.currentlyViewingDealContract;
+        this.changeContractColor();
       }
 
     });
@@ -153,6 +155,7 @@ export class DealPlayerComponent implements OnInit {
     this.renderer.removeClass(this.elRef.nativeElement, VISIBLE_CLASSNAME);
     this.resetCardsRotationAndPosition();
     this.store.dispatch(new SetCurrentlyViewingDeal({} as CurrentlyViewingDeal));
+    this.resetVariables();
   }
 
   onNext() {
@@ -296,8 +299,6 @@ export class DealPlayerComponent implements OnInit {
     const numberElement = document.querySelector(`.${DEAL_PLAYER_CLASSNAME}__${direction}-suit-number`);
     const suitEntityElement = document.querySelector(`.${DEAL_PLAYER_CLASSNAME}__${direction}-suit-entity`);
     
-    console.log('numberElement =', numberElement);
-    console.log('suitEntityElement =', suitEntityElement);
     if (!numberElement || !suitEntityElement) return;
 
     let colorClass = COLOR_RED_CLASSNAME;
@@ -521,35 +522,41 @@ export class DealPlayerComponent implements OnInit {
   }
 
   private onResize(e: Event) {
-    clearTimeout(this.redrawTimeout);
+    setTimeout(() => {
 
-    this.isMobile = window.innerWidth <= this.mobileWidthStart;
-    this.redrawTimeout = setTimeout(() => {
-      this.cardScaleAmount = this.isMobile
-        ? this.MIN_SCALE_AMOUNT_MOBILE
-        : window.innerWidth < this.SCALE_AMOUNT_THRESHOLD_VIEW_PORT_WIDTH
-        ? getLinearPercentOfMaxMatchWithinRange(
-            window.innerWidth as number,
-            this.mobileWidthStart,
-            this.SCALE_AMOUNT_THRESHOLD_VIEW_PORT_WIDTH,
-            this.MIN_SCALE_AMOUNT_NORMAL,
-            this.MAX_SCALE_AMOUNT_BELOW_THRESHOLD
-          )
-        : getLinearPercentOfMaxMatchWithinRange(
-            window.innerWidth as number,
-            this.MIN_TARGET_VIEW_PORT_WIDTH,
-            this.MAX_TARGET_VIEW_PORT_WIDTH,
-            this.MIN_SCALE_AMOUNT_NORMAL,
-            this.MAX_SCALE_AMOUNT_ABOVE_THRESHOLD
-          );
-        
-      console.log('this.cardScaleAmount =', this.cardScaleAmount);
+      clearTimeout(this.redrawTimeout);
+      console.log('resize------------------------------------------------');
 
-      this.setCardsSize();
-      this.setCanvasMetrics();
-      this.setCardMetrics();
-      this.renderHands();
-    }, 250);
+      this.isMobile = window.innerWidth <= this.mobileWidthStart;
+      this.redrawTimeout = setTimeout(() => {
+        this.cardScaleAmount = this.isMobile
+          ? this.MIN_SCALE_AMOUNT_MOBILE
+          : window.innerWidth < this.SCALE_AMOUNT_THRESHOLD_VIEW_PORT_WIDTH
+          ? getLinearPercentOfMaxMatchWithinRange(
+              window.innerWidth as number,
+              this.mobileWidthStart,
+              this.SCALE_AMOUNT_THRESHOLD_VIEW_PORT_WIDTH,
+              this.MIN_SCALE_AMOUNT_NORMAL,
+              this.MAX_SCALE_AMOUNT_BELOW_THRESHOLD
+            )
+          : getLinearPercentOfMaxMatchWithinRange(
+              window.innerWidth as number,
+              this.MIN_TARGET_VIEW_PORT_WIDTH,
+              this.MAX_TARGET_VIEW_PORT_WIDTH,
+              this.MIN_SCALE_AMOUNT_NORMAL,
+              this.MAX_SCALE_AMOUNT_ABOVE_THRESHOLD
+            );
+          
+        console.log('this.cardScaleAmount =', this.cardScaleAmount);
+
+        this.resetCardsRotationAndPosition();
+        this.setCardsSize();
+        this.setCanvasMetrics();
+        this.setCardMetrics();
+        this.renderHands();
+      }, 250);
+    },250)
+
   }
 
   private getStartingPosition(numberOfCardsInHand: number, direction: string) {
@@ -624,5 +631,36 @@ export class DealPlayerComponent implements OnInit {
       card.scale(desiredWidth / currentWidth);
       card.scale(this.cardScaleAmount);
     }
+  }
+
+  private changeContractColor() {
+    const contract = document.querySelector(`.${DEAL_PLAYER_CLASSNAME}__contract`) as HTMLElement;
+
+    let classToAdd = COLOR_BLACK_CLASSNAME;
+    if (this.contract?.htmlEntity === suitsHtmlEntities[1] || this.contract?.htmlEntity === suitsHtmlEntities[2]) classToAdd = COLOR_RED_CLASSNAME;
+
+    this.renderer.removeClass(contract.children[1], COLOR_BLACK_CLASSNAME);
+    this.renderer.removeClass(contract.children[1], COLOR_RED_CLASSNAME);
+    this.renderer.addClass(contract.children[1], classToAdd);
+  }
+
+  private resetVariables() {
+    // this.cardHeight = -1;
+    // this.cardWidth = -1;
+    // this.canvasWidth = -1;
+    // this.canvasHeight = -1;
+    // this.cardScaleAmount = -1;
+    // this.cardSpacingIncrement = -1;
+    // this.cardVisibleOffset = -1;
+    // this.playCount = 0;
+    // this.trickNumber = 0;
+    // this.cardsPlayed = [];
+    // this.cardPlayWaitDuration = 2500;
+    // this.seating = null;
+    // this.name = null;
+    // this.date = null;
+    // this.isPlaying = false;
+    // this.scope = null;
+    // this.project = null;
   }
 }
