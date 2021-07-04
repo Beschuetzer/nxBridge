@@ -38,7 +38,7 @@ import {
   tricksInABook,
 } from '@nx-bridge/constants';
 import { Store } from '@ngrx/store';
-import { AppState, SetCurrentlyViewingDeal, SetCurrentlyViewingDealContract } from '@nx-bridge/store';
+import { AppState, CurrentlyViewingDeal, SetCurrentlyViewingDeal, SetCurrentlyViewingDealContract } from '@nx-bridge/store';
 @Component({
   selector: 'nx-bridge-deal-detail',
   templateUrl: './deal-detail.component.html',
@@ -103,7 +103,12 @@ export class DealDetailComponent implements OnInit {
 
   onWatchClick(e: Event) {
     this.store.dispatch(new SetCurrentlyViewingDealContract(this.contract as Contract));
-    this.store.dispatch(new SetCurrentlyViewingDeal(this.deal as Deal));
+    
+    const button = (e.currentTarget || e.target) as HTMLButtonElement;
+    const dealDetailSummary = button.closest(`.${DEAL_DETAIL_CLASSNAME}__summary`);
+    const dealNumber = dealDetailSummary?.querySelector(`.${DEAL_DETAIL_CLASSNAME}__summary-number`)?.innerHTML.match(/\d+/i);
+    
+    this.store.dispatch(new SetCurrentlyViewingDeal({...this.deal, dealNumber: dealNumber ? dealNumber[0] : -1} as CurrentlyViewingDeal));
   }
 
   setBiddingTable() {

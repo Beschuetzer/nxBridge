@@ -4,14 +4,14 @@ import * as fromDealActions from '../actions/deal.actions';
 export interface DealState {
   dealsAsStrings: string[];
   fetchedDeals: Deal[];
-  currentlyViewingDeal: Deal;
+  currentlyViewingDeal: fromDealActions.CurrentlyViewingDeal;
   currentlyViewingDealContract: Contract;
 }
 
 const INITIAL_STATE: DealState = {
   dealsAsStrings: [],
   fetchedDeals: [],
-  currentlyViewingDeal: {} as Deal,
+  currentlyViewingDeal: {} as fromDealActions.CurrentlyViewingDeal,
   currentlyViewingDealContract: {prefix: '', htmlEntity: ''},
 };
 

@@ -19,7 +19,7 @@
 
   &__summary {
     position: absolute;
-    top: 81%;
+    top: 77.5%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -30,7 +30,7 @@
       transform: translateX(-50%);  
     }
 
-    & >div:nth-child(1) {
+    & >div:nth-of-type(-n + 2) {
       padding-bottom: $default-font-size * .25;
     }
 

@@ -23,7 +23,7 @@ import {
 } from '@nx-bridge/constants';
 
 import { Store } from '@ngrx/store';
-import { AppState, SetCurrentlyViewingDeal } from '@nx-bridge/store';
+import { AppState, SetCurrentlyViewingDeal, CurrentlyViewingDeal } from '@nx-bridge/store';
 import { Contract, Deal, Hand, Hands, Seating } from '@nx-bridge/interfaces-and-types';
 import * as paper from 'paper';
 import { Project, Raster } from 'paper/dist/paper-core';
@@ -40,6 +40,7 @@ export class DealPlayerComponent implements OnInit {
   public DEAL_PLAYER_CLASSNAME = DEAL_PLAYER_CLASSNAME;
   public DISPLAY_NONE_CLASSNAME = DISPLAY_NONE_CLASSNAME;
   public deal: Deal | null = null;
+  public dealNumber: number | string = -1;
   public contract: Contract | null = null;
   public handsToRender: Hands | null = null;
   public playCount = 0;
@@ -114,6 +115,7 @@ export class DealPlayerComponent implements OnInit {
     this.store.select('deals').subscribe((dealState) => {
       if (dealState.currentlyViewingDeal?.bids && !this.hasLoadedDeal) {
         this.deal = dealState.currentlyViewingDeal;
+        this.dealNumber = dealState.currentlyViewingDeal.dealNumber;
         if (Object.keys(this.deal).length <= 0) return;
 
         this.handsToRender = this.deal?.hands;
@@ -139,6 +141,7 @@ export class DealPlayerComponent implements OnInit {
       if (dealState.currentlyViewingDealContract?.prefix) {
         this.contract = dealState.currentlyViewingDealContract;
       }
+
     });
   }
 
@@ -149,7 +152,7 @@ export class DealPlayerComponent implements OnInit {
     this.resetTable();
     this.renderer.removeClass(this.elRef.nativeElement, VISIBLE_CLASSNAME);
     this.resetCardsRotationAndPosition();
-    this.store.dispatch(new SetCurrentlyViewingDeal({} as Deal));
+    this.store.dispatch(new SetCurrentlyViewingDeal({} as CurrentlyViewingDeal));
   }
 
   onNext() {
