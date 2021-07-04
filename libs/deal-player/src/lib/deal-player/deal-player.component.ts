@@ -24,8 +24,18 @@ import {
 } from '@nx-bridge/constants';
 
 import { Store } from '@ngrx/store';
-import { AppState, SetCurrentlyViewingDeal, CurrentlyViewingDeal } from '@nx-bridge/store';
-import { Contract, Deal, Hand, Hands, Seating } from '@nx-bridge/interfaces-and-types';
+import {
+  AppState,
+  SetCurrentlyViewingDeal,
+  CurrentlyViewingDeal,
+} from '@nx-bridge/store';
+import {
+  Contract,
+  Deal,
+  Hand,
+  Hands,
+  Seating,
+} from '@nx-bridge/interfaces-and-types';
 import * as paper from 'paper';
 import { Project, Raster } from 'paper/dist/paper-core';
 
@@ -74,8 +84,8 @@ export class DealPlayerComponent implements OnInit {
   private SCALE_AMOUNT_THRESHOLD_VIEW_PORT_WIDTH = 1350;
   private MAX_SCALE_AMOUNT_BELOW_THRESHOLD = 0.7;
   private MAX_SCALE_AMOUNT_ABOVE_THRESHOLD = 0.75;
-  private MIN_SCALE_AMOUNT_MOBILE = .7;
-  private MIN_SCALE_AMOUNT_NORMAL = .5;
+  private MIN_SCALE_AMOUNT_MOBILE = 0.7;
+  private MIN_SCALE_AMOUNT_NORMAL = 0.5;
   private MIN_TARGET_VIEW_PORT_WIDTH = 600;
   private MAX_TARGET_VIEW_PORT_WIDTH = 1800;
   private CARD_MOBILE_PIXEL_WIDTH = 233;
@@ -133,10 +143,9 @@ export class DealPlayerComponent implements OnInit {
         else {
           this.positionHands();
         }
-        
+
         this.renderer.addClass(this.elRef.nativeElement, VISIBLE_CLASSNAME);
         this.hasLoadedDeal = true;
-        
       } else if (dealState.currentlyViewingDeal?.bids) {
         this.renderer.addClass(this.elRef.nativeElement, VISIBLE_CLASSNAME);
       }
@@ -145,7 +154,6 @@ export class DealPlayerComponent implements OnInit {
         this.contract = dealState.currentlyViewingDealContract;
         this.changeContractColor();
       }
-
     });
   }
 
@@ -161,7 +169,9 @@ export class DealPlayerComponent implements OnInit {
     this.resetTable();
     this.renderer.removeClass(this.elRef.nativeElement, VISIBLE_CLASSNAME);
     this.resetCardsRotationAndPosition();
-    this.store.dispatch(new SetCurrentlyViewingDeal({} as CurrentlyViewingDeal));
+    this.store.dispatch(
+      new SetCurrentlyViewingDeal({} as CurrentlyViewingDeal)
+    );
     this.resetVariables();
   }
 
@@ -208,7 +218,6 @@ export class DealPlayerComponent implements OnInit {
   }
 
   onSpeedChange(e: Event) {
-    
     // debugger;
     // console.log('this.deal =', this.deal);
     // console.log('this.cardSpacingIncrement =', this.cardSpacingIncrement);
@@ -226,17 +235,24 @@ export class DealPlayerComponent implements OnInit {
     this.onPause();
     this.resetCardsPlayed();
     this.trickNumber = 0;
-
   }
 
   private playCard(nthCard = this.playCount) {
     const cardPlayOrder = this.deal?.cardPlayOrder;
-    if (!this.deal || !cardPlayOrder || cardPlayOrder.length < cardsPerDeck) return;
+    if (!this.deal || !cardPlayOrder || cardPlayOrder.length < cardsPerDeck)
+      return;
 
     if (nthCard >= cardsPerDeck) return this.onPause();
-    if (nthCard === -2 || nthCard === 51) this.cardsPlayed = flatten(cardPlayOrder);
-    else if (nthCard < -2) this.cardsPlayed = flatten(cardPlayOrder.slice(0, nthCard + 2) as number[]);
-    else this.cardsPlayed = flatten(cardPlayOrder.slice(0, nthCard + 1) as number[]);
+    if (nthCard === -2 || nthCard === 51)
+      this.cardsPlayed = flatten(cardPlayOrder);
+    else if (nthCard < -2)
+      this.cardsPlayed = flatten(
+        cardPlayOrder.slice(0, nthCard + 2) as number[]
+      );
+    else
+      this.cardsPlayed = flatten(
+        cardPlayOrder.slice(0, nthCard + 1) as number[]
+      );
 
     this.playCount = nthCard + 1;
     this.displayCardsInTable();
@@ -246,10 +262,10 @@ export class DealPlayerComponent implements OnInit {
   private updateHands() {
     let removalCount = 0;
     const cardsRemoved: number[] = [];
-    const tempHands: {[key: string]: Hand} = {};
+    const tempHands: { [key: string]: Hand } = {};
     for (const username in this.handsToRender) {
       if (Object.prototype.hasOwnProperty.call(this.handsToRender, username)) {
-        const handCopy = [...this.deal?.hands[username] as Hand];
+        const handCopy = [...(this.deal?.hands[username] as Hand)];
 
         if (removalCount >= this.cardsPlayed.length) {
           tempHands[username] = handCopy as Hand;
@@ -271,14 +287,15 @@ export class DealPlayerComponent implements OnInit {
         }
 
         let reconstitutedHand = handCopy;
-        if (isUpdateNecessary) reconstitutedHand = createHandArrayFromFlatArray(flatHandCopy);
-        
+        if (isUpdateNecessary)
+          reconstitutedHand = createHandArrayFromFlatArray(flatHandCopy);
+
         tempHands[username] = reconstitutedHand as Hand;
       }
     }
 
     this.hideCards(cardsRemoved);
-    this.handsToRender = {...tempHands};
+    this.handsToRender = { ...tempHands };
     this.positionHands();
   }
 
@@ -291,7 +308,7 @@ export class DealPlayerComponent implements OnInit {
     const currentTrick = this.getCurrentTrick();
 
     let cardsDisplayed = 0;
-    for (let i = currentTrick.length -1; i >= 0; i--) {
+    for (let i = currentTrick.length - 1; i >= 0; i--) {
       if (cardsDisplayed === 4) break;
       const card = currentTrick[i];
       this.displayCardInTable(card);
@@ -305,7 +322,8 @@ export class DealPlayerComponent implements OnInit {
     const startIndex = (this.trickNumber - 1) * 4;
     const endIndex = startIndex + 4;
 
-    if (endIndex > numberOfCardsPlayed - 1) return this.cardsPlayed.slice(startIndex);
+    if (endIndex > numberOfCardsPlayed - 1)
+      return this.cardsPlayed.slice(startIndex);
     else return this.cardsPlayed.slice(startIndex, endIndex);
     return this.cardsPlayed.slice(startIndex, endIndex);
   }
@@ -314,13 +332,23 @@ export class DealPlayerComponent implements OnInit {
     let numberToUse = 'N/A';
     let suitHtmlEntity = '';
 
-    if (cardAsNumber !== 'N/A' as any) {
+    if (cardAsNumber !== ('N/A' as any)) {
       numberToUse = getCharacterFromCardAsNumber(cardAsNumber);
       suitHtmlEntity = getHtmlEntityFromSuitOrCardAsNumber(cardAsNumber);
-      const userWhoPlayedCard = getUserWhoPlayedCard(this.deal?.hands as Hands, cardAsNumber);
-      const directionToUse = getDirectionFromSeating(this.seating as Seating, userWhoPlayedCard);
-      return this.setDirectionContent(numberToUse, suitHtmlEntity, directionToUse);
-    } 
+      const userWhoPlayedCard = getUserWhoPlayedCard(
+        this.deal?.hands as Hands,
+        cardAsNumber
+      );
+      const directionToUse = getDirectionFromSeating(
+        this.seating as Seating,
+        userWhoPlayedCard
+      );
+      return this.setDirectionContent(
+        numberToUse,
+        suitHtmlEntity,
+        directionToUse
+      );
+    }
 
     for (let i = 0; i < cardinalDirections.length; i++) {
       const direction = cardinalDirections[i];
@@ -329,30 +357,52 @@ export class DealPlayerComponent implements OnInit {
   }
 
   private setFirstCardPlayedAndPlayer() {
-    if (this.firstCardPlayed === -1) this.firstCardPlayed = flatten(this.deal?.cardPlayOrder)[0];
-    this.firstCardPlayer = getUserWhoPlayedCard(this.deal?.hands as Hands, this.firstCardPlayed);
+    if (this.firstCardPlayed === -1)
+      this.firstCardPlayed = flatten(this.deal?.cardPlayOrder)[0];
+    this.firstCardPlayer = getUserWhoPlayedCard(
+      this.deal?.hands as Hands,
+      this.firstCardPlayed
+    );
   }
 
   private setCardPlayOrderAsDirections() {
-    const directionOfPersonWhoPlayedFirst = getDirectionFromSeating(this.seating as Seating, this.firstCardPlayer);
+    const directionOfPersonWhoPlayedFirst = getDirectionFromSeating(
+      this.seating as Seating,
+      this.firstCardPlayer
+    );
     const index = cardinalDirections.indexOf(directionOfPersonWhoPlayedFirst);
-    this.cardPlayerOrder = [...cardinalDirections.slice(index), ...cardinalDirections.slice(0, index)] as [string, string, string, string];
+    this.cardPlayerOrder = [
+      ...cardinalDirections.slice(index),
+      ...cardinalDirections.slice(0, index),
+    ] as [string, string, string, string];
   }
 
-  private setDirectionContent(number: string | number, suitHtmlEntity: string, direction: string) {
-    const numberElement = document.querySelector(`.${DEAL_PLAYER_CLASSNAME}__${direction}-suit-number`);
-    const suitEntityElement = document.querySelector(`.${DEAL_PLAYER_CLASSNAME}__${direction}-suit-entity`);
-    
+  private setDirectionContent(
+    number: string | number,
+    suitHtmlEntity: string,
+    direction: string
+  ) {
+    const numberElement = document.querySelector(
+      `.${DEAL_PLAYER_CLASSNAME}__${direction}-suit-number`
+    );
+    const suitEntityElement = document.querySelector(
+      `.${DEAL_PLAYER_CLASSNAME}__${direction}-suit-entity`
+    );
+
     if (!numberElement || !suitEntityElement) return;
 
     let colorClass = COLOR_RED_CLASSNAME;
-    if (suitHtmlEntity === suitsHtmlEntities[0] || suitHtmlEntity === suitsHtmlEntities[3]) colorClass = COLOR_BLACK_CLASSNAME;
+    if (
+      suitHtmlEntity === suitsHtmlEntities[0] ||
+      suitHtmlEntity === suitsHtmlEntities[3]
+    )
+      colorClass = COLOR_BLACK_CLASSNAME;
     this.renderer.removeClass(numberElement, COLOR_BLACK_CLASSNAME);
     this.renderer.removeClass(suitEntityElement, COLOR_BLACK_CLASSNAME);
     this.renderer.removeClass(numberElement, COLOR_RED_CLASSNAME);
     this.renderer.removeClass(suitEntityElement, COLOR_RED_CLASSNAME);
-    this.renderer.addClass(numberElement, colorClass)
-    this.renderer.addClass(suitEntityElement, colorClass)
+    this.renderer.addClass(numberElement, colorClass);
+    this.renderer.addClass(suitEntityElement, colorClass);
     this.renderer.setProperty(numberElement, 'innerHTML', number);
     this.renderer.setProperty(suitEntityElement, 'innerHTML', suitHtmlEntity);
   }
@@ -383,7 +433,7 @@ export class DealPlayerComponent implements OnInit {
 
   private hideCards(cards: number[]) {
     for (let i = 0; i < cards.length; i++) {
-      const cardAsNumber = cards[i]
+      const cardAsNumber = cards[i];
       const card = this.cards[cardAsNumber] as paper.Raster;
       card.position.x = this.DEFAULT_CARD_POSITION;
     }
@@ -575,7 +625,6 @@ export class DealPlayerComponent implements OnInit {
 
   private onResize(e: Event) {
     setTimeout(() => {
-
       clearTimeout(this.redrawTimeout);
       console.log('resize------------------------------------------------');
 
@@ -598,7 +647,7 @@ export class DealPlayerComponent implements OnInit {
               this.MIN_SCALE_AMOUNT_NORMAL,
               this.MAX_SCALE_AMOUNT_ABOVE_THRESHOLD
             );
-          
+
         console.log('this.cardScaleAmount =', this.cardScaleAmount);
 
         this.resetCardsRotationAndPosition();
@@ -607,18 +656,16 @@ export class DealPlayerComponent implements OnInit {
         this.setCardMetrics();
         this.positionHands();
       }, 250);
-    },250)
-
+    }, 250);
   }
 
   private getStartingPosition(numberOfCardsInHand: number, direction: string) {
-    let lengthOfHand =
-      this.cardWidth + (numberOfCardsInHand - 1) * this.cardSpacingIncrement;
+    // let lengthOfHand = this.cardWidth + (numberOfCardsInHand - 1) * this.cardSpacingIncrement;
     const lenghtOfFullHand = this.cardWidth + 12 * this.cardSpacingIncrement;
 
     let dimensionToUse = this.canvasWidth;
     let spaceUsedByTopAndBottomHands = 0;
-    let usableSpace = this.canvasWidth;
+    // let usableSpace = this.canvasWidth;
 
     if (
       direction === cardinalDirections[1] ||
@@ -626,49 +673,70 @@ export class DealPlayerComponent implements OnInit {
     ) {
       dimensionToUse = this.canvasHeight;
       spaceUsedByTopAndBottomHands = this.cardVisibleOffset * 2;
-      usableSpace = dimensionToUse - spaceUsedByTopAndBottomHands;
+      // usableSpace = dimensionToUse - spaceUsedByTopAndBottomHands;
     }
 
-    let usedSpace = spaceUsedByTopAndBottomHands + lengthOfHand;
-    const usedSpaceOfFullHand = spaceUsedByTopAndBottomHands + lenghtOfFullHand;
-    
-    
+    // let usedSpace = spaceUsedByTopAndBottomHands + lengthOfHand;
+
+    //note: removed this as it caused unpleasant jumping
     // if (usableSpace >= lengthOfHand)
     //   if (direction === cardinalDirections[0] || direction === cardinalDirections[2]) return (
     //     ((dimensionToUse as number) - usedSpace) / 2
-        
+
     //   );
     //   else return this.cardVisibleOffset + ((dimensionToUse as number) - usedSpace) / 2;
     // else {
-      lengthOfHand = numberOfCardsInHand * this.cardSpacingIncrement;
-      usedSpace = this.cardVisibleOffset * 2 + lengthOfHand;
-      if (
-        direction === cardinalDirections[0] ||
-        direction === cardinalDirections[1]
-      ) {
-        if (this.keepCardsCentered)  return (
+
+    // }
+    const lengthOfHand = numberOfCardsInHand * this.cardSpacingIncrement;
+    const usedSpace = this.cardVisibleOffset * 2 + lengthOfHand;
+    const usedSpaceOfFullHand = spaceUsedByTopAndBottomHands + lenghtOfFullHand;
+
+    if (this.keepCardsCentered) {
+      if (direction === cardinalDirections[0])
+        return (
           this.cardVisibleOffset +
           ((dimensionToUse as number) - usedSpace) / 2 -
           (this.cardWidth - this.cardSpacingIncrement)
         );
-
-        return this.cardVisibleOffset +
-        ((dimensionToUse as number) - usedSpaceOfFullHand) / 2 -
-        (this.cardWidth - this.cardSpacingIncrement)
-       
-      } else if (
-        direction === cardinalDirections[2] ||
-        direction === cardinalDirections[3]
-      ) {
-        if (this.keepCardsCentered) return (
+      else if (direction === cardinalDirections[1])
+        return (
+          this.cardVisibleOffset +
+          ((dimensionToUse as number) - usedSpace) / 2 -
+          (this.cardWidth - this.cardSpacingIncrement)
+        );
+      else if (direction === cardinalDirections[2])
+        return (
           this.cardVisibleOffset + ((dimensionToUse as number) - usedSpace) / 2
         );
-
+      else if (direction === cardinalDirections[3])
         return (
-          this.cardVisibleOffset + ((dimensionToUse as number) - lenghtOfFullHand) / 2
+          this.cardVisibleOffset + ((dimensionToUse as number) - usedSpace) / 2
         );
-      }
-    // }
+    } else {
+      if (direction === cardinalDirections[0])
+        return (
+          this.cardVisibleOffset +
+          ((dimensionToUse as number) - usedSpaceOfFullHand) / 2 -
+          (this.cardWidth - this.cardSpacingIncrement)
+        );
+      else if (direction === cardinalDirections[1])
+        return (
+          this.cardVisibleOffset +
+          ((dimensionToUse as number) - usedSpaceOfFullHand) / 2 -
+          (this.cardWidth - this.cardSpacingIncrement)
+        );
+      else if (direction === cardinalDirections[2])
+        return (
+          this.cardVisibleOffset +
+          ((dimensionToUse as number) - lenghtOfFullHand) / 2
+        );
+      else if (direction === cardinalDirections[3])
+        return (
+          this.cardVisibleOffset +
+          ((dimensionToUse as number) - lenghtOfFullHand) / 2
+        );
+    }
 
     throw new Error('Invalid direction in getCalculatedStart');
   }
@@ -699,10 +767,16 @@ export class DealPlayerComponent implements OnInit {
   }
 
   private changeContractColor() {
-    const contract = document.querySelector(`.${DEAL_PLAYER_CLASSNAME}__contract`) as HTMLElement;
+    const contract = document.querySelector(
+      `.${DEAL_PLAYER_CLASSNAME}__contract`
+    ) as HTMLElement;
 
     let classToAdd = COLOR_BLACK_CLASSNAME;
-    if (this.contract?.htmlEntity === suitsHtmlEntities[1] || this.contract?.htmlEntity === suitsHtmlEntities[2]) classToAdd = COLOR_RED_CLASSNAME;
+    if (
+      this.contract?.htmlEntity === suitsHtmlEntities[1] ||
+      this.contract?.htmlEntity === suitsHtmlEntities[2]
+    )
+      classToAdd = COLOR_RED_CLASSNAME;
 
     this.renderer.removeClass(contract.children[1], COLOR_BLACK_CLASSNAME);
     this.renderer.removeClass(contract.children[1], COLOR_RED_CLASSNAME);
