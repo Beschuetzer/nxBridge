@@ -212,6 +212,8 @@ export class DealPlayerComponent implements OnInit {
     this.resetTable();
     this.onPause();
     this.resetCardsPlayed();
+    this.trickNumber = 0;
+
   }
 
   private playCard(nthCard = this.playCount) {
@@ -237,8 +239,6 @@ export class DealPlayerComponent implements OnInit {
     if ((this.cardsPlayed.length - 1) % 4 === 0) this.resetTable();
 
     const currentTrick = this.getCurrentTrick();
-    console.log('this.deal.cardPlayerOrder =', this.deal?.cardPlayerOrder);
-    console.log('currentTrick =', currentTrick);
 
     let cardsDisplayed = 0;
     for (let i = currentTrick.length -1; i >= 0; i--) {
@@ -261,12 +261,21 @@ export class DealPlayerComponent implements OnInit {
   }
 
   private displayCardInTable(cardAsNumber: number) {
-    const numberToUse = getCharacterFromCardAsNumber(cardAsNumber);
-    const suitHtmlEntity = getHtmlEntityFromSuitOrCardAsNumber(cardAsNumber);
-    const userWhoPlayedCard = getUserWhoPlayedCard(this.deal?.hands as Hands, cardAsNumber);
-    const directionToUse = getDirectionFromSeating(this.seating as Seating, userWhoPlayedCard);
+    let numberToUse = 'N/A';
+    let suitHtmlEntity = '';
 
-    this.setDirectionContent(numberToUse, suitHtmlEntity, directionToUse);
+    if (cardAsNumber !== 'N/A' as any) {
+      numberToUse = getCharacterFromCardAsNumber(cardAsNumber);
+      suitHtmlEntity = getHtmlEntityFromSuitOrCardAsNumber(cardAsNumber);
+      const userWhoPlayedCard = getUserWhoPlayedCard(this.deal?.hands as Hands, cardAsNumber);
+      const directionToUse = getDirectionFromSeating(this.seating as Seating, userWhoPlayedCard);
+      return this.setDirectionContent(numberToUse, suitHtmlEntity, directionToUse);
+    } 
+
+    for (let i = 0; i < cardinalDirections.length; i++) {
+      const direction = cardinalDirections[i];
+      this.setDirectionContent(numberToUse, suitHtmlEntity, direction);
+    }
   }
 
   private setFirstCardPlayedAndPlayer() {
