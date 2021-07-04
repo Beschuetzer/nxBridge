@@ -1,13 +1,12 @@
-<section class="{{ DEAL_PLAYER_CLASSNAME }}__summary">
-  <div class="{{ DEAL_PLAYER_CLASSNAME }}__summary-details">
+
+<div (click)="onClose()" class="{{ DEAL_PLAYER_CLASSNAME }}__close">
+  &#10006;
+</div>
+<section class="{{ DEAL_PLAYER_CLASSNAME }}__canvas">
+  <article class="{{ DEAL_PLAYER_CLASSNAME }}__summary">
     <div>{{ name }}</div>
     <div>{{ date }}</div>
-  </div>
-  <div (click)="onClose()" class="{{ DEAL_PLAYER_CLASSNAME }}__summary-close">
-    &#10006;
-  </div>
-</section>
-<section class="{{ DEAL_PLAYER_CLASSNAME }}__canvas">
+  </article>
   <div *ngIf="trickNumber" class="{{ DEAL_PLAYER_CLASSNAME }}__trick">
     <span>Trick #:&nbsp;</span>
     <span class="{{ DEAL_PLAYER_CLASSNAME }}__trick-number">{{
@@ -15,34 +14,26 @@
     }}</span>
   </div>
   <div class="{{ DEAL_PLAYER_CLASSNAME }}__played">
-    <div class="{{ DEAL_PLAYER_CLASSNAME }}__played-north">
-      <div>{{ seating?.north }}</div>
-      <div>
-        <span class="{{ DEAL_PLAYER_CLASSNAME }}__played-north-number"></span>
-        <span class="{{ DEAL_PLAYER_CLASSNAME }}__played-north-suit"></span>
+      <div class="{{DEAL_PLAYER_CLASSNAME}}__north-suit">
+        <span class="{{ DEAL_PLAYER_CLASSNAME }}__north-suit-number"></span>
+        <span class="{{ DEAL_PLAYER_CLASSNAME }}__north-suit-entity"></span>
       </div>
-    </div>
-    <div class="{{ DEAL_PLAYER_CLASSNAME }}__played-east">
-      <div>{{ seating?.east }}</div>
-      <div>
-        <span class="{{ DEAL_PLAYER_CLASSNAME }}__played-east-number"></span>
-        <span class="{{ DEAL_PLAYER_CLASSNAME }}__played-east-suit"></span>
+      <div class="{{DEAL_PLAYER_CLASSNAME}}__north-name">{{ seating?.north }}</div>
+      <div class="{{DEAL_PLAYER_CLASSNAME}}__east-suit">
+        <span class="{{ DEAL_PLAYER_CLASSNAME }}__east-suit-number"></span>
+        <span class="{{ DEAL_PLAYER_CLASSNAME }}__east-suit-entity"></span>
       </div>
-    </div>
-    <div class="{{ DEAL_PLAYER_CLASSNAME }}__played-south">
-      <div>{{ seating?.south }}</div>
-      <div>
-        <span class="{{ DEAL_PLAYER_CLASSNAME }}__played-south-number"></span>
-        <span class="{{ DEAL_PLAYER_CLASSNAME }}__played-south-suit"></span>
+      <div class="{{DEAL_PLAYER_CLASSNAME}}__east-name">{{ seating?.east }}</div>
+      <div class="{{DEAL_PLAYER_CLASSNAME}}__south-suit">
+        <span class="{{ DEAL_PLAYER_CLASSNAME }}__south-suit-number"></span>
+        <span class="{{ DEAL_PLAYER_CLASSNAME }}__south-suit-entity"></span>
       </div>
-    </div>
-    <div class="{{ DEAL_PLAYER_CLASSNAME }}__played-west">
-      <div>{{ seating?.west }}</div>
-      <div>
-        <span class="{{ DEAL_PLAYER_CLASSNAME }}__played-west-number"></span>
-        <span class="{{ DEAL_PLAYER_CLASSNAME }}__played-west-suit"></span>
+      <div class="{{DEAL_PLAYER_CLASSNAME}}__south-name">{{ seating?.south }}</div>
+      <div class="{{DEAL_PLAYER_CLASSNAME}}__west-suit">
+        <span class="{{ DEAL_PLAYER_CLASSNAME }}__west-suit-number"></span>
+        <span class="{{ DEAL_PLAYER_CLASSNAME }}__west-suit-entity"></span>
       </div>
-    </div>
+      <div class="{{DEAL_PLAYER_CLASSNAME}}__west-name">{{ seating?.west }}</div>
   </div>
   <canvas
     id="{{ DEAL_PLAYER_CLASSNAME }}-canvas"

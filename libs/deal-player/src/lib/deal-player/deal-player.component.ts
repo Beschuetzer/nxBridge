@@ -290,9 +290,11 @@ export class DealPlayerComponent implements OnInit {
   }
 
   private setDirectionContent(number: string | number, suitHtmlEntity: string, direction: string) {
-    const numberElement = document.querySelector(`.${DEAL_PLAYER_CLASSNAME}__played-${direction}-number`);
-    const suitEntityElement = document.querySelector(`.${DEAL_PLAYER_CLASSNAME}__played-${direction}-suit`);
+    const numberElement = document.querySelector(`.${DEAL_PLAYER_CLASSNAME}__${direction}-suit-number`);
+    const suitEntityElement = document.querySelector(`.${DEAL_PLAYER_CLASSNAME}__${direction}-suit-entity`);
     
+    console.log('numberElement =', numberElement);
+    console.log('suitEntityElement =', suitEntityElement);
     if (!numberElement || !suitEntityElement) return;
 
     let colorClass = COLOR_RED_CLASSNAME;

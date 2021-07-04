@@ -51,5 +51,5 @@ Todos----------------------------------------------------------
 
 -figure out how to make closing deal-player reset everything
 
--finish label styling?
 -Deal 1 trick 6 of yougurt 2/16 7:24pm bug in play order?
+-add 'Deal 1' below room name and date
