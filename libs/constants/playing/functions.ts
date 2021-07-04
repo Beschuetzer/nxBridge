@@ -13,7 +13,6 @@ import {
   cardValuesAsStrings,
   maxCardValue,
   minCardValue,
-  sortOrders,
   suits,
   suitsAsCapitalizedStrings,
   suitsHtmlEntities,
@@ -226,4 +225,16 @@ export function getUserWhoPlayedCard(hands: Hands, card: number) {
     }
   }
   return '';
+}
+
+export function createHandArrayFromFlatArray(flatArray: number[]){
+  const spades = [], hearts = [], diamonds = [], clubs = [];
+  for (let i = 0; i < flatArray.length; i++) {
+      const cardAsNumber = flatArray[i];
+      if (cardAsNumber >= 0 && cardAsNumber <= 12) clubs.push(cardAsNumber);
+      else if (cardAsNumber >= 13 && cardAsNumber <= 25) diamonds.push(cardAsNumber);
+      else if (cardAsNumber >= 26 && cardAsNumber <= 38) hearts.push(cardAsNumber);
+      else if (cardAsNumber >= 39 && cardAsNumber <= 51) spades.push(cardAsNumber);
+  }
+  return [spades, hearts, diamonds, clubs];
 }

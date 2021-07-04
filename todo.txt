@@ -47,7 +47,6 @@ Todos----------------------------------------------------------
 
 
 -add goto nth card played text box?
--need to handle deals with 'n/a' (could just display) use 2/12/21, 5:45 PM 2nd deal to test
 
 
 -Deal 1 trick 6 of yougurt 2/16 7:24pm bug in play order?
