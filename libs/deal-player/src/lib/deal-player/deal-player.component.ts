@@ -238,6 +238,10 @@ export class DealPlayerComponent implements OnInit {
     this.onPause();
     this.resetCardsPlayed();
     this.trickNumber = 0;
+    
+    const target = document.querySelector(`.${DEAL_PLAYER_CLASSNAME}__round-winners`) as HTMLElement;
+    this.renderer.setProperty(target, 'innerHTML', '');
+
   }
 
   private playCard(nthCard = this.playCount) {

@@ -332,7 +332,7 @@
     grid-row: 1/-1;
     width: 75vh;
 
-    @include respond(phone) {
+    @include respond(tab-port) {
       width: 100vmin;
     }
 
@@ -402,6 +402,7 @@
   }
 
   &__round-winners{
+    user-select: none;
     grid-column: 3 / span 1;
     grid-row: 1 / span 1;
 
@@ -421,7 +422,7 @@
         border-bottom: $deal-player-border-thin;  
         width: 100%;
         text-align: center;
-        padding: $default-font-size * .5;
+        padding: $default-font-size * .25 $default-font-size * .5;
       }
 
       & > *:nth-child(-n + 2) {
