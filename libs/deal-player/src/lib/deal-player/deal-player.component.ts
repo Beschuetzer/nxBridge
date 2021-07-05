@@ -821,9 +821,9 @@ export class DealPlayerComponent implements OnInit {
   }
 
   private renderRounderWinnersTable() {
-    const headerLeftContent = '#';
-    const headerRightContent = 'Winner';
-    const sectionHeaderContent = 'Round Winners:'
+    const headerLeftContent = 'Trick #';
+    const headerRightContent = 'Taker';
+    const sectionHeaderContent = 'Trick Takers:'
     const target = document.querySelector(`.${DEAL_PLAYER_CLASSNAME}__round-winners`) as HTMLElement;
     const numberOfWinnersToShow = Math.floor(this.cardsPlayed.length / 4);
 
