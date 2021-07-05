@@ -728,7 +728,6 @@ export class DealPlayerComponent implements OnInit {
           this.cardVisibleOffset + ((dimensionToUse as number) - usedSpace) / 2
         );
     } else {
-
       if (direction === cardinalDirections[0])
         return (
           this.cardVisibleOffset +
