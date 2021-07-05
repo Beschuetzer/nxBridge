@@ -400,6 +400,41 @@
       opacity: $deal-player-canvas-text-opacity;
     }
   }
+
+  &__round-winners{
+    grid-column: 3 / span 1;
+    grid-row: 1 / span 1;
+
+    &-table {
+      display: grid;
+      grid-template-columns: min-content 1fr;
+      width: 100%;
+      padding: $default-font-size * 1;
+      justify-items: center;
+      align-items: center;
+      font-size: $default-font-size * .75;
+      max-width: $default-font-size * 12;
+      margin: 0 auto;
+
+      & > * {
+        border-right: $deal-player-border-thin;  
+        border-bottom: $deal-player-border-thin;  
+        width: 100%;
+        text-align: center;
+        padding: $default-font-size * .5;
+      }
+
+      & > *:nth-child(-n + 2) {
+        font-weight: 700;
+        border-top: $deal-player-border-thin;
+      }
+
+      & > *:nth-child(2n + 1) {
+        border-left: $deal-player-border-thin;
+      }
+
+    }
+  }
   
   &__controls{
     cursor: pointer;
@@ -409,15 +444,24 @@
     grid-column: 2 / span 1;
     justify-self: stretch;
     text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
     & > * {
       fill: var(--color-primary-1);
       height: $default-font-size * 3;
       width: $default-font-size * 3;
+      margin: 0 $default-font-size * .25;
 
       &:hover {
         fill: var(--color-primary-2);
       }
     }
+  }
+
+  &__restart {
+    height: $default-font-size * 2.25;
+    width: $default-font-size * 2.25;
   }
 }

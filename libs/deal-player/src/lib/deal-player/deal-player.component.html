@@ -96,8 +96,8 @@
   <svg (click)="onPause()" *ngIf="isPlaying">
     <use xlink:href="assets/deal-player/sprite.svg#icon-pause"></use>
   </svg>
-  <svg (click)="onStop()">
-    <use xlink:href="assets/deal-player/sprite.svg#icon-stop"></use>
+  <svg class="{{DEAL_PLAYER_CLASSNAME}}__restart" (click)="onRestart()">
+    <use xlink:href="assets/deal-player/sprite.svg#icon-restart"></use>
   </svg>
   <svg (click)="onNext()">
     <use xlink:href="assets/deal-player/sprite.svg#icon-next"></use>
@@ -106,7 +106,10 @@
     <use xlink:href="assets/deal-player/sprite.svg#icon-next-five"></use>
   </svg>
 </section>
+<section class="{{ DEAL_PLAYER_CLASSNAME }}__round-winners">
 
+</section>
+<!-- Loading Cards -->
 <div
   *ngIf="!isMobile"
   class="{{ DEAL_PLAYER_CLASSNAME }}__images {{ DISPLAY_NONE_CLASSNAME }}"
@@ -117,7 +120,6 @@
     src="/assets/deal-player/cards-full/{{ i }}.png"
   />
 </div>
-
 <div
   *ngIf="isMobile"
   class="{{ DEAL_PLAYER_CLASSNAME }}__images {{ DISPLAY_NONE_CLASSNAME }}"

@@ -232,7 +232,7 @@ export class DealPlayerComponent implements OnInit {
     // this.onPlay()
   }
 
-  onStop() {
+  onRestart() {
     this.onPause();
     this.resetTable();
     this.onPause();
@@ -305,6 +305,7 @@ export class DealPlayerComponent implements OnInit {
   private displayCardsInTable() {
     this.setFirstCardPlayedAndPlayer();
     this.setCardPlayOrderAsDirections();
+    this.renderRounderWinnersTable();
 
     if ((this.cardsPlayed.length - 1) % 4 === 0) this.resetTable();
 
@@ -809,5 +810,41 @@ export class DealPlayerComponent implements OnInit {
     // this.isPlaying = false;
     // this.scope = null;
     // this.project = null;
+  }
+
+  private renderRounderWinnersTable() {
+    const headerLeftContent = '#';
+    const headerRightContent = 'Winner';
+    const target = document.querySelector(`.${DEAL_PLAYER_CLASSNAME}__round-winners`) as HTMLElement;
+    const numberOfWinnersToShow = Math.floor(this.cardsPlayed.length / 4);
+
+    this.renderer.setProperty(target, 'innerHTML', '');
+    const table = this.renderer.createElement('div');
+    const leftHeader = this.renderer.createElement('div');
+    const rightHeader = this.renderer.createElement('div');
+
+    this.renderer.addClass(table, `${DEAL_PLAYER_CLASSNAME}__round-winners-table`)
+
+    this.renderer.setProperty(leftHeader, 'innerHTML', headerLeftContent);
+    this.renderer.setProperty(rightHeader, 'innerHTML', headerRightContent);
+    this.renderer.appendChild(table, leftHeader);
+    this.renderer.appendChild(table, rightHeader);
+    
+    //this.cardPlayerOrder has names of players in sequence of their playing order
+
+    for (let i = 0; i < numberOfWinnersToShow; i++) {
+      const roundWinner = (this.deal?.roundWinners as string[][])[i];
+      const newDivNumber = this.renderer.createElement('div');
+      const newDivName = this.renderer.createElement('div');
+
+      this.renderer.setProperty(newDivNumber, 'innerHTML', i + 1);
+      this.renderer.setProperty(newDivName, 'innerHTML', roundWinner[0]);
+      this.renderer.appendChild(table, newDivNumber);
+      this.renderer.appendChild(table, newDivName);
+    }
+
+
+
+    this.renderer.appendChild(target, table);
   }
 }
