@@ -664,7 +664,7 @@ export class DealPlayerComponent implements OnInit {
 
   private getStartingPosition(numberOfCardsInHand: number, direction: string) {
     // let lengthOfHand = this.cardWidth + (numberOfCardsInHand - 1) * this.cardSpacingIncrement;
-    const lenghtOfFullHand = this.cardWidth + 12 * this.cardSpacingIncrement;
+    const lengthOfFullHand = this.cardWidth + 12 * this.cardSpacingIncrement;
 
     let dimensionToUse = this.canvasWidth;
     let spaceUsedByTopAndBottomHands = 0;
@@ -693,7 +693,7 @@ export class DealPlayerComponent implements OnInit {
     // }
     const lengthOfHand = numberOfCardsInHand * this.cardSpacingIncrement;
     const usedSpace = this.cardVisibleOffset * 2 + lengthOfHand;
-    const usedSpaceOfFullHand = spaceUsedByTopAndBottomHands + lenghtOfFullHand;
+    const usedSpaceOfFullHand = spaceUsedByTopAndBottomHands + lengthOfFullHand;
     const missingCardAdjustment = (cardsPerHand - numberOfCardsInHand) * this.cardSpacingIncrement;
 
     if (this.keepCardsCentered) {
@@ -718,6 +718,8 @@ export class DealPlayerComponent implements OnInit {
           this.cardVisibleOffset + ((dimensionToUse as number) - usedSpace) / 2
         );
     } else {
+      console.log('dimensionToUse =', dimensionToUse);
+
       if (direction === cardinalDirections[0])
         return (
           this.cardVisibleOffset +
@@ -727,7 +729,7 @@ export class DealPlayerComponent implements OnInit {
         );
       else if (direction === cardinalDirections[1])
         return (
-          this.cardVisibleOffset +
+          2 * this.cardVisibleOffset +
           ((dimensionToUse as number) - usedSpaceOfFullHand) / 2 -
           (this.cardWidth - this.cardSpacingIncrement) +
           missingCardAdjustment
@@ -735,12 +737,12 @@ export class DealPlayerComponent implements OnInit {
       else if (direction === cardinalDirections[2])
         return (
           this.cardVisibleOffset +
-          ((dimensionToUse as number) - lenghtOfFullHand) / 2
+          ((dimensionToUse as number) - lengthOfFullHand) / 2
         );
       else if (direction === cardinalDirections[3])
         return (
           this.cardVisibleOffset +
-          ((dimensionToUse as number) - lenghtOfFullHand) / 2
+          ((dimensionToUse as number) - lengthOfFullHand) / 2
         );
     }
 
