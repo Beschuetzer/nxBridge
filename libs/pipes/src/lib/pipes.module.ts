@@ -4,6 +4,7 @@ import { JoinNamesPipe } from './join-names.pipe';
 import { SuitToStringPipe } from './suit-to-string.pipe';
 import { GetHtmlEntityFromSuitPipe } from './get-html-entity-from-suit.pipe';
 import { SafeHtmlPipe } from './safe-html.pipe';
+import { ReplacePipe } from './replace.pipe';
 
 @NgModule({
   imports: [CommonModule],
@@ -11,13 +12,15 @@ import { SafeHtmlPipe } from './safe-html.pipe';
     JoinNamesPipe,
     SuitToStringPipe,
     GetHtmlEntityFromSuitPipe,
-    SafeHtmlPipe
+    SafeHtmlPipe,
+    ReplacePipe
   ],
   exports: [
     JoinNamesPipe,
     SuitToStringPipe,
     GetHtmlEntityFromSuitPipe,
     SafeHtmlPipe,
+    ReplacePipe,
   ]
 })
 export class PipesModule {}

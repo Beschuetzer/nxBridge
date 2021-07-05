@@ -67,7 +67,7 @@ export class DealPlayerComponent implements OnInit {
   public isPlaying = false;
   public scope: paper.PaperScope | null = null;
   public project: paper.Project | null = null;
-  public biddingTable: HTMLElement | null = null;
+  public biddingTable = '';
   private mobileWidthStart = 655;
   public isMobile = window.innerWidth <= this.mobileWidthStart;
   public summaryPre = '';

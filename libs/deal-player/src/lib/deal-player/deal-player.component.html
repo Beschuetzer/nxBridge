@@ -116,7 +116,7 @@
 </section>
 <section
   class="{{ DEAL_PLAYER_CLASSNAME }}__bidding"
-  [innerHTML]="biddingTable | replaceTicks"
+  [innerHTML]="biddingTable | replace : 't':'i'"
 ></section>
 
 <!-- Loading Cards -->
