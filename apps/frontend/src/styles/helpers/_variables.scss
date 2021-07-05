@@ -49,6 +49,7 @@ $deal-detail-separator-dashed: $deal-detail-separator-width dashed $deal-detail-
 //deal-player
 $deal-player-border: 3px solid var(--color-primary-1);
 $deal-player-border-thin: 1px solid var(--color-primary-1);
+$deal-player-canvas-text-opacity: .66;
 
 //deals-list
 $deals-list-shadow: 0 4px 12px rgba(var(--color-black-rgb), 0.33);

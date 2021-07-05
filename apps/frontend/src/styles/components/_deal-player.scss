@@ -65,7 +65,7 @@
   }
 
   &__deal-info, &__trick, &__summary {
-    color: rgba(var(--color-black-rgb), .5);
+    color: rgba(var(--color-black-rgb), $deal-player-canvas-text-opacity);
   } 
 
   &__deal-info {
@@ -391,6 +391,13 @@
       transform: rotate(90deg) translateY(-50%);
       left: $location;
       top: 50%;
+    }
+  }
+
+  &__contract {
+
+    & > *:nth-child(2) {
+      opacity: $deal-player-canvas-text-opacity;
     }
   }
   
