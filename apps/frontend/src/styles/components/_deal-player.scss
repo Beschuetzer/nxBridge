@@ -1,4 +1,5 @@
 .deal-player {
+  color: var(--color-black);
   font-size: $default-font-size;
   background-color: var(--color-white);
   position: absolute;
@@ -63,13 +64,13 @@
     }
   }
 
-  &__deal-info, &__trick {
-    color: var(--color-primary-black);
+  &__deal-info, &__trick, &__summary {
+    color: var(--color-black);
   } 
 
   &__deal-info {
     position: absolute;
-    top: 14%;
+    top: 17%;
     left: 50%;
     transform: translate(-50%, -0%);
     display: flex;
@@ -88,11 +89,13 @@
 
 
   &__trick {
-    // font-weight: 700;
-    position: absolute;
-    top: 22.5%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    font-weight: 700;
+    grid-column: 3 / span 2;
+    grid-row: 3 / span 2;
+    // position: absolute;
+    // top: 22.5%;
+    // left: 50%;
+    // transform: translate(-50%, -50%);
 
     &-number {
 
@@ -156,6 +159,7 @@
 
     &-north, &-south, &-east, &-west {
       font-size: $default-font-size * 1.5;
+      font-weight: 400;
 
       & > div:nth-child(2) {
         padding-bottom: $default-font-size * 1;
@@ -192,8 +196,12 @@
   &__north-suit, &__south-suit, &__east-suit, &__west-suit {
     font-size: $default-font-size * 3;
 
-    @include respond(super-small) {
+    @include respond(phone) {
       font-size: $default-font-size * 2;
+    }
+
+    @include respond(super-small) {
+      font-size: $default-font-size * 1.33;
     }
   }
 

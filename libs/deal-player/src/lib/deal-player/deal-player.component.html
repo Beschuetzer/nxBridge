@@ -17,13 +17,14 @@
       <span>'{{ declarer }}'</span>
     </div>
   </div>
-  <div *ngIf="trickNumber" class="{{ DEAL_PLAYER_CLASSNAME }}__trick">
-    <span>Trick #:&nbsp;</span>
-    <span class="{{ DEAL_PLAYER_CLASSNAME }}__trick-number">{{
-      trickNumber
-    }}</span>
-  </div>
+  
   <div class="{{ DEAL_PLAYER_CLASSNAME }}__played">
+    <div *ngIf="trickNumber" class="{{ DEAL_PLAYER_CLASSNAME }}__trick">
+      <!-- <span>Trick:&nbsp;</span> -->
+      <span class="{{ DEAL_PLAYER_CLASSNAME }}__trick-number">{{
+        trickNumber
+      }}</span>
+    </div>
     <div class="{{ DEAL_PLAYER_CLASSNAME }}__north-suit">
       <span class="{{ DEAL_PLAYER_CLASSNAME }}__north-suit-number"></span>
       <span class="{{ DEAL_PLAYER_CLASSNAME }}__north-suit-entity"></span>
