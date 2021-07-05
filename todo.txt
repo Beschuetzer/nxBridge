@@ -56,5 +56,4 @@ Todos----------------------------------------------------------
 -figure out how to make closing deal-player reset everything
 
 -add goto nth card played text box?
-
--hands get rearrange suit wise 
+-work on deal-player styling

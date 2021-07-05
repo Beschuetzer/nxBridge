@@ -236,5 +236,5 @@ export function createHandArrayFromFlatArray(flatArray: number[]){
       else if (cardAsNumber >= 26 && cardAsNumber <= 38) hearts.push(cardAsNumber);
       else if (cardAsNumber >= 39 && cardAsNumber <= 51) spades.push(cardAsNumber);
   }
-  return [spades, hearts, diamonds, clubs];
+  return [spades, hearts, clubs, diamonds];
 }

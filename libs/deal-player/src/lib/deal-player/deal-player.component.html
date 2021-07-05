@@ -5,25 +5,31 @@
   <article class="{{ DEAL_PLAYER_CLASSNAME }}__summary">
     <div>{{ name }}</div>
     <div>{{ date }}</div>
-    <div>Deal #:&nbsp;{{ dealNumber }}</div>
+    <div>Deal #:&nbsp;&nbsp;{{ dealNumber }}</div>
   </article>
   <div class="{{ DEAL_PLAYER_CLASSNAME }}__deal-info">
-    <div class="{{ DEAL_PLAYER_CLASSNAME }}__contract"> 
-      <span>Contract:&nbsp;{{ contract?.prefix }}</span>
+    <div class="{{ DEAL_PLAYER_CLASSNAME }}__contract">
+      <span>Contract:&nbsp;&nbsp;{{ contract?.prefix }}</span>
       <span [innerHTML]="contract?.htmlEntity"></span>
     </div>
     <div class="{{ DEAL_PLAYER_CLASSNAME }}__declarer">
-      <span>Declarer:&nbsp;</span>
+      <span>Declarer:&nbsp;&nbsp;</span>
       <span>'{{ declarer }}'</span>
     </div>
+    <div class="{{ DEAL_PLAYER_CLASSNAME }}__result">
+      <span>Result:&nbsp;&nbsp;</span>
+      <span *ngIf="summaryPost !== 'overtrick'">{{ summaryPre.toLowerCase() }}</span>
+      <span *ngIf="summaryNumber">{{ summaryNumber }}</span>
+      <span *ngIf="summaryPost">{{ summaryPost }}</span>
+    </div>
   </div>
-  
+
   <div class="{{ DEAL_PLAYER_CLASSNAME }}__played">
     <div *ngIf="trickNumber" class="{{ DEAL_PLAYER_CLASSNAME }}__trick">
       <!-- <span>Trick:&nbsp;</span> -->
-      <span class="{{ DEAL_PLAYER_CLASSNAME }}__trick-number">T{{
-        trickNumber
-      }}</span>
+      <span class="{{ DEAL_PLAYER_CLASSNAME }}__trick-number"
+        >T{{ trickNumber }}</span
+      >
     </div>
     <div class="{{ DEAL_PLAYER_CLASSNAME }}__north-suit">
       <span class="{{ DEAL_PLAYER_CLASSNAME }}__north-suit-number"></span>
@@ -84,7 +90,7 @@
   </div>
 </section>
 <section class="{{ DEAL_PLAYER_CLASSNAME }}__controls">
-  <svg (click)="onPreviousFive()">
+  <svg (click)="onPreviousFour()">
     <use xlink:href="assets/deal-player/sprite.svg#icon-previous-five"></use>
   </svg>
   <svg (click)="onPrevious()">
@@ -96,19 +102,22 @@
   <svg (click)="onPause()" *ngIf="isPlaying">
     <use xlink:href="assets/deal-player/sprite.svg#icon-pause"></use>
   </svg>
-  <svg class="{{DEAL_PLAYER_CLASSNAME}}__restart" (click)="onRestart()">
+  <svg class="{{ DEAL_PLAYER_CLASSNAME }}__restart" (click)="onRestart()">
     <use xlink:href="assets/deal-player/sprite.svg#icon-restart"></use>
   </svg>
   <svg (click)="onNext()">
     <use xlink:href="assets/deal-player/sprite.svg#icon-next"></use>
   </svg>
-  <svg (click)="onNextFive()">
+  <svg (click)="onNextFour()">
     <use xlink:href="assets/deal-player/sprite.svg#icon-next-five"></use>
   </svg>
 </section>
-<section class="{{ DEAL_PLAYER_CLASSNAME }}__round-winners">
+<section
+  class="{{ DEAL_PLAYER_CLASSNAME }}__bidding"
+  [innerHTML]="biddingTable"
+></section>
+<section class="{{ DEAL_PLAYER_CLASSNAME }}__round-winners"></section>
 
-</section>
 <!-- Loading Cards -->
 <div
   *ngIf="!isMobile"

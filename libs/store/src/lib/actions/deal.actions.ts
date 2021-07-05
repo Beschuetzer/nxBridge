@@ -9,6 +9,10 @@ export const SET_CURRENTLY_VIEWING_DEAL_CONTRACT = '[Deals] SET_CURRENTLY_VIEWIN
 export interface CurrentlyViewingDeal extends Deal {
   dealNumber: number | string;
   declarer: string;
+  biddingTable: HTMLElement;
+  summaryPre: string;
+  summaryNumber: string;
+  summaryPost: string;
 }
 
 export class SetDealsAsStrings implements Action {

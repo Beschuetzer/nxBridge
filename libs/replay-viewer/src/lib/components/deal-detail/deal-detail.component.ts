@@ -128,6 +128,12 @@ export class DealDetailComponent implements OnInit {
         ...this.deal,
         dealNumber: dealNumber ? dealNumber[0] : -1,
         declarer: this.declarer,
+        biddingTable: this.elRef.nativeElement.querySelector(
+          `.${DEAL_DETAIL_CLASSNAME}__bids`
+        )?.innerHTML,
+        summaryPre: this.dealSummaryMessageSuffixPre,
+        summaryNumber: this.dealSummaryMessageSuffixNumber,
+        summaryPost: this.dealSummaryMessageSuffixPost,
       } as CurrentlyViewingDeal)
     );
   }

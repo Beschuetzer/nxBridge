@@ -67,8 +67,12 @@ export class DealPlayerComponent implements OnInit {
   public isPlaying = false;
   public scope: paper.PaperScope | null = null;
   public project: paper.Project | null = null;
+  public biddingTable: HTMLElement | null = null;
   private mobileWidthStart = 655;
   public isMobile = window.innerWidth <= this.mobileWidthStart;
+  public summaryPre = '';
+  public summaryNumber = '';
+  public summaryPost = '';
   private hasLoadedDeal = false;
   private shouldChangePlaySpeed = false;
   private firstCardPlayed = -1;
@@ -133,6 +137,11 @@ export class DealPlayerComponent implements OnInit {
         this.deal = dealState.currentlyViewingDeal;
         this.declarer = dealState.currentlyViewingDeal.declarer;
         this.dealNumber = dealState.currentlyViewingDeal.dealNumber;
+        this.biddingTable = dealState.currentlyViewingDeal.biddingTable;
+        this.summaryPre = dealState.currentlyViewingDeal.summaryPre;
+        this.summaryNumber = dealState.currentlyViewingDeal.summaryNumber;
+        this.summaryPost = dealState.currentlyViewingDeal.summaryPost;
+
         if (Object.keys(this.deal).length <= 0) return;
 
         this.handsToRender = this.deal?.hands;
@@ -184,9 +193,9 @@ export class DealPlayerComponent implements OnInit {
     this.onPause();
   }
 
-  onNextFive() {
+  onNextFour() {
     this.resetTable();
-    this.playCard(this.playCount + 4);
+    this.playCard(this.playCount + 3);
     this.onPause();
   }
 
@@ -214,10 +223,10 @@ export class DealPlayerComponent implements OnInit {
     this.playCard(this.playCount - 2);
   }
 
-  onPreviousFive() {
+  onPreviousFour() {
     this.onPause();
     this.resetTable();
-    this.playCard(this.playCount - 6);
+    this.playCard(this.playCount - 5);
   }
 
   onSpeedChange(e: Event) {
@@ -241,7 +250,6 @@ export class DealPlayerComponent implements OnInit {
     
     const target = document.querySelector(`.${DEAL_PLAYER_CLASSNAME}__round-winners`) as HTMLElement;
     this.renderer.setProperty(target, 'innerHTML', '');
-
   }
 
   private playCard(nthCard = this.playCount) {

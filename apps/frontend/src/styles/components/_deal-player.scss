@@ -1,7 +1,7 @@
 .deal-player {
   color: var(--color-black);
   font-size: $default-font-size;
-  background-color: rgba(var(--color-white-rgb), .5);
+  background-color: rgba(var(--color-primary-1-rgb), 1);
   position: absolute;
   top: 0px;
   left: 0;
@@ -20,7 +20,7 @@
 
   &__summary {
     position: absolute;
-    top: 75.25%;
+    top: 77.25%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -70,7 +70,7 @@
 
   &__deal-info {
     position: absolute;
-    top: 17%;
+    top: 15.7%;
     left: 50%;
     transform: translate(-50%, -0%);
     display: flex;
@@ -402,9 +402,11 @@
   }
 
   &__round-winners{
+    color: var(--color-primary-4);
+
     user-select: none;
     grid-column: 3 / span 1;
-    grid-row: 1 / span 1;
+    grid-row: 2 / span 1;
 
     &-table {
       display: grid;
@@ -413,9 +415,9 @@
       padding: $default-font-size * 1;
       justify-items: center;
       align-items: center;
-      font-size: $default-font-size * .75;
-      max-width: $default-font-size * 12;
-      margin: 0 auto;
+      font-size: $default-font-size * 1;
+      // max-width: $default-font-size * 12;
+      // margin: 0 auto;
 
       & > * {
         border-right: $deal-player-border-thin;  
@@ -464,5 +466,29 @@
   &__restart {
     height: $default-font-size * 2.25;
     width: $default-font-size * 2.25;
+  }
+
+  &__bidding {
+    color: var(--color-primary-4);
+    font-size: $default-font-size * 1;
+    text-align: center;
+    padding: $default-font-size * .5;
+    grid-column: 3 / span 1;
+    grid-row: 1 / span 1;
+
+    & .deal-detail__bids-table {
+
+      & > * {
+        color: inherit !important;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: $default-font-size * .25 $default-font-size * .5;
+      }
+
+      & > *:nth-child(-n + 4) {
+        font-size: $default-font-size * .75;
+      }
+    }
   }
 }
