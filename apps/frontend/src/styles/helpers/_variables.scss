@@ -5,6 +5,7 @@ $nav-break-max-width: 35.0625em;
 $phone-max-width: 40.9375em;
 $tab-port-max-width: 52.6875em;
 $tab-land-max-width: 58.5625em;
+$deal-player-layout-switch-max-width: 84.375em;
 $big-desktop-min-width: 120.0625em;
 $layout-breakpoint: phone;
 
@@ -49,8 +50,8 @@ $deal-detail-separator-dashed: $deal-detail-separator-width dashed $deal-detail-
 //deal-player
 $deal-player-layout-breakpoint: tab-port;
 $deal-player-table-border: 3px solid var(--color-primary-4);
-$deal-player-border: 3px solid var(--color-primary-4);
-$deal-player-border-thin: 1px solid var(--color-primary-4);
+$deal-player-border: 3px solid var(--color-primary-3);
+$deal-player-border-thin: 1px solid var(--color-primary-3);
 $deal-player-control-border: 3px solid var(--color-primary-1);
 $deal-player-control-border-thin: 1px solid var(--color-primary-1);
 $deal-player-canvas-text-opacity: .66;

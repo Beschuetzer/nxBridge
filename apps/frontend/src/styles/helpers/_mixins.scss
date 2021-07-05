@@ -177,6 +177,11 @@
 			@content;
 		} //937px
 	}
+	@if $breakpoint == deal-player-layout-switch {
+		@media only screen and (max-width: $deal-player-layout-switch-max-width) {
+			@content;
+		}//1350px
+	}
 	@if $breakpoint == big-desktop {
 		@media only screen and (min-width: $big-desktop-min-width) {
 			@content;

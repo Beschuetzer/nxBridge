@@ -1,8 +1,6 @@
 <div (click)="onClose()" class="{{ DEAL_PLAYER_CLASSNAME }}__close">
   &#10006;
 </div>
-<section class="{{ DEAL_PLAYER_CLASSNAME }}__round-winners">
-</section>
 <section class="{{ DEAL_PLAYER_CLASSNAME }}__canvas">
   <article class="{{ DEAL_PLAYER_CLASSNAME }}__summary">
     <div>{{ name }}</div>
@@ -113,6 +111,8 @@
   <svg (click)="onNextFour()">
     <use xlink:href="assets/deal-player/sprite.svg#icon-next-five"></use>
   </svg>
+</section>
+<section class="{{ DEAL_PLAYER_CLASSNAME }}__round-winners">
 </section>
 <section
   class="{{ DEAL_PLAYER_CLASSNAME }}__bidding"
