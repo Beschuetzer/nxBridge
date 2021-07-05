@@ -15,7 +15,6 @@ export class ReplacePipe implements PipeTransform {
     const toReplaceIsArray = Array.isArray(toReplace);
     const replaceWithIsArray = Array.isArray(replaceWith);
 
-
     if (!toReplaceIsArray && !replaceWithIsArray) {
       if (!replaceAll) result = this.replaceOne(result, toReplace as string, replaceWith as string);
       else {
@@ -58,7 +57,8 @@ export class ReplacePipe implements PipeTransform {
     let result = str;
     for (let i = 0; i < toReplace.length; i++) {
       const toReplaceString = toReplace[i];
-      result = this.replaceOne(str, toReplaceString as string, replaceWith as string);
+      result = this.replaceOne(result, toReplaceString as string, replaceWith as string);
+      console.log('result =', result);
     }
     return result;
   }
@@ -69,7 +69,7 @@ export class ReplacePipe implements PipeTransform {
     for (let i = 0; i < toReplace.length; i++) {
       const toReplaceString = toReplace[i];
       const replaceWithString = replaceWith[i]
-      result = this.replaceOne(str, toReplaceString, replaceWithString);
+      result = this.replaceOne(result, toReplaceString, replaceWithString);
     }
     return result;
   }

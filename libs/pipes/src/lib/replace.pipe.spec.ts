@@ -22,21 +22,21 @@ describe('ReplacePipe', () => {
 
   it('string[] - string - false', () => {
     const pipe = new ReplacePipe();
-    expect(pipe.transform(testString, toReplaceArray, 'a', false)).toBe(testString);
+    expect(pipe.transform(testString, toReplaceArray, 'a', false)).toBe('ahis is tha test string');
   });
 
   it('string[] - string - true', () => {
     const pipe = new ReplacePipe();
-    expect(pipe.transform(testString, toReplaceArray, 'a', true)).toBe(testString);
+    expect(pipe.transform(testString, toReplaceArray, 'a', true)).toBe('ahis is aha aasa saring');
   });
 
   it('string[] - string[] - false', () => {
     const pipe = new ReplacePipe();
-    expect(pipe.transform(testString, toReplaceArray, toReplaceWithArray, false)).toBe(testString);
+    expect(pipe.transform(testString, toReplaceArray, toReplaceWithArray, false)).toBe('ahis is thb test string');
   });
 
   it('string[] - string[] - true', () => {
     const pipe = new ReplacePipe();
-    expect(pipe.transform(testString, toReplaceArray, toReplaceWithArray, true)).toBe(testString);
+    expect(pipe.transform(testString, toReplaceArray, toReplaceWithArray, true)).toBe('ahis is ahb absa saring');
   });
 });
