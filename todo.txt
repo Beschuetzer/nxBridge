@@ -1,3 +1,8 @@
+known bugs --------------------------
+  -Deal 1 trick 6 of yougurt 2/16 7:24pm bug where order of playing is reversed
+
+
+
 
 Components:
   1. UserInputs (inputs for username and email, input for filter before and filter after (three ways to use: get games before date, after date, or between dates), dropdown to select nth page to view when more than specified-amount-to-view-per-page number of games available
@@ -46,10 +51,8 @@ Todos----------------------------------------------------------
 
 
 
--add goto nth card played text box?
 
 
--Deal 1 trick 6 of yougurt 2/16 7:24pm bug in play order?
 -figure out how to make closing deal-player reset everything
 
--north and east for not keeping cards center needs work
+-add goto nth card played text box?

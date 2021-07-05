@@ -21,6 +21,8 @@ import {
   COLOR_RED_CLASSNAME,
   COLOR_BLACK_CLASSNAME,
   createHandArrayFromFlatArray,
+  cardsPerSuit,
+  cardsPerHand,
 } from '@nx-bridge/constants';
 
 import { Store } from '@ngrx/store';
@@ -691,6 +693,7 @@ export class DealPlayerComponent implements OnInit {
     const lengthOfHand = numberOfCardsInHand * this.cardSpacingIncrement;
     const usedSpace = this.cardVisibleOffset * 2 + lengthOfHand;
     const usedSpaceOfFullHand = spaceUsedByTopAndBottomHands + lenghtOfFullHand;
+    const missingCardAdjustment = (cardsPerHand - numberOfCardsInHand) * this.cardSpacingIncrement;
 
     if (this.keepCardsCentered) {
       if (direction === cardinalDirections[0])
@@ -718,13 +721,15 @@ export class DealPlayerComponent implements OnInit {
         return (
           this.cardVisibleOffset +
           ((dimensionToUse as number) - usedSpaceOfFullHand) / 2 -
-          (this.cardWidth - this.cardSpacingIncrement)
+          (this.cardWidth - this.cardSpacingIncrement) +
+          missingCardAdjustment
         );
       else if (direction === cardinalDirections[1])
         return (
           this.cardVisibleOffset +
           ((dimensionToUse as number) - usedSpaceOfFullHand) / 2 -
-          (this.cardWidth - this.cardSpacingIncrement)
+          (this.cardWidth - this.cardSpacingIncrement) +
+          missingCardAdjustment
         );
       else if (direction === cardinalDirections[2])
         return (
