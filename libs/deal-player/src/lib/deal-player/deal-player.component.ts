@@ -21,7 +21,6 @@ import {
   COLOR_RED_CLASSNAME,
   COLOR_BLACK_CLASSNAME,
   createHandArrayFromFlatArray,
-  cardsPerSuit,
   cardsPerHand,
 } from '@nx-bridge/constants';
 
@@ -55,6 +54,7 @@ export class DealPlayerComponent implements OnInit {
   public deal: Deal | null = null;
   public dealNumber: number | string = -1;
   public contract: Contract | null = null;
+  public declarer = "";
   public handsToRender: Hands | null = null;
   public playCount = 0;
   public trickNumber = 0;
@@ -131,6 +131,7 @@ export class DealPlayerComponent implements OnInit {
     this.store.select('deals').subscribe((dealState) => {
       if (dealState.currentlyViewingDeal?.bids && !this.hasLoadedDeal) {
         this.deal = dealState.currentlyViewingDeal;
+        this.declarer = dealState.currentlyViewingDeal.declarer;
         this.dealNumber = dealState.currentlyViewingDeal.dealNumber;
         if (Object.keys(this.deal).length <= 0) return;
 

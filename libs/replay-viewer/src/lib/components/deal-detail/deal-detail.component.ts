@@ -38,7 +38,12 @@ import {
   tricksInABook,
 } from '@nx-bridge/constants';
 import { Store } from '@ngrx/store';
-import { AppState, CurrentlyViewingDeal, SetCurrentlyViewingDeal, SetCurrentlyViewingDealContract } from '@nx-bridge/store';
+import {
+  AppState,
+  CurrentlyViewingDeal,
+  SetCurrentlyViewingDeal,
+  SetCurrentlyViewingDealContract,
+} from '@nx-bridge/store';
 @Component({
   selector: 'nx-bridge-deal-detail',
   templateUrl: './deal-detail.component.html',
@@ -65,8 +70,9 @@ export class DealDetailComponent implements OnInit {
   public buttonChoices: [string, string] = dealDetailButtonChoices;
 
   constructor(
-    private renderer: Renderer2, private elRef: ElementRef,
-    private store: Store<AppState>,
+    private renderer: Renderer2,
+    private elRef: ElementRef,
+    private store: Store<AppState>
   ) {}
 
   ngOnInit(): void {
@@ -86,29 +92,44 @@ export class DealDetailComponent implements OnInit {
       `.${DEAL_DETAIL_CLASSNAME}__tables`
     );
     toggleClassOnList([item], DISPLAY_NONE_CLASSNAME);
-    toggleInnerHTML(
-      button,
-      this.buttonChoices
-    );
+    toggleInnerHTML(button, this.buttonChoices);
 
     if (button.innerHTML.match(this.buttonChoices[1])) {
       const gameDetail = button.closest(`.${GAME_DETAIL_CLASSNAME}`);
-      const gameDetailSummary = gameDetail?.querySelector(`.${GAME_DETAIL_CLASSNAME}__summary`);
+      const gameDetailSummary = gameDetail?.querySelector(
+        `.${GAME_DETAIL_CLASSNAME}__summary`
+      );
       const gameDetailSummaryClientRect = gameDetailSummary?.getBoundingClientRect();
       const gameDetailSummaryBottom = gameDetailSummaryClientRect?.bottom as number;
-      const scrollAmount = scrollToSection(button, gameDetailSummaryBottom ? gameDetailSummaryBottom : 0, true);
+      const scrollAmount = scrollToSection(
+        button,
+        gameDetailSummaryBottom ? gameDetailSummaryBottom : 0,
+        true
+      );
       if (gameDetail) gameDetail.scrollTop = scrollAmount as number;
     }
   }
 
   onWatchClick(e: Event) {
-    this.store.dispatch(new SetCurrentlyViewingDealContract(this.contract as Contract));
-    
+    this.store.dispatch(
+      new SetCurrentlyViewingDealContract(this.contract as Contract)
+    );
+
     const button = (e.currentTarget || e.target) as HTMLButtonElement;
-    const dealDetailSummary = button.closest(`.${DEAL_DETAIL_CLASSNAME}__summary`);
-    const dealNumber = dealDetailSummary?.querySelector(`.${DEAL_DETAIL_CLASSNAME}__summary-number`)?.innerHTML.match(/\d+/i);
-    
-    this.store.dispatch(new SetCurrentlyViewingDeal({...this.deal, dealNumber: dealNumber ? dealNumber[0] : -1} as CurrentlyViewingDeal));
+    const dealDetailSummary = button.closest(
+      `.${DEAL_DETAIL_CLASSNAME}__summary`
+    );
+    const dealNumber = dealDetailSummary
+      ?.querySelector(`.${DEAL_DETAIL_CLASSNAME}__summary-number`)
+      ?.innerHTML.match(/\d+/i);
+
+    this.store.dispatch(
+      new SetCurrentlyViewingDeal({
+        ...this.deal,
+        dealNumber: dealNumber ? dealNumber[0] : -1,
+        declarer: this.declarer,
+      } as CurrentlyViewingDeal)
+    );
   }
 
   setBiddingTable() {

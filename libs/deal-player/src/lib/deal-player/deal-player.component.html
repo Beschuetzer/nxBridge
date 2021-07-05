@@ -7,9 +7,15 @@
     <div>{{ date }}</div>
     <div>Deal #:&nbsp;{{ dealNumber }}</div>
   </article>
-  <div class="{{ DEAL_PLAYER_CLASSNAME }}__contract">
-    <span>Contract:&nbsp;{{ contract?.prefix }}</span>
-    <span [innerHTML]="contract?.htmlEntity"></span>
+  <div class="{{ DEAL_PLAYER_CLASSNAME }}__deal-info">
+    <div class="{{ DEAL_PLAYER_CLASSNAME }}__contract"> 
+      <span>Contract:&nbsp;{{ contract?.prefix }}</span>
+      <span [innerHTML]="contract?.htmlEntity"></span>
+    </div>
+    <div class="{{ DEAL_PLAYER_CLASSNAME }}__declarer">
+      <span>Declarer:&nbsp;</span>
+      <span>'{{ declarer }}'</span>
+    </div>
   </div>
   <div *ngIf="trickNumber" class="{{ DEAL_PLAYER_CLASSNAME }}__trick">
     <span>Trick #:&nbsp;</span>
@@ -54,7 +60,7 @@
 </section>
 <section class="{{ DEAL_PLAYER_CLASSNAME }}__play">
   <div>
-    <span>Play a card every&nbsp;</span>
+    <span>Play every&nbsp;</span>
     <input
       type="number"
       (change)="onSpeedChange($event)"
@@ -67,7 +73,7 @@
     <span>&nbsp;seconds.</span>
   </div>
   <div>
-    <span>Keep cards centered?&nbsp;</span>
+    <span>Center cards?&nbsp;</span>
     <input
       type="checkbox"
       (change)="onCenteredChange($event)"
