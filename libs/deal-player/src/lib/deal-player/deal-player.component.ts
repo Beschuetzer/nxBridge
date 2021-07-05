@@ -642,7 +642,6 @@ export class DealPlayerComponent implements OnInit {
   private onResize(e: Event) {
     setTimeout(() => {
       clearTimeout(this.redrawTimeout);
-      console.log('resize------------------------------------------------');
 
       this.isMobile = window.innerWidth <= this.mobileWidthStart;
       this.redrawTimeout = setTimeout(() => {
@@ -663,8 +662,6 @@ export class DealPlayerComponent implements OnInit {
               this.MIN_SCALE_AMOUNT_NORMAL,
               this.MAX_SCALE_AMOUNT_ABOVE_THRESHOLD
             );
-
-        console.log('this.cardScaleAmount =', this.cardScaleAmount);
 
         this.resetCardsRotationAndPosition();
         this.setCardsSize();
@@ -731,7 +728,6 @@ export class DealPlayerComponent implements OnInit {
           this.cardVisibleOffset + ((dimensionToUse as number) - usedSpace) / 2
         );
     } else {
-      console.log('dimensionToUse =', dimensionToUse);
 
       if (direction === cardinalDirections[0])
         return (
@@ -827,20 +823,25 @@ export class DealPlayerComponent implements OnInit {
   private renderRounderWinnersTable() {
     const headerLeftContent = '#';
     const headerRightContent = 'Winner';
+    const sectionHeaderContent = 'Round Winners:'
     const target = document.querySelector(`.${DEAL_PLAYER_CLASSNAME}__round-winners`) as HTMLElement;
     const numberOfWinnersToShow = Math.floor(this.cardsPlayed.length / 4);
 
     this.renderer.setProperty(target, 'innerHTML', '');
     const table = this.renderer.createElement('div');
-    const leftHeader = this.renderer.createElement('div');
-    const rightHeader = this.renderer.createElement('div');
+    const sectionHeader = this.renderer.createElement('div');
+    const leftTableHeader = this.renderer.createElement('div');
+    const rightTableHeader = this.renderer.createElement('div');
 
     this.renderer.addClass(table, `${DEAL_PLAYER_CLASSNAME}__round-winners-table`)
 
-    this.renderer.setProperty(leftHeader, 'innerHTML', headerLeftContent);
-    this.renderer.setProperty(rightHeader, 'innerHTML', headerRightContent);
-    this.renderer.appendChild(table, leftHeader);
-    this.renderer.appendChild(table, rightHeader);
+    this.renderer.addClass(sectionHeader, `${DEAL_PLAYER_CLASSNAME}__round-winners-header`);
+    this.renderer.setProperty(sectionHeader, 'innerHTML', sectionHeaderContent);
+    this.renderer.setProperty(leftTableHeader, 'innerHTML', headerLeftContent);
+    this.renderer.setProperty(rightTableHeader, 'innerHTML', headerRightContent);
+    this.renderer.appendChild(target, sectionHeader);
+    this.renderer.appendChild(table, leftTableHeader);
+    this.renderer.appendChild(table, rightTableHeader);
     
     //this.cardPlayerOrder has names of players in sequence of their playing order
 
