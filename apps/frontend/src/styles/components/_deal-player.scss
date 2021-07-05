@@ -119,6 +119,7 @@
   }
 
   &__play {
+    user-select: none;
     font-size: $default-font-size * 0.74;
     grid-column: 2 / span 1;
     display: flex;
@@ -422,6 +423,7 @@
   }
 
   &__controls {
+    user-select: none;
     cursor: pointer;
     max-width: $default-font-size * 39;
     grid-template-columns: repeat(4, 1fr);
@@ -454,9 +456,13 @@
     width: $default-font-size * 2.25;
   }
 
+  &__bidding, &__round-winners {
+    user-select: none;
+    
+  }
+  
   &__round-winners {
     color: var(--color-primary-1);
-    user-select: none;
     grid-column: 1 / span 1;
     grid-row: 1 / -1;
     overflow: auto;
@@ -494,7 +500,7 @@
 
       @include respond(deal-player-layout-switch) {
         & > *:nth-child(2n + 2) {
-          border-right: $deal-player-border;
+          border-right: $deal-player-table-border;
         }
       }
 

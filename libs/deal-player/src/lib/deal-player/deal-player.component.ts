@@ -54,7 +54,7 @@ export class DealPlayerComponent implements OnInit {
   public deal: Deal | null = null;
   public dealNumber: number | string = -1;
   public contract: Contract | null = null;
-  public declarer = "";
+  public declarer = '';
   public handsToRender: Hands | null = null;
   public playCount = 0;
   public trickNumber = 0;
@@ -143,7 +143,7 @@ export class DealPlayerComponent implements OnInit {
         this.summaryPost = dealState.currentlyViewingDeal.summaryPost;
 
         if (Object.keys(this.deal).length <= 0) return;
-
+        
         this.handsToRender = this.deal?.hands;
         this.project = new Project(
           document.querySelector(
@@ -158,6 +158,7 @@ export class DealPlayerComponent implements OnInit {
 
         this.renderer.addClass(this.elRef.nativeElement, VISIBLE_CLASSNAME);
         this.hasLoadedDeal = true;
+        this.renderRoundWinnersTable();
       } else if (dealState.currentlyViewingDeal?.bids) {
         this.renderer.addClass(this.elRef.nativeElement, VISIBLE_CLASSNAME);
       }
@@ -247,9 +248,6 @@ export class DealPlayerComponent implements OnInit {
     this.onPause();
     this.resetCardsPlayed();
     this.trickNumber = 0;
-    
-    const target = document.querySelector(`.${DEAL_PLAYER_CLASSNAME}__round-winners`) as HTMLElement;
-    this.renderer.setProperty(target, 'innerHTML', '');
   }
 
   private playCard(nthCard = this.playCount) {
@@ -317,7 +315,7 @@ export class DealPlayerComponent implements OnInit {
   private displayCardsInTable() {
     this.setFirstCardPlayedAndPlayer();
     this.setCardPlayOrderAsDirections();
-    this.renderRounderWinnersTable();
+    this.renderRoundWinnersTable();
 
     if ((this.cardsPlayed.length - 1) % 4 === 0) this.resetTable();
 
@@ -704,7 +702,8 @@ export class DealPlayerComponent implements OnInit {
     const lengthOfHand = numberOfCardsInHand * this.cardSpacingIncrement;
     const usedSpace = this.cardVisibleOffset * 2 + lengthOfHand;
     const usedSpaceOfFullHand = spaceUsedByTopAndBottomHands + lengthOfFullHand;
-    const missingCardAdjustment = (cardsPerHand - numberOfCardsInHand) * this.cardSpacingIncrement;
+    const missingCardAdjustment =
+      (cardsPerHand - numberOfCardsInHand) * this.cardSpacingIncrement;
 
     if (this.keepCardsCentered) {
       if (direction === cardinalDirections[0])
@@ -819,11 +818,13 @@ export class DealPlayerComponent implements OnInit {
     // this.project = null;
   }
 
-  private renderRounderWinnersTable() {
+  private renderRoundWinnersTable() {
     const headerLeftContent = 'Trick #';
     const headerRightContent = 'Taker';
-    const sectionHeaderContent = 'Trick Takers:'
-    const target = document.querySelector(`.${DEAL_PLAYER_CLASSNAME}__round-winners`) as HTMLElement;
+    const sectionHeaderContent = 'Trick Takers:';
+    const target = document.querySelector(
+      `.${DEAL_PLAYER_CLASSNAME}__round-winners`
+    ) as HTMLElement;
     const numberOfWinnersToShow = Math.floor(this.cardsPlayed.length / 4);
 
     this.renderer.setProperty(target, 'innerHTML', '');
@@ -832,30 +833,42 @@ export class DealPlayerComponent implements OnInit {
     const leftTableHeader = this.renderer.createElement('div');
     const rightTableHeader = this.renderer.createElement('div');
 
-    this.renderer.addClass(table, `${DEAL_PLAYER_CLASSNAME}__round-winners-table`)
+    this.renderer.addClass(
+      table,
+      `${DEAL_PLAYER_CLASSNAME}__round-winners-table`
+    );
 
-    this.renderer.addClass(sectionHeader, `${DEAL_PLAYER_CLASSNAME}__round-winners-header`);
+    this.renderer.addClass(
+      sectionHeader,
+      `${DEAL_PLAYER_CLASSNAME}__round-winners-header`
+    );
     this.renderer.setProperty(sectionHeader, 'innerHTML', sectionHeaderContent);
     this.renderer.setProperty(leftTableHeader, 'innerHTML', headerLeftContent);
-    this.renderer.setProperty(rightTableHeader, 'innerHTML', headerRightContent);
+    this.renderer.setProperty(
+      rightTableHeader,
+      'innerHTML',
+      headerRightContent
+    );
     this.renderer.appendChild(target, sectionHeader);
     this.renderer.appendChild(table, leftTableHeader);
     this.renderer.appendChild(table, rightTableHeader);
-    
+
     //this.cardPlayerOrder has names of players in sequence of their playing order
 
-    for (let i = 0; i < numberOfWinnersToShow; i++) {
+    for (let i = 0; i < 13; i++) {
       const roundWinner = (this.deal?.roundWinners as string[][])[i];
       const newDivNumber = this.renderer.createElement('div');
       const newDivName = this.renderer.createElement('div');
 
       this.renderer.setProperty(newDivNumber, 'innerHTML', i + 1);
-      this.renderer.setProperty(newDivName, 'innerHTML', roundWinner[0]);
+      this.renderer.setProperty(
+        newDivName,
+        'innerHTML',
+        i + 1 <= numberOfWinnersToShow ? roundWinner[0] : ''
+      );
       this.renderer.appendChild(table, newDivNumber);
       this.renderer.appendChild(table, newDivName);
     }
-
-
 
     this.renderer.appendChild(target, table);
   }
