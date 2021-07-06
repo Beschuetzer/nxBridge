@@ -6,7 +6,12 @@ import {
   ValidatorFn,
 } from '@angular/forms';
 import { HelpersService } from '@nx-bridge/helpers';
-import { AppState, SetCurrentlyViewingUser, SetIsLoading, SetLoadingError } from '@nx-bridge/store';
+import {
+  AppState,
+  SetCurrentlyViewingUser,
+  SetIsLoading,
+  SetLoadingError,
+} from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
 import { LocalStorageUser } from '@nx-bridge/interfaces-and-types';
 import { Game } from '@nx-bridge/interfaces-and-types';
@@ -16,13 +21,13 @@ import { LocalStorageManagerService } from './local-storage-manager.service';
   providedIn: 'root',
 })
 export class LandingPageService {
-  public username = "";
-  public email = "";
-  public userId = "";
+  public username = '';
+  public email = '';
+  public userId = '';
   public localGameCount = 0;
   public gameCountFromServer = 0;
   public needToCreateLocalStorageUser = false;
-
+  public needToUpdateEmailOrUsername = false;
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor(
@@ -58,14 +63,27 @@ export class LandingPageService {
     };
   }
 
-  startRequest(username: string, email: string) {
+  private getLocalUserId() {
     const localStorageUsers = this.localStorageManager.getLocalStorageUsers();
-    this.userId = localStorageUsers ? this.localStorageManager.getIdFromUsername(username) : '';
+
+    if (!localStorageUsers) return '';
+    let localUserId = this.localStorageManager.getIdFromUsername(this.username);
+
+    if (!localUserId)
+      localUserId = this.localStorageManager.getIdFromEmail(this.email);
+
+    return localUserId;
+  }
+
+  startRequest(username: string, email: string) {
+    this.needToUpdateEmailOrUsername = false;
+    this.needToCreateLocalStorageUser = false;
     this.username = username;
     this.email = email;
+    this.userId = this.getLocalUserId();
+    debugger;
 
     if (!this.userId) {
-      this.needToCreateLocalStorageUser = true;
       this.helpersService.getUser(username, email).subscribe((userId) => {
         this.handleGetUserResponse(userId);
       });
@@ -74,14 +92,21 @@ export class LandingPageService {
 
   private handleGetUserResponse(userId: string) {
     if (userId) {
+      const localStorageUser = this.localStorageManager.getLocalStorageUser(
+        userId
+      );
+
+      if (!localStorageUser) this.needToCreateLocalStorageUser = true;
+      else this.needToUpdateEmailOrUsername = true;
+
       this.userId = userId;
       this.getGameCount();
     } else {
       this.store.dispatch(
         new SetLoadingError(
-          `There is no user with the ${this.username ? 'username' : 'email'} of '${
-            this.username ? this.username : this.email
-          }'.`
+          `There is no user with the ${
+            this.username ? 'username' : 'email'
+          } of '${this.username ? this.username : this.email}'.`
         )
       );
       this.store.dispatch(new SetIsLoading(false));
@@ -89,37 +114,70 @@ export class LandingPageService {
   }
 
   private getGameCount() {
-    this.localGameCount = this.localStorageManager.getLastGameCount(this.userId as string);
-    this.helpersService.getGameCount(this.userId as string).subscribe(gameCount => {
-      this.gameCountFromServer = gameCount;
-      this.handleGetGameCountResponse();
-    })
+    this.localGameCount = this.localStorageManager.getLastGameCount(
+      this.userId as string
+    );
+    this.helpersService
+      .getGameCount(this.userId as string)
+      .subscribe((gameCount) => {
+        this.gameCountFromServer = gameCount;
+        this.handleGetGameCountResponse();
+      });
   }
 
   private handleGetGameCountResponse() {
-    const numberOfGamesToGet = Math.abs(this.gameCountFromServer - this.localGameCount);
+    const numberOfGamesToGet = Math.abs(
+      this.gameCountFromServer - this.localGameCount
+    );
     debugger;
 
     if (numberOfGamesToGet === 0) {
       const games = this.localStorageManager.getGames(this.userId);
-      return this.handleGetGamesResponse(games ? games : [])
+      return this.handleGetGamesResponse(games ? games : []);
     }
-    
-    this.helpersService.getGames(this.userId as string, numberOfGamesToGet).subscribe((games) => {
-      this.handleGetGamesResponse(games);
-    });
+
+    this.helpersService
+      .getGames(this.userId as string, numberOfGamesToGet)
+      .subscribe((games) => {
+        this.handleGetGamesResponse(games);
+      });
   }
 
   private handleGetGamesResponse(games: Game[]) {
     console.log('games =', games);
     this.helpersService.loadDealsIntoRedux(games);
 
-    if (this.needToCreateLocalStorageUser) this.localStorageManager.createLocalStorageUser(this.userId, this.username, this.email, games, this.gameCountFromServer + this.localGameCount);
-    else this.localStorageManager.appendGamesToLocalStorageUser(this.userId as string, games);
+    if (this.needToCreateLocalStorageUser)
+      this.localStorageManager.createLocalStorageUser(
+        this.userId,
+        this.username,
+        this.email,
+        games,
+        this.gameCountFromServer + this.localGameCount
+      );
+    else {
+      if (this.needToUpdateEmailOrUsername)
+        this.localStorageManager.updateEmailAndUsername(
+          this.userId,
+          this.username,
+          this.email
+        );
+
+      this.localStorageManager.appendGamesToLocalStorageUser(
+        this.userId as string,
+        games
+      );
+    }
 
     debugger;
-    const localStorageUser = this.localStorageManager.getLocalStorageUser(this.userId);
-    this.store.dispatch(new SetCurrentlyViewingUser(localStorageUser ? localStorageUser : {} as LocalStorageUser));
+    const localStorageUser = this.localStorageManager.getLocalStorageUser(
+      this.userId
+    );
+    this.store.dispatch(
+      new SetCurrentlyViewingUser(
+        localStorageUser ? localStorageUser : ({} as LocalStorageUser)
+      )
+    );
     this.store.dispatch(new SetIsLoading(false));
   }
 }

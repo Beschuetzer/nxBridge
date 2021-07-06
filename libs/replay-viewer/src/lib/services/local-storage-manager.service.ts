@@ -57,6 +57,17 @@ export class LocalStorageManagerService {
     return this.EMPTY_USER_ID_RETURNS;
   }
 
+  getIdFromEmail(email: string) {
+    const localStorageUsers = this.getLocalStorageUsers();
+    for (const userId in localStorageUsers) {
+      if (Object.prototype.hasOwnProperty.call(localStorageUsers, userId)) {
+        const userObj = localStorageUsers[userId];
+        if (userObj.email === email) return userId;
+      }
+    }
+    return this.EMPTY_USER_ID_RETURNS;
+  }
+
   appendGamesToLocalStorageUser(userId: string, games: Game[]) {
     const localStorageUser = this.getLocalStorageUser(userId);
     localStorageUser?.games.push(...games);
@@ -84,7 +95,38 @@ export class LocalStorageManagerService {
       }
     }
 
-    localStorage.setItem(this.usersInLocalStorage, JSON.stringify(localStorageUsers));
+    this.saveLocalStorageUsers(localStorageUsers);
     return localStorageUsers;
+  }
+
+  updateEmailAndUsername(userId: string, username: string, email: string) {
+    if (!userId) return;
+    const localStorageUser = this.getLocalStorageUser(userId);
+    if (!localStorageUser) return;
+
+    const trimmedUsername = username ? username.trim() : "";
+    const trimmedEmail = email ? email.trim() : "";
+
+    if (trimmedUsername) localStorageUser.username = trimmedUsername;
+    if (trimmedEmail) localStorageUser.email = trimmedEmail;
+
+    this.saveLocalStorageUser(userId, localStorageUser);
+  }
+
+  private saveLocalStorageUser(userId: string, localStorageUser: LocalStorageUser) {
+    let localStorageUsers = this.getLocalStorageUsers();
+    if (!localStorageUsers) {
+      localStorageUsers = {
+        [userId]: localStorageUser,
+      }
+    } else {
+      localStorageUsers[userId] = localStorageUser;
+    }
+
+    this.saveLocalStorageUsers(localStorageUsers);
+  }
+
+  private saveLocalStorageUsers(localStorageUsers: LocalStorageUsers) {
+    localStorage.setItem(this.usersInLocalStorage, JSON.stringify(localStorageUsers));
   }
 }

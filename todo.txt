@@ -61,7 +61,8 @@ Todos----------------------------------------------------------
 Testing------------
   -how the new games are grabbed 
   -test already stored LocalStorageUser scenario works
-  -test how checking for a new user works when you have users already in localStorageUsers
+  -how does providing email to a localStorageUser already present work? does it save email?
 
 
-  -user names can change, so have getGameCount return current username too?
+  -games get loading on top of other games that are there (need to only add new ones in appendGamesToLocalStorageUser())
+  -user names can change, so have getGameCount return current username too? how do we update usernames on every submission?
