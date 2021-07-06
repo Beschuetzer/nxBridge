@@ -39,6 +39,7 @@ import {
 } from '@nx-bridge/interfaces-and-types';
 import * as paper from 'paper';
 import { Project, Raster } from 'paper/dist/paper-core';
+import { DealPlayerService } from '../deal-player.service';
 
 @Component({
   selector: 'nx-bridge-deal-player',
@@ -120,7 +121,8 @@ export class DealPlayerComponent implements OnInit {
   constructor(
     private store: Store<AppState>,
     private elRef: ElementRef,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private dealPlayerService: DealPlayerService,
   ) {}
 
   ngOnInit(): void {
@@ -181,7 +183,8 @@ export class DealPlayerComponent implements OnInit {
     this.resetCardsPlayed();
     this.resetTable();
     this.renderer.removeClass(this.elRef.nativeElement, VISIBLE_CLASSNAME);
-    this.resetCardsRotationAndPosition();
+    console.log('onClose------------------------------------------------');
+    this.dealPlayerService.setCardsRotationAndPosition(this.cards);
     this.store.dispatch(
       new SetCurrentlyViewingDeal({} as CurrentlyViewingDeal)
     );
@@ -509,8 +512,9 @@ export class DealPlayerComponent implements OnInit {
           handsWithDirectionAsKey[usersDirection] = usersHand;
         } catch (err) {
           this.error = err;
-          this.resetCardsRotationAndPosition();
+          this.dealPlayerService.setCardsRotationAndPosition(this.cards);
           console.error('err =', err);
+          return;
         }
       }
     }
@@ -660,8 +664,8 @@ export class DealPlayerComponent implements OnInit {
               this.MIN_SCALE_AMOUNT_NORMAL,
               this.MAX_SCALE_AMOUNT_ABOVE_THRESHOLD
             );
-
-        this.resetCardsRotationAndPosition();
+            
+        this.dealPlayerService.setCardsRotationAndPosition(this.cards);
         this.setCardsSize();
         this.setCanvasMetrics();
         this.setCardMetrics();
@@ -754,14 +758,6 @@ export class DealPlayerComponent implements OnInit {
     }
 
     throw new Error('Invalid direction in getCalculatedStart');
-  }
-
-  private resetCardsRotationAndPosition() {
-    for (let i = 0; i < this.cards.length; i++) {
-      const card = this.cards[i] as paper.Raster;
-      card.position.x = this.DEFAULT_CARD_POSITION;
-      card.rotation = 0;
-    }
   }
 
   private setCardsSize() {
