@@ -13,8 +13,8 @@ import {
   USERNAME_STRING,
   USERS_STRING,
   GET_GAME_COUNT_URL,
+  GET_GAMES_LAST_STRING,
 } from '@nx-bridge/constants';
-import * as mongoose from 'mongoose';
 
 @Injectable({ providedIn: 'root' })
 export class HelpersService {
@@ -30,11 +30,8 @@ export class HelpersService {
   }
 
   getGames(userId: string, numberOfGamesToGet?: number) {
-    const queryStringToUse = `${USER_ID_STRING}=${userId}`;
-    if (!numberOfGamesToGet) {
-      return this.http.get<Game[]>(`${GET_GAMES_URL}?${queryStringToUse}`);
-    } 
-    
+    const queryStringToUse = `${USER_ID_STRING}=${userId}&${GET_GAMES_LAST_STRING}=${numberOfGamesToGet}`;
+    return this.http.get<Game[]>(`${GET_GAMES_URL}?${queryStringToUse}`);
   }
 
   getUser(usernameValue: string, emailValue: string) {

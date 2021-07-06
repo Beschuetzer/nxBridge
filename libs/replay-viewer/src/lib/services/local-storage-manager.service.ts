@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Game, Preferences } from '@nx-bridge/interfaces-and-types';
+import { Game, Preferences, User } from '@nx-bridge/interfaces-and-types';
 
 export interface LocalStorageUser {
   username: string;
   games: Game[];
-  email: string;
   lastSearchDate: number;
   lastGameCount: number;
-  preferences: Preferences,
+  preferences: Preferences | null,
 }
 
 export interface LocalStorageUsers {
@@ -22,6 +21,7 @@ export type EmptyLocalStorageReturn = null;
 export class LocalStorageManagerService {
   public usersInLocalStorage = 'users';
   public EMPTY_LOCAL_STORAGE_RETURNS = null;
+  public EMPTY_USER_ID_RETURNS = '';
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor() {}
@@ -33,7 +33,7 @@ export class LocalStorageManagerService {
       return localStorageUser;
     }
 
-    return null;
+    return this.EMPTY_LOCAL_STORAGE_RETURNS;
   }
 
   getLocalStorageUsers(): LocalStorageUsers | EmptyLocalStorageReturn {
@@ -62,18 +62,7 @@ export class LocalStorageManagerService {
         if (userObj.username === username) return userId;
       }
     }
-    return null;
-  }
-
-  getIdFromEmail(email: string) {
-    const localStorageUsers = this.getLocalStorageUsers();
-    for (const userId in localStorageUsers) {
-      if (Object.prototype.hasOwnProperty.call(localStorageUsers, userId)) {
-        const userObj = localStorageUsers[userId];
-        if (userObj.email === email) return userId;
-      }
-    }
-    return null;
+    return this.EMPTY_USER_ID_RETURNS;
   }
 
   appendGamesToLocalStorageUser(id: string, games: Game[]) {
@@ -82,23 +71,24 @@ export class LocalStorageManagerService {
     return localStorageUser;
   }
 
-  updateLocalStorageUsers(id: string, username: string, games: Game[], email: string, gameCount: number, time: number, preferences: Preferences) {
-    if (!username) return null;
+  appendLocalStorageUser(userObj: User, games: Game[], gameCount: number) {
+    if (!userObj) return null;
     let localStorageUsers = this.getLocalStorageUsers();
+    const time = Date.now();
+
     const newLocalStorageUser: LocalStorageUser = {
-      username,
-      email,
+      username: userObj.username,
       lastGameCount: gameCount,
       lastSearchDate: time,
       games, 
-      preferences,
+      preferences: userObj.preferences,
     }
 
     if (localStorageUsers) {
-      localStorageUsers[id] = newLocalStorageUser;
+      localStorageUsers[(userObj as any)._id] = newLocalStorageUser;
     } else {
       localStorageUsers = {
-        [id]: newLocalStorageUser,
+        [(userObj as any)._id]: newLocalStorageUser,
       }
     }
 

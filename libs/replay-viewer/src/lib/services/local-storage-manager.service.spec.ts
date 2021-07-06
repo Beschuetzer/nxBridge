@@ -80,7 +80,7 @@ describe('LocalStorageManagerService', () => {
       }
     }
 
-    expect(service.updateLocalStorageUsers(userId, username, games, email, gameCount, time, preferences)).toEqual(expected);
+    expect(service.appendLocalStorageUser(userId, username, games, email, gameCount, time, preferences)).toEqual(expected);
   });
 
   it('updating localStorage user - update two', () => {
@@ -103,7 +103,7 @@ describe('LocalStorageManagerService', () => {
       }
     }
 
-    expect(service.updateLocalStorageUsers(userId, username, games, email, gameCount, time, preferences)).toEqual(expected);
+    expect(service.appendLocalStorageUser(userId, username, games, email, gameCount, time, preferences)).toEqual(expected);
 
     const username2 = "Tom2";
     const games2: Game[] = [];
@@ -131,7 +131,7 @@ describe('LocalStorageManagerService', () => {
       }
     }
 
-    expect(service.updateLocalStorageUsers(id2, username2, games2, email2, gameCount2, time2, preferences)).toEqual(expected2);
+    expect(service.appendLocalStorageUser(id2, username2, games2, email2, gameCount2, time2, preferences)).toEqual(expected2);
   });
 
   it('updating localStorage user - invalid username', () => {
@@ -142,7 +142,7 @@ describe('LocalStorageManagerService', () => {
     const time = Date.now();
     const preferences = {} as Preferences;
 
-    expect(service.updateLocalStorageUsers(userId, username, games, email, gameCount, time, preferences)).toEqual(null);
+    expect(service.appendLocalStorageUser(userId, username, games, email, gameCount, time, preferences)).toEqual(null);
   });
 
   it('getting last game count - no local storage', () => {
@@ -167,7 +167,7 @@ describe('LocalStorageManagerService', () => {
 
   it('getting id from username - not present', () => {
     localStorage.setItem('users', JSON.stringify(localStorageUsers));
-    expect(service.getIdFromUsername("Adams")).toBe(null);
+    expect(service.getIdFromUsername("Adams")).toBe(service.EMPTY_USER_ID_RETURNS);
   });
 
   it('getting id from email - valid', () => {
@@ -177,7 +177,7 @@ describe('LocalStorageManagerService', () => {
 
   it('getting id from email - not present', () => {
     localStorage.setItem('users', JSON.stringify(localStorageUsers));
-    expect(service.getIdFromEmail("adam22@gmail.com")).toBe(null);
+    expect(service.getIdFromEmail("adam22@gmail.com")).toBe(service.EMPTY_USER_ID_RETURNS);
   });
 
   it('append game', () => {
