@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { Game, Preferences } from '@nx-bridge/interfaces-and-types';
+import { Game, GameRoundEndingScores, Points, Preferences, Room } from '@nx-bridge/interfaces-and-types';
 
 import { LocalStorageManagerService, LocalStorageUsers } from './local-storage-manager.service';
 
@@ -20,6 +20,16 @@ describe('LocalStorageManagerService', () => {
   const localStorageUsers: LocalStorageUsers = {
     [userId]: userObj,
   } 
+
+  const game: Game = {
+    completionDate: 123,
+    deals: ['123','234'] as string[],
+    gameRoundEndingScores: {} as GameRoundEndingScores,
+    players: ['123','234','34','343'],
+    points: {} as Points,
+    room: {} as Room,
+    startDate: 123456,
+  }
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
@@ -168,5 +178,15 @@ describe('LocalStorageManagerService', () => {
   it('getting id from email - not present', () => {
     localStorage.setItem('users', JSON.stringify(localStorageUsers));
     expect(service.getIdFromEmail("adam22@gmail.com")).toBe(null);
+  });
+
+  it('append game', () => {
+    localStorage.setItem('users', JSON.stringify(localStorageUsers));
+
+    const userObjCopy = userObj;
+    userObjCopy.games.push(game);
+
+    const result = service.appendGamesToLocalStorageUser(userId, [game]);
+    expect(result?.games).toEqual(userObjCopy.games);
   });
 });

@@ -23,6 +23,7 @@ export class LocalStorageManagerService {
   public usersInLocalStorage = 'users';
   public EMPTY_LOCAL_STORAGE_RETURNS = null;
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor() {}
   getLocalStorageUser(id: string): LocalStorageUser | null {
     const localStorageUsers = this.getLocalStorageUsers();
@@ -75,8 +76,10 @@ export class LocalStorageManagerService {
     return null;
   }
 
-  saveGames(id: string) {
-
+  appendGamesToLocalStorageUser(id: string, games: Game[]) {
+    const localStorageUser = this.getLocalStorageUser(id);
+    localStorageUser?.games.push(...games);
+    return localStorageUser;
   }
 
   updateLocalStorageUsers(id: string, username: string, games: Game[], email: string, gameCount: number, time: number, preferences: Preferences) {
