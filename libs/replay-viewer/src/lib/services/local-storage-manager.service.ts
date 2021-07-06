@@ -11,11 +11,17 @@ export class LocalStorageManagerService {
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor() {}
-  getLocalStorageUser(id: string): LocalStorageUser | null {
+
+  getGames(userId: string) {
+    const localStorageUser = this.getLocalStorageUser(userId);
+    return localStorageUser?.games;
+  }
+
+  getLocalStorageUser(userId: string): LocalStorageUser | null {
     const localStorageUsers = this.getLocalStorageUsers();
 
     if(localStorageUsers) {
-      const localStorageUser = localStorageUsers[id];
+      const localStorageUser = localStorageUsers[userId];
       return localStorageUser;
     }
 
@@ -33,11 +39,11 @@ export class LocalStorageManagerService {
     return parsed;
   }
 
-  getLastGameCount(id: string) {
+  getLastGameCount(userId: string) {
     const localStorageUsers = this.getLocalStorageUsers();
-    if (!localStorageUsers || !localStorageUsers[id]) return 0;
+    if (!localStorageUsers || !localStorageUsers[userId]) return 0;
 
-    return localStorageUsers[id].lastGameCount;
+    return localStorageUsers[userId].lastGameCount;
   }
 
   getIdFromUsername(username: string) {
@@ -51,8 +57,8 @@ export class LocalStorageManagerService {
     return this.EMPTY_USER_ID_RETURNS;
   }
 
-  appendGamesToLocalStorageUser(id: string, games: Game[]) {
-    const localStorageUser = this.getLocalStorageUser(id);
+  appendGamesToLocalStorageUser(userId: string, games: Game[]) {
+    const localStorageUser = this.getLocalStorageUser(userId);
     localStorageUser?.games.push(...games);
     return localStorageUser;
   }

@@ -89,7 +89,6 @@ export class LandingPageService {
   }
 
   private getGameCount() {
-    debugger;
     this.localGameCount = this.localStorageManager.getLastGameCount(this.userId as string);
     this.helpersService.getGameCount(this.userId as string).subscribe(gameCount => {
       this.gameCountFromServer = gameCount;
@@ -98,7 +97,15 @@ export class LandingPageService {
   }
 
   private handleGetGameCountResponse() {
-    this.helpersService.getGames(this.userId as string, Math.abs(this.gameCountFromServer - this.localGameCount)).subscribe((games) => {
+    const numberOfGamesToGet = Math.abs(this.gameCountFromServer - this.localGameCount);
+    debugger;
+
+    if (numberOfGamesToGet === 0) {
+      const games = this.localStorageManager.getGames(this.userId);
+      return this.handleGetGamesResponse(games ? games : [])
+    }
+    
+    this.helpersService.getGames(this.userId as string, numberOfGamesToGet).subscribe((games) => {
       this.handleGetGamesResponse(games);
     });
   }
@@ -106,11 +113,11 @@ export class LandingPageService {
   private handleGetGamesResponse(games: Game[]) {
     console.log('games =', games);
     this.helpersService.loadDealsIntoRedux(games);
-    debugger;
 
     if (this.needToCreateLocalStorageUser) this.localStorageManager.createLocalStorageUser(this.userId, this.username, this.email, games, this.gameCountFromServer + this.localGameCount);
     else this.localStorageManager.appendGamesToLocalStorageUser(this.userId as string, games);
 
+    debugger;
     const localStorageUser = this.localStorageManager.getLocalStorageUser(this.userId);
     this.store.dispatch(new SetCurrentlyViewingUser(localStorageUser ? localStorageUser : {} as LocalStorageUser));
     this.store.dispatch(new SetIsLoading(false));
