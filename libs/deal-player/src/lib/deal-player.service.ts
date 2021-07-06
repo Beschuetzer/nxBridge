@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import * as paper from 'paper';
-import { cardinalDirections, cardsPerDeck, cardsPerHand, createHandArrayFromFlatArray, DEAL_PLAYER_CLASSNAME, flatten, getDirectionFromSeating, getLinearPercentOfMaxMatchWithinRange, MOBILE_START_WIDTH } from '@nx-bridge/constants';
+import { cardinalDirections, cardsPerDeck, cardsPerHand, createHandArrayFromFlatArray, DEAL_PLAYER_CLASSNAME, flatten, getDirectionFromSeating, getLinearPercentOfMaxMatchWithinRange, getUserWhoPlayedCard, MOBILE_START_WIDTH } from '@nx-bridge/constants';
 import { Deal, Hand, Hands, Seating } from '@nx-bridge/interfaces-and-types';
 @Injectable({
   providedIn: 'root'
 })
 export class DealPlayerService {
+  public firstCardPlayed = -1;
+  public firstCardPlayer = '';
   public seating: Seating | null = null;
-  public isPlaying = false;
   public playInterval: any;
   public keepCardsCentered = false;
   public deal: Deal | null = null;
@@ -36,7 +37,6 @@ export class DealPlayerService {
   private MIN_TARGET_VIEW_PORT_WIDTH = 600;
   private MAX_TARGET_VIEW_PORT_WIDTH = 1800;
   public isMobile = window.innerWidth <= MOBILE_START_WIDTH;
-
   private cardScaleAmount = this.isMobile
     ? this.MIN_SCALE_AMOUNT_MOBILE
     : window.innerWidth < this.SCALE_AMOUNT_THRESHOLD_VIEW_PORT_WIDTH
@@ -154,7 +154,6 @@ export class DealPlayerService {
 
     throw new Error('Invalid direction in getCalculatedStart');
   }
-
 
   hideCards(cards: number[]) {
     for (let i = 0; i < cards.length; i++) {
@@ -315,6 +314,18 @@ export class DealPlayerService {
     }
   }
 
+  setCardPlayOrderAsDirections() {
+    const directionOfPersonWhoPlayedFirst = getDirectionFromSeating(
+      this.seating as Seating,
+      this.firstCardPlayer
+    );
+    const index = cardinalDirections.indexOf(directionOfPersonWhoPlayedFirst);
+    this.cardPlayerOrder = [
+      ...cardinalDirections.slice(index),
+      ...cardinalDirections.slice(0, index),
+    ] as [string, string, string, string];
+  }
+
   setCardsRotationAndPosition(positionToSetCardsTo = 0, rotationToSetCardsTo = 0) {
     for (let i = 0; i < this.cards.length; i++) {
       const card = this.cards[i] as paper.Raster;
@@ -412,6 +423,17 @@ export class DealPlayerService {
       card.scale(desiredWidth / currentWidth);
       card.scale(this.cardScaleAmount);
     }
+  }
+
+  setFirstCardPlayedAndPlayer() {
+    if (this.firstCardPlayed === -1)
+      this.firstCardPlayed = flatten(
+        this.deal?.cardPlayOrder
+      )[0];
+    this.firstCardPlayer = getUserWhoPlayedCard(
+      this.deal?.hands as Hands,
+      this.firstCardPlayed
+    );
   }
 
   setupProject() {

@@ -27,6 +27,8 @@ import {
   AppState,
   SetCurrentlyViewingDeal,
   CurrentlyViewingDeal,
+  DealState,
+  GameState,
 } from '@nx-bridge/store';
 import { Contract, Hands, Seating } from '@nx-bridge/interfaces-and-types';
 import { DealPlayerService } from '../deal-player.service';
@@ -58,8 +60,7 @@ export class DealPlayerComponent implements OnInit {
   public error = '';
   private hasLoadedDeal = false;
   private shouldChangePlaySpeed = false;
-  private firstCardPlayed = -1;
-  private firstCardPlayer = '';
+  
   public isMobile = window.innerWidth <= MOBILE_START_WIDTH;
   public isPlaying = false;
 
@@ -77,44 +78,11 @@ export class DealPlayerComponent implements OnInit {
     );
 
     this.store.select('games').subscribe((gameState) => {
-      this.seating = gameState.currentlyViewingGame.seating;
-      this.dealPlayerService.seating = gameState.currentlyViewingGame.seating;
-      this.name = gameState.currentlyViewingGame.name;
-      this.date = gameState.currentlyViewingGame.date;
+      this.handleGamesUpdates
     });
 
     this.store.select('deals').subscribe((dealState) => {
-      if (dealState.currentlyViewingDeal?.bids && !this.hasLoadedDeal) {
-        this.dealPlayerService.deal = dealState.currentlyViewingDeal;
-        this.declarer = dealState.currentlyViewingDeal.declarer;
-        this.dealNumber = dealState.currentlyViewingDeal.dealNumber;
-        this.biddingTable = dealState.currentlyViewingDeal.biddingTable;
-        this.summaryPre = dealState.currentlyViewingDeal.summaryPre;
-        this.summaryNumber = dealState.currentlyViewingDeal.summaryNumber;
-        this.summaryPost = dealState.currentlyViewingDeal.summaryPost;
-
-        if (Object.keys(this.dealPlayerService.deal).length <= 0) return;
-
-        this.dealPlayerService.handsToRender = this.dealPlayerService.deal?.hands;
-        this.dealPlayerService.setupProject();
-
-        if (this.dealPlayerService.cards.length < cardsPerDeck)
-          this.dealPlayerService.loadCards();
-        else {
-          this.dealPlayerService.positionHands();
-        }
-
-        this.renderer.addClass(this.elRef.nativeElement, VISIBLE_CLASSNAME);
-        this.hasLoadedDeal = true;
-        this.renderRoundWinnersTable();
-      } else if (dealState.currentlyViewingDeal?.bids) {
-        this.renderer.addClass(this.elRef.nativeElement, VISIBLE_CLASSNAME);
-      }
-
-      if (dealState.currentlyViewingDealContract?.prefix) {
-        this.contract = dealState.currentlyViewingDealContract;
-        this.changeContractColor();
-      }
+      this.handleDealsUpdates(dealState);
     });
   }
 
@@ -132,7 +100,6 @@ export class DealPlayerComponent implements OnInit {
     this.dealPlayerService.resetCardsPlayed();
     this.resetTable();
     this.renderer.removeClass(this.elRef.nativeElement, VISIBLE_CLASSNAME);
-    console.log('onClose------------------------------------------------');
     this.dealPlayerService.setCardsRotationAndPosition();
     this.store.dispatch(
       new SetCurrentlyViewingDeal({} as CurrentlyViewingDeal)
@@ -158,7 +125,7 @@ export class DealPlayerComponent implements OnInit {
   }
 
   onPlay() {
-    this.dealPlayerService.isPlaying = true;
+    this.isPlaying = true;
     this.playCard();
     this.dealPlayerService.playInterval = setInterval(() => {
       if (this.shouldChangePlaySpeed) {
@@ -184,15 +151,9 @@ export class DealPlayerComponent implements OnInit {
   }
 
   onSpeedChange(e: Event) {
-    // debugger;
-    // console.log('this.dealPlayerService.deal =', this.dealPlayerService.deal);
-    // console.log('this.cardSpacingIncrement =', this.cardSpacingIncrement);
-
     this.cardPlayWaitDuration = +(e.target as HTMLInputElement)?.value * 1000;
     console.log('this.cardPlayWaitDuration =', this.cardPlayWaitDuration);
-    if (this.dealPlayerService.isPlaying) this.shouldChangePlaySpeed = true;
-    // clearInterval(this.dealPlayerService.playInterval);
-    // this.onPlay()
+    if (this.isPlaying) this.shouldChangePlaySpeed = true;
   }
 
   onRestart() {
@@ -203,57 +164,21 @@ export class DealPlayerComponent implements OnInit {
     this.trickNumber = 0;
   }
 
-  displayCardsInTable() {
-    this.setFirstCardPlayedAndPlayer();
-    this.setCardPlayOrderAsDirections();
-    this.renderRoundWinnersTable();
+  private changeContractColor() {
+    const contract = document.querySelector(
+      `.${DEAL_PLAYER_CLASSNAME}__contract`
+    ) as HTMLElement;
 
-    if ((this.dealPlayerService.cardsPlayed.length - 1) % 4 === 0)
-      this.resetTable();
+    let classToAdd = COLOR_BLACK_CLASSNAME;
+    if (
+      this.contract?.htmlEntity === suitsHtmlEntities[1] ||
+      this.contract?.htmlEntity === suitsHtmlEntities[2]
+    )
+      classToAdd = COLOR_RED_CLASSNAME;
 
-    const currentTrick = this.getCurrentTrick();
-
-    let cardsDisplayed = 0;
-    for (let i = currentTrick.length - 1; i >= 0; i--) {
-      if (cardsDisplayed === 4) break;
-      const card = currentTrick[i];
-      this.displayCardInTable(card);
-      cardsDisplayed++;
-    }
-  }
-
-  private playCard(nthCard = this.dealPlayerService.playCount) {
-    const cardPlayOrder = this.dealPlayerService.deal?.cardPlayOrder;
-    if (!this.dealPlayerService.deal || !cardPlayOrder || cardPlayOrder.length < cardsPerDeck)
-      return;
-
-    if (nthCard >= cardsPerDeck) return this.onPause();
-    if (nthCard === -2 || nthCard === 51)
-      this.dealPlayerService.cardsPlayed = flatten(cardPlayOrder);
-    else if (nthCard < -2)
-      this.dealPlayerService.cardsPlayed = flatten(
-        cardPlayOrder.slice(0, nthCard + 2) as number[]
-      );
-    else
-      this.dealPlayerService.cardsPlayed = flatten(
-        cardPlayOrder.slice(0, nthCard + 1) as number[]
-      );
-
-    this.dealPlayerService.playCount = nthCard + 1;
-    this.displayCardsInTable();
-    this.dealPlayerService.updateHands();
-  }
-
-  private getCurrentTrick() {
-    const numberOfCardsPlayed = this.dealPlayerService.cardsPlayed.length;
-    this.trickNumber = Math.floor((numberOfCardsPlayed - 1) / 4) + 1;
-    const startIndex = (this.trickNumber - 1) * 4;
-    const endIndex = startIndex + 4;
-
-    if (endIndex > numberOfCardsPlayed - 1)
-      return this.dealPlayerService.cardsPlayed.slice(startIndex);
-    else return this.dealPlayerService.cardsPlayed.slice(startIndex, endIndex);
-    return this.dealPlayerService.cardsPlayed.slice(startIndex, endIndex);
+    this.renderer.removeClass(contract.children[1], COLOR_BLACK_CLASSNAME);
+    this.renderer.removeClass(contract.children[1], COLOR_RED_CLASSNAME);
+    this.renderer.addClass(contract.children[1], classToAdd);
   }
 
   private displayCardInTable(cardAsNumber: number) {
@@ -284,57 +209,97 @@ export class DealPlayerComponent implements OnInit {
     }
   }
 
-  private setFirstCardPlayedAndPlayer() {
-    if (this.firstCardPlayed === -1)
-      this.firstCardPlayed = flatten(
-        this.dealPlayerService.deal?.cardPlayOrder
-      )[0];
-    this.firstCardPlayer = getUserWhoPlayedCard(
-      this.dealPlayerService.deal?.hands as Hands,
-      this.firstCardPlayed
-    );
+  private displayCardsInTable() {
+    this.dealPlayerService.setFirstCardPlayedAndPlayer();
+    this.dealPlayerService.setCardPlayOrderAsDirections();
+    this.renderRoundWinnersTable();
+
+    if ((this.dealPlayerService.cardsPlayed.length - 1) % 4 === 0)
+      this.resetTable();
+
+    const currentTrick = this.getCurrentTrick();
+
+    let cardsDisplayed = 0;
+    for (let i = currentTrick.length - 1; i >= 0; i--) {
+      if (cardsDisplayed === 4) break;
+      const card = currentTrick[i];
+      this.displayCardInTable(card);
+      cardsDisplayed++;
+    }
   }
 
-  private setCardPlayOrderAsDirections() {
-    const directionOfPersonWhoPlayedFirst = getDirectionFromSeating(
-      this.seating as Seating,
-      this.firstCardPlayer
-    );
-    const index = cardinalDirections.indexOf(directionOfPersonWhoPlayedFirst);
-    this.dealPlayerService.cardPlayerOrder = [
-      ...cardinalDirections.slice(index),
-      ...cardinalDirections.slice(0, index),
-    ] as [string, string, string, string];
+  private getCurrentTrick() {
+    const numberOfCardsPlayed = this.dealPlayerService.cardsPlayed.length;
+    this.trickNumber = Math.floor((numberOfCardsPlayed - 1) / 4) + 1;
+    const startIndex = (this.trickNumber - 1) * 4;
+    const endIndex = startIndex + 4;
+
+    if (endIndex > numberOfCardsPlayed - 1)
+      return this.dealPlayerService.cardsPlayed.slice(startIndex);
+    else return this.dealPlayerService.cardsPlayed.slice(startIndex, endIndex);
   }
 
-  private setDirectionContent(
-    number: string | number,
-    suitHtmlEntity: string,
-    direction: string
-  ) {
-    const numberElement = document.querySelector(
-      `.${DEAL_PLAYER_CLASSNAME}__${direction}-suit-number`
-    );
-    const suitEntityElement = document.querySelector(
-      `.${DEAL_PLAYER_CLASSNAME}__${direction}-suit-entity`
-    );
+  private handleGamesUpdates(gameState: GameState) {
+    this.seating = gameState.currentlyViewingGame.seating;
+    this.dealPlayerService.seating = gameState.currentlyViewingGame.seating;
+    this.name = gameState.currentlyViewingGame.name;
+    this.date = gameState.currentlyViewingGame.date;
+  }
 
-    if (!numberElement || !suitEntityElement) return;
+  private handleDealsUpdates(dealState: DealState) {
+    if (dealState.currentlyViewingDeal?.bids && !this.hasLoadedDeal) {
+      this.dealPlayerService.deal = dealState.currentlyViewingDeal;
+      this.declarer = dealState.currentlyViewingDeal.declarer;
+      this.dealNumber = dealState.currentlyViewingDeal.dealNumber;
+      this.biddingTable = dealState.currentlyViewingDeal.biddingTable;
+      this.summaryPre = dealState.currentlyViewingDeal.summaryPre;
+      this.summaryNumber = dealState.currentlyViewingDeal.summaryNumber;
+      this.summaryPost = dealState.currentlyViewingDeal.summaryPost;
 
-    let colorClass = COLOR_RED_CLASSNAME;
-    if (
-      suitHtmlEntity === suitsHtmlEntities[0] ||
-      suitHtmlEntity === suitsHtmlEntities[3]
-    )
-      colorClass = COLOR_BLACK_CLASSNAME;
-    this.renderer.removeClass(numberElement, COLOR_BLACK_CLASSNAME);
-    this.renderer.removeClass(suitEntityElement, COLOR_BLACK_CLASSNAME);
-    this.renderer.removeClass(numberElement, COLOR_RED_CLASSNAME);
-    this.renderer.removeClass(suitEntityElement, COLOR_RED_CLASSNAME);
-    this.renderer.addClass(numberElement, colorClass);
-    this.renderer.addClass(suitEntityElement, colorClass);
-    this.renderer.setProperty(numberElement, 'innerHTML', number);
-    this.renderer.setProperty(suitEntityElement, 'innerHTML', suitHtmlEntity);
+      if (Object.keys(this.dealPlayerService.deal).length <= 0) return;
+
+      this.dealPlayerService.handsToRender = this.dealPlayerService.deal?.hands;
+      this.dealPlayerService.setupProject();
+
+      if (this.dealPlayerService.cards.length < cardsPerDeck)
+        this.dealPlayerService.loadCards();
+      else {
+        this.dealPlayerService.positionHands();
+      }
+
+      this.renderer.addClass(this.elRef.nativeElement, VISIBLE_CLASSNAME);
+      this.hasLoadedDeal = true;
+      this.renderRoundWinnersTable();
+    } else if (dealState.currentlyViewingDeal?.bids) {
+      this.renderer.addClass(this.elRef.nativeElement, VISIBLE_CLASSNAME);
+    }
+
+    if (dealState.currentlyViewingDealContract?.prefix) {
+      this.contract = dealState.currentlyViewingDealContract;
+      this.changeContractColor();
+    }
+  }
+
+  private playCard(nthCard = this.dealPlayerService.playCount) {
+    const cardPlayOrder = this.dealPlayerService.deal?.cardPlayOrder;
+    if (!this.dealPlayerService.deal || !cardPlayOrder || cardPlayOrder.length < cardsPerDeck)
+      return;
+
+    if (nthCard >= cardsPerDeck) return this.onPause();
+    if (nthCard === -2 || nthCard === 51)
+      this.dealPlayerService.cardsPlayed = flatten(cardPlayOrder);
+    else if (nthCard < -2)
+      this.dealPlayerService.cardsPlayed = flatten(
+        cardPlayOrder.slice(0, nthCard + 2) as number[]
+      );
+    else
+      this.dealPlayerService.cardsPlayed = flatten(
+        cardPlayOrder.slice(0, nthCard + 1) as number[]
+      );
+
+    this.dealPlayerService.playCount = nthCard + 1;
+    this.displayCardsInTable();
+    this.dealPlayerService.updateHands();
   }
 
   private resetTable() {
@@ -342,23 +307,6 @@ export class DealPlayerComponent implements OnInit {
       const direction = cardinalDirections[i];
       this.setDirectionContent('', '', direction);
     }
-  }
-
-  private changeContractColor() {
-    const contract = document.querySelector(
-      `.${DEAL_PLAYER_CLASSNAME}__contract`
-    ) as HTMLElement;
-
-    let classToAdd = COLOR_BLACK_CLASSNAME;
-    if (
-      this.contract?.htmlEntity === suitsHtmlEntities[1] ||
-      this.contract?.htmlEntity === suitsHtmlEntities[2]
-    )
-      classToAdd = COLOR_RED_CLASSNAME;
-
-    this.renderer.removeClass(contract.children[1], COLOR_BLACK_CLASSNAME);
-    this.renderer.removeClass(contract.children[1], COLOR_RED_CLASSNAME);
-    this.renderer.addClass(contract.children[1], classToAdd);
   }
 
   private resetVariables() {
@@ -376,7 +324,7 @@ export class DealPlayerComponent implements OnInit {
     // this.seating = null;
     // this.name = null;
     // this.date = null;
-    // this.dealPlayerService.isPlaying = false;
+    // this.isPlaying = false;
     // this.scope = null;
     // this.project = null;
   }
@@ -437,5 +385,35 @@ export class DealPlayerComponent implements OnInit {
     }
 
     this.renderer.appendChild(target, table);
+  }
+
+  private setDirectionContent(
+    number: string | number,
+    suitHtmlEntity: string,
+    direction: string
+  ) {
+    const numberElement = document.querySelector(
+      `.${DEAL_PLAYER_CLASSNAME}__${direction}-suit-number`
+    );
+    const suitEntityElement = document.querySelector(
+      `.${DEAL_PLAYER_CLASSNAME}__${direction}-suit-entity`
+    );
+
+    if (!numberElement || !suitEntityElement) return;
+
+    let colorClass = COLOR_RED_CLASSNAME;
+    if (
+      suitHtmlEntity === suitsHtmlEntities[0] ||
+      suitHtmlEntity === suitsHtmlEntities[3]
+    )
+      colorClass = COLOR_BLACK_CLASSNAME;
+    this.renderer.removeClass(numberElement, COLOR_BLACK_CLASSNAME);
+    this.renderer.removeClass(suitEntityElement, COLOR_BLACK_CLASSNAME);
+    this.renderer.removeClass(numberElement, COLOR_RED_CLASSNAME);
+    this.renderer.removeClass(suitEntityElement, COLOR_RED_CLASSNAME);
+    this.renderer.addClass(numberElement, colorClass);
+    this.renderer.addClass(suitEntityElement, colorClass);
+    this.renderer.setProperty(numberElement, 'innerHTML', number);
+    this.renderer.setProperty(suitEntityElement, 'innerHTML', suitHtmlEntity);
   }
 }
