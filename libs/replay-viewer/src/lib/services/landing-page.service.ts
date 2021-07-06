@@ -65,7 +65,7 @@ export class LandingPageService {
 
   private getLocalUserId() {
     const localStorageUsers = this.localStorageManager.getLocalStorageUsers();
-    debugger;
+    // debugger;
 
     if (!localStorageUsers) return '';
     let localUserId = this.localStorageManager.getIdFromUsername(this.username);
@@ -128,7 +128,7 @@ export class LandingPageService {
     const numberOfGamesToGet = Math.abs(
       this.gameCountFromServer - this.localGameCount
     );
-    debugger;
+    // debugger;
 
     if (numberOfGamesToGet === 0) {
       const games = this.localStorageManager.getGames(this.userId);
@@ -165,7 +165,7 @@ export class LandingPageService {
 
     this.localStorageManager.updateEmailAndUsername(this.userId, this.username, this.email);
 
-    debugger;
+    // debugger;
     const localStorageUser = this.localStorageManager.getLocalStorageUser(
       this.userId
     );

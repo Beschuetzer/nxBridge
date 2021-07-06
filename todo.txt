@@ -70,6 +70,4 @@ Testing------------
 
 -need a function to remove the oldest localStorageUser by last access date and call when storage is full or approaching it
 
--refactor deal-player by moving all private functions that don't use renderer to service
-
--how to move cards to service and then call setRotationAndPosition from games-list onClick() when it closes?
+-sluggish resize and no card reset when opening one deal in a game, then resize, then open another

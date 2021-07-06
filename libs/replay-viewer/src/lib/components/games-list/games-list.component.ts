@@ -4,6 +4,7 @@ import { Store } from '@ngrx/store';
 import { Game } from '@nx-bridge/interfaces-and-types';
 import { HelpersService } from '@nx-bridge/helpers';
 import { dealsListDealsButtonChoices, DEALS_LIST_CLASSNAME, DEAL_DETAIL_CLASSNAME, DISPLAY_NONE_CLASSNAME, FULL_SIZE_CLASSNAME, toggleClassOnList, toggleInnerHTML } from '@nx-bridge/constants';
+import { DealPlayerService } from 'libs/deal-player/src/lib/deal-player.service';
 
 @Component({
   selector: 'nx-bridge-games-list',
@@ -17,6 +18,7 @@ export class GamesListComponent implements OnInit {
   public games: Game[] = [];
 
   constructor(
+    private dealPlayerService: DealPlayerService,
     private store: Store<AppState>,
   ) {}
 
@@ -41,7 +43,7 @@ export class GamesListComponent implements OnInit {
       target.classList.remove(FULL_SIZE_CLASSNAME);
       this.store.dispatch(new SetIsViewingGame(false));
 
-      //todo: how to resetCardRotations here?
+      this.dealPlayerService.setCardsRotationAndPosition();
     }
   }
 }

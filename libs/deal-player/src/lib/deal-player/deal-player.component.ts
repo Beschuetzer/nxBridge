@@ -78,7 +78,7 @@ export class DealPlayerComponent implements OnInit {
     );
 
     this.store.select('games').subscribe((gameState) => {
-      this.handleGamesUpdates
+      this.handleGamesUpdates(gameState);
     });
 
     this.store.select('deals').subscribe((dealState) => {
