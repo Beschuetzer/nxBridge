@@ -11,6 +11,7 @@ export class GetGameCountService {
   ) {}
 
   async getGameCount(userId: string): ControllerResponse<number> {
+    console.log('userId =', userId);
     if (!userId) {
       return new Promise((res, rej) => {
         res({message: "No userId given", status: 400});

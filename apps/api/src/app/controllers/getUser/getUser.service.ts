@@ -15,9 +15,7 @@ export class GetUserService {
     const error = this.validateInputs(username, email);
     if (error) return error;
     const response = await this.queryDB(username, email) as UserModel;
-    if (response) return {
-      id: (response as any)._id,
-    }
+    if (response) return (response as any)._id;
     return response;
   }
 

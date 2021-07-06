@@ -68,8 +68,6 @@ export class LandingPageService {
   }
 
   private handleGetUserResponse(userId: string, username: string, email: string) {
-    debugger;
-    
     if (userId) {
       this.userId = userId;
       this.getGameCount();
@@ -86,6 +84,7 @@ export class LandingPageService {
   }
 
   private getGameCount() {
+    debugger;
     this.localGameCount = this.localStorageManager.getLastGameCount(this.userId as string);
     this.helpersService.getGameCount(this.userId as string).subscribe(gameCount => {
       this.gameCountFromServer = gameCount;
