@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Game } from '@nx-bridge/interfaces-and-types';
+import { Game, Preferences } from '@nx-bridge/interfaces-and-types';
 
 export interface LocalStorageUser {
+  username: string;
   games: Game[];
-  id: string;
   email: string;
   lastSearchDate: number;
   lastGameCount: number;
+  preferences: Preferences,
 }
 
 export interface LocalStorageUsers {
@@ -23,11 +24,11 @@ export class LocalStorageManagerService {
   public EMPTY_LOCAL_STORAGE_RETURNS = null;
 
   constructor() {}
-  getLocalStorageUser(username: string): LocalStorageUser | null {
+  getLocalStorageUser(id: string): LocalStorageUser | null {
     const localStorageUsers = this.getLocalStorageUsers();
 
     if(localStorageUsers) {
-      const localStorageUser = localStorageUsers[username];
+      const localStorageUser = localStorageUsers[id];
       return localStorageUser;
     }
 
@@ -45,29 +46,39 @@ export class LocalStorageManagerService {
     return parsed;
   }
 
-  getLastGameCount(username: string) {
+  getLastGameCount(id: string) {
     const localStorageUsers = this.getLocalStorageUsers();
-    if (!localStorageUsers || !localStorageUsers[username]) return 0;
+    if (!localStorageUsers || !localStorageUsers[id]) return 0;
 
-    return localStorageUsers[username].lastGameCount;
+    return localStorageUsers[id].lastGameCount;
   }
 
-  updateLocalStorageUsers(username: string, games: Game[], email: string, gameCount: number, id: string, time: number) {
+  getIdFromUsername(username: string) {
+    const localStorageUsers = this.getLocalStorageUsers();
+    //todo: finish
+  }
+
+  saveGames(id: string) {
+
+  }
+
+  updateLocalStorageUsers(id: string, username: string, games: Game[], email: string, gameCount: number, time: number, preferences: Preferences) {
     if (!username) return null;
     let localStorageUsers = this.getLocalStorageUsers();
     const newLocalStorageUser: LocalStorageUser = {
-      id,
+      username,
       email,
       lastGameCount: gameCount,
       lastSearchDate: time,
       games, 
+      preferences,
     }
 
     if (localStorageUsers) {
-      localStorageUsers[username] = newLocalStorageUser;
+      localStorageUsers[id] = newLocalStorageUser;
     } else {
       localStorageUsers = {
-        [username]: newLocalStorageUser,
+        [id]: newLocalStorageUser,
       }
     }
 

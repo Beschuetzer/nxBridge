@@ -15,32 +15,12 @@ export class HelpersService {
     private router: Router,
   ) {}
 
-  setDeals(games: Game[]) {
-    const deals = [];
-    for (let i = 0; i < games.length; i++) {
-      const game = games[i];
-      for (let j = 0; j < game.deals.length; j++) {
-        const deal = game.deals[j];
-        deals.push(deal);
-      }
-    }
-
-    this.store.dispatch(new ngrxStore.SetDealsAsStrings(deals));
-  }
-
-  getGameCount(userId: string) {
-
-  }
 
   getGames(userId: string) {
     const queryStringToUse = `${USER_ID_STRING}=${userId}`;
-    this.http
+    return this.http
       .get<Game[]>(`${GET_GAMES_URL}?${queryStringToUse}`)
-      .subscribe((games) => {
-        console.log('games =', games);
-        this.store.dispatch(new ngrxStore.SetGames(games));
-        this.setDeals(games);
-      });
+     
   }
 
   getUser(usernameValue: string, emailValue: string) {
@@ -55,5 +35,17 @@ export class HelpersService {
     if (!users || users.length <= 0) return;
     console.log('users =', users);
     return this.http.post<User[]>(`${GET_USERS_URL}`, {[`${USERS_STRING}`]: users});
+  }
+
+  loadDealsIntoRedux(games: Game[]) {
+    const deals = [];
+    for (let i = 0; i < games.length; i++) {
+      const game = games[i];
+      for (let j = 0; j < game.deals.length; j++) {
+        const deal = game.deals[j];
+        deals.push(deal);
+      }
+    }
+    this.store.dispatch(new ngrxStore.SetDealsAsStrings(deals));
   }
 }
