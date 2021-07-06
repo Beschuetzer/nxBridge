@@ -9,7 +9,7 @@ describe('LocalStorageManagerService', () => {
   const userId = '12345';
   const userObj = {
     username: 'Adam',
-    email: 'test123@gmail.com',
+    email: 'adam@gmail.com',
     games: [
       {} as Game,
     ],
@@ -148,5 +148,25 @@ describe('LocalStorageManagerService', () => {
   it('getting last game count - valid', () => {
     localStorage.setItem('users', JSON.stringify(localStorageUsers));
     expect(service.getLastGameCount(userId)).toBe(10);
+  });
+
+  it('getting id from username - valid', () => {
+    localStorage.setItem('users', JSON.stringify(localStorageUsers));
+    expect(service.getIdFromUsername("Adam")).toBe(userId);
+  });
+
+  it('getting id from username - not present', () => {
+    localStorage.setItem('users', JSON.stringify(localStorageUsers));
+    expect(service.getIdFromUsername("Adams")).toBe(null);
+  });
+
+  it('getting id from email - valid', () => {
+    localStorage.setItem('users', JSON.stringify(localStorageUsers));
+    expect(service.getIdFromEmail("adam@gmail.com")).toBe(userId);
+  });
+
+  it('getting id from email - not present', () => {
+    localStorage.setItem('users', JSON.stringify(localStorageUsers));
+    expect(service.getIdFromEmail("adam22@gmail.com")).toBe(null);
   });
 });

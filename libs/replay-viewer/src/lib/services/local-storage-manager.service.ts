@@ -55,7 +55,24 @@ export class LocalStorageManagerService {
 
   getIdFromUsername(username: string) {
     const localStorageUsers = this.getLocalStorageUsers();
-    //todo: finish
+    for (const userId in localStorageUsers) {
+      if (Object.prototype.hasOwnProperty.call(localStorageUsers, userId)) {
+        const userObj = localStorageUsers[userId];
+        if (userObj.username === username) return userId;
+      }
+    }
+    return null;
+  }
+
+  getIdFromEmail(email: string) {
+    const localStorageUsers = this.getLocalStorageUsers();
+    for (const userId in localStorageUsers) {
+      if (Object.prototype.hasOwnProperty.call(localStorageUsers, userId)) {
+        const userObj = localStorageUsers[userId];
+        if (userObj.email === email) return userId;
+      }
+    }
+    return null;
   }
 
   saveGames(id: string) {
