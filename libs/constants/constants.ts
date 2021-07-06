@@ -32,3 +32,4 @@ export const dealsListDealsButtonChoices: [string, string] = ['Open', '&#10006;'
 export const dealsListDetailsButtonChoices: [string, string] = ['Show All', 'Hide All'];
 export const dealDetailButtonChoices: [string, string] = ['Show', 'Hide'];
 
+export const MOBILE_START_WIDTH = 655;
