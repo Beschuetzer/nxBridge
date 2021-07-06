@@ -40,32 +40,8 @@ export class GamesListComponent implements OnInit {
       
       target.classList.remove(FULL_SIZE_CLASSNAME);
       this.store.dispatch(new SetIsViewingGame(false));
+
+      //todo: how to resetCardRotations here?
     }
   }
-
-  // private getAndStoreUsers () {
-  //   // this.helpers.getUsers(this.usernames)?.subscribe(users => {
-
-  //     let usersInStore: User[] | null = null;
-  //     this.store.select('users').pipe(take(1)).subscribe(usersState => {
-  //       usersInStore = usersState.users;
-  //       if (!usersInStore || usersInStore.length <= 0){
-  //         this.store.dispatch(new SetUsers(users));
-  //       }
-  //     })
-  //     this.setUsersInLocalStorage(users);
-  //   // });
-  // }
-
-  // private setUsersInLocalStorage(users: User[]) {
-  //   const currentValueInStorage = getValueFromLocalStorage('users')
-  //   console.log('currentValueInStorage =', currentValueInStorage);
-  //   const toSet: {[key: string]: User} = {};
-
-  //   for (let i = 0; i < users.length; i++) {
-  //     const user = users[i];
-  //     toSet[user.username] = user;
-  //   }
-  //   localStorage.setItem('users', JSON.stringify({...currentValueInStorage, ...toSet}));
-  // }
 }
