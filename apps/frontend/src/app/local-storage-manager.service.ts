@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Game } from '@nx-bridge/interfaces-and-types';
 
-interface LocalStorageUser {
+export interface LocalStorageUser {
   games: Game[];
   id: string;
   email: string;
@@ -9,15 +9,18 @@ interface LocalStorageUser {
   lastGameCount: number;
 }
 
-interface LocalStorageUsers {
+export interface LocalStorageUsers {
   [key: string]: LocalStorageUser;
 }
+
+export type EmptyLocalStorageReturn = null;
 
 @Injectable({
   providedIn: 'root',
 })
 export class LocalStorageManagerService {
-  private usersInLocalStorage = 'users';
+  public usersInLocalStorage = 'users';
+  public EMPTY_LOCAL_STORAGE_RETURNS = null;
 
   constructor() {}
   getLocalStorageUser(username: string): LocalStorageUser | null {
@@ -31,21 +34,19 @@ export class LocalStorageManagerService {
     return null;
   }
 
-  getLocalStorageUsers(): LocalStorageUsers | '' {
+  getLocalStorageUsers(): LocalStorageUsers | EmptyLocalStorageReturn {
     const itemInStorage = localStorage.getItem(this.usersInLocalStorage);
     
-    if (!itemInStorage) return '';
+    if (!itemInStorage) return this.EMPTY_LOCAL_STORAGE_RETURNS;
 
     const parsed = itemInStorage
       ? (JSON.parse(itemInStorage) as LocalStorageUsers)
-      : '';
+      : this.EMPTY_LOCAL_STORAGE_RETURNS;
     return parsed;
   }
 
   updateLocalStorageUsers(username: string, games: Game[], email: string, gameCount: number, id: string) {
-    let localStorageUsers = this.getLocalStorageUser(username);
-
-
+    let localStorageUsers = this.getLocalStorageUsers();
     const newLocalStorageUser: LocalStorageUser = {
       id,
       email,
@@ -54,16 +55,15 @@ export class LocalStorageManagerService {
       games, 
     }
 
-
     if (localStorageUsers) {
-      return null;
-
+      localStorageUsers[username] = newLocalStorageUser;
     } else {
-      localStorageUsers:  = {
+      localStorageUsers = {
         [username]: newLocalStorageUser,
       }
-      localStorage.setItem(this.usersInLocalStorage, JSON.stringify(localStorageUsers));
     }
 
+    localStorage.setItem(this.usersInLocalStorage, JSON.stringify(localStorageUsers));
+    return localStorageUsers;
   }
 }
