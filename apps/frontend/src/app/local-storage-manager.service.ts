@@ -45,13 +45,14 @@ export class LocalStorageManagerService {
     return parsed;
   }
 
-  updateLocalStorageUsers(username: string, games: Game[], email: string, gameCount: number, id: string) {
+  updateLocalStorageUsers(username: string, games: Game[], email: string, gameCount: number, id: string, time: number) {
+    if (!username) return null;
     let localStorageUsers = this.getLocalStorageUsers();
     const newLocalStorageUser: LocalStorageUser = {
       id,
       email,
       lastGameCount: gameCount,
-      lastSearchDate: Date.now(),
+      lastSearchDate: time,
       games, 
     }
 
