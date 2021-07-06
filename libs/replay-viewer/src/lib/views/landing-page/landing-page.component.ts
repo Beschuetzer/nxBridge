@@ -145,9 +145,9 @@ export class LandingPageComponent implements OnInit {
   }
 
   private subscribeToGames() {
-    this.store.select('games').subscribe(gamesState => {
-      if (gamesState.games.length > 0 && this.shouldNavigateToGames) {
-        console.log('navigating------------------------------------------------');
+    this.store.select('users').subscribe(usersState => {
+      if (!usersState?.currentlyViewingUser?.games) return;
+      if (usersState.currentlyViewingUser.games.length > 0 && this.shouldNavigateToGames) {
         this.router.navigate(['games'], {relativeTo: this.route});
         this.shouldNavigateToGames = false;
       }

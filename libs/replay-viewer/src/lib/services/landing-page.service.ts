@@ -6,10 +6,10 @@ import {
   ValidatorFn,
 } from '@angular/forms';
 import { HelpersService } from '@nx-bridge/helpers';
-import { AppState, SetCurrentlyViewingUser, SetGames, SetIsLoading, SetLoadingError } from '@nx-bridge/store';
+import { AppState, SetCurrentlyViewingUser, SetIsLoading, SetLoadingError } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
-import { LocalStorageUser, LocalStorageUserCore } from '@nx-bridge/interfaces-and-types';
-import { Game, User } from '@nx-bridge/interfaces-and-types';
+import { LocalStorageUser } from '@nx-bridge/interfaces-and-types';
+import { Game } from '@nx-bridge/interfaces-and-types';
 import { LocalStorageManagerService } from './local-storage-manager.service';
 
 @Injectable({
@@ -89,6 +89,7 @@ export class LandingPageService {
   }
 
   private getGameCount() {
+    debugger;
     this.localGameCount = this.localStorageManager.getLastGameCount(this.userId as string);
     this.helpersService.getGameCount(this.userId as string).subscribe(gameCount => {
       this.gameCountFromServer = gameCount;
@@ -104,7 +105,6 @@ export class LandingPageService {
 
   private handleGetGamesResponse(games: Game[]) {
     console.log('games =', games);
-    this.store.dispatch(new SetGames(games));
     this.helpersService.loadDealsIntoRedux(games);
     debugger;
 

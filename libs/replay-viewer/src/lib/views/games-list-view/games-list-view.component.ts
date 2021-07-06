@@ -2,6 +2,7 @@ import { Component, HostBinding, OnInit } from '@angular/core';
 import { AppState } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
 import { LocalStorageUser } from '@nx-bridge/interfaces-and-types';
+import { debug } from 'node:console';
 
 @Component({
   selector: 'nx-bridge-games-list-view',

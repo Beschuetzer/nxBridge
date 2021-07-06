@@ -57,3 +57,6 @@ Todos----------------------------------------------------------
 
 -add goto nth card played text box?
 -change how deal winners works (always show 14 columns)
+
+
+-need to test how the already stored LocalStorageUser scenario works

@@ -1,10 +1,9 @@
 import { Component, HostBinding, OnInit } from '@angular/core';
-import { AppState, SetIsViewingGame, SetUsers } from '@nx-bridge/store';
+import { AppState, SetIsViewingGame } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
-import { take } from 'rxjs/operators';
-import { Game, User } from '@nx-bridge/interfaces-and-types';
+import { Game } from '@nx-bridge/interfaces-and-types';
 import { HelpersService } from '@nx-bridge/helpers';
-import { dealsListDealsButtonChoices, DEALS_LIST_CLASSNAME, DEAL_DETAIL_CLASSNAME, DISPLAY_NONE_CLASSNAME, FULL_SIZE_CLASSNAME, getValueFromLocalStorage, toggleClassOnList, toggleInnerHTML } from '@nx-bridge/constants';
+import { dealsListDealsButtonChoices, DEALS_LIST_CLASSNAME, DEAL_DETAIL_CLASSNAME, DISPLAY_NONE_CLASSNAME, FULL_SIZE_CLASSNAME, toggleClassOnList, toggleInnerHTML } from '@nx-bridge/constants';
 
 @Component({
   selector: 'nx-bridge-games-list',
@@ -19,20 +18,12 @@ export class GamesListComponent implements OnInit {
 
   constructor(
     private store: Store<AppState>,
-    private helpers: HelpersService
   ) {}
 
   ngOnInit(): void {
-    // const usersInLocalStorage = JSON.parse(localStorage.getItem('users') as string);
-    // if (!usersInLocalStorage) {
-    this.store.select('games').subscribe((gamesState) => {
-      this.games = gamesState.games;
-      // this.populateUsernames();
-      // if (this.usernames) this.getAndStoreUsers();
+    this.store.select('users').subscribe((userState) => {
+      this.games = userState.currentlyViewingUser.games;
     });
-    // } else {
-    //   this.store.dispatch(new SetUsers(usersInLocalStorage));
-    // }
   }
 
   onClick(e: Event) {
