@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { InjectModel } from '@nestjs/mongoose';
-import { invalidEmailAndPassword } from '@nx-bridge/api-errors';
+import { INVALID_CREDENTIALS } from '@nx-bridge/api-errors';
 import { UserModel } from '@nx-bridge/api-mongoose-models';
 import { ControllerResponse, GetUserResponse } from '@nx-bridge/interfaces-and-types';
 import { Model } from 'mongoose';
@@ -23,7 +23,7 @@ export class GetUserService {
 
   private validateInputs(username: string, email: string) {
     if (!email && !username) {
-      return { message: invalidEmailAndPassword, status: 400 };
+      return { message: INVALID_CREDENTIALS, status: 400 };
     }
 
     return null;

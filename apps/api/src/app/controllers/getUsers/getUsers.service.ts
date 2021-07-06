@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { InjectModel } from '@nestjs/mongoose';
-import { invalidUsersArray } from '@nx-bridge/api-errors';
+import { INVALID_USERS_ARRAY } from '@nx-bridge/api-errors';
 import { UserModel } from '@nx-bridge/api-mongoose-models';
 import { ControllerResponse, User } from '@nx-bridge/interfaces-and-types';
 import { Model } from 'mongoose';
@@ -21,7 +21,7 @@ export class GetUsersService {
 
   private validateInputs(users: string[]) {
     if (!users || users.length < 0) {
-      return { message: invalidUsersArray, status: 400 };
+      return { message: INVALID_USERS_ARRAY, status: 400 };
     }
 
     return null;

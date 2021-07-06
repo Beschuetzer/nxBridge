@@ -16,6 +16,7 @@ import { Store } from '@ngrx/store';
 import { GetUserResponse, LocalStorageUser } from '@nx-bridge/interfaces-and-types';
 import { Game } from '@nx-bridge/interfaces-and-types';
 import { LocalStorageManagerService } from './local-storage-manager.service';
+import { ERROR_APPENDING_GAMES } from '@nx-bridge/api-errors';
 
 @Injectable({
   providedIn: 'root',
@@ -154,10 +155,12 @@ export class LandingPageService {
         this.gameCountFromServer + this.localGameCount
       );
     else {
-      this.localStorageManager.appendGamesToLocalStorageUser(
+      const result = this.localStorageManager.appendGamesToLocalStorageUser(
         this.userId as string,
         games
       );
+
+      if (!result) return this.store.dispatch(new SetLoadingError(ERROR_APPENDING_GAMES));
     }
 
     this.localStorageManager.updateEmailAndUsername(this.userId, this.username, this.email);

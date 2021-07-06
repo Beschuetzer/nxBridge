@@ -61,7 +61,6 @@ Todos----------------------------------------------------------
 -change how deal winners works (always show 14 columns)
 
 Testing------------
-  -how the new games are grabbed 
   -test already stored LocalStorageUser scenario works
   -how does providing email to a localStorageUser already present work? does it save email?
 
@@ -69,3 +68,4 @@ Testing------------
   -games get loading on top of other games that are there (need to only add new ones in appendGamesToLocalStorageUser())
 
 
+-need a function to remove the oldest localStorageUser by last access date and call when storage is full or approaching it

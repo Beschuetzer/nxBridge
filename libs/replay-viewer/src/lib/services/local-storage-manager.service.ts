@@ -70,8 +70,14 @@ export class LocalStorageManagerService {
 
   appendGamesToLocalStorageUser(userId: string, games: Game[]) {
     const localStorageUser = this.getLocalStorageUser(userId);
-    localStorageUser?.games.push(...games);
-    return localStorageUser;
+    
+    if (!localStorageUser) return false;
+    
+    localStorageUser.games.push(...games);
+    localStorageUser.lastGameCount = localStorageUser.games.length;
+    localStorageUser.lastSearchDate = Date.now();
+    this.saveLocalStorageUser(userId, localStorageUser);
+    return true;
   }
 
   createLocalStorageUser(userId: string, username: string, email: string, games: Game[], gameCount: number) {
@@ -100,7 +106,6 @@ export class LocalStorageManagerService {
   }
 
   updateEmailAndUsername(userId: string, username: string, email: string) {
-    debugger;
     if (!userId) return;
     const localStorageUser = this.getLocalStorageUser(userId);
     if (!localStorageUser) return;
