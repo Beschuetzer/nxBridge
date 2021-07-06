@@ -1,7 +1,7 @@
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Game, User } from '@nx-bridge/interfaces-and-types';
+import { Game, LocalStorageUser, User } from '@nx-bridge/interfaces-and-types';
 import * as ngrxStore from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
 import {
@@ -35,7 +35,7 @@ export class HelpersService {
   }
 
   getUser(usernameValue: string, emailValue: string) {
-    return this.http.post<User>(`${GET_USER_URL}`, {
+    return this.http.post<string>(`${GET_USER_URL}`, {
       [`${EMAIL_STRING}`]: emailValue,
       [`${USERNAME_STRING}`]: usernameValue,
     });
@@ -44,7 +44,7 @@ export class HelpersService {
   getUsers(users: string[]) {
     if (!users || users.length <= 0) return;
     console.log('users =', users);
-    return this.http.post<User[]>(`${GET_USERS_URL}`, {
+    return this.http.post<string[]>(`${GET_USERS_URL}`, {
       [`${USERS_STRING}`]: users,
     });
   }

@@ -1,19 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Game, Preferences, User } from '@nx-bridge/interfaces-and-types';
-
-export interface LocalStorageUser {
-  username: string;
-  games: Game[];
-  lastSearchDate: number;
-  lastGameCount: number;
-  preferences: Preferences | null,
-}
-
-export interface LocalStorageUsers {
-  [key: string]: LocalStorageUser;
-}
-
-export type EmptyLocalStorageReturn = null;
+import { EmptyLocalStorageReturn, Game, LocalStorageUser, LocalStorageUsers, User } from '@nx-bridge/interfaces-and-types';
 
 @Injectable({
   providedIn: 'root',
@@ -71,7 +57,7 @@ export class LocalStorageManagerService {
     return localStorageUser;
   }
 
-  appendLocalStorageUser(userObj: User, games: Game[], gameCount: number) {
+  appendLocalStorageUser(userObj: LocalStorageUser, games: Game[], gameCount: number) {
     if (!userObj) return null;
     let localStorageUsers = this.getLocalStorageUsers();
     const time = Date.now();

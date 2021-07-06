@@ -1,4 +1,4 @@
-import { ErrorMessage } from '@nx-bridge/interfaces-and-types';
+import { ErrorMessage } from './frontend-types';
 
 export type ControllerResponse<T> = Promise< T | T[] | ErrorMessage >;
 

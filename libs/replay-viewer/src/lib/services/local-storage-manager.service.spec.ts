@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
-import { Game, GameRoundEndingScores, Points, Preferences, Room } from '@nx-bridge/interfaces-and-types';
+import { Game, GameRoundEndingScores, LocalStorageUsers, Points, Preferences, Room } from '@nx-bridge/interfaces-and-types';
 
-import { LocalStorageManagerService, LocalStorageUsers } from './local-storage-manager.service';
+import { LocalStorageManagerService } from './local-storage-manager.service';
 
 describe('LocalStorageManagerService', () => {
   let service: LocalStorageManagerService;
@@ -170,15 +170,15 @@ describe('LocalStorageManagerService', () => {
     expect(service.getIdFromUsername("Adams")).toBe(service.EMPTY_USER_ID_RETURNS);
   });
 
-  it('getting id from email - valid', () => {
-    localStorage.setItem('users', JSON.stringify(localStorageUsers));
-    expect(service.getIdFromEmail("adam@gmail.com")).toBe(userId);
-  });
+  // it('getting id from email - valid', () => {
+  //   localStorage.setItem('users', JSON.stringify(localStorageUsers));
+  //   expect(service.getIdFromEmail("adam@gmail.com")).toBe(userId);
+  // });
 
-  it('getting id from email - not present', () => {
-    localStorage.setItem('users', JSON.stringify(localStorageUsers));
-    expect(service.getIdFromEmail("adam22@gmail.com")).toBe(service.EMPTY_USER_ID_RETURNS);
-  });
+  // it('getting id from email - not present', () => {
+  //   localStorage.setItem('users', JSON.stringify(localStorageUsers));
+  //   expect(service.getIdFromEmail("adam22@gmail.com")).toBe(service.EMPTY_USER_ID_RETURNS);
+  // });
 
   it('append game', () => {
     localStorage.setItem('users', JSON.stringify(localStorageUsers));

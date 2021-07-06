@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { InjectModel } from '@nestjs/mongoose';
 import { invalidEmailAndPassword } from '@nx-bridge/api-errors';
 import { UserModel } from '@nx-bridge/api-mongoose-models';
-import { ControllerResponse } from '@nx-bridge/interfaces-and-types';
+import { ControllerResponse, LocalStorageUserCore } from '@nx-bridge/interfaces-and-types';
 import { Model } from 'mongoose';
 
 @Injectable({ providedIn: 'root'})
@@ -11,10 +11,14 @@ export class GetUserService {
     @InjectModel('User') private userModel: Model<UserModel>,
   ) {}
 
-  async getUser(username: string, email: string): ControllerResponse<UserModel> {
+  async getUser(username: string, email: string): ControllerResponse<LocalStorageUserCore | UserModel> {
     const error = this.validateInputs(username, email);
     if (error) return error;
-    return await this.queryDB(username, email);
+    const response = await this.queryDB(username, email) as UserModel;
+    if (response) return {
+      id: (response as any)._id,
+    }
+    return response;
   }
 
   private validateInputs(username: string, email: string) {
@@ -35,6 +39,6 @@ export class GetUserService {
   }
 
   private async getUserFromEmail(email: string) {
-    return await this.userModel.findOne({email});
+    return await this.userModel.findOne({email}).exec();
   }
 }

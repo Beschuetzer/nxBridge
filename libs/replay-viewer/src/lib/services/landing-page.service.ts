@@ -8,16 +8,16 @@ import {
 import { HelpersService } from '@nx-bridge/helpers';
 import { AppState, SetGames, SetIsLoading, SetLoadingError } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
-import { LocalStorageManagerService } from './local-storage-manager.service';
+import { LocalStorageUser, LocalStorageUserCore } from '@nx-bridge/interfaces-and-types';
 import { Game, User } from '@nx-bridge/interfaces-and-types';
-import * as ngrxStore from '@nx-bridge/store';
+import { LocalStorageManagerService } from './local-storage-manager.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LandingPageService {
   public userId: string | null = null;
-  public userObj: User | null = null;
+  public user: LocalStorageUser | null = null;
   public localGameCount = 0;
   public gameCountFromServer = 0;
 
@@ -67,10 +67,11 @@ export class LandingPageService {
     } else this.getGameCount();
   }
 
-  private handleGetUserResponse(user: User, username: string, email: string) {
-    if (user) {
-      this.userObj = user;
-      this.userId = (user as any)._id;
+  private handleGetUserResponse(userId: string, username: string, email: string) {
+    debugger;
+    
+    if (userId) {
+      this.userId = userId;
       this.getGameCount();
     } else {
       this.store.dispatch(
@@ -105,6 +106,6 @@ export class LandingPageService {
     debugger;
     this.store.dispatch(new SetIsLoading(false));
     this.localStorageManager.appendGamesToLocalStorageUser(this.userId as string, games);
-    this.localStorageManager.appendLocalStorageUser(this.userObj as User, games, this.gameCountFromServer + this.localGameCount);
+    this.localStorageManager.appendLocalStorageUser(this.user as LocalStorageUser, games, this.gameCountFromServer + this.localGameCount);
   }
 }
