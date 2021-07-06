@@ -1,7 +1,9 @@
 known bugs --------------------------
-  -Deal 1 trick 6 of yougurt 2/16 7:24pm bug where order of playing is reversed
+  -Deal 1 trick 6 of yougurt 2/16 7:24pm bug where order of playing is reversed (it seems to be an issue with the deal and how it was saved)
 
 
+Known Quirks-----------------
+  -since users can change username and email, the user has to know the current username or email in order to get results (would have to keep track user username changes on A# maj bridge to remedy )
 
 
 Components:
@@ -65,4 +67,5 @@ Testing------------
 
 
   -games get loading on top of other games that are there (need to only add new ones in appendGamesToLocalStorageUser())
-  -user names can change, so have getGameCount return current username too? how do we update usernames on every submission?
+
+

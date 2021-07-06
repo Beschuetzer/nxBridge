@@ -51,7 +51,7 @@ export class LocalStorageManagerService {
     for (const userId in localStorageUsers) {
       if (Object.prototype.hasOwnProperty.call(localStorageUsers, userId)) {
         const userObj = localStorageUsers[userId];
-        if (userObj.username === username) return userId;
+        if (userObj.username && userObj.username === username) return userId;
       }
     }
     return this.EMPTY_USER_ID_RETURNS;
@@ -62,7 +62,7 @@ export class LocalStorageManagerService {
     for (const userId in localStorageUsers) {
       if (Object.prototype.hasOwnProperty.call(localStorageUsers, userId)) {
         const userObj = localStorageUsers[userId];
-        if (userObj.email === email) return userId;
+        if (userObj.email && userObj.email === email) return userId;
       }
     }
     return this.EMPTY_USER_ID_RETURNS;
@@ -100,6 +100,7 @@ export class LocalStorageManagerService {
   }
 
   updateEmailAndUsername(userId: string, username: string, email: string) {
+    debugger;
     if (!userId) return;
     const localStorageUser = this.getLocalStorageUser(userId);
     if (!localStorageUser) return;

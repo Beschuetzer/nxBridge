@@ -1,5 +1,10 @@
 import { Game} from '@nx-bridge/interfaces-and-types';
 
+export interface GetUserResponse {
+  username: string,
+  id: string,
+}
+
 export interface LocalStorageUserCore {
   [key: string]: string | number | Game[];
 }

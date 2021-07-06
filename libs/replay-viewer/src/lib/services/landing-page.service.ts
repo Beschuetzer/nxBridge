@@ -13,7 +13,7 @@ import {
   SetLoadingError,
 } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
-import { LocalStorageUser } from '@nx-bridge/interfaces-and-types';
+import { GetUserResponse, LocalStorageUser } from '@nx-bridge/interfaces-and-types';
 import { Game } from '@nx-bridge/interfaces-and-types';
 import { LocalStorageManagerService } from './local-storage-manager.service';
 
@@ -27,7 +27,6 @@ export class LandingPageService {
   public localGameCount = 0;
   public gameCountFromServer = 0;
   public needToCreateLocalStorageUser = false;
-  public needToUpdateEmailOrUsername = false;
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor(
@@ -65,6 +64,7 @@ export class LandingPageService {
 
   private getLocalUserId() {
     const localStorageUsers = this.localStorageManager.getLocalStorageUsers();
+    debugger;
 
     if (!localStorageUsers) return '';
     let localUserId = this.localStorageManager.getIdFromUsername(this.username);
@@ -76,30 +76,28 @@ export class LandingPageService {
   }
 
   startRequest(username: string, email: string) {
-    this.needToUpdateEmailOrUsername = false;
     this.needToCreateLocalStorageUser = false;
     this.username = username;
     this.email = email;
     this.userId = this.getLocalUserId();
-    debugger;
 
     if (!this.userId) {
-      this.helpersService.getUser(username, email).subscribe((userId) => {
-        this.handleGetUserResponse(userId);
+      this.helpersService.getUser(username, email).subscribe((getUserResponse) => {
+        this.handleGetUserResponse(getUserResponse);
       });
     } else this.getGameCount();
   }
 
-  private handleGetUserResponse(userId: string) {
-    if (userId) {
+  private handleGetUserResponse(getUserResponse: GetUserResponse) {
+    if (getUserResponse) {
       const localStorageUser = this.localStorageManager.getLocalStorageUser(
-        userId
+        getUserResponse.id
       );
 
       if (!localStorageUser) this.needToCreateLocalStorageUser = true;
-      else this.needToUpdateEmailOrUsername = true;
 
-      this.userId = userId;
+      this.username = getUserResponse.username;
+      this.userId = getUserResponse.id;
       this.getGameCount();
     } else {
       this.store.dispatch(
@@ -156,18 +154,13 @@ export class LandingPageService {
         this.gameCountFromServer + this.localGameCount
       );
     else {
-      if (this.needToUpdateEmailOrUsername)
-        this.localStorageManager.updateEmailAndUsername(
-          this.userId,
-          this.username,
-          this.email
-        );
-
       this.localStorageManager.appendGamesToLocalStorageUser(
         this.userId as string,
         games
       );
     }
+
+    this.localStorageManager.updateEmailAndUsername(this.userId, this.username, this.email);
 
     debugger;
     const localStorageUser = this.localStorageManager.getLocalStorageUser(
