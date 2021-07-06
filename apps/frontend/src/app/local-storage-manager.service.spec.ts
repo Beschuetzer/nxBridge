@@ -128,4 +128,19 @@ describe('LocalStorageManagerService', () => {
 
     expect(service.updateLocalStorageUsers(username, games, email, gameCount, id, time)).toEqual(null);
   });
+
+  it('getting last game count - no local storage', () => {
+    localStorage.removeItem('users');
+    expect(service.getLastGameCount("Adam")).toBe(0);
+  });
+
+  it('getting last game count - invalid username', () => {
+    localStorage.setItem('users', JSON.stringify(localStorageUsers));
+    expect(service.getLastGameCount("")).toBe(0);
+  });
+
+  it('getting last game count - valid', () => {
+    localStorage.setItem('users', JSON.stringify(localStorageUsers));
+    expect(service.getLastGameCount("Adam")).toBe(10);
+  });
 });

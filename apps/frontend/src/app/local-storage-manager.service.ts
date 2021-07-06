@@ -45,6 +45,13 @@ export class LocalStorageManagerService {
     return parsed;
   }
 
+  getLastGameCount(username: string) {
+    const localStorageUsers = this.getLocalStorageUsers();
+    if (!localStorageUsers || !localStorageUsers[username]) return 0;
+
+    return localStorageUsers[username].lastGameCount;
+  }
+
   updateLocalStorageUsers(username: string, games: Game[], email: string, gameCount: number, id: string, time: number) {
     if (!username) return null;
     let localStorageUsers = this.getLocalStorageUsers();
