@@ -19,7 +19,6 @@ import {
   suitsHtmlEntities,
   COLOR_RED_CLASSNAME,
   COLOR_BLACK_CLASSNAME,
-  createHandArrayFromFlatArray,
   MOBILE_START_WIDTH,
 } from '@nx-bridge/constants';
 
@@ -29,15 +28,7 @@ import {
   SetCurrentlyViewingDeal,
   CurrentlyViewingDeal,
 } from '@nx-bridge/store';
-import {
-  Contract,
-  Deal,
-  Hand,
-  Hands,
-  Seating,
-} from '@nx-bridge/interfaces-and-types';
-import * as paper from 'paper';
-import { Project, Raster } from 'paper/dist/paper-core';
+import { Contract, Hands, Seating } from '@nx-bridge/interfaces-and-types';
 import { DealPlayerService } from '../deal-player.service';
 
 @Component({
@@ -51,20 +42,15 @@ export class DealPlayerComponent implements OnInit {
   }
   public DEAL_PLAYER_CLASSNAME = DEAL_PLAYER_CLASSNAME;
   public DISPLAY_NONE_CLASSNAME = DISPLAY_NONE_CLASSNAME;
-  public deal: Deal | null = null;
   public dealNumber: number | string = -1;
   public contract: Contract | null = null;
   public declarer = '';
-  public handsToRender: Hands | null = null;
-  public playCount = 0;
   public trickNumber = 0;
   public keepCardsCentered = false;
-  public cardsPlayed: number[] = [];
   public cardPlayWaitDuration = 2500;
   public seating: Seating | null = null;
   public name: string | null = null;
   public date: number | string | null = null;
-  public isPlaying = false;
   public biddingTable = '';
   public summaryPre = '';
   public summaryNumber = '';
@@ -74,28 +60,32 @@ export class DealPlayerComponent implements OnInit {
   private shouldChangePlaySpeed = false;
   private firstCardPlayed = -1;
   private firstCardPlayer = '';
-  private playInterval: any;
   public isMobile = window.innerWidth <= MOBILE_START_WIDTH;
+  public isPlaying = false;
 
   constructor(
     private store: Store<AppState>,
     private elRef: ElementRef,
     private renderer: Renderer2,
-    private dealPlayerService: DealPlayerService,
+    private dealPlayerService: DealPlayerService
   ) {}
 
   ngOnInit(): void {
-    window.addEventListener('resize', this.dealPlayerService.onResize.bind(this.dealPlayerService));
+    window.addEventListener(
+      'resize',
+      this.dealPlayerService.onResize.bind(this.dealPlayerService)
+    );
 
     this.store.select('games').subscribe((gameState) => {
       this.seating = gameState.currentlyViewingGame.seating;
+      this.dealPlayerService.seating = gameState.currentlyViewingGame.seating;
       this.name = gameState.currentlyViewingGame.name;
       this.date = gameState.currentlyViewingGame.date;
     });
 
     this.store.select('deals').subscribe((dealState) => {
       if (dealState.currentlyViewingDeal?.bids && !this.hasLoadedDeal) {
-        this.deal = dealState.currentlyViewingDeal;
+        this.dealPlayerService.deal = dealState.currentlyViewingDeal;
         this.declarer = dealState.currentlyViewingDeal.declarer;
         this.dealNumber = dealState.currentlyViewingDeal.dealNumber;
         this.biddingTable = dealState.currentlyViewingDeal.biddingTable;
@@ -103,16 +93,13 @@ export class DealPlayerComponent implements OnInit {
         this.summaryNumber = dealState.currentlyViewingDeal.summaryNumber;
         this.summaryPost = dealState.currentlyViewingDeal.summaryPost;
 
-        if (Object.keys(this.deal).length <= 0) return;
-        
-        this.handsToRender = this.deal?.hands;
-        this.dealPlayerService.project = new Project(
-          document.querySelector(
-            `#${DEAL_PLAYER_CLASSNAME}-canvas`
-          ) as HTMLCanvasElement
-        );
+        if (Object.keys(this.dealPlayerService.deal).length <= 0) return;
 
-        if (this.dealPlayerService.cards.length < cardsPerDeck) this.dealPlayerService.loadCards();
+        this.dealPlayerService.handsToRender = this.dealPlayerService.deal?.hands;
+        this.dealPlayerService.setupProject();
+
+        if (this.dealPlayerService.cards.length < cardsPerDeck)
+          this.dealPlayerService.loadCards();
         else {
           this.dealPlayerService.positionHands();
         }
@@ -133,7 +120,10 @@ export class DealPlayerComponent implements OnInit {
 
   onCenteredChange(e: Event) {
     const checkbox = (e.currentTarget || e.target) as HTMLInputElement;
-    this.keepCardsCentered = checkbox.checked;
+    const newValue = checkbox.checked;
+
+    this.keepCardsCentered = newValue;
+    this.dealPlayerService.keepCardsCentered = newValue;
   }
 
   onClose() {
@@ -152,55 +142,56 @@ export class DealPlayerComponent implements OnInit {
 
   onNext() {
     this.resetTable();
-    this.dealPlayerService.playCard();
+    this.playCard();
     this.onPause();
   }
 
   onNextFour() {
     this.resetTable();
-    this.dealPlayerService.playCard(this.playCount + 3);
+    this.playCard(this.dealPlayerService.playCount + 3);
     this.onPause();
   }
 
   onPause() {
     this.isPlaying = false;
-    clearInterval(this.playInterval);
+    clearInterval(this.dealPlayerService.playInterval);
   }
 
   onPlay() {
-    this.isPlaying = true;
-    this.dealPlayerService.playCard();
-    this.playInterval = setInterval(() => {
+    this.dealPlayerService.isPlaying = true;
+    this.playCard();
+    this.dealPlayerService.playInterval = setInterval(() => {
       if (this.shouldChangePlaySpeed) {
-        clearInterval(this.playInterval);
+        clearInterval(this.dealPlayerService.playInterval);
         return this.onPlay();
       }
-      this.dealPlayerService.playCard();
-      if (this.playCount === cardsPerDeck) clearInterval(this.playInterval);
+      this.playCard();
+      if (this.dealPlayerService.playCount === cardsPerDeck)
+        clearInterval(this.dealPlayerService.playInterval);
     }, this.cardPlayWaitDuration);
   }
 
   onPrevious() {
     this.onPause();
     this.resetTable();
-    this.dealPlayerService.playCard(this.playCount - 2);
+    this.playCard(this.dealPlayerService.playCount - 2);
   }
 
   onPreviousFour() {
     this.onPause();
     this.resetTable();
-    this.dealPlayerService.playCard(this.playCount - 5);
+    this.playCard(this.dealPlayerService.playCount - 5);
   }
 
   onSpeedChange(e: Event) {
     // debugger;
-    // console.log('this.deal =', this.deal);
+    // console.log('this.dealPlayerService.deal =', this.dealPlayerService.deal);
     // console.log('this.cardSpacingIncrement =', this.cardSpacingIncrement);
 
     this.cardPlayWaitDuration = +(e.target as HTMLInputElement)?.value * 1000;
     console.log('this.cardPlayWaitDuration =', this.cardPlayWaitDuration);
-    if (this.isPlaying) this.shouldChangePlaySpeed = true;
-    // clearInterval(this.playInterval);
+    if (this.dealPlayerService.isPlaying) this.shouldChangePlaySpeed = true;
+    // clearInterval(this.dealPlayerService.playInterval);
     // this.onPlay()
   }
 
@@ -212,14 +203,13 @@ export class DealPlayerComponent implements OnInit {
     this.trickNumber = 0;
   }
 
-  
-
   displayCardsInTable() {
     this.setFirstCardPlayedAndPlayer();
     this.setCardPlayOrderAsDirections();
     this.renderRoundWinnersTable();
 
-    if ((this.cardsPlayed.length - 1) % 4 === 0) this.resetTable();
+    if ((this.dealPlayerService.cardsPlayed.length - 1) % 4 === 0)
+      this.resetTable();
 
     const currentTrick = this.getCurrentTrick();
 
@@ -232,16 +222,38 @@ export class DealPlayerComponent implements OnInit {
     }
   }
 
+  private playCard(nthCard = this.dealPlayerService.playCount) {
+    const cardPlayOrder = this.dealPlayerService.deal?.cardPlayOrder;
+    if (!this.dealPlayerService.deal || !cardPlayOrder || cardPlayOrder.length < cardsPerDeck)
+      return;
+
+    if (nthCard >= cardsPerDeck) return this.onPause();
+    if (nthCard === -2 || nthCard === 51)
+      this.dealPlayerService.cardsPlayed = flatten(cardPlayOrder);
+    else if (nthCard < -2)
+      this.dealPlayerService.cardsPlayed = flatten(
+        cardPlayOrder.slice(0, nthCard + 2) as number[]
+      );
+    else
+      this.dealPlayerService.cardsPlayed = flatten(
+        cardPlayOrder.slice(0, nthCard + 1) as number[]
+      );
+
+    this.dealPlayerService.playCount = nthCard + 1;
+    this.displayCardsInTable();
+    this.dealPlayerService.updateHands();
+  }
+
   private getCurrentTrick() {
-    const numberOfCardsPlayed = this.cardsPlayed.length;
+    const numberOfCardsPlayed = this.dealPlayerService.cardsPlayed.length;
     this.trickNumber = Math.floor((numberOfCardsPlayed - 1) / 4) + 1;
     const startIndex = (this.trickNumber - 1) * 4;
     const endIndex = startIndex + 4;
 
     if (endIndex > numberOfCardsPlayed - 1)
-      return this.cardsPlayed.slice(startIndex);
-    else return this.cardsPlayed.slice(startIndex, endIndex);
-    return this.cardsPlayed.slice(startIndex, endIndex);
+      return this.dealPlayerService.cardsPlayed.slice(startIndex);
+    else return this.dealPlayerService.cardsPlayed.slice(startIndex, endIndex);
+    return this.dealPlayerService.cardsPlayed.slice(startIndex, endIndex);
   }
 
   private displayCardInTable(cardAsNumber: number) {
@@ -252,7 +264,7 @@ export class DealPlayerComponent implements OnInit {
       numberToUse = getCharacterFromCardAsNumber(cardAsNumber);
       suitHtmlEntity = getHtmlEntityFromSuitOrCardAsNumber(cardAsNumber);
       const userWhoPlayedCard = getUserWhoPlayedCard(
-        this.deal?.hands as Hands,
+        this.dealPlayerService.deal?.hands as Hands,
         cardAsNumber
       );
       const directionToUse = getDirectionFromSeating(
@@ -274,9 +286,11 @@ export class DealPlayerComponent implements OnInit {
 
   private setFirstCardPlayedAndPlayer() {
     if (this.firstCardPlayed === -1)
-      this.firstCardPlayed = flatten(this.deal?.cardPlayOrder)[0];
+      this.firstCardPlayed = flatten(
+        this.dealPlayerService.deal?.cardPlayOrder
+      )[0];
     this.firstCardPlayer = getUserWhoPlayedCard(
-      this.deal?.hands as Hands,
+      this.dealPlayerService.deal?.hands as Hands,
       this.firstCardPlayed
     );
   }
@@ -355,14 +369,14 @@ export class DealPlayerComponent implements OnInit {
     // this.cardScaleAmount = -1;
     // this.cardSpacingIncrement = -1;
     // this.cardVisibleOffset = -1;
-    // this.playCount = 0;
+    // this.dealPlayerService.playCount = 0;
     // this.trickNumber = 0;
-    // this.cardsPlayed = [];
+    // this.dealPlayerService.cardsPlayed = [];
     // this.cardPlayWaitDuration = 2500;
     // this.seating = null;
     // this.name = null;
     // this.date = null;
-    // this.isPlaying = false;
+    // this.dealPlayerService.isPlaying = false;
     // this.scope = null;
     // this.project = null;
   }
@@ -374,7 +388,9 @@ export class DealPlayerComponent implements OnInit {
     const target = document.querySelector(
       `.${DEAL_PLAYER_CLASSNAME}__round-winners`
     ) as HTMLElement;
-    const numberOfWinnersToShow = Math.floor(this.cardsPlayed.length / 4);
+    const numberOfWinnersToShow = Math.floor(
+      this.dealPlayerService.cardsPlayed.length / 4
+    );
 
     this.renderer.setProperty(target, 'innerHTML', '');
     const table = this.renderer.createElement('div');
@@ -405,7 +421,8 @@ export class DealPlayerComponent implements OnInit {
     //this.cardPlayerOrder has names of players in sequence of their playing order
 
     for (let i = 0; i < 13; i++) {
-      const roundWinner = (this.deal?.roundWinners as string[][])[i];
+      const roundWinner = (this.dealPlayerService.deal
+        ?.roundWinners as string[][])[i];
       const newDivNumber = this.renderer.createElement('div');
       const newDivName = this.renderer.createElement('div');
 
