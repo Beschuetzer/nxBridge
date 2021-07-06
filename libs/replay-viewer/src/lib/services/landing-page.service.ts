@@ -6,7 +6,7 @@ import {
   ValidatorFn,
 } from '@angular/forms';
 import { HelpersService } from '@nx-bridge/helpers';
-import { AppState, SetGames, SetIsLoading, SetLoadingError } from '@nx-bridge/store';
+import { AppState, SetCurrentlyViewingUser, SetGames, SetIsLoading, SetLoadingError } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
 import { LocalStorageUser, LocalStorageUserCore } from '@nx-bridge/interfaces-and-types';
 import { Game, User } from '@nx-bridge/interfaces-and-types';
@@ -16,10 +16,12 @@ import { LocalStorageManagerService } from './local-storage-manager.service';
   providedIn: 'root',
 })
 export class LandingPageService {
-  public userId: string | null = null;
-  public user: LocalStorageUser | null = null;
+  public username = "";
+  public email = "";
+  public userId = "";
   public localGameCount = 0;
   public gameCountFromServer = 0;
+  public needToCreateLocalStorageUser = false;
 
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -59,23 +61,26 @@ export class LandingPageService {
   startRequest(username: string, email: string) {
     const localStorageUsers = this.localStorageManager.getLocalStorageUsers();
     this.userId = localStorageUsers ? this.localStorageManager.getIdFromUsername(username) : '';
+    this.username = username;
+    this.email = email;
 
     if (!this.userId) {
-      this.helpersService.getUser(username, email).subscribe((user) => {
-        this.handleGetUserResponse(user, username, email);
+      this.needToCreateLocalStorageUser = true;
+      this.helpersService.getUser(username, email).subscribe((userId) => {
+        this.handleGetUserResponse(userId);
       });
     } else this.getGameCount();
   }
 
-  private handleGetUserResponse(userId: string, username: string, email: string) {
+  private handleGetUserResponse(userId: string) {
     if (userId) {
       this.userId = userId;
       this.getGameCount();
     } else {
       this.store.dispatch(
         new SetLoadingError(
-          `There is no user with the ${username ? 'username' : 'email'} of '${
-            username ? username : email
+          `There is no user with the ${this.username ? 'username' : 'email'} of '${
+            this.username ? this.username : this.email
           }'.`
         )
       );
@@ -84,7 +89,6 @@ export class LandingPageService {
   }
 
   private getGameCount() {
-    debugger;
     this.localGameCount = this.localStorageManager.getLastGameCount(this.userId as string);
     this.helpersService.getGameCount(this.userId as string).subscribe(gameCount => {
       this.gameCountFromServer = gameCount;
@@ -103,8 +107,12 @@ export class LandingPageService {
     this.store.dispatch(new SetGames(games));
     this.helpersService.loadDealsIntoRedux(games);
     debugger;
+
+    if (this.needToCreateLocalStorageUser) this.localStorageManager.createLocalStorageUser(this.userId, this.username, this.email, games, this.gameCountFromServer + this.localGameCount);
+    else this.localStorageManager.appendGamesToLocalStorageUser(this.userId as string, games);
+
+    const localStorageUser = this.localStorageManager.getLocalStorageUser(this.userId);
+    this.store.dispatch(new SetCurrentlyViewingUser(localStorageUser ? localStorageUser : {} as LocalStorageUser));
     this.store.dispatch(new SetIsLoading(false));
-    this.localStorageManager.appendGamesToLocalStorageUser(this.userId as string, games);
-    this.localStorageManager.appendLocalStorageUser(this.user as LocalStorageUser, games, this.gameCountFromServer + this.localGameCount);
   }
 }

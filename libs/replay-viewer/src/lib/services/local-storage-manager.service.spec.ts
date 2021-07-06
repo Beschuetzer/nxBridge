@@ -80,7 +80,7 @@ describe('LocalStorageManagerService', () => {
       }
     }
 
-    expect(service.appendLocalStorageUser(userId, username, games, email, gameCount, time, preferences)).toEqual(expected);
+    expect(service.createLocalStorageUser(userId, username, games, email, gameCount, time, preferences)).toEqual(expected);
   });
 
   it('updating localStorage user - update two', () => {
@@ -103,7 +103,7 @@ describe('LocalStorageManagerService', () => {
       }
     }
 
-    expect(service.appendLocalStorageUser(userId, username, games, email, gameCount, time, preferences)).toEqual(expected);
+    expect(service.createLocalStorageUser(userId, username, games, email, gameCount, time, preferences)).toEqual(expected);
 
     const username2 = "Tom2";
     const games2: Game[] = [];
@@ -131,7 +131,7 @@ describe('LocalStorageManagerService', () => {
       }
     }
 
-    expect(service.appendLocalStorageUser(id2, username2, games2, email2, gameCount2, time2, preferences)).toEqual(expected2);
+    expect(service.createLocalStorageUser(id2, username2, games2, email2, gameCount2, time2, preferences)).toEqual(expected2);
   });
 
   it('updating localStorage user - invalid username', () => {
@@ -142,7 +142,7 @@ describe('LocalStorageManagerService', () => {
     const time = Date.now();
     const preferences = {} as Preferences;
 
-    expect(service.appendLocalStorageUser(userId, username, games, email, gameCount, time, preferences)).toEqual(null);
+    expect(service.createLocalStorageUser(userId, username, games, email, gameCount, time, preferences)).toEqual(null);
   });
 
   it('getting last game count - no local storage', () => {

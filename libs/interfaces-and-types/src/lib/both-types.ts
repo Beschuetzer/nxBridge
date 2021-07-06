@@ -9,6 +9,7 @@ export interface LocalStorageUser extends LocalStorageUserCore {
   lastSearchDate: number;
   username: string;
   lastGameCount: number;
+  email: string;
 }
 
 export interface LocalStorageUsers {

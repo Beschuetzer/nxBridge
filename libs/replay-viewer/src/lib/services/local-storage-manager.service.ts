@@ -57,24 +57,24 @@ export class LocalStorageManagerService {
     return localStorageUser;
   }
 
-  appendLocalStorageUser(userObj: LocalStorageUser, games: Game[], gameCount: number) {
-    if (!userObj) return null;
+  createLocalStorageUser(userId: string, username: string, email: string, games: Game[], gameCount: number) {
+    if (!userId) return null;
     let localStorageUsers = this.getLocalStorageUsers();
     const time = Date.now();
 
     const newLocalStorageUser: LocalStorageUser = {
-      username: userObj.username,
+      username,
       lastGameCount: gameCount,
       lastSearchDate: time,
       games, 
-      preferences: userObj.preferences,
+      email,
     }
 
     if (localStorageUsers) {
-      localStorageUsers[(userObj as any)._id] = newLocalStorageUser;
+      localStorageUsers[userId] = newLocalStorageUser;
     } else {
       localStorageUsers = {
-        [(userObj as any)._id]: newLocalStorageUser,
+        [userId]: newLocalStorageUser,
       }
     }
 
