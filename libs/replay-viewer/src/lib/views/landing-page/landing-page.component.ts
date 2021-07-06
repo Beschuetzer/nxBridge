@@ -21,6 +21,7 @@ export class LandingPageComponent implements OnInit {
     private store: Store<AppState>,
     private router: Router,
     private route: ActivatedRoute,
+    private landingPageService: LandingPageService,
   ) {}
 
   public isLoading = false;
@@ -92,22 +93,7 @@ export class LandingPageComponent implements OnInit {
     const emailValue = email?.value;
     const usernameValue = username?.value;
 
-    const userInLocalStorage = localStorage.getItem('user');
-    const parsed = userInLocalStorage
-      ? (JSON.parse(userInLocalStorage) as User)
-      : null;
-
-    // console.log('email =', emailValue);
-    // console.log('username =', usernameValue);
-    // console.log('userInLocalStorage =', userInLocalStorage);
-    // console.log('parsed =', parsed);
-    
-    if (!(parsed as any)?._id || parsed?.username !== usernameValue) {
-      this.helpersService.getUser(parsed, usernameValue, emailValue);
-    } else {
-      this.helpersService.getGames((parsed as any)._id);
-      this.store.dispatch(new SetIsLoading(false));
-    }
+    this.landingPageService.startRequest(usernameValue, emailValue);
     this.resetForm();
     this.shouldNavigateToGames = true;
   }
