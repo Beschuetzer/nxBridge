@@ -1,7 +1,7 @@
 import { Query, Get, Param } from '@nestjs/common';
 import { Controller } from '@nestjs/common';
 import { GameModel } from '@nx-bridge/api-mongoose-models';
-import { GET_GAMES_CONTROLLER_STRING } from '@nx-bridge/constants';
+import { GET_GAMES_CONTROLLER_STRING, LAST_NUMBER_OF_GAMES_TO_GET_STRING } from '@nx-bridge/constants';
 import { ControllerResponse } from '@nx-bridge/interfaces-and-types';
 import { GetGamesService } from './getGames.service';
 import { USER_ID_STRING } from '@nx-bridge/constants';
@@ -13,9 +13,10 @@ export class GetGamesController {
 
   @Get()
   async getGames(
-    @Query(USER_ID_STRING) userId: string
+    @Query(USER_ID_STRING) userId: string,
+    @Query(LAST_NUMBER_OF_GAMES_TO_GET_STRING) lastGamesToGet: string,
   ): ControllerResponse<GameModel> {
-    return await this.getGamesService.getGames(userId);
+    return await this.getGamesService.getGames(userId, lastGamesToGet);
   }
 
   @Get(':gameId')

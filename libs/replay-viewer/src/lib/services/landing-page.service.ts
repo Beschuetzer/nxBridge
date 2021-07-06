@@ -52,24 +52,34 @@ export class LandingPageService {
 
   startRequest(username: string, email: string) {
     const localStorageUsers = this.localStorageManager.getLocalStorageUsers();
-    const localStorageUser = localStorageUsers ? this.localStorageManager.getIdFromUsername(username) : null;
+    const userId = localStorageUsers ? this.localStorageManager.getIdFromUsername(username) : null;
+    debugger
 
-    if (!localStorageUser) {
+    if (!userId) {
       this.helpersService.getUser(username, email).subscribe((user) => {
         this.handleGetUserResponse(user, username, email);
       });
     } else {
-      this.helpersService.getGames((localStorageUser as any)._id).subscribe((games) => {
-        this.handleGetGamesResponse(games);
-      });
-      this.store.dispatch(new SetIsLoading(false));
+      const localGameCount = this.localStorageManager.getLastGameCount(userId);
+      this.helpersService.getGameCount(userId).subscribe(gameCount => {
+        this.handleGetGameCountResponse(gameCount, localGameCount);
+      })
     }
+  }
+
+  private handleGetGameCountResponse(gameCountFromServer: number, localGameCount: number) {
+
+
+    this.helpersService.getGames(userId).subscribe((games) => {
+      this.handleGetGamesResponse(games);
+    });
   }
 
   private handleGetGamesResponse(games: Game[]) {
     console.log('games =', games);
     this.store.dispatch(new ngrxStore.SetGames(games));
     this.helpersService.loadDealsIntoRedux(games);
+    this.store.dispatch(new SetIsLoading(false));
   }
 
   private handleGetUserResponse(user: User, username: string, email: string) {

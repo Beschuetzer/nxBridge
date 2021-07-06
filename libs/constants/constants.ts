@@ -5,6 +5,7 @@ export const GET_USER_CONTROLLER_STRING = 'getUser';
 export const GET_USERS_CONTROLLER_STRING = 'getUsers';
 
 export const USER_ID_STRING = 'userId';
+export const LAST_NUMBER_OF_GAMES_TO_GET_STRING = 'last';
 export const DEALS_STRING = 'deals';
 export const USERNAME_STRING = 'username';
 export const EMAIL_STRING = 'email';
