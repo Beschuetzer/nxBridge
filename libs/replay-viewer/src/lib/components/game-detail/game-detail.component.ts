@@ -36,6 +36,7 @@ export class GameDetailComponent implements OnInit {
   }
 
   private getUserIdsFromGame (game: Game) {
+    if (!game) return null;
     return game.players;
   }
 

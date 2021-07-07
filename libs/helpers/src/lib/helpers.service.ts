@@ -53,6 +53,7 @@ export class HelpersService {
     const deals = [];
     for (let i = 0; i < games.length; i++) {
       const game = games[i];
+      if (!game || !game.deals) continue;
       for (let j = 0; j < game.deals.length; j++) {
         const deal = game.deals[j];
         deals.push(deal);

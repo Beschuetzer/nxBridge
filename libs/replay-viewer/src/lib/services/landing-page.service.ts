@@ -134,7 +134,7 @@ export class LandingPageService {
     const numberOfGamesToGet = Math.abs(
       this.gameCountFromServer - this.localGameCount
     );
-    // debugger;
+    debugger;
 
     if (this.gameCountFromServer === 0 && this.localGameCount === 0) {
       const messageSuffix = 'has not finished any games yet...';
@@ -159,7 +159,6 @@ export class LandingPageService {
 
   private handleGetGamesResponse(games: Game[]) {
     console.log('games =', games);
-    this.helpersService.loadDealsIntoRedux(games);
 
     if (this.needToCreateLocalStorageUser)
       this.localStorageManager.createLocalStorageUser(
@@ -188,6 +187,7 @@ export class LandingPageService {
     const localStorageUserWithGames = this.localStorageManager.getLocalStorageUserWithGames(
       this.userId
     );
+    this.helpersService.loadDealsIntoRedux(localStorageUserWithGames?.games as Game[]);
     this.store.dispatch(
       new SetCurrentlyViewingUser(
         localStorageUserWithGames ? localStorageUserWithGames : ({} as LocalStorageUserWithGames)

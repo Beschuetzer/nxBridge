@@ -65,10 +65,11 @@ export class LocalStorageManagerService {
     
     for (let i = 0; i < localStorageUser.gameIds.length; i++) {
       const gameId = localStorageUser.gameIds[i];
-      games.push(this.getGameFromGameId(gameId))
+      const game = this.getGameFromGameId(gameId);
+      if (game) games.push(game);
     }
 
-    localStorageUser.games = games;
+    localStorageUser.games = games.reverse();
     delete localStorageUser.gameIds;
     return localStorageUser;
   }
@@ -117,14 +118,15 @@ export class LocalStorageManagerService {
 
     for (let i = 0; i < games.length; i++) {
       const game = games[i];
+      if (!game) continue;
       const index = localStorageUser.gameIds.findIndex(
         (gameLocal) => {
-          return (gameLocal && gameLocal === (game as any)._id)
+          return (gameLocal && gameLocal === (game as any)?._id)
         }
       );
 
       if (index === -1) {
-        localStorageUser.gameIds.push((game as any)._id);
+        localStorageUser.gameIds.push((game as any)?._id);
       }
     }
 
