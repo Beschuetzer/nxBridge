@@ -69,6 +69,3 @@ Testing------------
 
 
 -need a function to remove the oldest localStorageUser by last access date and call when storage is full or approaching it
-
-
--something strange happens when loading newly played games and there is localstorage for that user

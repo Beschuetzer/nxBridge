@@ -2,7 +2,7 @@
   width: 100%;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr));
-  padding: 0 0 0 $default-font-size * 1;
+  padding: $default-font-size * .5;
   grid-gap: $default-font-size * .5;
 
   @include respond(big-desktop) {

@@ -91,6 +91,7 @@ export class DealDetailComponent implements OnInit {
     const item = this.elRef.nativeElement.querySelector(
       `.${DEAL_DETAIL_CLASSNAME}__tables`
     );
+  
     toggleClassOnList([item], DISPLAY_NONE_CLASSNAME);
     toggleInnerHTML(button, this.buttonChoices);
 

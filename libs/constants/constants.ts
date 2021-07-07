@@ -17,12 +17,14 @@ export const GET_GAME_COUNT_URL = `/api/${GET_GAME_COUNT_CONTROLLER_STRING}`;
 export const GET_USER_URL = `/api/${GET_USER_CONTROLLER_STRING}`;
 export const GET_USERS_URL = `/api/${GET_USERS_CONTROLLER_STRING}`;
 
+export const OVERFLOW_Y_SCROLL_CLASSNAME = 'overflow-y-scroll';
 export const HIDDEN_CLASSNAME = 'hidden';
 export const VISIBLE_CLASSNAME = 'visible';
 export const DISPLAY_NONE_CLASSNAME = 'd-none';
 export const DEALS_LIST_CLASSNAME = 'deals-list';
 export const DEAL_DETAIL_CLASSNAME = 'deal-detail';
 export const GAME_DETAIL_CLASSNAME = 'game-detail';
+export const GAMES_VIEW_CLASSNAME = 'games-view';
 export const DEAL_PLAYER_CLASSNAME = 'deal-player';
 export const FULL_SIZE_CLASSNAME = 'full-size';
 export const COLOR_RED_CLASSNAME = 'color-red';

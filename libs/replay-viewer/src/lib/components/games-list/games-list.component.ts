@@ -1,9 +1,8 @@
-import { Component, HostBinding, OnInit } from '@angular/core';
+import { Component, HostBinding, OnInit, Renderer2 } from '@angular/core';
 import { AppState, SetIsViewingGame } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
 import { Game } from '@nx-bridge/interfaces-and-types';
-import { HelpersService } from '@nx-bridge/helpers';
-import { dealsListDealsButtonChoices, DEALS_LIST_CLASSNAME, DEAL_DETAIL_CLASSNAME, DISPLAY_NONE_CLASSNAME, FULL_SIZE_CLASSNAME, toggleClassOnList, toggleInnerHTML } from '@nx-bridge/constants';
+import { dealsListDealsButtonChoices, DEALS_LIST_CLASSNAME, DEAL_DETAIL_CLASSNAME, DISPLAY_NONE_CLASSNAME, FULL_SIZE_CLASSNAME, GAMES_VIEW_CLASSNAME, OVERFLOW_Y_SCROLL_CLASSNAME, toggleClassOnList, toggleInnerHTML } from '@nx-bridge/constants';
 import { DealPlayerService } from 'libs/deal-player/src/lib/deal-player.service';
 
 @Component({
@@ -20,6 +19,7 @@ export class GamesListComponent implements OnInit {
   constructor(
     private dealPlayerService: DealPlayerService,
     private store: Store<AppState>,
+    private renderer: Renderer2,
   ) {}
 
   ngOnInit(): void {
@@ -29,6 +29,8 @@ export class GamesListComponent implements OnInit {
   }
 
   onClick(e: Event) {
+    const gamesView = document.querySelector(`.${GAMES_VIEW_CLASSNAME}`) as HTMLElement;
+
     const target = e.target as any;
     if ((target)?.classList.contains(FULL_SIZE_CLASSNAME)) {
       const items = target.querySelectorAll(`.${DEAL_DETAIL_CLASSNAME}`);
@@ -44,6 +46,12 @@ export class GamesListComponent implements OnInit {
       this.store.dispatch(new SetIsViewingGame(false));
 
       this.dealPlayerService.setCardsRotationAndPosition();
+
+      this.renderer.removeClass(gamesView, OVERFLOW_Y_SCROLL_CLASSNAME);
+    } else {
+      setTimeout(() => {
+        this.renderer.addClass(gamesView, OVERFLOW_Y_SCROLL_CLASSNAME);
+      },750)
     }
   }
 }
