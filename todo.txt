@@ -69,3 +69,6 @@ Testing------------
 
 
 -need a function to remove the oldest localStorageUser by last access date and call when storage is full or approaching it
+
+
+-create a separate storage item for games where ids are keys and game is value, then store ids in users storage items instead of actual games (then load games upon loading)

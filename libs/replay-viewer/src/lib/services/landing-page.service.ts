@@ -13,7 +13,10 @@ import {
   SetLoadingError,
 } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
-import { GetUserResponse, LocalStorageUser } from '@nx-bridge/interfaces-and-types';
+import {
+  GetUserResponse,
+  LocalStorageUser,
+} from '@nx-bridge/interfaces-and-types';
 import { Game } from '@nx-bridge/interfaces-and-types';
 import { LocalStorageManagerService } from './local-storage-manager.service';
 import { ERROR_APPENDING_GAMES } from '@nx-bridge/api-errors';
@@ -83,9 +86,11 @@ export class LandingPageService {
     this.userId = this.getLocalUserId();
 
     if (!this.userId) {
-      this.helpersService.getUser(username, email).subscribe((getUserResponse) => {
-        this.handleGetUserResponse(getUserResponse);
-      });
+      this.helpersService
+        .getUser(username, email)
+        .subscribe((getUserResponse) => {
+          this.handleGetUserResponse(getUserResponse);
+        });
     } else this.getGameCount();
   }
 
@@ -130,6 +135,15 @@ export class LandingPageService {
     );
     // debugger;
 
+    if (this.gameCountFromServer === 0 && this.localGameCount === 0) {
+      const messageSuffix = 'has not finished any games yet...';
+      let message = `'${this.username}' ${messageSuffix}`;
+      if (!this.username && this.email)
+        message = `The user with email '${this.email}' ${messageSuffix}`;
+      this.store.dispatch(new SetLoadingError(message));
+      return this.store.dispatch(new SetIsLoading(false));
+    }
+
     if (numberOfGamesToGet === 0) {
       const games = this.localStorageManager.getGames(this.userId);
       return this.handleGetGamesResponse(games ? games : []);
@@ -160,10 +174,15 @@ export class LandingPageService {
         games
       );
 
-      if (!result) return this.store.dispatch(new SetLoadingError(ERROR_APPENDING_GAMES));
+      if (!result)
+        return this.store.dispatch(new SetLoadingError(ERROR_APPENDING_GAMES));
     }
 
-    this.localStorageManager.updateEmailAndUsername(this.userId, this.username, this.email);
+    this.localStorageManager.updateEmailAndUsername(
+      this.userId,
+      this.username,
+      this.email
+    );
 
     // debugger;
     const localStorageUser = this.localStorageManager.getLocalStorageUser(

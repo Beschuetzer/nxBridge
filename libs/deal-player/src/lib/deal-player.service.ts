@@ -326,7 +326,6 @@ export class DealPlayerService {
   }
 
   setCardsRotationAndPosition(positionToSetCardsTo = 0, rotationToSetCardsTo = 0) {
-    console.log('reseting card rotations------------------------------------------------');
     for (let i = 0; i < this.cards.length; i++) {
       const card = this.cards[i] as paper.Raster;
       card.position.x = positionToSetCardsTo;
