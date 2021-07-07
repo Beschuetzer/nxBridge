@@ -271,6 +271,7 @@ export class DealPlayerComponent implements OnInit {
       this.hasLoadedDeal = true;
       this.renderRoundWinnersTable();
     } else if (dealState.currentlyViewingDeal?.bids) {
+      this.dealPlayerService.setCardsRotationAndPosition();
       this.renderer.addClass(this.elRef.nativeElement, VISIBLE_CLASSNAME);
     }
 

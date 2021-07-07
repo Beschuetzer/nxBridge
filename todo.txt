@@ -70,4 +70,4 @@ Testing------------
 
 -need a function to remove the oldest localStorageUser by last access date and call when storage is full or approaching it
 
--sluggish resize and no card reset when opening one deal in a game, then resize, then open another
+-sluggish resize and no card reset when opening one deal in a game, then resize, then open another (doesn't seems to be from deal-player.service migration)

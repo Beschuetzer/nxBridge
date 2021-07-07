@@ -186,7 +186,7 @@ export class DealPlayerService {
   }
 
   onResize(e: Event) {
-    setTimeout(() => {
+    // setTimeout(() => {
       clearTimeout(this.redrawTimeout);
 
       this.isMobile = window.innerWidth <= MOBILE_START_WIDTH;
@@ -209,13 +209,12 @@ export class DealPlayerService {
               this.MAX_SCALE_AMOUNT_ABOVE_THRESHOLD
             );
             
-        this.setCardsRotationAndPosition();
         this.setCardsSize();
         this.setCanvasMetrics();
         this.setCardMetrics();
         this.positionHands();
-      }, 250);
-    }, 250);
+      }, 125);
+    // }, 250);
   }
 
   positionHands() {
@@ -327,6 +326,7 @@ export class DealPlayerService {
   }
 
   setCardsRotationAndPosition(positionToSetCardsTo = 0, rotationToSetCardsTo = 0) {
+    console.log('reseting card rotations------------------------------------------------');
     for (let i = 0; i < this.cards.length; i++) {
       const card = this.cards[i] as paper.Raster;
       card.position.x = positionToSetCardsTo;
