@@ -63,12 +63,13 @@ export class LocalStorageManagerService {
 
     const games: Game[] = [];
     
-    for (let i = 0; i < localStorageUser.games.length; i++) {
-      const gameId = localStorageUser.games[i];
-      games.push(this.getGameFromGameId(gameId as string))
+    for (let i = 0; i < localStorageUser.gameIds.length; i++) {
+      const gameId = localStorageUser.gameIds[i];
+      games.push(this.getGameFromGameId(gameId))
     }
 
     localStorageUser.games = games;
+    delete localStorageUser.gameIds;
     return localStorageUser;
   }
 
@@ -118,12 +119,12 @@ export class LocalStorageManagerService {
       const game = games[i];
       const index = localStorageUser.gameIds.findIndex(
         (gameLocal) => {
-          return ((gameLocal as any)._id && (gameLocal as any)._id === (game as any)._id)
+          return (gameLocal && gameLocal === (game as any)._id)
         }
       );
 
       if (index === -1) {
-        // localStorageUser.games.push(game);
+        localStorageUser.gameIds.push((game as any)._id);
       }
     }
 
@@ -161,8 +162,6 @@ export class LocalStorageManagerService {
     }
     this.saveLocalStorageUsers(localStorageUsers);
 
-    debugger;
-
     this.saveGameIds(games);
     return localStorageUsers;
   }
@@ -186,8 +185,6 @@ export class LocalStorageManagerService {
   }
 
   private getGameFromGameId(gameId: string) {
-    debugger;
-
     const localStorageGames = this.getLocalStorageGames();
     const toReturn = localStorageGames[gameId] as any;
     return toReturn;
