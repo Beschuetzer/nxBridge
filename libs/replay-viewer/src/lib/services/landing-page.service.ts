@@ -185,7 +185,7 @@ export class LandingPageService {
     );
 
     // debugger;
-    const localStorageUser = this.localStorageManager.getLocalStorageUser(
+    const localStorageUser = this.localStorageManager.getLocalStorageUserWithGames(
       this.userId
     );
     this.store.dispatch(

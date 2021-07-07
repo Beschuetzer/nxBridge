@@ -16,7 +16,7 @@ export class LocalStorageManagerService {
   public usersInLocalStorage = 'users';
   public gamesInLocalStorage = 'games';
   public EMPTY_LOCAL_STORAGE_USERS_RETURNS = null;
-  public EMPTY_LOCAL_STORAGE_GAMES_RETURNS = [];
+  public EMPTY_LOCAL_STORAGE_GAMES_RETURNS = {};
   public EMPTY_USER_ID_RETURNS = '';
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -32,7 +32,7 @@ export class LocalStorageManagerService {
 
     if (!itemInStorage) return this.EMPTY_LOCAL_STORAGE_GAMES_RETURNS;
 
-    return JSON.parse(itemInStorage) as LocalStorageGames
+    return JSON.parse(itemInStorage) as LocalStorageGames;
   }
 
   getLocalStorageUser(userId: string): LocalStorageUser | null {
@@ -122,7 +122,7 @@ export class LocalStorageManagerService {
       username,
       lastGameCount: gameCount,
       lastSearchDate: time,
-      games,
+      games: this.getGameIds(games),
       email,
     };
 
@@ -133,8 +133,11 @@ export class LocalStorageManagerService {
         [userId]: newLocalStorageUser,
       };
     }
-
     this.saveLocalStorageUsers(localStorageUsers);
+
+    debugger;
+
+    this.saveGameIds(games);
     return localStorageUsers;
   }
 
@@ -152,14 +155,29 @@ export class LocalStorageManagerService {
     this.saveLocalStorageUser(userId, localStorageUser);
   }
 
-  private saveGameIds(games: Game[]) {
-    const localStorageGames = this.getLocalStorageGames() as Game[];
+  private getGameIds(games: Game[]) {
+    return games.map(game => (game as any)._id);
+  }
 
-    debugger;
-    for (let i = 0; i < localStorageGames.length; i++) {
-      const localStorageGame = localStorageGames[i];
-      
+  private saveGameIds(games: Game[]) {
+    const localStorageGames = this.getLocalStorageGames() as any;
+
+    for (let i = 0; i < games.length; i++) {
+      const game = games[i];
+
+      let shouldAdd = true;
+      for (const gameId in localStorageGames) {
+        if (Object.prototype.hasOwnProperty.call(localStorageGames, gameId)) {
+          if (gameId && gameId === (game as any)._id) {
+            shouldAdd = false;
+            break;
+          }
+        }
+      }
+
+      if (shouldAdd) localStorageGames[(game as any)._id as any] = game;
     }
+    this.saveLocalStorageGames(localStorageGames);
   }
 
   private saveLocalStorageUser(
@@ -182,6 +200,13 @@ export class LocalStorageManagerService {
     localStorage.setItem(
       this.usersInLocalStorage,
       JSON.stringify(localStorageUsers)
+    );
+  }
+
+  private saveLocalStorageGames(localStorageGames: LocalStorageGames) {
+    localStorage.setItem(
+      this.gamesInLocalStorage,
+      JSON.stringify(localStorageGames)
     );
   }
 }
