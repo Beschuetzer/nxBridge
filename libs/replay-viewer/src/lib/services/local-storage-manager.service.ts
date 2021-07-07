@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import {
-  EmptyLocalStorageReturn,
+  EmptyLocalStorageGamesReturn,
+  EmptyLocalStorageUsersReturn,
   Game,
+  LocalStorageGames,
   LocalStorageUser,
   LocalStorageUsers,
   User,
@@ -12,7 +14,9 @@ import {
 })
 export class LocalStorageManagerService {
   public usersInLocalStorage = 'users';
-  public EMPTY_LOCAL_STORAGE_RETURNS = null;
+  public gamesInLocalStorage = 'games';
+  public EMPTY_LOCAL_STORAGE_USERS_RETURNS = null;
+  public EMPTY_LOCAL_STORAGE_GAMES_RETURNS = [];
   public EMPTY_USER_ID_RETURNS = '';
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -23,6 +27,14 @@ export class LocalStorageManagerService {
     return localStorageUser?.games;
   }
 
+  getLocalStorageGames(): LocalStorageGames | EmptyLocalStorageGamesReturn {
+    const itemInStorage = localStorage.getItem(this.gamesInLocalStorage);
+
+    if (!itemInStorage) return this.EMPTY_LOCAL_STORAGE_GAMES_RETURNS;
+
+    return JSON.parse(itemInStorage) as LocalStorageGames
+  }
+
   getLocalStorageUser(userId: string): LocalStorageUser | null {
     const localStorageUsers = this.getLocalStorageUsers();
 
@@ -31,18 +43,15 @@ export class LocalStorageManagerService {
       return localStorageUser;
     }
 
-    return this.EMPTY_LOCAL_STORAGE_RETURNS;
+    return this.EMPTY_LOCAL_STORAGE_USERS_RETURNS;
   }
 
-  getLocalStorageUsers(): LocalStorageUsers | EmptyLocalStorageReturn {
+  getLocalStorageUsers(): LocalStorageUsers | EmptyLocalStorageUsersReturn {
     const itemInStorage = localStorage.getItem(this.usersInLocalStorage);
 
-    if (!itemInStorage) return this.EMPTY_LOCAL_STORAGE_RETURNS;
+    if (!itemInStorage) return this.EMPTY_LOCAL_STORAGE_USERS_RETURNS;
 
-    const parsed = itemInStorage
-      ? (JSON.parse(itemInStorage) as LocalStorageUsers)
-      : this.EMPTY_LOCAL_STORAGE_RETURNS;
-    return parsed;
+    return (JSON.parse(itemInStorage) as LocalStorageUsers);
   }
 
   getLastGameCount(userId: string) {
@@ -141,6 +150,16 @@ export class LocalStorageManagerService {
     if (trimmedEmail) localStorageUser.email = trimmedEmail;
 
     this.saveLocalStorageUser(userId, localStorageUser);
+  }
+
+  private saveGameIds(games: Game[]) {
+    const localStorageGames = this.getLocalStorageGames() as Game[];
+
+    debugger;
+    for (let i = 0; i < localStorageGames.length; i++) {
+      const localStorageGame = localStorageGames[i];
+      
+    }
   }
 
   private saveLocalStorageUser(

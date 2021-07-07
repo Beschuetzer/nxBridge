@@ -48,7 +48,7 @@ describe('LocalStorageManagerService', () => {
 
   it('retrieving localStorage users - non-existant', () => {
     localStorage.removeItem(service.usersInLocalStorage);
-    expect(service.getLocalStorageUsers()).toEqual(service.EMPTY_LOCAL_STORAGE_RETURNS);
+    expect(service.getLocalStorageUsers()).toEqual(service.EMPTY_LOCAL_STORAGE_USERS_RETURNS);
   });
 
   it('retrieving localStorage user - present', () => {
