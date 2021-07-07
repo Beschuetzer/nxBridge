@@ -35,3 +35,4 @@ export const dealsListDetailsButtonChoices: [string, string] = ['Show All', 'Hid
 export const dealDetailButtonChoices: [string, string] = ['Show', 'Hide'];
 
 export const MOBILE_START_WIDTH = 655;
+export const ANIMATION_DURATION = 500;

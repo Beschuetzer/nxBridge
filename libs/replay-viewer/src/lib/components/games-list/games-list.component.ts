@@ -2,7 +2,7 @@ import { Component, HostBinding, OnInit, Renderer2 } from '@angular/core';
 import { AppState, SetIsViewingGame } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
 import { Game } from '@nx-bridge/interfaces-and-types';
-import { dealsListDealsButtonChoices, DEALS_LIST_CLASSNAME, DEAL_DETAIL_CLASSNAME, DISPLAY_NONE_CLASSNAME, FULL_SIZE_CLASSNAME, GAMES_VIEW_CLASSNAME, OVERFLOW_Y_SCROLL_CLASSNAME, toggleClassOnList, toggleInnerHTML } from '@nx-bridge/constants';
+import { ANIMATION_DURATION, dealsListDealsButtonChoices, DEALS_LIST_CLASSNAME, DEAL_DETAIL_CLASSNAME, DISPLAY_NONE_CLASSNAME, FULL_SIZE_CLASSNAME, GAMES_VIEW_CLASSNAME, OVERFLOW_Y_SCROLL_CLASSNAME, toggleClassOnList, toggleInnerHTML } from '@nx-bridge/constants';
 import { DealPlayerService } from 'libs/deal-player/src/lib/deal-player.service';
 
 @Component({
@@ -51,7 +51,7 @@ export class GamesListComponent implements OnInit {
     } else {
       setTimeout(() => {
         this.renderer.addClass(gamesView, OVERFLOW_Y_SCROLL_CLASSNAME);
-      },750)
+      }, ANIMATION_DURATION * 1.5)
     }
   }
 }
