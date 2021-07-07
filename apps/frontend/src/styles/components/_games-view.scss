@@ -4,12 +4,11 @@
   width: 100%;
   grid-column: 2 / -1;
   grid-row: 2 / -1;
-  // overflow-y: scroll;
+  overflow: hidden;
   display: flex;
   justify-content: flex-start;
   align-items: center;
   flex-direction: column;
-  padding-right: $default-font-size * .5;
 
   @include respond($layout-breakpoint) {
     grid-column: 1/-1;
@@ -19,6 +18,9 @@
   &__title{
     margin: 0;
     padding: $default-font-size * .5 $default-font-size;
+    text-align: center;
+    width: 100%;
+    border-bottom: $deal-player-control-border;
 
     & span {
       color: var(--color-primary-2);

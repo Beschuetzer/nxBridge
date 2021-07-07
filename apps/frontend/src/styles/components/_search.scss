@@ -8,13 +8,34 @@
   min-width: 25vmin;
   background-color: rgba(var(--color-primary-1-rgb), 1);
 
-  & * {
-    color: var(--color-primary-4);
+  @include respond($layout-breakpoint) {
+    grid-column: 1 / -1;
+    grid-row: 2 / span 1;
+    width: 100%;
   }
 
-  & form > div {
-    &:last-of-type {
-      margin-top: $default-font-size * 1;
+  & *:not(.button) {
+    color: var(--color-primary-4) !important;
+  }
+
+  & .header {
+    font-size: $default-font-size * 2 !important;
+  }
+
+  & label {
+    font-size: $default-font-size * .75 !important;
+  }
+
+  & form {
+    
+    @include respond($layout-breakpoint) {
+      width: 100%;
+    }
+
+    & > div {
+      &:last-of-type {
+        margin-top: $default-font-size * 1;
+      }
     }
   }
 
@@ -25,10 +46,4 @@
     }
   }
 
-  @include respond($layout-breakpoint) {
-    grid-column: 1 / -1;
-    grid-row: 2 / span 1;
-    border-bottom: $deal-player-control-border;
-    width: 100vw;
-  }
 }

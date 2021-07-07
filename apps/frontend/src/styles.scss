@@ -11,11 +11,11 @@
 @import "./styles/base/_typography.scss";
 @import "./styles/base/overrides";
 
+@import "./styles/components/search";
 @import "./styles/components/_forms.scss";
-@import "./styles/components/login-card";
 @import "./styles/components/logo";
 @import "./styles/components/header";
-@import "./styles/components/search";
+@import "./styles/components/login-card";
 @import "./styles/components/games-view";
 @import "./styles/components/games-list";
 @import "./styles/components/game-detail";

@@ -168,7 +168,8 @@ export class DealPlayerComponent implements OnInit {
   }
 
   private addHeightAuto() {
-    const dealPlayer = this.elRef.nativeElement;
+    const dealPlayer = this.elRef.nativeElement as HTMLElement;
+    if (!dealPlayer.classList.contains(VISIBLE_CLASSNAME)) return;
     this.renderer.addClass(dealPlayer, HEIGHT_AUTO_CLASSNAME);
   }
 

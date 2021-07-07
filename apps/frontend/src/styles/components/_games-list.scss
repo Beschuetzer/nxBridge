@@ -4,6 +4,7 @@
   grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr));
   padding: $default-font-size * .5;
   grid-gap: $default-font-size * .5;
+  overflow-y: auto;
 
   @include respond(big-desktop) {
     grid-auto-rows: $default-font-size * 7;
