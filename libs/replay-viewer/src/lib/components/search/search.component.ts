@@ -1,4 +1,4 @@
-import { Component, HostBinding, OnInit } from '@angular/core';
+import { Component, HostBinding, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { take, map } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
@@ -15,12 +15,15 @@ export class SearchComponent implements OnInit {
   @HostBinding('class.search') get classname() {
     return true;
   }
+  @Input() titleMsg = 'Search';
+  @Input() isLandingPage = false;
 
   public isLoading = false;
   public initialForm: FormGroup = new FormGroup({});
   public error = '';
   public errorHighlightedValue = '';
   public errorSub = Subscription;
+  public isEmailError = false;
 
   get emailIsValid(): boolean | undefined {
     const email = this.initialForm.get('email');
@@ -119,13 +122,17 @@ export class SearchComponent implements OnInit {
       const termToHighlight = errorMessageWhole.match(/'.+'/i);
       const punctuation = errorMessageWhole.match(/[.?]$/i);
 
+      if (errorMessageWhole.match(/email/i)) this.isEmailError = true;
+
       if (termToHighlight) {
         let term = termToHighlight[0];
         let errorWithoutTerm = errorMessageWhole.replace(term, '')
        
         if (punctuation) {
-          term += punctuation[0];
-          errorWithoutTerm = errorWithoutTerm.replace(punctuation[0], '');
+          if (this.isEmailError) {
+            term += punctuation[0];
+            errorWithoutTerm = errorWithoutTerm.replace(punctuation[0], '');
+          }
         }
 
         this.error = errorWithoutTerm;

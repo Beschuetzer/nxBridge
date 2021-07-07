@@ -1,5 +1,5 @@
 <form (ngSubmit)="onSubmit()" [formGroup]="initialForm" class="ui form">
-  <h2 class="header ui login-card__title">A#Maj Bridge Replay Viewer</h2>
+  <h2 class="header ui {{ isLandingPage ? 'login-card__title' : ''}}">{{ titleMsg }}</h2>
   <div class="field">
     <label>Username</label>
     <input
@@ -35,8 +35,11 @@
     <ng-template #space>
       <p *ngIf="!error">&nbsp;</p>
     </ng-template>
-    <div *ngIf="error" class="ui red message">
+    <div *ngIf="error && isEmailError" class="ui red message">
       {{ error }}<b>{{ errorHighlightedValue }}</b>
+    </div>
+    <div *ngIf="error && !isEmailError" class="ui red message">
+      <b>{{ errorHighlightedValue }}</b> {{ error }}
     </div>
   </div>
 
