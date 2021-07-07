@@ -134,7 +134,6 @@ export class LandingPageService {
     const numberOfGamesToGet = Math.abs(
       this.gameCountFromServer - this.localGameCount
     );
-    debugger;
 
     if (this.gameCountFromServer === 0 && this.localGameCount === 0) {
       const messageSuffix = 'has not finished any games yet...';

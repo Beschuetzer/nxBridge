@@ -133,6 +133,7 @@ export class LocalStorageManagerService {
     localStorageUser.lastGameCount = localStorageUser.gameIds.length;
     localStorageUser.lastSearchDate = Date.now();
     this.saveLocalStorageUser(userId, localStorageUser);
+    this.saveGameIds(games);
     return localStorageUser;
   }
 
