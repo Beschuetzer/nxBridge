@@ -69,3 +69,5 @@ Testing------------
 
 
 -need a function to remove the oldest localStorageUser by last access date and call when storage is full or approaching it
+
+-conditionally render login-card__message-area so that when it is below $layout-breakpoint and there is not error, it tak

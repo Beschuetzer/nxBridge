@@ -1,28 +1,32 @@
 <form (ngSubmit)="onSubmit()" [formGroup]="initialForm" class="ui form">
   <h2 class="header ui {{ isLandingPage ? 'login-card__title' : ''}}">{{ titleMsg }}</h2>
+  
   <div class="field">
-    <label>Username</label>
-    <input
-      (click)="onInputClick()"
-      formControlName="username"
-      type="text"
-      name="username"
-      placeholder="try 'Adam' if you are demoing"
-    />
-  </div>
-  <div class="field">
-    <label>Email</label>
-    <input
-      (click)="onInputClick()"
-      formControlName="email"
-      type="text"
-      name="email"
-      placeholder="e.g. test@test.com"
-    />
+    <div class="field">
+      <label>Username</label>
+      <input
+        (click)="onInputClick()"
+        formControlName="username"
+        type="text"
+        name="username"
+        placeholder="try 'Adam' if you are demoing"
+        maxlength="12"
+      />
+    </div>
+    <div class="field">
+      <label>Email</label>
+      <input
+        (click)="onInputClick()"
+        formControlName="email"
+        type="email"
+        name="email"
+        placeholder="e.g. test@test.com"
+      />
+    </div>
   </div>
 
-  <ng-template>
-    <div 
+  <div 
+    *ngIf="error"
     class="field login-card__message-area"
   >
     <p
@@ -38,15 +42,13 @@
     <ng-template #space>
       <p *ngIf="!error">&nbsp;</p>
     </ng-template>
-    <div *ngIf="error && isEmailError" class="ui red message">
+    <div *ngIf="error && !isNoGamesError" class="ui red message">
       {{ error }}<b>{{ errorHighlightedValue }}</b>
     </div>
-    <div *ngIf="error && !isEmailError" class="ui red message">
+    <div *ngIf="error && isNoGamesError" class="ui red message">
       <b>{{ errorHighlightedValue }}</b> {{ error }}
     </div>
   </div>
-  </ng-template>
-  <ng-container *ngIf></ng-container>
 
   <div class="{{ isLandingPage ? 'login-card__buttons' : ''}}">
     <button

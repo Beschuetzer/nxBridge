@@ -349,6 +349,7 @@ export class DealPlayerService {
   setCanvasMetrics() {
     const canvasEl = document.getElementById(`${DEAL_PLAYER_CLASSNAME}-canvas`);
     const canvasBounds = canvasEl?.getBoundingClientRect() as DOMRect;
+    if (!canvasBounds) return;
     this.canvasHeight = canvasBounds.height as number;
     this.canvasWidth = canvasBounds.width as number;
   }

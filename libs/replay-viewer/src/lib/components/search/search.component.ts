@@ -23,7 +23,7 @@ export class SearchComponent implements OnInit {
   public error = '';
   public errorHighlightedValue = '';
   public errorSub = Subscription;
-  public isEmailError = false;
+  public isNoGamesError = false;
 
   get emailIsValid(): boolean | undefined {
     const email = this.initialForm.get('email');
@@ -122,14 +122,15 @@ export class SearchComponent implements OnInit {
       const termToHighlight = errorMessageWhole.match(/'.+'/i);
       const punctuation = errorMessageWhole.match(/[.?]$/i);
 
-      if (errorMessageWhole.match(/email/i)) this.isEmailError = true;
+      if (errorMessageWhole.match(/yet/i)) this.isNoGamesError = true;
+      else this.isNoGamesError = false;
 
       if (termToHighlight) {
         let term = termToHighlight[0];
         let errorWithoutTerm = errorMessageWhole.replace(term, '')
        
         if (punctuation) {
-          if (this.isEmailError) {
+          if (!this.isNoGamesError) {
             term += punctuation[0];
             errorWithoutTerm = errorWithoutTerm.replace(punctuation[0], '');
           }
