@@ -3,10 +3,7 @@ import { Game, GameRoundEndingScores, LocalStorageUser, LocalStorageUsers, Point
 
 import { LocalStorageManagerService } from './local-storage-manager.service';
 
-describe('LocalStorageManagerService', () => {
-  let service: LocalStorageManagerService;
-  
-  const localStorageItem = 'users';
+const localStorageItem = 'users';
   const userId = '601f8832fd5d073213bc4a37';
   const userObj = {
     username: 'Adam',
@@ -14,8 +11,8 @@ describe('LocalStorageManagerService', () => {
     games: [
       {} as Game,
     ],
-    lastSearchDate: 123456,
-    lastGameCount: 10,
+    lastSearchDate: 1625627865326,
+    lastGameCount: 48,
   }
   const localStorageUsers: LocalStorageUsers = {
     [userId]: userObj,
@@ -30,6 +27,10 @@ describe('LocalStorageManagerService', () => {
     room: {} as Room,
     startDate: 123456,
   }
+
+
+describe('LocalStorageManagerService', () => {
+  let service: LocalStorageManagerService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
@@ -137,12 +138,15 @@ describe('LocalStorageManagerService', () => {
     
 
     const result = service.createLocalStorageUser(userId, username, email, games, gameCount);
-    const expected: LocalStorageUser = {
-      username,
-      games,
-      email,
-      lastSearchDate: result ? result[userId]?.lastSearchDate : 0,
-      lastGameCount: gameCount,
+    const expected: LocalStorageUsers = {
+      [userId]: {
+        username,
+        games,
+        email,
+        lastSearchDate: result ? result[userId]?.lastSearchDate : 0,
+        lastGameCount: gameCount,
+      }
+
     }
 
     expect(service.createLocalStorageUser(userId, username, email, games, gameCount)).toEqual(expected);
@@ -153,14 +157,14 @@ describe('LocalStorageManagerService', () => {
     expect(service.getLastGameCount("Adam")).toBe(0);
   });
 
-  it('getting last game count - invalid username', () => {
+  it('getting last game count - invalid userId', () => {
     localStorage.setItem(localStorageItem, JSON.stringify(localStorageUsers));
     expect(service.getLastGameCount("")).toBe(0);
   });
 
   it('getting last game count - valid', () => {
     localStorage.setItem(localStorageItem, JSON.stringify(localStorageUsers));
-    expect(service.getLastGameCount(userId)).toBe(10);
+    expect(service.getLastGameCount(userId)).toBe(userObj.lastGameCount);
   });
 
   it('getting id from username - valid', () => {
@@ -175,7 +179,7 @@ describe('LocalStorageManagerService', () => {
 
   it('getting id from email - valid', () => {
     localStorage.setItem(localStorageItem, JSON.stringify(localStorageUsers));
-    expect(service.getIdFromEmail("adam@gmail.com")).toBe(userId);
+    expect(service.getIdFromEmail(userObj.email)).toBe(userId);
   });
 
   it('getting id from email - not present', () => {
@@ -189,7 +193,9 @@ describe('LocalStorageManagerService', () => {
     const userObjCopy = userObj;
     userObjCopy.games.push(game);
 
-    const result = service.appendGamesToLocalStorageUser(userId, [game]);
-    expect((result as LocalStorageUser)?.games).toEqual(userObjCopy.games);
+    const result = service.appendGamesToLocalStorageUser(userId, [game]) as LocalStorageUser;
+    userObjCopy.lastGameCount = result.lastGameCount;
+    userObjCopy.lastSearchDate = result.lastSearchDate;
+    expect(result).toEqual(userObjCopy);
   });
 });

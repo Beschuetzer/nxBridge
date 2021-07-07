@@ -82,9 +82,14 @@ export class LocalStorageManagerService {
     for (let i = 0; i < games.length; i++) {
       const game = games[i];
       const index = localStorageUser.games.findIndex(
-        (gameLocal) => (gameLocal as any)._id === (game as any)._id
+        (gameLocal) => {
+          return ((gameLocal as any)._id && (gameLocal as any)._id === (game as any)._id)
+        }
       );
-      if (index === -1) localStorageUser.games.push(game);
+
+      if (index === -1) {
+        localStorageUser.games.push(game);
+      }
     }
 
     localStorageUser.lastGameCount = localStorageUser.games.length;

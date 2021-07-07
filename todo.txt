@@ -68,4 +68,4 @@ Testing------------
 
 
 
--games get loading on top of other games that are there (need to only add new ones in appendGamesToLocalStorageUser())
+-need a function to remove the oldest localStorageUser by last access date and call when storage is full or approaching it
