@@ -18,6 +18,7 @@ export const GET_USER_URL = `/api/${GET_USER_CONTROLLER_STRING}`;
 export const GET_USERS_URL = `/api/${GET_USERS_CONTROLLER_STRING}`;
 
 export const OVERFLOW_Y_SCROLL_CLASSNAME = 'overflow-y-scroll';
+export const HEIGHT_AUTO_CLASSNAME = 'h-auto';
 export const HIDDEN_CLASSNAME = 'hidden';
 export const VISIBLE_CLASSNAME = 'visible';
 export const DISPLAY_NONE_CLASSNAME = 'd-none';
@@ -29,6 +30,7 @@ export const DEAL_PLAYER_CLASSNAME = 'deal-player';
 export const FULL_SIZE_CLASSNAME = 'full-size';
 export const COLOR_RED_CLASSNAME = 'color-red';
 export const COLOR_BLACK_CLASSNAME = 'color-black';
+export const HEADER_CLASSNAME = 'navbar';
 
 export const dealsListDealsButtonChoices: [string, string] = ['Open', '&#10006;'];
 export const dealsListDetailsButtonChoices: [string, string] = ['Show All', 'Hide All'];

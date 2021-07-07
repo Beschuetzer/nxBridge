@@ -7,7 +7,7 @@ $tab-port-max-width: 52.6875em;
 $tab-land-max-width: 58.5625em;
 $deal-player-layout-switch-max-width: 84.375em;
 $big-desktop-min-width: 120.0625em;
-$layout-breakpoint: phone;
+$layout-breakpoint: nav-break;
 
 //font
 // $font-family-text: "Roboto", sans-serif;
@@ -26,6 +26,10 @@ $scrollbar-thumb-background: var(--color-primary-4);
 $login-card-logo: '../../bridge-logo.svg';
 $logo-opacity-normal: 0.05;
 $logo-opacity-hover: $logo-opacity-normal * 0.75;
+$login-card-box-shadow: 0 4px 8px 0px rgba(var(--color-primary-1-rgb), .33);
+$login-card-form-box-shadow: 0 8px 16px 0px rgba(var(--color-primary-1-rgb), .66);
+$login-card-border-radius: $default-font-size * .5;
+
 
 //game-detail
 $game-detail-border: 1px solid var(--color-primary-1);

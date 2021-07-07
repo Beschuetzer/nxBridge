@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostBinding, OnInit } from '@angular/core';
+import { HEADER_CLASSNAME } from '@nx-bridge/constants';
 
 @Component({
   selector: 'nx-bridge-header',
@@ -6,7 +7,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
-
+  @HostBinding(`class.${HEADER_CLASSNAME}`) get classname() {
+    return true;
+  }
   constructor() { }
 
   ngOnInit(): void {

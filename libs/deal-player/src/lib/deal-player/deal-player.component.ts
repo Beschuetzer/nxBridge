@@ -20,6 +20,7 @@ import {
   COLOR_RED_CLASSNAME,
   COLOR_BLACK_CLASSNAME,
   MOBILE_START_WIDTH,
+  HEIGHT_AUTO_CLASSNAME,
 } from '@nx-bridge/constants';
 
 import { Store } from '@ngrx/store';
@@ -83,6 +84,7 @@ export class DealPlayerComponent implements OnInit {
 
     this.store.select('deals').subscribe((dealState) => {
       this.handleDealsUpdates(dealState);
+      this.addHeightAuto();
     });
   }
 
@@ -105,6 +107,7 @@ export class DealPlayerComponent implements OnInit {
       new SetCurrentlyViewingDeal({} as CurrentlyViewingDeal)
     );
     this.resetVariables();
+    this.removeHeightAuto();
   }
 
   onNext() {
@@ -162,6 +165,11 @@ export class DealPlayerComponent implements OnInit {
     this.onPause();
     this.dealPlayerService.resetCardsPlayed();
     this.trickNumber = 0;
+  }
+
+  private addHeightAuto() {
+    const dealPlayer = this.elRef.nativeElement;
+    this.renderer.addClass(dealPlayer, HEIGHT_AUTO_CLASSNAME);
   }
 
   private changeContractColor() {
@@ -302,6 +310,11 @@ export class DealPlayerComponent implements OnInit {
     this.dealPlayerService.playCount = nthCard + 1;
     this.displayCardsInTable();
     this.dealPlayerService.updateHands();
+  }
+
+  private removeHeightAuto() {
+    const dealPlayer = this.elRef.nativeElement;
+    this.renderer.removeClass(dealPlayer, HEIGHT_AUTO_CLASSNAME);
   }
 
   private resetTable() {

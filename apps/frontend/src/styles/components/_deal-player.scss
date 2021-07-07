@@ -17,7 +17,6 @@
   transition: opacity $animation-duration * 1 $animation-easing-standard;
 
   @include respond(deal-player-layout-switch) {
-    height: auto;
     grid-template-columns: repeat(2, 1fr);
   }
 
