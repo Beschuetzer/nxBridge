@@ -1,5 +1,11 @@
 import { Injectable } from '@angular/core';
-import { EmptyLocalStorageReturn, Game, LocalStorageUser, LocalStorageUsers, User } from '@nx-bridge/interfaces-and-types';
+import {
+  EmptyLocalStorageReturn,
+  Game,
+  LocalStorageUser,
+  LocalStorageUsers,
+  User,
+} from '@nx-bridge/interfaces-and-types';
 
 @Injectable({
   providedIn: 'root',
@@ -20,7 +26,7 @@ export class LocalStorageManagerService {
   getLocalStorageUser(userId: string): LocalStorageUser | null {
     const localStorageUsers = this.getLocalStorageUsers();
 
-    if(localStorageUsers) {
+    if (localStorageUsers) {
       const localStorageUser = localStorageUsers[userId];
       return localStorageUser;
     }
@@ -30,7 +36,7 @@ export class LocalStorageManagerService {
 
   getLocalStorageUsers(): LocalStorageUsers | EmptyLocalStorageReturn {
     const itemInStorage = localStorage.getItem(this.usersInLocalStorage);
-    
+
     if (!itemInStorage) return this.EMPTY_LOCAL_STORAGE_RETURNS;
 
     const parsed = itemInStorage
@@ -70,17 +76,30 @@ export class LocalStorageManagerService {
 
   appendGamesToLocalStorageUser(userId: string, games: Game[]) {
     const localStorageUser = this.getLocalStorageUser(userId);
-    
+
     if (!localStorageUser) return false;
-    
-    localStorageUser.games.push(...games);
+
+    for (let i = 0; i < games.length; i++) {
+      const game = games[i];
+      const index = localStorageUser.games.findIndex(
+        (gameLocal) => (gameLocal as any)._id === (game as any)._id
+      );
+      if (index === -1) localStorageUser.games.push(game);
+    }
+
     localStorageUser.lastGameCount = localStorageUser.games.length;
     localStorageUser.lastSearchDate = Date.now();
     this.saveLocalStorageUser(userId, localStorageUser);
-    return true;
+    return localStorageUser;
   }
 
-  createLocalStorageUser(userId: string, username: string, email: string, games: Game[], gameCount: number) {
+  createLocalStorageUser(
+    userId: string,
+    username: string,
+    email: string,
+    games: Game[],
+    gameCount: number
+  ) {
     if (!userId) return null;
     let localStorageUsers = this.getLocalStorageUsers();
     const time = Date.now();
@@ -89,16 +108,16 @@ export class LocalStorageManagerService {
       username,
       lastGameCount: gameCount,
       lastSearchDate: time,
-      games, 
+      games,
       email,
-    }
+    };
 
     if (localStorageUsers) {
       localStorageUsers[userId] = newLocalStorageUser;
     } else {
       localStorageUsers = {
         [userId]: newLocalStorageUser,
-      }
+      };
     }
 
     this.saveLocalStorageUsers(localStorageUsers);
@@ -110,8 +129,8 @@ export class LocalStorageManagerService {
     const localStorageUser = this.getLocalStorageUser(userId);
     if (!localStorageUser) return;
 
-    const trimmedUsername = username ? username.trim() : "";
-    const trimmedEmail = email ? email.trim() : "";
+    const trimmedUsername = username ? username.trim() : '';
+    const trimmedEmail = email ? email.trim() : '';
 
     if (trimmedUsername) localStorageUser.username = trimmedUsername;
     if (trimmedEmail) localStorageUser.email = trimmedEmail;
@@ -119,12 +138,15 @@ export class LocalStorageManagerService {
     this.saveLocalStorageUser(userId, localStorageUser);
   }
 
-  private saveLocalStorageUser(userId: string, localStorageUser: LocalStorageUser) {
+  private saveLocalStorageUser(
+    userId: string,
+    localStorageUser: LocalStorageUser
+  ) {
     let localStorageUsers = this.getLocalStorageUsers();
     if (!localStorageUsers) {
       localStorageUsers = {
         [userId]: localStorageUser,
-      }
+      };
     } else {
       localStorageUsers[userId] = localStorageUser;
     }
@@ -133,6 +155,9 @@ export class LocalStorageManagerService {
   }
 
   private saveLocalStorageUsers(localStorageUsers: LocalStorageUsers) {
-    localStorage.setItem(this.usersInLocalStorage, JSON.stringify(localStorageUsers));
+    localStorage.setItem(
+      this.usersInLocalStorage,
+      JSON.stringify(localStorageUsers)
+    );
   }
 }

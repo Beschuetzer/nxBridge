@@ -176,6 +176,7 @@ export class DealPlayerComponent implements OnInit {
     )
       classToAdd = COLOR_RED_CLASSNAME;
 
+    if (!contract?.children[1]) return;
     this.renderer.removeClass(contract.children[1], COLOR_BLACK_CLASSNAME);
     this.renderer.removeClass(contract.children[1], COLOR_RED_CLASSNAME);
     this.renderer.addClass(contract.children[1], classToAdd);

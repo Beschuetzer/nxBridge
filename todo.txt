@@ -1,5 +1,6 @@
 known bugs --------------------------
   -Deal 1 trick 6 of yougurt 2/16 7:24pm bug where order of playing is reversed (it seems to be an issue with the deal and how it was saved)
+  -sluggish resize and no card reset when opening one deal in a game, then resize, then open another (doesn't seems to be from deal-player.service migration)
 
 
 Known Quirks-----------------
@@ -65,9 +66,6 @@ Testing------------
   -how does providing email to a localStorageUser already present work? does it save email?
 
 
-  -games get loading on top of other games that are there (need to only add new ones in appendGamesToLocalStorageUser())
 
 
--need a function to remove the oldest localStorageUser by last access date and call when storage is full or approaching it
-
--sluggish resize and no card reset when opening one deal in a game, then resize, then open another (doesn't seems to be from deal-player.service migration)
+-games get loading on top of other games that are there (need to only add new ones in appendGamesToLocalStorageUser())
