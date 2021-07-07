@@ -16,6 +16,7 @@ import { Store } from '@ngrx/store';
 import {
   GetUserResponse,
   LocalStorageUser,
+  LocalStorageUserWithGames,
 } from '@nx-bridge/interfaces-and-types';
 import { Game } from '@nx-bridge/interfaces-and-types';
 import { LocalStorageManagerService } from './local-storage-manager.service';
@@ -184,13 +185,12 @@ export class LandingPageService {
       this.email
     );
 
-    // debugger;
-    const localStorageUser = this.localStorageManager.getLocalStorageUserWithGames(
+    const localStorageUserWithGames = this.localStorageManager.getLocalStorageUserWithGames(
       this.userId
     );
     this.store.dispatch(
       new SetCurrentlyViewingUser(
-        localStorageUser ? localStorageUser : ({} as LocalStorageUser)
+        localStorageUserWithGames ? localStorageUserWithGames : ({} as LocalStorageUserWithGames)
       )
     );
     this.store.dispatch(new SetIsLoading(false));

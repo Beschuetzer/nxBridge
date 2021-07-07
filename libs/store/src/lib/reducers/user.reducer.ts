@@ -1,14 +1,14 @@
-import { LocalStorageUser, User } from "@nx-bridge/interfaces-and-types";
+import { LocalStorageUserWithGames, User } from "@nx-bridge/interfaces-and-types";
 import * as UserActions from '../actions/user.actions';
 
 export interface UserState {
   users: User[];
-  currentlyViewingUser: LocalStorageUser;
+  currentlyViewingUser: LocalStorageUserWithGames;
 }
 
 const INITIAL_STATE = {
   users: [],
-  currentlyViewingUser: {} as LocalStorageUser,
+  currentlyViewingUser: {} as LocalStorageUserWithGames,
 }
 
 export const userReducer = (state = INITIAL_STATE, action: UserActions.UserActions ) => {

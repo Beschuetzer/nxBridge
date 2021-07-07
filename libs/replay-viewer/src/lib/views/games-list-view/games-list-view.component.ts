@@ -1,7 +1,7 @@
 import { Component, HostBinding, OnInit } from '@angular/core';
 import { AppState } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
-import { LocalStorageUser } from '@nx-bridge/interfaces-and-types';
+import { LocalStorageUser, LocalStorageUserWithGames } from '@nx-bridge/interfaces-and-types';
 import { debug } from 'node:console';
 
 @Component({
@@ -11,7 +11,7 @@ import { debug } from 'node:console';
 })
 export class GamesListViewComponent implements OnInit {
   @HostBinding('class.games-list-view') get classname() {return true};
-  public currentlyViewingUser: LocalStorageUser = {} as LocalStorageUser;
+  public currentlyViewingUser: LocalStorageUserWithGames = {} as LocalStorageUserWithGames;
 
   constructor(
     private store: Store<AppState>,

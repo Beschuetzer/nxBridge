@@ -6,6 +6,7 @@ import {
   LocalStorageGames,
   LocalStorageUser,
   LocalStorageUsers,
+  LocalStorageUserWithGames,
   User,
 } from '@nx-bridge/interfaces-and-types';
 
@@ -23,8 +24,18 @@ export class LocalStorageManagerService {
   constructor() {}
 
   getGames(userId: string) {
+    const localStorageGames = this.getLocalStorageGames();
     const localStorageUser = this.getLocalStorageUser(userId);
-    return localStorageUser?.games;
+    if (!localStorageUser) return [];
+
+    const games: Game[] = [];
+
+    for (let i = 0; i < localStorageUser?.gameIds?.length; i++) {
+      const localGameId = localStorageUser?.gameIds[i];
+      games.push(localStorageGames[localGameId] as any)
+    }
+
+    return games;
   }
 
   getLocalStorageGames(): LocalStorageGames | EmptyLocalStorageGamesReturn {
@@ -44,6 +55,21 @@ export class LocalStorageManagerService {
     }
 
     return this.EMPTY_LOCAL_STORAGE_USERS_RETURNS;
+  }
+
+  getLocalStorageUserWithGames(userId: string): LocalStorageUserWithGames | EmptyLocalStorageUsersReturn {
+    const localStorageUser = this.getLocalStorageUser(userId) as any;
+    if (!localStorageUser) return this.EMPTY_LOCAL_STORAGE_USERS_RETURNS;
+
+    const games: Game[] = [];
+    
+    for (let i = 0; i < localStorageUser.games.length; i++) {
+      const gameId = localStorageUser.games[i];
+      games.push(this.getGameFromGameId(gameId as string))
+    }
+
+    localStorageUser.games = games;
+    return localStorageUser;
   }
 
   getLocalStorageUsers(): LocalStorageUsers | EmptyLocalStorageUsersReturn {
@@ -90,18 +116,18 @@ export class LocalStorageManagerService {
 
     for (let i = 0; i < games.length; i++) {
       const game = games[i];
-      const index = localStorageUser.games.findIndex(
+      const index = localStorageUser.gameIds.findIndex(
         (gameLocal) => {
           return ((gameLocal as any)._id && (gameLocal as any)._id === (game as any)._id)
         }
       );
 
       if (index === -1) {
-        localStorageUser.games.push(game);
+        // localStorageUser.games.push(game);
       }
     }
 
-    localStorageUser.lastGameCount = localStorageUser.games.length;
+    localStorageUser.lastGameCount = localStorageUser.gameIds.length;
     localStorageUser.lastSearchDate = Date.now();
     this.saveLocalStorageUser(userId, localStorageUser);
     return localStorageUser;
@@ -122,7 +148,7 @@ export class LocalStorageManagerService {
       username,
       lastGameCount: gameCount,
       lastSearchDate: time,
-      games: this.getGameIds(games),
+      gameIds: this.getGameIds(games),
       email,
     };
 
@@ -157,6 +183,14 @@ export class LocalStorageManagerService {
 
   private getGameIds(games: Game[]) {
     return games.map(game => (game as any)._id);
+  }
+
+  private getGameFromGameId(gameId: string) {
+    debugger;
+
+    const localStorageGames = this.getLocalStorageGames();
+    const toReturn = localStorageGames[gameId] as any;
+    return toReturn;
   }
 
   private saveGameIds(games: Game[]) {
