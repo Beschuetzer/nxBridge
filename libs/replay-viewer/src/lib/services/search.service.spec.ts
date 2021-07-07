@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { LandingPageService } from './landing-page.service';
+import { SearchService } from './search.service';
 
-describe('LandingPageService', () => {
-  let service: LandingPageService;
+describe('SearchService', () => {
+  let service: SearchService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(LandingPageService);
+    service = TestBed.inject(SearchService);
   });
 
   it('should be created', () => {

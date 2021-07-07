@@ -1,1 +1,63 @@
-<p>search works!</p>
+<form (ngSubmit)="onSubmit()" [formGroup]="initialForm" class="ui form">
+  <h2 class="header ui login-card__title">A#Maj Bridge Replay Viewer</h2>
+  <div class="field">
+    <label>Username</label>
+    <input
+      (click)="onInputClick()"
+      formControlName="username"
+      type="text"
+      name="username"
+      placeholder="try 'Adam' if you are demoing"
+    />
+  </div>
+  <div class="field">
+    <label>Email</label>
+    <input
+      (click)="onInputClick()"
+      formControlName="email"
+      type="text"
+      name="email"
+      placeholder="e.g. test@test.com"
+    />
+  </div>
+
+  <div class="field login-card__message-area">
+    <p
+      *ngIf="
+        stringToSearchUsing && !error && (emailIsValid || usernameIsValid);
+        else space
+      "
+      else
+    >
+      {{ stringToSearchUsing?.pre }}<b>{{ stringToSearchUsing?.post }}</b
+      >?
+    </p>
+    <ng-template #space>
+      <p *ngIf="!error">&nbsp;</p>
+    </ng-template>
+    <div *ngIf="error" class="ui red message">
+      {{ error }}<b>{{ errorHighlightedValue }}</b>
+    </div>
+  </div>
+
+  <div class="login-card__buttons">
+    <button
+      class="ui button bg-color-3 hover-bg-color-1 hover-color-3 w-100 margin-0"
+      type="submit"
+      [disabled]="initialForm.invalid && !emailIsValid && !usernameIsValid && !isLoading"
+    >
+      Search
+    </button>
+    <button
+      (click)="onReset()"
+      class="ui button bg-color-4 hover-color-4 hover-bg-color-1 w-100 margin-0"
+      type="button"
+      [disabled]="
+        initialForm.get('email')?.value === '' ||
+        initialForm.get('username')?.value === ''
+      "
+    >
+      Reset
+    </button>
+  </div>
+</form>

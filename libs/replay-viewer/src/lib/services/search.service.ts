@@ -15,7 +15,6 @@ import {
 import { Store } from '@ngrx/store';
 import {
   GetUserResponse,
-  LocalStorageUser,
   LocalStorageUserWithGames,
 } from '@nx-bridge/interfaces-and-types';
 import { Game } from '@nx-bridge/interfaces-and-types';
@@ -25,7 +24,8 @@ import { ERROR_APPENDING_GAMES } from '@nx-bridge/api-errors';
 @Injectable({
   providedIn: 'root',
 })
-export class LandingPageService {
+export class SearchService {
+  public shouldNavigateToGames = false;
   public username = '';
   public email = '';
   public userId = '';
