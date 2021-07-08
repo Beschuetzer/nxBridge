@@ -69,3 +69,5 @@ Testing------------
 
 
 -need a function to remove the oldest localStorageUser by last access date and call when storage is full or approaching it
+
+-add a toggle/checkbox to toggle/choose the height of game-detail (3.2rem or what it is now) and is also sets game-detail__summary height to 100%;  maybe call is 'size' and use a dropdown to the left or right of title;  also store a value in localstorage to keep track of users last selected choice (which loads on redirect to /games).

@@ -91,7 +91,7 @@ export class SearchComponent implements OnInit {
     const emailValue = email?.value;
     const usernameValue = username?.value;
 
-    this.searchService.startRequest(usernameValue, emailValue);
+    this.error = this.searchService.startRequest(usernameValue, emailValue);
     this.resetForm();
     this.searchService.shouldNavigateToGames = true;
   }

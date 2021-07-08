@@ -6,6 +6,8 @@
   grid-gap: $default-font-size * .5;
   overflow-y: auto;
   border-left: $games-list-border;
+  border-right: $games-list-border;
+  border-bottom: $games-list-border;
   height: 100%;
   background: rgba(var(--color-primary-4-rgb), 1);
 

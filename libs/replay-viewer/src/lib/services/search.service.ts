@@ -88,7 +88,7 @@ export class SearchService {
 
   startRequest(username: string, email: string) {
     const shouldContinue = this.getShouldContinue(username, email);
-    if (!shouldContinue) return;
+    if (!shouldContinue) return `Already viewing games by that user.  Try scrolling down.`;
 
     this.needToCreateLocalStorageUser = false;
     this.username = username;
@@ -102,6 +102,7 @@ export class SearchService {
           this.handleGetUserResponse(getUserResponse);
         });
     } else this.getGameCount();
+    return '';
   }
 
   private handleGetUserResponse(getUserResponse: GetUserResponse) {
