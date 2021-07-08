@@ -43,7 +43,7 @@
   }
 
   &__score {
-    height: 20%;
+    height: calc(100% - #{var(--game-detail-summary-height-percentage)});
     // position: sticky;
     // top: 8.6rem;
     // margin: var(--game-detail-padding-sides) 0;
@@ -58,7 +58,7 @@
 
   &__players {
     font-weight: 1000;
-    display: grid;
+    display: var(--player-names-display-type);
     grid-template-columns: 1fr min-content 1fr;
 
     @include respond(big-desktop) {
@@ -84,7 +84,7 @@
     }
 
     &-labels {
-      display: flex;
+      display: var(--player-labels-display-type);
       justify-content: space-between;
       margin: var(--game-detail-padding-sides) 0 0 0;
       text-decoration: underline;

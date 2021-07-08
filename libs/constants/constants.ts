@@ -45,6 +45,9 @@ export const ANIMATION_DURATION = 500;
 export const gameDetailHeightAboveBreakpointCssPropName =  '--game-detail-height-above-breakpoint';
 export const gameDetailHeightBelowBreakpointCssPropName =  '--game-detail-height-below-breakpoint';
 export const gameDetailSummaryHeightPercentageCssPropName =  '--game-detail-summary-height-percentage';
+export const playerLabelsDisplayTypeCssPropName =  '--player-labels-display-type';
+export const playerNamesDisplayTypeCssPropName =  '--player-names-display-type';
+
 
 export const SIZE_OPTIONS = {
   [GameDetailSizes.small]: GameDetailSizes.small,

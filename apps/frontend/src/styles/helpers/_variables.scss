@@ -139,4 +139,6 @@ $border-radius-full-screen: $default-font-size * 0.5;
   --game-detail-height-above-breakpoint: #{$default-font-size * 2};
   --game-detail-height-below-breakpoint: #{$default-font-size * 2};
   --game-detail-summary-height-percentage: 100%;
+  --player-labels-display-type: flex;
+  --player-names-display-type: grid;
 }
