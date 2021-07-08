@@ -2,14 +2,14 @@
 ::-webkit-scrollbar {
   // height: $default-font-size * 1;
   // width: $default-font-size * 1;
-  background: var(--color-primary-1);
+  background: var(--color-black);
 }
   ::-webkit-scrollbar-thumb {
-    background: var(--color-primary-1);
-    border: 9px solid var(--color-primary-4);
+    background: var(--color-black);
+    border: 9px solid var(--color-primary-3);
     -webkit-border-radius: 0;
     border-radius: 0 !important;
 }
   ::-webkit-scrollbar-corner {
-  background: var(--color-primary-4);
+  background: var(--color-primary-3);
 }

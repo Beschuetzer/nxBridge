@@ -28,15 +28,30 @@ $scrollbar-thumb-background: var(--color-primary-4);
 $login-card-logo: '../../bridge-logo.svg';
 $logo-opacity-normal: 0.05;
 $logo-opacity-hover: $logo-opacity-normal * 0.75;
-$login-card-box-shadow: 0 4px 8px 0px rgba(var(--color-primary-1-rgb), .33);
-$login-card-form-box-shadow: 0 8px 16px 0px rgba(var(--color-primary-1-rgb), .66);
-$login-card-border-radius: $default-font-size * .5;
+$login-card-box-shadow: 0 4px 8px 0px rgba(var(--color-primary-1-rgb), 0.33);
+$login-card-form-box-shadow: 0 8px 16px 0px
+  rgba(var(--color-primary-1-rgb), 0.66);
+$login-card-border-radius: $default-font-size * 0.5;
 
+//games-list-view
+$games-list-outer-box-shadow-left: 0.6rem 0 0.8rem -3px rgba(var(--color-black-rgb), 0.5);
+$games-list-outer-box-shadow-bottom: 0 0.6rem 0.8rem -3px rgba(var(--color-black-rgb), 0.5);
+$games-list-border: 3px solid var(--color-black);
+$games-list-gradient-color-1: var(--color-black-rgb);
+$games-list-gradient-color-2: var(--color-primary-3-rgb);
+$games-list-gradient-color-3: var(--color-primary-1-rgb);
+$games-list-black-gradient-amount: 75%;
 
 //game-detail
 $game-detail-border: 1px solid var(--color-primary-1);
 $game-detail-border-thick: 2px solid var(--color-primary-1);
 $game-detail-padding-sides: $default-font-size * 0.5;
+$game-detail-background: linear-gradient(
+  to right,
+  rgba(#{$games-list-gradient-color-1}, 1),
+  rgba(#{$games-list-gradient-color-3}, 1),
+);
+
 $game-summary-bg-color: rgba(var(--color-primary-1-rgb), 1);
 $game-summary-bg-color-full-size: rgba(var(--color-primary-1-rgb), 1);
 $game-summary-color: var(--color-primary-4);
@@ -49,9 +64,10 @@ $deal-detail-username-color: var(--color-primary-1);
 
 $deal-detail-separator-width: 1px;
 $deal-detail-separator-color: rgba(var(--color-primary-1-rgb), 0.5);
-$deal-detail-separator: $deal-detail-separator-width solid $deal-detail-separator-color;
-$deal-detail-separator-dashed: $deal-detail-separator-width dashed $deal-detail-separator-color;
-
+$deal-detail-separator: $deal-detail-separator-width solid
+  $deal-detail-separator-color;
+$deal-detail-separator-dashed: $deal-detail-separator-width dashed
+  $deal-detail-separator-color;
 
 //deal-player
 $deal-player-layout-breakpoint: tab-port;
@@ -60,14 +76,11 @@ $deal-player-border: 3px solid var(--color-primary-3);
 $deal-player-border-thin: 1px solid var(--color-primary-3);
 $deal-player-control-border: 3px solid var(--color-primary-1);
 $deal-player-control-border-thin: 1px solid var(--color-primary-1);
-$deal-player-canvas-text-opacity: .66;
+$deal-player-canvas-text-opacity: 0.66;
 $deal-player-table-background: var(--color-primary-3);
-
-
 
 //deals-list
 $deals-list-shadow: 0 4px 12px rgba(var(--color-black-rgb), 0.33);
-
 
 //skills
 $skills-linear-gradient-original: linear-gradient(
@@ -97,10 +110,7 @@ $animation-easing-flash: cubic-bezier(0.68, -2, 0.32, 1);
 $animation-easing-modern: cubic-bezier(1, 0, 0, 1);
 $animation-navbar: $animation-duration $animation-easing-standard;
 
-
-
-$border-radius-full-screen: $default-font-size * .5;
-
+$border-radius-full-screen: $default-font-size * 0.5;
 
 :root {
   scroll-behavior: smooth;

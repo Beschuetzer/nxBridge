@@ -20,10 +20,19 @@
     padding: $default-font-size * .5 $default-font-size;
     text-align: center;
     width: 100%;
-    border-bottom: $deal-player-control-border;
+    color: var(--color-primary-4);
+    border-bottom: $games-list-border;
+    background-image: linear-gradient(
+      to right,
+      rgba(#{$games-list-gradient-color-1}, 1),
+      rgba(#{$games-list-gradient-color-1}, 1) $games-list-black-gradient-amount,
+      rgba(#{$games-list-gradient-color-2}, 1),
+    );
+    box-shadow: $games-list-outer-box-shadow-bottom;
+
 
     & span {
-      color: var(--color-primary-2);
+      color: var(--color-primary-3);
     }
   }
 }

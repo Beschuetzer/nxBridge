@@ -5,6 +5,9 @@
   padding: $default-font-size * .5;
   grid-gap: $default-font-size * .5;
   overflow-y: auto;
+  border-left: $games-list-border;
+  height: 100%;
+  background: rgba(var(--color-primary-4-rgb), 1);
 
   @include respond(big-desktop) {
     grid-auto-rows: $default-font-size * 7;

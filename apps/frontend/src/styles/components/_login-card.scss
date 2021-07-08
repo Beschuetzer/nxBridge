@@ -42,6 +42,7 @@
   } 
 
   & .search {
+    background-image: none ;
     padding: $default-font-size;
     background-color: rgba(var(--color-primary-1-rgb), .125);
     border-radius: $login-card-border-radius;
@@ -69,6 +70,10 @@
       & > div:last-of-type {
         // display: block;
       }
+    }
+
+    & .field:nth-of-type(2) label {
+      margin-top: 0 !important;
     }
 
     // & .header {

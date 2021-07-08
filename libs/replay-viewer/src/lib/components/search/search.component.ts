@@ -28,13 +28,13 @@ export class SearchComponent implements OnInit {
   get emailIsValid(): boolean | undefined {
     const email = this.initialForm.get('email');
     if (!email) return true;
-    return email.touched && email.value !== '' && email.valid;
+    return email.valid;
   }
 
   get usernameIsValid(): boolean | undefined {
     const username = this.initialForm.get('username');
     if (!username) return true;
-    return username.touched && username.value !== '' && username.valid;
+    return username.valid;
   }
 
   get stringToSearchUsing(): { pre: string; post: string } | undefined {

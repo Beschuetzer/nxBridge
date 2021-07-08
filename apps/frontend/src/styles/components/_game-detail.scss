@@ -36,7 +36,7 @@
     position: sticky;
     top: 0;
     padding: var(--game-detail-padding-sides);
-    background-color: $game-summary-bg-color;
+    background-image: $game-detail-background;
     color: $game-summary-color;
     // backdrop-filter: blur(10px);
     border-bottom: $game-summary-border-bottom;
@@ -48,7 +48,7 @@
     // position: sticky;
     // top: 8.6rem;
     // margin: var(--game-detail-padding-sides) 0;
-    background-color: $game-summary-bg-color;
+    background-image: $game-detail-background;
     color: $game-summary-color;
     // padding-bottom: var(--game-detail-padding-sides);
     border-bottom: $game-summary-border-bottom;
@@ -221,7 +221,8 @@
       
       &__summary, &__score {
         height: auto;
-        background-color:  $game-summary-bg-color-full-size;
+        background-image: $game-detail-background;
+
       }
       &__summary {
         border-top: $game-detail-border-thick;

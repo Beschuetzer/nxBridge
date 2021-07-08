@@ -1,18 +1,24 @@
 .search {
   grid-column: 1 / span 1;
   grid-row: 2 / -1;
-  padding: $default-font-size * .5;
+  padding: $default-font-size * 0.5;
   display: flex;
   justify-content: center;
   align-items: center;
   min-width: 25vmin;
-  background-color: rgba(var(--color-primary-1-rgb), 1);
+  // background-color: rgba(var(--color-primary-1-rgb), 1);
+  background-image: linear-gradient(
+    rgba(var(--color-black-rgb), 1),
+    rgba(var(--color-black-rgb), 1) $games-list-black-gradient-amount,
+    rgba(var(--color-primary-1-rgb), 1)
+  );
+  box-shadow: $games-list-outer-box-shadow-left;
 
   @include respond($layout-breakpoint) {
     grid-column: 1 / -1;
     grid-row: 2 / span 1;
     width: 100%;
-    padding: $default-font-size * .25;
+    padding: $default-font-size * 0.25;
     border-bottom: $deal-player-control-border;
   }
 
@@ -21,9 +27,9 @@
     margin-bottom: 0 !important;
   }
 
-  & .login-card__buttons { 
+  & .login-card__buttons {
     @include respond($layout-breakpoint) {
-      // margin-bottom: $semantic-ui-text-default-font-size / 2 !important; 
+      // margin-bottom: $semantic-ui-text-default-font-size / 2 !important;
     }
   }
   // & .header {
@@ -31,7 +37,11 @@
   // }
 
   & label {
-    text-align: left;
+    text-align: left;    
+  }
+
+  & .field:nth-of-type(2) label {
+    margin-top: $semantic-ui-text-default-font-size * .5 !important;
   }
 
   & form {
@@ -42,42 +52,37 @@
 
     & > div {
       &:last-of-type {
-        margin-top: $default-font-size * .5;
+        margin-top: $default-font-size * 0.5;
 
         @include respond($layout-breakpoint) {
           display: grid;
           grid-template-columns: repeat(2, 1fr);
-          column-gap: $default-font-size * .25;
-          margin-top: $default-font-size * .5;
-
+          column-gap: $default-font-size * 0.25;
+          margin-top: $default-font-size * 0.5;
         }
       }
     }
 
     & > .field:nth-of-type(1) {
-      
       @include respond($layout-breakpoint) {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        column-gap: $default-font-size * .25;
-
+        column-gap: $default-font-size * 0.25;
       }
     }
   }
 
   & button {
-
     @include respond($layout-breakpoint) {
       // max-width: $default-font-size * 8 !important;
     }
 
     &:nth-of-type(1) {
-      margin-bottom: $default-font-size * .5 !important;
+      margin-bottom: $default-font-size * 0.5 !important;
 
       @include respond($layout-breakpoint) {
         margin-bottom: 0 !important;
       }
     }
   }
-
 }
