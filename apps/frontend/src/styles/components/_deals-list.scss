@@ -21,7 +21,7 @@
       transition:
         opacity $animation-duration $animation-easing-standard-easeInOutBack-smaller,
       ;
-      font-size: $default-font-size * 2 !important;
+      font-size: var(--deals-list-button-font-size) !important;
 
       color: rgba(var(--color-black-rgb), 1) !important;
 

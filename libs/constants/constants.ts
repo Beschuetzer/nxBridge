@@ -47,6 +47,7 @@ export const gameDetailHeightBelowBreakpointCssPropName =  '--game-detail-height
 export const gameDetailSummaryHeightPercentageCssPropName =  '--game-detail-summary-height-percentage';
 export const playerLabelsDisplayTypeCssPropName =  '--player-labels-display-type';
 export const playerNamesDisplayTypeCssPropName =  '--player-names-display-type';
+export const dealsListButtonFontSizeCssPropName =  '--deals-list-button-font-size';
 
 
 export const SIZE_OPTIONS = {

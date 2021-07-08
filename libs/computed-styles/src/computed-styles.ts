@@ -12,6 +12,7 @@ export const gameDetailSizes: {[key: string]: any} = {
     },         
     playerLabelsDisplayType: "flex",
     playerNamesDisplayType: "grid",
+    dealsListButtonFontSize: `${defaultFontSizeNumber * 1}rem`,
   },
   [GameDetailSizes.medium]: {
     summaryHeightPercent: '50%',
@@ -21,6 +22,7 @@ export const gameDetailSizes: {[key: string]: any} = {
     },           
     playerLabelsDisplayType: "none",
     playerNamesDisplayType: "none",
+    dealsListButtonFontSize: `${defaultFontSizeNumber * 2}rem`,
   },
   [GameDetailSizes.large]: {
     summaryHeightPercent: '80%',
@@ -30,5 +32,6 @@ export const gameDetailSizes: {[key: string]: any} = {
     },             
     playerLabelsDisplayType: "flex",
     playerNamesDisplayType: "grid",
+    dealsListButtonFontSize: `${defaultFontSizeNumber * 2}rem`,
   },
 }
