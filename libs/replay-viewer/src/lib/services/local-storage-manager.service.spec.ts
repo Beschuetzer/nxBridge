@@ -250,6 +250,32 @@ describe('getIndexToAddGameIntoGames - linearly', () => {
     expect(result).toEqual(expected);
   });
 
+  it('append second', () => {
+    const nthItem = 1;
+    const game = { completionDate: numberofGames - nthItem };
+
+    const result = service.getIndexToAddGameIntoGames(
+      games as Game[],
+      game as Game
+    );
+    const expected = nthItem;
+    expect(result).toEqual(expected);
+  });
+
+  it('middle', () => {
+    const numberToInsert = 5.5
+    const game = { completionDate: numberToInsert };
+
+    const result = service.getIndexToAddGameIntoGames(
+      games as Game[],
+      game as Game
+    );
+    const expected = Math.ceil(numberofGames - numberToInsert);
+    console.log('expected =', expected);
+    console.log('result =', result);
+    expect(result).toEqual(expected);
+  });
+
   it('after second to last', () => {
     const numberToInsert = 1.5
     const game = { completionDate: numberToInsert };
@@ -272,20 +298,6 @@ describe('getIndexToAddGameIntoGames - linearly', () => {
       game as Game
     );
     const expected = games.length;
-    console.log('expected =', expected);
-    console.log('result =', result);
-    expect(result).toEqual(expected);
-  });
-
-  it('middle', () => {
-    const numberToInsert = 5.5
-    const game = { completionDate: numberToInsert };
-
-    const result = service.getIndexToAddGameIntoGames(
-      games as Game[],
-      game as Game
-    );
-    const expected = Math.ceil(numberofGames - numberToInsert);
     console.log('expected =', expected);
     console.log('result =', result);
     expect(result).toEqual(expected);

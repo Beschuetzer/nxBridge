@@ -253,7 +253,6 @@ export class LocalStorageManagerService {
           const gameToCheck = games[j];
           const gameToCheckNext = games[j + 1];
 
-          //todo: what about the scenario where game.completionDate is greater than all of the items in games?
           if (game.completionDate >= gameToCheck.completionDate) {
             console.log('1------------------------------------------------');
             indexWhereConditionMet = -1;
