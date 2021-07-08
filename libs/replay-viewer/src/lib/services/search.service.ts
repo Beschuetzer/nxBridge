@@ -20,6 +20,7 @@ import {
 import { Game } from '@nx-bridge/interfaces-and-types';
 import { LocalStorageManagerService } from './local-storage-manager.service';
 import { ERROR_APPENDING_GAMES } from '@nx-bridge/api-errors';
+import { take } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -41,8 +42,12 @@ export class SearchService {
   ) {}
 
   static noEmpty = (formControl: AbstractControl) => {
-    console.log('vallue =', formControl.value);
-    if (formControl.value === undefined || formControl.value === null || formControl.value?.trim() === '') return { isEmpty: true };
+    if (
+      formControl.value === undefined ||
+      formControl.value === null ||
+      formControl.value?.trim() === ''
+    )
+      return { isEmpty: true };
     return null;
   };
 
@@ -82,6 +87,9 @@ export class SearchService {
   }
 
   startRequest(username: string, email: string) {
+    const shouldContinue = this.getShouldContinue(username, email);
+    if (!shouldContinue) return;
+
     this.needToCreateLocalStorageUser = false;
     this.username = username;
     this.email = email;
@@ -129,6 +137,21 @@ export class SearchService {
         this.gameCountFromServer = gameCount;
         this.handleGetGameCountResponse();
       });
+  }
+
+  private getShouldContinue(username: string, email: string) {
+    let shouldContinue = false;
+    this.store
+      .select('users')
+      .pipe(take(1))
+      .subscribe((userState) => {
+        if (username)
+          shouldContinue = userState.currentlyViewingUser.username !== username;
+        else if (email)
+          shouldContinue = userState.currentlyViewingUser.email !== email;
+      });
+
+    return shouldContinue;
   }
 
   private handleGetGameCountResponse() {
@@ -187,10 +210,14 @@ export class SearchService {
     const localStorageUserWithGames = this.localStorageManager.getLocalStorageUserWithGames(
       this.userId
     );
-    this.helpersService.loadDealsIntoRedux(localStorageUserWithGames?.games as Game[]);
+    this.helpersService.loadDealsIntoRedux(
+      localStorageUserWithGames?.games as Game[]
+    );
     this.store.dispatch(
       new SetCurrentlyViewingUser(
-        localStorageUserWithGames ? localStorageUserWithGames : ({} as LocalStorageUserWithGames)
+        localStorageUserWithGames
+          ? localStorageUserWithGames
+          : ({} as LocalStorageUserWithGames)
       )
     );
     this.store.dispatch(new SetIsLoading(false));

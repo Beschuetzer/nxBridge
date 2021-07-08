@@ -83,6 +83,12 @@ $deal-player-table-background: var(--color-primary-3);
 //deals-list
 $deals-list-shadow: 0 4px 12px rgba(var(--color-black-rgb), 0.33);
 
+
+//gradients
+$search-linear-gradient-direction: to bottom;
+$search-linear-gradient-direction-layout-breakpoint: to right;
+
+
 //skills
 $skills-linear-gradient-original: linear-gradient(
   to left,
@@ -126,4 +132,7 @@ $border-radius-full-screen: $default-font-size * 0.5;
   --tab-land-max-width: #{$tab-land-max-width};
   --big-desktop-min-width: #{$big-desktop-min-width};
   --game-detail-padding-sides: #{$game-detail-padding-sides};
+
+  --search-linear-gradient-direction: #{$search-linear-gradient-direction};
+  --games-view-title-gradient-direction: #{$search-linear-gradient-direction-layout-breakpoint};
 }

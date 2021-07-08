@@ -46,11 +46,11 @@
     padding: $default-font-size;
     background-color: rgba(var(--color-primary-1-rgb), .125);
     border-radius: $login-card-border-radius;
-    // border-radius: 50%;
-    box-shadow: $login-card-box-shadow;
-    box-shadow: 0 0rem 6.4rem 0px rgba(var(--color-primary-1-rgb), 0.25);
     box-shadow: 0 0rem 3.2rem 1rem rgba(var(--color-primary-1-rgb), 0.25);
 
+    @include respond($layout-breakpoint) {
+      border-bottom: none !important;
+    }
 
     & button {
     

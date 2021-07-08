@@ -12,5 +12,18 @@
 .search .ui.red.message {
   background-color: rgba(var(--color-primary-4-rgb), 1) !important;
   margin-top: $default-font-size !important;
+
+  @include respond($layout-breakpoint) {
+    margin-top: $default-font-size * .5 !important;
+  }
 }
+
+.login-card {
+  .search .ui.red.message {
+    @include respond($layout-breakpoint) {
+      margin-top: -$default-font-size * .5 !important;
+    }
+  }
+}
+
 

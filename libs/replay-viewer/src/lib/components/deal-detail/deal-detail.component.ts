@@ -101,7 +101,7 @@ export class DealDetailComponent implements OnInit {
         `.${GAME_DETAIL_CLASSNAME}__summary`
       );
       const gameDetailSummaryClientRect = gameDetailSummary?.getBoundingClientRect();
-      const gameDetailSummaryBottom = gameDetailSummaryClientRect?.bottom as number;
+      const gameDetailSummaryBottom = gameDetailSummaryClientRect?.bottom as number + window.innerHeight / 6;
       const scrollAmount = scrollToSection(
         button,
         gameDetailSummaryBottom ? gameDetailSummaryBottom : 0,

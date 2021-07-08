@@ -121,11 +121,14 @@
 .color-4 {
   color: var(--color-primary-4) !important;
 }
-.color-red {
-	color: var(--color-red) !important;
-}
 .color-black {
 	color: var(--color-black) !important;
+}
+.color-green {
+	color: var(--color-green) !important;
+}
+.color-white {
+	color: var(--color-white) !important;
 }
 
 .hover-color-1 {
@@ -146,6 +149,16 @@
 .hover-color-4 {
 	&:hover {
 		color: var(--color-primary-4) !important;
+	}
+}
+.hover-color-black {
+	&:hover {
+		color: var(--color-black) !important;
+	}
+}
+.hover-color-white {
+	&:hover {
+		color: var(--color-white) !important;
 	}
 }
 

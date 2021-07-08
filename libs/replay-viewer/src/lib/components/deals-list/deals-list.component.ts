@@ -81,14 +81,52 @@ export class DealsListComponent implements OnInit {
   }
 
   onDealsButtonClick(e: Event) {
+    if (!this.getShouldContinue()) return;
+    const button = (e.currentTarget || e.target) as HTMLElement;
+    this.handleDealsButtonLogic(button);
+    this.dispatchIsViewingGame(button);
+  }
+
+  onShowDetails(e: Event) {
+    this.toggleDealItems(e);
+
+    toggleInnerHTML(
+      (e?.currentTarget || e?.target) as HTMLElement,
+      this.buttonChoicesDetails
+    );
+  }
+
+  private dispatchIsViewingGame(button: HTMLElement) {
+    const isFullSize = this.toggleDeals(button);
+
+    if (isFullSize) this.store.dispatch(new SetIsViewingGame(true));
+    else this.store.dispatch(new SetIsViewingGame(false));
+  }
+
+  private getItemsFromDB() {
+    const itemsToGet = this.getDealsToGet();
+    this.isLoading = true;
+    this.http
+      .post<Deal[]>(GET_DEALS_URL, { [`${DEALS_STRING}`]: itemsToGet })
+      .subscribe((deals) => {
+        this.handleGetDealsFromDBResponse(deals);
+      });
+  }
+
+  private getDealsToGet() {
+    //todo: this can be optimized later to only get Deals not in localStorage already
+    return this.dealsAsStrings;
+  }
+
+  private getShouldContinue() {
     let shouldContinue = true;
     this.store.select('games').pipe(take(1)).subscribe(gameState => {
       shouldContinue = !gameState.isViewingGame;
     })
+    return shouldContinue;
+  }
 
-    if (!shouldContinue) return;
-
-    const button = (e.currentTarget || e.target) as HTMLElement;
+  private handleDealsButtonLogic(button: HTMLElement) {
     if (button.innerHTML.match(dealsListDealsButtonChoices[0])) {
       const gameDetail = (this.elRef.nativeElement as HTMLElement).closest(
         `.${GAME_DETAIL_CLASSNAME}`
@@ -115,57 +153,6 @@ export class DealsListComponent implements OnInit {
           date: -1,
         } as CurrentlyViewingGame)
       );
-
-    const isFullSize = this.toggleDeals(button);
-
-    if (isFullSize) this.store.dispatch(new SetIsViewingGame(true));
-    else this.store.dispatch(new SetIsViewingGame(false));
-  }
-
-  onShowDetails(e: Event) {
-    const itemsToChange = this.elRef.nativeElement.querySelectorAll(
-      `.${DEAL_DETAIL_CLASSNAME}__tables`
-    );
-    const clickedButton = (e.currentTarget || e.target) as HTMLButtonElement;
-
-    let isOpening = false;
-    if (clickedButton.innerHTML.trim() === this.buttonChoicesDetails[0])
-      isOpening = true;
-
-    for (let i = 0; i < itemsToChange.length; i++) {
-      const itemToChange = itemsToChange[i];
-      itemToChange.classList.remove(DISPLAY_NONE_CLASSNAME);
-
-      const itemsParent = itemToChange.parentNode;
-      const buttonToToggleInnerHTML = itemsParent.querySelector('button');
-
-      if (isOpening) {
-        buttonToToggleInnerHTML.innerHTML = dealDetailButtonChoices[1];
-      } else {
-        itemToChange.classList.add(DISPLAY_NONE_CLASSNAME);
-        buttonToToggleInnerHTML.innerHTML = dealDetailButtonChoices[0];
-      }
-    }
-
-    toggleInnerHTML(
-      (e?.currentTarget || e?.target) as HTMLElement,
-      this.buttonChoicesDetails
-    );
-  }
-
-  private getItemsFromDB() {
-    const itemsToGet = this.getDealsToGet();
-    this.isLoading = true;
-    this.http
-      .post<Deal[]>(GET_DEALS_URL, { [`${DEALS_STRING}`]: itemsToGet })
-      .subscribe((deals) => {
-        this.handleGetDealsFromDBResponse(deals);
-      });
-  }
-
-  private getDealsToGet() {
-    //todo: this can be optimized later to only get Deals not in localStorage already
-    return this.dealsAsStrings;
   }
 
   private handleGetDealsFromDBResponse(deals: Deal[]) {
@@ -335,5 +322,31 @@ export class DealsListComponent implements OnInit {
       ],
       FULL_SIZE_CLASSNAME
     );
+  }
+
+  private toggleDealItems(e: Event) {
+    const itemsToChange = this.elRef.nativeElement.querySelectorAll(
+      `.${DEAL_DETAIL_CLASSNAME}__tables`
+      );
+    const clickedButton = (e.currentTarget || e.target) as HTMLButtonElement;
+
+    let isOpening = false;
+    if (clickedButton.innerHTML.trim() === this.buttonChoicesDetails[0])
+      isOpening = true;
+
+    for (let i = 0; i < itemsToChange.length; i++) {
+      const itemToChange = itemsToChange[i];
+      itemToChange.classList.remove(DISPLAY_NONE_CLASSNAME);
+
+      const itemsParent = itemToChange.parentNode;
+      const buttonToToggleInnerHTML = itemsParent.querySelector('button');
+
+      if (isOpening) {
+        buttonToToggleInnerHTML.innerHTML = dealDetailButtonChoices[1];
+      } else {
+        itemToChange.classList.add(DISPLAY_NONE_CLASSNAME);
+        buttonToToggleInnerHTML.innerHTML = dealDetailButtonChoices[0];
+      }
+    }
   }
 }

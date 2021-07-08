@@ -23,9 +23,12 @@
       ;
       font-size: $default-font-size * 2 !important;
 
+      color: rgba(var(--color-black-rgb), 1) !important;
+
       &:hover {
-        opacity: .75;
-        border-bottom: $deal-detail-separator !important; 
+        background-color: rgba(var(--color-primary-4-rgb), .75) !important;
+        opacity: .9;
+        // border-bottom: $deal-detail-separator !important; 
       }
     }
 

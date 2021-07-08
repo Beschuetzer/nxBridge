@@ -6,8 +6,8 @@
   justify-content: center;
   align-items: center;
   min-width: 25vmin;
-  // background-color: rgba(var(--color-primary-1-rgb), 1);
   background-image: linear-gradient(
+    var(--search-linear-gradient-direction),
     rgba(var(--color-black-rgb), 1),
     rgba(var(--color-black-rgb), 1) $games-list-black-gradient-amount,
     rgba(var(--color-primary-1-rgb), 1)
@@ -15,11 +15,18 @@
   box-shadow: $games-list-outer-box-shadow-left;
 
   @include respond($layout-breakpoint) {
+    // --search-linear-gradient-direction: #{$search-linear-gradient-direction-layout-breakpoint};
+    background-image: linear-gradient(
+      to top,
+      rgba(var(--color-black-rgb), 1),
+      rgba(var(--color-black-rgb), 1) 95%,
+      rgba(var(--color-primary-4-rgb), 1)
+    );
     grid-column: 1 / -1;
     grid-row: 2 / span 1;
     width: 100%;
     padding: $default-font-size * 0.25;
-    border-bottom: $deal-player-control-border;
+    border-bottom: $games-list-border;
   }
 
   & *:not(.button, input) {
@@ -42,6 +49,10 @@
 
   & .field:nth-of-type(2) label {
     margin-top: $semantic-ui-text-default-font-size * .5 !important;
+
+    @include respond($layout-breakpoint) {
+      margin-top: 0 !important;
+    }
   }
 
   & form {

@@ -9,6 +9,11 @@
   height: 100%;
   background: rgba(var(--color-primary-4-rgb), 1);
 
+  @include respond($layout-breakpoint) {
+    padding: $default-font-size * .25;
+    grid-gap: $default-font-size * .25;
+  }
+
   @include respond(big-desktop) {
     grid-auto-rows: $default-font-size * 7;
     
