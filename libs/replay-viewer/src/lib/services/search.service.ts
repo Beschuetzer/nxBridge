@@ -16,11 +16,13 @@ import { Store } from '@ngrx/store';
 import {
   GetUserResponse,
   LocalStorageUserWithGames,
+  SortOptions,
 } from '@nx-bridge/interfaces-and-types';
 import { Game } from '@nx-bridge/interfaces-and-types';
 import { LocalStorageManagerService } from './local-storage-manager.service';
 import { ERROR_APPENDING_GAMES } from '@nx-bridge/api-errors';
 import { take } from 'rxjs/operators';
+import { SetCurrentlyDisplayingGames } from '@nx-bridge/store';
 
 @Injectable({
   providedIn: 'root',
@@ -88,7 +90,8 @@ export class SearchService {
 
   startRequest(username: string, email: string) {
     const shouldContinue = this.getShouldContinue(username, email);
-    if (!shouldContinue) return `Already viewing games by that user.  Try scrolling down.`;
+    if (!shouldContinue)
+      return `Already viewing games by that user.  Try scrolling down.`;
 
     this.needToCreateLocalStorageUser = false;
     this.username = username;
@@ -221,6 +224,39 @@ export class SearchService {
           : ({} as LocalStorageUserWithGames)
       )
     );
+    this.setCurrentlyDisplayingGames(localStorageUserWithGames ? localStorageUserWithGames.games : []);
     this.store.dispatch(new SetIsLoading(false));
+  }
+
+  private setCurrentlyDisplayingGames(games: Game[]) {
+    const gamesToUse = [...games];
+
+    this.paginateGames(gamesToUse)
+    this.filterGames(gamesToUse)
+
+    let sortPreference = JSON.stringify(SortOptions.ascending);
+    this.store.select('general').pipe(take(1)).subscribe(generalState => {sortPreference = generalState.sortingPreference});
+
+    if (sortPreference === SortOptions.descending) this.sortDescending(gamesToUse);
+    else this.sortAscending(gamesToUse);
+    this.store.dispatch(new SetCurrentlyDisplayingGames(gamesToUse));
+  }
+
+  private sortDescending(games: Game[]) {
+    //todo: look up which sorting algorithm to use
+    games.reverse();
+  }
+
+  private sortAscending(games: Game[]) {
+    //todo: look up which sorting algorithm to use
+    // games.reverse();
+  }
+
+  private paginateGames(games: Game[]) {
+    //TODO: will need to put in the filter parts
+  }
+
+  private filterGames(games: Game[]) {
+    //TODO: will need to put in the pagination part
   }
 }

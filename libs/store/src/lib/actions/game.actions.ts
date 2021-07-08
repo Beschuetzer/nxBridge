@@ -22,7 +22,7 @@ export class SetGames implements fromGeneralActions {
   constructor(public payload: Game[]) {}
 }
 
-export class SetDisplayingGames implements fromGeneralActions {
+export class SetCurrentlyDisplayingGames implements fromGeneralActions {
   readonly type = SET_CURRENTLY_DISPLAYING_GAMES;
   constructor(public payload: Game[]) {}
 }
@@ -36,4 +36,4 @@ export type GameActions =
   | SetGames
   | SetCurrentlyViewingGame
   | SetIsViewingGame
-  | SetDisplayingGames;
+  | SetCurrentlyDisplayingGames;
