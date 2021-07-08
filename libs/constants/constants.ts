@@ -41,6 +41,11 @@ export const dealDetailButtonChoices: [string, string] = ['Show', 'Hide'];
 export const MOBILE_START_WIDTH = 655;
 export const ANIMATION_DURATION = 500;
 
+
+export const gameDetailHeightAboveBreakpointCssPropName =  '--game-detail-height-above-breakpoint';
+export const gameDetailHeightBelowBreakpointCssPropName =  '--game-detail-height-below-breakpoint';
+export const gameDetailSummaryHeightPercentageCssPropName =  '--game-detail-summary-height-percentage';
+
 export const SIZE_OPTIONS = {
   [GameDetailSizes.small]: GameDetailSizes.small,
   [GameDetailSizes.medium]: GameDetailSizes.medium,
