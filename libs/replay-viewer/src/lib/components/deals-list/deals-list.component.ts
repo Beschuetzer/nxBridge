@@ -43,6 +43,7 @@ import {
 } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
 import { take } from 'rxjs/operators';
+import { debug } from 'node:console';
 
 @Component({
   selector: 'nx-bridge-deals-list',
@@ -80,6 +81,13 @@ export class DealsListComponent implements OnInit {
   }
 
   onDealsButtonClick(e: Event) {
+    let shouldContinue = true;
+    this.store.select('games').pipe(take(1)).subscribe(gameState => {
+      shouldContinue = !gameState.isViewingGame;
+    })
+
+    if (!shouldContinue) return;
+
     const button = (e.currentTarget || e.target) as HTMLElement;
     if (button.innerHTML.match(dealsListDealsButtonChoices[0])) {
       const gameDetail = (this.elRef.nativeElement as HTMLElement).closest(
