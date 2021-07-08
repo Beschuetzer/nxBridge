@@ -8,21 +8,20 @@
       <div>
         <label class="ui field">
           Size:&nbsp;
-          <select (change)="onSizeChange($event)" class="ui input">
-            <option value="{{sizeOptions.small}}">S</option>
-            <option value="{{sizeOptions.medium}}">M</option>
-            <option value="{{sizeOptions.large}}">L</option>
+          <select (change)="onSizeChange($event)" class="ui input" #size>
+            <option value="{{sizeOptions.small}}">{{sizeOptions.small | slice : 0 : 1 | titlecase}}</option>
+            <option value="{{sizeOptions.medium}}">{{sizeOptions.medium | slice : 0 : 1 | titlecase}}</option>
+            <option value="{{sizeOptions.large}}">{{sizeOptions.large | slice : 0 : 1 | titlecase}}</option>
           </select>
         </label>
         <label class="ui field">
           Sort:&nbsp;
-          <select (change)="onSortChange($event)" class="ui input">
-            <option value="{{sortOptions.descending}}">{{sortOptions.descending | titlecase}}</option>
+          <select (change)="onSortChange($event)" class="ui input" #sort>
             <option value="{{sortOptions.ascending}}">{{sortOptions.ascending | titlecase}}</option>
+            <option value="{{sortOptions.descending}}">{{sortOptions.descending | titlecase}}</option>
           </select>
         </label>
       </div>
-
     </div>
     <nx-bridge-games-list></nx-bridge-games-list>
   </section>

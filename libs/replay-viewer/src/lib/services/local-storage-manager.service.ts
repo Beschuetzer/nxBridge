@@ -3,11 +3,11 @@ import {
   EmptyLocalStorageGamesReturn,
   EmptyLocalStorageUsersReturn,
   Game,
+  GameDetailDisplayPreferences,
   LocalStorageGames,
   LocalStorageUser,
   LocalStorageUsers,
   LocalStorageUserWithGames,
-  User,
 } from '@nx-bridge/interfaces-and-types';
 
 @Injectable({
@@ -16,100 +16,14 @@ import {
 export class LocalStorageManagerService {
   public usersInLocalStorage = 'users';
   public gamesInLocalStorage = 'games';
+  public sortPreferenceInLocalStorage = 'sort';
+  public sizePreferenceInLocalStorage = 'size';
   public EMPTY_LOCAL_STORAGE_USERS_RETURNS = null;
   public EMPTY_LOCAL_STORAGE_GAMES_RETURNS = {};
   public EMPTY_USER_ID_RETURNS = '';
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor() {}
-
-  getGames(userId: string) {
-    const localStorageGames = this.getLocalStorageGames();
-    const localStorageUser = this.getLocalStorageUser(userId);
-    if (!localStorageUser) return [];
-
-    const games: Game[] = [];
-
-    for (let i = 0; i < localStorageUser?.gameIds?.length; i++) {
-      const localGameId = localStorageUser?.gameIds[i];
-      games.push(localStorageGames[localGameId] as any)
-    }
-
-    return games;
-  }
-
-  getLocalStorageGames(): LocalStorageGames | EmptyLocalStorageGamesReturn {
-    const itemInStorage = localStorage.getItem(this.gamesInLocalStorage);
-
-    if (!itemInStorage) return this.EMPTY_LOCAL_STORAGE_GAMES_RETURNS;
-
-    return JSON.parse(itemInStorage) as LocalStorageGames;
-  }
-
-  getLocalStorageUser(userId: string): LocalStorageUser | null {
-    const localStorageUsers = this.getLocalStorageUsers();
-
-    if (localStorageUsers) {
-      const localStorageUser = localStorageUsers[userId];
-      return localStorageUser;
-    }
-
-    return this.EMPTY_LOCAL_STORAGE_USERS_RETURNS;
-  }
-
-  getLocalStorageUserWithGames(userId: string): LocalStorageUserWithGames | EmptyLocalStorageUsersReturn {
-    const localStorageUser = this.getLocalStorageUser(userId) as any;
-    if (!localStorageUser) return this.EMPTY_LOCAL_STORAGE_USERS_RETURNS;
-
-    const games: Game[] = [];
-    
-    for (let i = 0; i < localStorageUser.gameIds.length; i++) {
-      const gameId = localStorageUser.gameIds[i];
-      const game = this.getGameFromGameId(gameId);
-      if (game) games.push(game);
-    }
-
-    localStorageUser.games = games.reverse();
-    delete localStorageUser.gameIds;
-    return localStorageUser;
-  }
-
-  getLocalStorageUsers(): LocalStorageUsers | EmptyLocalStorageUsersReturn {
-    const itemInStorage = localStorage.getItem(this.usersInLocalStorage);
-
-    if (!itemInStorage) return this.EMPTY_LOCAL_STORAGE_USERS_RETURNS;
-
-    return (JSON.parse(itemInStorage) as LocalStorageUsers);
-  }
-
-  getLastGameCount(userId: string) {
-    const localStorageUsers = this.getLocalStorageUsers();
-    if (!localStorageUsers || !localStorageUsers[userId]) return 0;
-
-    return localStorageUsers[userId].lastGameCount;
-  }
-
-  getIdFromUsername(username: string) {
-    const localStorageUsers = this.getLocalStorageUsers();
-    for (const userId in localStorageUsers) {
-      if (Object.prototype.hasOwnProperty.call(localStorageUsers, userId)) {
-        const userObj = localStorageUsers[userId];
-        if (userObj.username && userObj.username === username) return userId;
-      }
-    }
-    return this.EMPTY_USER_ID_RETURNS;
-  }
-
-  getIdFromEmail(email: string) {
-    const localStorageUsers = this.getLocalStorageUsers();
-    for (const userId in localStorageUsers) {
-      if (Object.prototype.hasOwnProperty.call(localStorageUsers, userId)) {
-        const userObj = localStorageUsers[userId];
-        if (userObj.email && userObj.email === email) return userId;
-      }
-    }
-    return this.EMPTY_USER_ID_RETURNS;
-  }
 
   appendGamesToLocalStorageUser(userId: string, games: Game[]) {
     const localStorageUser = this.getLocalStorageUser(userId);
@@ -169,6 +83,114 @@ export class LocalStorageManagerService {
     return localStorageUsers;
   }
 
+  getGames(userId: string) {
+    const localStorageGames = this.getLocalStorageGames();
+    const localStorageUser = this.getLocalStorageUser(userId);
+    if (!localStorageUser) return [];
+
+    const games: Game[] = [];
+
+    for (let i = 0; i < localStorageUser?.gameIds?.length; i++) {
+      const localGameId = localStorageUser?.gameIds[i];
+      games.push(localStorageGames[localGameId] as any)
+    }
+
+    return games;
+  }
+
+  getIdFromUsername(username: string) {
+    const localStorageUsers = this.getLocalStorageUsers();
+    for (const userId in localStorageUsers) {
+      if (Object.prototype.hasOwnProperty.call(localStorageUsers, userId)) {
+        const userObj = localStorageUsers[userId];
+        if (userObj.username && userObj.username === username) return userId;
+      }
+    }
+    return this.EMPTY_USER_ID_RETURNS;
+  }
+
+  getIdFromEmail(email: string) {
+    const localStorageUsers = this.getLocalStorageUsers();
+    for (const userId in localStorageUsers) {
+      if (Object.prototype.hasOwnProperty.call(localStorageUsers, userId)) {
+        const userObj = localStorageUsers[userId];
+        if (userObj.email && userObj.email === email) return userId;
+      }
+    }
+    return this.EMPTY_USER_ID_RETURNS;
+  }
+
+  getLastGameCount(userId: string) {
+    const localStorageUsers = this.getLocalStorageUsers();
+    if (!localStorageUsers || !localStorageUsers[userId]) return 0;
+
+    return localStorageUsers[userId].lastGameCount;
+  }
+
+  getLocalStorageGames(): LocalStorageGames | EmptyLocalStorageGamesReturn {
+    const itemInStorage = localStorage.getItem(this.gamesInLocalStorage);
+
+    if (!itemInStorage) return this.EMPTY_LOCAL_STORAGE_GAMES_RETURNS;
+
+    return JSON.parse(itemInStorage) as LocalStorageGames;
+  }
+
+  getLocalStorageUser(userId: string): LocalStorageUser | null {
+    const localStorageUsers = this.getLocalStorageUsers();
+
+    if (localStorageUsers) {
+      const localStorageUser = localStorageUsers[userId];
+      return localStorageUser;
+    }
+
+    return this.EMPTY_LOCAL_STORAGE_USERS_RETURNS;
+  }
+
+  getLocalStorageUsers(): LocalStorageUsers | EmptyLocalStorageUsersReturn {
+    const itemInStorage = localStorage.getItem(this.usersInLocalStorage);
+
+    if (!itemInStorage) return this.EMPTY_LOCAL_STORAGE_USERS_RETURNS;
+
+    return (JSON.parse(itemInStorage) as LocalStorageUsers);
+  }
+
+  getLocalStorageUserWithGames(userId: string): LocalStorageUserWithGames | EmptyLocalStorageUsersReturn {
+    const localStorageUser = this.getLocalStorageUser(userId) as any;
+    if (!localStorageUser) return this.EMPTY_LOCAL_STORAGE_USERS_RETURNS;
+
+    const games: Game[] = [];
+    
+    for (let i = 0; i < localStorageUser.gameIds.length; i++) {
+      const gameId = localStorageUser.gameIds[i];
+      const game = this.getGameFromGameId(gameId);
+      if (game) games.push(game);
+    }
+
+    localStorageUser.games = games.reverse();
+    delete localStorageUser.gameIds;
+    return localStorageUser;
+  }
+
+  getPreferences(): GameDetailDisplayPreferences {
+    const sortLocalStorageValue = localStorage.getItem(this.sortPreferenceInLocalStorage);
+    const sizeLocalStorageValue = localStorage.getItem(this.sizePreferenceInLocalStorage);
+    const sort = sortLocalStorageValue ? sortLocalStorageValue : '';
+    const size = sizeLocalStorageValue ? sizeLocalStorageValue : '';
+
+    return {
+      sort,
+      size,
+    }
+  }
+
+  saveSizePreference(sizePreference: string) {
+    localStorage.setItem(this.sizePreferenceInLocalStorage, sizePreference);
+  }
+
+  saveSortPreference(sortPreference: string) {
+    localStorage.setItem(this.sortPreferenceInLocalStorage, sortPreference);
+  }
+  
   updateEmailAndUsername(userId: string, username: string, email: string) {
     if (!userId) return;
     const localStorageUser = this.getLocalStorageUser(userId);

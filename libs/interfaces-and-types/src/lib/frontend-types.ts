@@ -258,6 +258,7 @@ export type HandsForConsumption = [string, Hand][] | null | undefined;
 export type Team = "EW" | "NS" | '';
 export type TeamFull = "eastWest" | "northSouth";
 export type Contract = { prefix: string, htmlEntity: string };
+export type GameDetailDisplayPreferences = {sort: string, size: string }
 
 export enum GameDetailSizes {small = 'small', medium = 'medium', large = 'large'};
 export enum SortOptions {ascending = 'ascending', descending = 'descending'};
