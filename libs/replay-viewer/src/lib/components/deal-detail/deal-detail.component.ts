@@ -279,7 +279,7 @@ export class DealDetailComponent implements OnInit {
       }
 
       let shouldAddColor = false;
-      let toAdd = `'${bid[0]}'`;
+      let toAdd = `${bid[0]}`;
       if (i >= lengthOfTable) {
         toAdd = this.getInnerHTMLOfBid(bid[1]);
         shouldAddColor = true;
@@ -377,7 +377,7 @@ export class DealDetailComponent implements OnInit {
         const child = tableChildren[index];
         const grandChildren = child.children;
         const newTableCell = this.getNewElement('div');
-        const grandChildHTML = this.addQuotationsToUsernames(grandChildren, i);
+        const grandChildHTML = grandChildren[i].innerHTML;
 
         this.renderer.setProperty(newTableCell, 'innerHTML', grandChildHTML);
         this.renderer.appendChild(flatTable, newTableCell);

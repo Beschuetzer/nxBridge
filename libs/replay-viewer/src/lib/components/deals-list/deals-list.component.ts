@@ -81,7 +81,6 @@ export class DealsListComponent implements OnInit {
   }
 
   onDealsButtonClick(e: Event) {
-    if (!this.getShouldContinue()) return;
     const button = (e.currentTarget || e.target) as HTMLElement;
     this.handleDealsButtonLogic(button);
     this.dispatchIsViewingGame(button);
@@ -116,14 +115,6 @@ export class DealsListComponent implements OnInit {
   private getDealsToGet() {
     //todo: this can be optimized later to only get Deals not in localStorage already
     return this.dealsAsStrings;
-  }
-
-  private getShouldContinue() {
-    let shouldContinue = true;
-    this.store.select('games').pipe(take(1)).subscribe(gameState => {
-      shouldContinue = !gameState.isViewingGame;
-    })
-    return shouldContinue;
   }
 
   private handleDealsButtonLogic(button: HTMLElement) {
