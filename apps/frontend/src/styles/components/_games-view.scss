@@ -35,6 +35,10 @@
       padding: 0 $default-font-size $default-font-size * .5 $default-font-size;
     }
 
+    & h2{
+      margin: 0 !important;
+    }
+
     & span {
       color: var(--color-primary-3);
     }

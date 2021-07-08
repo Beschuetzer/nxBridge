@@ -3,7 +3,7 @@
   border-radius: $default-font-size * .5;
   box-shadow: $game-detail-box-shadow;
   overflow: hidden;
-  height: $default-font-size * 7;
+  height: var(--game-detail-height-above-breakpoint);
   display: flex;
   flex-direction: column;
   // justify-content: space-between;
@@ -15,7 +15,7 @@
   ;
   
   @include respond(tab-port) {
-    height: $default-font-size * 7.5;
+    height: var(--game-detail-height-below-breakpoint);
   }
 
   &::-webkit-scrollbar-thumb,
@@ -30,7 +30,7 @@
 
   &__summary {
     // &.sticky {
-    height: 80%;
+    height: var(--game-detail-summary-height-percentage);
     width: 100%;
     position: sticky;
     top: 0;

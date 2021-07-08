@@ -135,4 +135,8 @@ $border-radius-full-screen: $default-font-size * 0.5;
 
   --search-linear-gradient-direction: #{$search-linear-gradient-direction};
   --games-view-title-gradient-direction: #{$search-linear-gradient-direction-layout-breakpoint};
+
+  --game-detail-height-above-breakpoint: #{$default-font-size} * 2;
+  --game-detail-height-below-breakpoint: #{$default-font-size} * 2;
+  --game-detail-summary-height-percentage: 100%;
 }
