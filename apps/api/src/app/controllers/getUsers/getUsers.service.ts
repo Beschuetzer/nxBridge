@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { InjectModel } from '@nestjs/mongoose';
 import { INVALID_USERS_ARRAY } from '@nx-bridge/api-errors';
-import { UserModel } from '@nx-bridge/api-mongoose-models';
-import { ControllerResponse, User } from '@nx-bridge/interfaces-and-types';
+import { ControllerResponse, ErrorMessage, User } from '@nx-bridge/interfaces-and-types';
 import { Model } from 'mongoose';
 import {getMongooseObjsFromStrings} from '@nx-bridge/constants';
 
@@ -13,10 +12,15 @@ export class GetUsersService {
   ) {}
 
   async getUsers(users): ControllerResponse<User> {
-    const error = this.validateInputs(users);
-    if (error) return error;
-    console.log('queryDB------------------------------------------------');
-    return await this.queryDB(users);
+    try {
+      const error = this.validateInputs(users);
+      if (error) return error;
+      return await this.queryDB(users);
+    } catch(err) {
+      console.log('err =', err);
+      this.getErrorResponse();
+    }
+
   }
 
   private validateInputs(users: string[]) {
@@ -34,4 +38,9 @@ export class GetUsersService {
     return newResponse;
   }
 
+  private getErrorResponse(): Promise<ErrorMessage> {
+    return new Promise((res, rej) => {
+      res({ message: 'Something went wrong in getUses()', status: 400 });
+    });
+  }
 }

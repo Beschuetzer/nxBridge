@@ -41,7 +41,8 @@ export class SearchService {
   ) {}
 
   static noEmpty = (formControl: AbstractControl) => {
-    if (formControl.value === '') return { isEmpty: true };
+    console.log('vallue =', formControl.value);
+    if (formControl.value === undefined || formControl.value === null || formControl.value?.trim() === '') return { isEmpty: true };
     return null;
   };
 

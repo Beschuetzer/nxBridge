@@ -1,6 +1,8 @@
 <form (ngSubmit)="onSubmit()" [formGroup]="initialForm" class="ui form">
-  <h2 class="header ui {{ isLandingPage ? 'login-card__title' : ''}}">{{ titleMsg }}</h2>
-  
+  <h2 class="header ui {{ isLandingPage ? 'login-card__title' : '' }}">
+    {{ titleMsg }}
+  </h2>
+
   <div class="field">
     <div class="field">
       <label>Username</label>
@@ -25,10 +27,7 @@
     </div>
   </div>
 
-  <div 
-    *ngIf="error"
-    class="field login-card__message-area"
-  >
+  <div *ngIf="error" class="field login-card__message-area">
     <p
       *ngIf="
         stringToSearchUsing && !error && (emailIsValid || usernameIsValid);
@@ -50,11 +49,13 @@
     </div>
   </div>
 
-  <div class="{{ isLandingPage ? 'login-card__buttons' : ''}}">
+  <div class="{{ isLandingPage ? 'login-card__buttons' : '' }}">
     <button
       class="ui button bg-color-3 hover-bg-color-1 hover-color-3 w-100 margin-0"
       type="submit"
-      [disabled]="initialForm.invalid && !emailIsValid && !usernameIsValid && !isLoading"
+      [disabled]="
+        initialForm.invalid && !emailIsValid && !usernameIsValid && !isLoading
+      "
     >
       Search
     </button>
@@ -63,8 +64,14 @@
       class="ui button bg-color-4 hover-color-4 hover-bg-color-1 w-100 margin-0"
       type="button"
       [disabled]="
-        initialForm.get('email')?.value === '' ||
-        initialForm.get('username')?.value === ''
+      !(
+          (initialForm.get('email')?.value?.trim() !== '' ||
+          initialForm.get('username')?.value?.trim() !== '') &&
+          (initialForm.get('email')?.value !== undefined ||
+          initialForm.get('username')?.value !== undefined) &&
+          (initialForm.get('email')?.value !== null ||
+          initialForm.get('username')?.value !== null)
+        )
       "
     >
       Reset

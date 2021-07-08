@@ -15,6 +15,8 @@ export class GamesListComponent implements OnInit {
     return true;
   }
   public games: Game[] = [];
+  public maxDisplayedPerPage = 25;
+  public displayedMultiple = 0;  //means displaying games with index maxDisplayedPerPage * displayedMultiple up to but not including maxDisplayedPerPage * (displayedMultiple + 1)
 
   constructor(
     private dealPlayerService: DealPlayerService,
@@ -25,6 +27,10 @@ export class GamesListComponent implements OnInit {
   ngOnInit(): void {
     this.store.select('users').subscribe((userState) => {
       this.games = userState.currentlyViewingUser.games;
+    });
+
+    this.store.select('games').subscribe((gameState) => {
+      if (gameState.currentlyDisplayingGames && gameState.currentlyDisplayingGames.length > 0) this.games = gameState.currentlyDisplayingGames;
     });
   }
 

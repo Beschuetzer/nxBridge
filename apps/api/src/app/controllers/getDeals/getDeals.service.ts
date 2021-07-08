@@ -32,14 +32,19 @@ export class GetDealsService {
   }
 
   async getDealsInfo(deals: string[]): ControllerResponse<DealModel> {
-    if (!deals || deals.length <= 0) {
-      return new Promise((res, rej) => {
-        res({message: "No Deals Provided in getDealsInfo", status: 400} as ErrorMessage);
-      }) 
-    } else {
+    try {
+      if (!deals || deals.length <= 0) return this.getErrorResponse();
       const mongooseObjs = getMongooseObjsFromStrings(deals);
       console.log('mongooseObjs =', mongooseObjs);
       return await this.DealsModel.find({_id: {$in: mongooseObjs}});
+    } catch (err) {
+      return this.getErrorResponse();
     }
+  }
+
+  private getErrorResponse(): Promise<ErrorMessage> { 
+    return new Promise((res, rej) => {
+      res({message: "No Deals Provided in getDealsInfo", status: 400} as ErrorMessage);
+    }) 
   }
 }

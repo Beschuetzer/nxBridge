@@ -51,6 +51,7 @@ export class HelpersService {
 
   loadDealsIntoRedux(games: Game[]) {
     const deals = [];
+    if (!games) return;
     for (let i = 0; i < games.length; i++) {
       const game = games[i];
       if (!game || !game.deals) continue;

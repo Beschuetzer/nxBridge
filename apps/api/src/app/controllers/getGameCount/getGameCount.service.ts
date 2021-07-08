@@ -1,24 +1,30 @@
 import { Injectable } from '@angular/core';
 import { InjectModel } from '@nestjs/mongoose';
 import { GameModel } from '@nx-bridge/api-mongoose-models';
-import { ControllerResponse } from '@nx-bridge/interfaces-and-types';
+import {
+  ControllerResponse,
+  ErrorMessage,
+} from '@nx-bridge/interfaces-and-types';
 import { Model } from 'mongoose';
 
-@Injectable({ providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class GetGameCountService {
-  constructor(
-    @InjectModel('Game') private gamesModel: Model<GameModel>,
-  ) {}
+  constructor(@InjectModel('Game') private gamesModel: Model<GameModel>) {}
 
   async getGameCount(userId: string): ControllerResponse<number> {
-    console.log('userId =', userId);
-    if (!userId) {
-      return new Promise((res, rej) => {
-        res({message: "No userId given", status: 400});
-      })
-    } else {
-      return await this.gamesModel.countDocuments({players: userId});
-      // return await this.gamesModel.find({players: userId});
+    try {
+      if (userId === undefined || userId === null)
+        return this.getErrorResponse();
+      return await this.gamesModel.countDocuments({ players: userId });
+    } catch (err) {
+      console.log('err =', err);
+      return this.getErrorResponse();
     }
+  }
+
+  private getErrorResponse(): Promise<ErrorMessage> {
+    return new Promise((res, rej) => {
+      res({ message: 'No userId given', status: 400 });
+    });
   }
 }
