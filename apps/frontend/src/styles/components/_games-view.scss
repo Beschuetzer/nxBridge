@@ -35,6 +35,10 @@
       padding: 0 $default-font-size $default-font-size * .5 $default-font-size;
     }
 
+    & label:nth-of-type(1) {
+      margin-right: $default-font-size * .5;
+    }
+
     & h2{
       margin: 0 !important;
     }

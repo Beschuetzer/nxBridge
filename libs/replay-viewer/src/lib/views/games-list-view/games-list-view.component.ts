@@ -1,11 +1,10 @@
 import { Component, ElementRef, HostBinding, OnInit, ViewChild } from '@angular/core';
-import { AppState } from '@nx-bridge/store';
+import { AppState, SetSortingPreference } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
 import { LocalStorageUserWithGames, GameDetailDisplayPreferences } from '@nx-bridge/interfaces-and-types';
 import { dealsListButtonFontSizeCssPropName, gameDetailHeightAboveBreakpointCssPropName, gameDetailHeightBelowBreakpointCssPropName, gameDetailSummaryHeightPercentageCssPropName, playerLabelsDisplayTypeCssPropName, playerNamesDisplayTypeCssPropName, SIZE_OPTIONS, SORT_OPTIONS } from '@nx-bridge/constants';
 import { LocalStorageManagerService } from '../../services/local-storage-manager.service';
 import { gameDetailSizes } from '@nx-bridge/computed-styles';
-import { debug } from 'node:console';
 
 @Component({
   selector: 'nx-bridge-games-list-view',
@@ -47,6 +46,7 @@ export class GamesListViewComponent implements OnInit {
     if (shouldSave) this.localStorageManager.saveSortPreference(option.value);
 
     //todo: need to finish this by dispatching a different value for currentlyDisplayingHands
+    this.setSortPreference(option.value);
   }
 
   setPreferences() {
@@ -61,6 +61,10 @@ export class GamesListViewComponent implements OnInit {
       const childToUse = (sortElement as HTMLSelectElement).children[childIndex] as HTMLOptionElement;
       childToUse.selected = true;
       this.onSortChange({target: childToUse} as any, false);
+
+      let stringToDispatch = this.sortOptions.ascending;
+      if (childIndex === 1) stringToDispatch = this.sortOptions.descending;
+      this.setSortPreference(stringToDispatch);
     }
     if (sizeElement) {
       let childIndex = 0;
@@ -82,5 +86,9 @@ export class GamesListViewComponent implements OnInit {
     document.documentElement.style.setProperty(playerLabelsDisplayTypeCssPropName, gameDetailSizes[newSize].playerLabelsDisplayType);
     document.documentElement.style.setProperty(playerNamesDisplayTypeCssPropName, gameDetailSizes[newSize].playerNamesDisplayType);
     document.documentElement.style.setProperty(dealsListButtonFontSizeCssPropName, gameDetailSizes[newSize].dealsListButtonFontSize);
+  }
+
+  private setSortPreference(newSortPreference: string) {
+    this.store.dispatch(new SetSortingPreference(newSortPreference));
   }
 }

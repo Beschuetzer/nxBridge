@@ -3,11 +3,13 @@ import * as fromGeneralActions from '../actions/general.actions';
 export interface GeneralState {
   isLoading: boolean,
   loadingError: string,
+  sortingPreference: string,
 }
 
 const INITIAL_STATE: GeneralState = {
   isLoading: false,
   loadingError: "",
+  sortingPreference: "",
 };
 
 export function generalReducer(
@@ -26,7 +28,11 @@ export function generalReducer(
         ...state,
         loadingError: action.payload,
       };
-   
+    case fromGeneralActions.SET_SORTING_PREFERENCE:
+      return {
+        ...state,
+        sortingPreference: action.payload,
+      };
     default:
       return state;
   }
