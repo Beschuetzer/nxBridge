@@ -1,8 +1,7 @@
 .game-detail {
   border: $game-detail-border-thick;
-  border-radius: 3px;
-  // padding: 00 0 0;
-  box-shadow: $scrollbar-box-shadow;
+  border-radius: $default-font-size * .5;
+  box-shadow: $game-detail-box-shadow;
   overflow: hidden;
   height: $default-font-size * 7;
   display: flex;
