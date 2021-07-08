@@ -34,11 +34,9 @@ export class LocalStorageManagerService {
     for (let i = 0; i < games.length; i++) {
       const game = games[i];
       if (!game) continue;
-      const index = localStorageUser.gameIds.findIndex(
-        (gameLocal) => {
-          return (gameLocal && gameLocal === (game as any)?._id)
-        }
-      );
+      const index = localStorageUser.gameIds.findIndex((gameLocal) => {
+        return gameLocal && gameLocal === (game as any)?._id;
+      });
 
       if (index === -1) {
         localStorageUser.gameIds.push((game as any)?._id);
@@ -93,7 +91,7 @@ export class LocalStorageManagerService {
 
     for (let i = 0; i < localStorageUser?.gameIds?.length; i++) {
       const localGameId = localStorageUser?.gameIds[i];
-      games.push(localStorageGames[localGameId] as any)
+      games.push(localStorageGames[localGameId] as any);
     }
 
     return games;
@@ -152,20 +150,26 @@ export class LocalStorageManagerService {
 
     if (!itemInStorage) return this.EMPTY_LOCAL_STORAGE_USERS_RETURNS;
 
-    return (JSON.parse(itemInStorage) as LocalStorageUsers);
+    return JSON.parse(itemInStorage) as LocalStorageUsers;
   }
 
-  getLocalStorageUserWithGames(userId: string): LocalStorageUserWithGames | EmptyLocalStorageUsersReturn {
+  getLocalStorageUserWithGames(
+    userId: string
+  ): LocalStorageUserWithGames | EmptyLocalStorageUsersReturn {
     const localStorageUser = this.getLocalStorageUser(userId) as any;
     if (!localStorageUser) return this.EMPTY_LOCAL_STORAGE_USERS_RETURNS;
 
     const games: Game[] = [];
-    
+
     for (let i = 0; i < localStorageUser.gameIds.length; i++) {
       const gameId = localStorageUser.gameIds[i];
       const game = this.getGameFromGameId(gameId) as Game;
       if (game) {
-        if (games.length === 0 || game.completionDate < games[games.length - 1].completionDate) games.push(game);
+        if (
+          games.length === 0 ||
+          game.completionDate < games[games.length - 1].completionDate
+        )
+          games.push(game);
         else {
           const indexToUse = this.getIndexToAddGameIntoGames(games, game);
           games.splice(indexToUse, 0, game);
@@ -179,15 +183,19 @@ export class LocalStorageManagerService {
   }
 
   getPreferences(): GameDetailDisplayPreferences {
-    const sortLocalStorageValue = localStorage.getItem(this.sortPreferenceInLocalStorage);
-    const sizeLocalStorageValue = localStorage.getItem(this.sizePreferenceInLocalStorage);
+    const sortLocalStorageValue = localStorage.getItem(
+      this.sortPreferenceInLocalStorage
+    );
+    const sizeLocalStorageValue = localStorage.getItem(
+      this.sizePreferenceInLocalStorage
+    );
     const sort = sortLocalStorageValue ? sortLocalStorageValue : '';
     const size = sizeLocalStorageValue ? sizeLocalStorageValue : '';
 
     return {
       sort,
       size,
-    }
+    };
   }
 
   saveSizePreference(sizePreference: string) {
@@ -197,7 +205,7 @@ export class LocalStorageManagerService {
   saveSortPreference(sortPreference: string) {
     localStorage.setItem(this.sortPreferenceInLocalStorage, sortPreference);
   }
-  
+
   updateEmailAndUsername(userId: string, username: string, email: string) {
     if (!userId) return;
     const localStorageUser = this.getLocalStorageUser(userId);
@@ -213,7 +221,7 @@ export class LocalStorageManagerService {
   }
 
   private getGameIds(games: Game[]) {
-    return games.map(game => (game as any)._id);
+    return games.map((game) => (game as any)._id);
   }
 
   private getGameFromGameId(gameId: string) {
@@ -222,27 +230,50 @@ export class LocalStorageManagerService {
     return toReturn;
   }
 
-  private getIndexToAddGameIntoGames (games: Game[], game: Game) {
+  public getIndexToAddGameIntoGames(games: Game[], game: Game) {
     //assumes games is in descending order already
+    //assumes completionDates are unique (they are date ints)
     //find index at which game.completionDate >= games[index].completionDate and <= game[index + 1].completionDate then return that index + 1;
     const maxNumberOfGamesToDoLinearly = 100;
-    const shouldDoLinearly = games.length < maxNumberOfGamesToDoLinearly;
-    let indexWhereConditionMet = -1;
+    const shouldDoLinearly = games.length <= maxNumberOfGamesToDoLinearly;
+    let indexWhereConditionMet = games.length - 1;
 
     //note: the point of the loop if to find where the condition is met and assign j to indexWhereConditionMet
     debugger;
+    console.log('games =', games);
+
     if (shouldDoLinearly) {
-      for (let j = 0; j < games.length; j++) {
-        if (j === games.length - 1) indexWhereConditionMet = j;
+      const secondToLastGameToCheck = games[games.length - 2];
+      const lastGameToCheck = games[games.length - 1];
 
-        const gameToCheck = games[j];
-        const gameToCheckNext = games[j + 1];
+      if (game.completionDate > lastGameToCheck.completionDate) {
+        for (let j = 0; j < games.length; j++) {
+          if (j === games.length - 1) indexWhereConditionMet = j;
 
-        //todo: what about the scenario where game.completionDate is greater than all of the items in games?
-        if (game.completionDate >= gameToCheck.completionDate) indexWhereConditionMet = j;
-        else if (game.completionDate < gameToCheck.completionDate && game.completionDate <= gameToCheckNext.completionDate) indexWhereConditionMet = j;
+          const gameToCheck = games[j];
+          const gameToCheckNext = games[j + 1];
 
-        if (indexWhereConditionMet !== -1) break;
+          //todo: what about the scenario where game.completionDate is greater than all of the items in games?
+          if (game.completionDate >= gameToCheck.completionDate) {
+            console.log('1------------------------------------------------');
+            indexWhereConditionMet = -1;
+            break;
+          } else if (
+            game.completionDate >= lastGameToCheck.completionDate &&
+            game.completionDate <= secondToLastGameToCheck.completionDate
+          ) {
+            console.log('2------------------------------------------------');
+            indexWhereConditionMet = games.length - 2;
+            break;
+          } else if (
+            game.completionDate < gameToCheck.completionDate &&
+            game.completionDate >= gameToCheckNext.completionDate
+          ) {
+            console.log('3------------------------------------------------');
+            indexWhereConditionMet = j;
+            break;
+          }
+        }
       }
     } else {
       const indexToStartAt = Math.floor(games.length / 2);
@@ -250,6 +281,7 @@ export class LocalStorageManagerService {
       //todo: implement a binary search pproach
     }
 
+    console.log('returning =', indexWhereConditionMet + 1);
     return indexWhereConditionMet + 1;
   }
 
