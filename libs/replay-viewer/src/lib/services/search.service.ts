@@ -8,10 +8,10 @@ import {
 import { HelpersService } from '@nx-bridge/helpers';
 import {
   AppState,
+  SetCurrentlyDisplayingGames,
   SetCurrentlyViewingUser,
   SetIsLoading,
   SetLoadingError,
-  SetCurrentlyDisplayingGames,
 } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
 import {
@@ -23,7 +23,6 @@ import { Game } from '@nx-bridge/interfaces-and-types';
 import { LocalStorageManagerService } from './local-storage-manager.service';
 import { ERROR_APPENDING_GAMES } from '@nx-bridge/api-errors';
 import { take } from 'rxjs/operators';
-import { sortAscending, sortDescending } from '@nx-bridge/constants';
 
 @Injectable({
   providedIn: 'root',
@@ -230,14 +229,16 @@ export class SearchService {
   }
 
   private setCurrentlyDisplayingGames(games: Game[]) {
+    debugger;
+
+    if (!games) return;
     let sortPreference = JSON.stringify(SortOptions.ascending);
     this.store.select('general').pipe(take(1)).subscribe(generalState => {sortPreference = generalState.sortingPreference});
 
+    //NOTE: assumming the games are sorted in descending order at this point (happens in)
     const gamesToUse = this.paginateGames(games, sortPreference, 0, 25);
     this.filterGames(gamesToUse)
 
-    if (sortPreference === SortOptions.descending) sortDescending(gamesToUse);
-    else sortAscending(gamesToUse);
     this.store.dispatch(new SetCurrentlyDisplayingGames(gamesToUse));
   }
 

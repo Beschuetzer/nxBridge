@@ -9,6 +9,7 @@ import {
   LocalStorageUsers,
   LocalStorageUserWithGames,
 } from '@nx-bridge/interfaces-and-types';
+import { sortDescending } from '@nx-bridge/constants';
 
 @Injectable({
   providedIn: 'root',
@@ -162,11 +163,17 @@ export class LocalStorageManagerService {
     
     for (let i = 0; i < localStorageUser.gameIds.length; i++) {
       const gameId = localStorageUser.gameIds[i];
-      const game = this.getGameFromGameId(gameId);
-      if (game) games.push(game);
+      const game = this.getGameFromGameId(gameId) as Game;
+      if (game) {
+        if (games.length === 0 || game.completionDate < games[games.length - 1].completionDate) games.push(game);
+        else {
+          const indexToUse = this.getIndexToAddGameIntoGames(games, game);
+          games.splice(indexToUse, 0, game);
+        }
+      }
     }
 
-    localStorageUser.games = games.reverse();
+    localStorageUser.games = games;
     delete localStorageUser.gameIds;
     return localStorageUser;
   }
@@ -213,6 +220,37 @@ export class LocalStorageManagerService {
     const localStorageGames = this.getLocalStorageGames();
     const toReturn = localStorageGames[gameId] as any;
     return toReturn;
+  }
+
+  private getIndexToAddGameIntoGames (games: Game[], game: Game) {
+    //assumes games is in descending order already
+    //find index at which game.completionDate >= games[index].completionDate and <= game[index + 1].completionDate then return that index + 1;
+    const maxNumberOfGamesToDoLinearly = 100;
+    const shouldDoLinearly = games.length < maxNumberOfGamesToDoLinearly;
+    let indexWhereConditionMet = -1;
+
+    //note: the point of the loop if to find where the condition is met and assign j to indexWhereConditionMet
+    debugger;
+    if (shouldDoLinearly) {
+      for (let j = 0; j < games.length; j++) {
+        if (j === games.length - 1) indexWhereConditionMet = j;
+
+        const gameToCheck = games[j];
+        const gameToCheckNext = games[j + 1];
+
+        //todo: what about the scenario where game.completionDate is greater than all of the items in games?
+        if (game.completionDate >= gameToCheck.completionDate) indexWhereConditionMet = j;
+        else if (game.completionDate < gameToCheck.completionDate && game.completionDate <= gameToCheckNext.completionDate) indexWhereConditionMet = j;
+
+        if (indexWhereConditionMet !== -1) break;
+      }
+    } else {
+      const indexToStartAt = Math.floor(games.length / 2);
+
+      //todo: implement a binary search pproach
+    }
+
+    return indexWhereConditionMet + 1;
   }
 
   private saveGameIds(games: Game[]) {
