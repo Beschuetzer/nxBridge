@@ -70,6 +70,7 @@ Testing------------
 
 -need a function to remove the oldest localStorageUser by last access date and call when storage is full or approaching it
 
--figure out how to work the sort select box
+-finish paginateGames() in search.service
+
 
 -add change handler for sortPreference box in gameslistView onSortchange (have it access currentlyDisplayingGames and rearrange then re-dispatch)

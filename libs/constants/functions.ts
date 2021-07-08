@@ -1,4 +1,4 @@
-import { Deal } from '@nx-bridge/interfaces-and-types';
+import { Deal, Game } from '@nx-bridge/interfaces-and-types';
 import * as mongoose from 'mongoose';
 import { getIsBidPlayable } from './playing/functions';
 
@@ -82,4 +82,14 @@ export const scrollToSection = (sectionToScrollTo: HTMLElement, headerHeight: nu
     left: 0, 
     behavior: 'smooth' 
   });
+}
+
+export function sortDescending(games: Game[]) {
+  //todo: look up which sorting algorithm to use
+  games.reverse();
+}
+
+export function sortAscending(games: Game[]) {
+  //todo: look up which sorting algorithm to use
+  // games.reverse();
 }

@@ -1,10 +1,11 @@
 import { Component, ElementRef, HostBinding, OnInit, ViewChild } from '@angular/core';
-import { AppState, SetSortingPreference } from '@nx-bridge/store';
+import { AppState, SetCurrentlyDisplayingGames, SetSortingPreference } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
-import { LocalStorageUserWithGames, GameDetailDisplayPreferences } from '@nx-bridge/interfaces-and-types';
+import { LocalStorageUserWithGames, GameDetailDisplayPreferences, Game } from '@nx-bridge/interfaces-and-types';
 import { dealsListButtonFontSizeCssPropName, gameDetailHeightAboveBreakpointCssPropName, gameDetailHeightBelowBreakpointCssPropName, gameDetailSummaryHeightPercentageCssPropName, playerLabelsDisplayTypeCssPropName, playerNamesDisplayTypeCssPropName, SIZE_OPTIONS, SORT_OPTIONS } from '@nx-bridge/constants';
 import { LocalStorageManagerService } from '../../services/local-storage-manager.service';
 import { gameDetailSizes } from '@nx-bridge/computed-styles';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'nx-bridge-games-list-view',
@@ -45,8 +46,8 @@ export class GamesListViewComponent implements OnInit {
     const option = (e.currentTarget || e.target) as HTMLOptionElement;
     if (shouldSave) this.localStorageManager.saveSortPreference(option.value);
 
-    //todo: need to finish this by dispatching a different value for currentlyDisplayingHands
     this.setSortPreference(option.value);
+    this.reverseCurrentlyDisplayingGames();
   }
 
   setPreferences() {
@@ -86,6 +87,15 @@ export class GamesListViewComponent implements OnInit {
     document.documentElement.style.setProperty(playerLabelsDisplayTypeCssPropName, gameDetailSizes[newSize].playerLabelsDisplayType);
     document.documentElement.style.setProperty(playerNamesDisplayTypeCssPropName, gameDetailSizes[newSize].playerNamesDisplayType);
     document.documentElement.style.setProperty(dealsListButtonFontSizeCssPropName, gameDetailSizes[newSize].dealsListButtonFontSize);
+  }
+
+  private reverseCurrentlyDisplayingGames() {
+    let currentlyDisplayingGames: Game[] = [];
+    this.store.select('games').pipe(take(1)).subscribe(gameState => {
+      currentlyDisplayingGames = JSON.parse(JSON.stringify(gameState.currentlyDisplayingGames));
+      currentlyDisplayingGames.reverse();
+      this.store.dispatch(new SetCurrentlyDisplayingGames(currentlyDisplayingGames));
+    });
   }
 
   private setSortPreference(newSortPreference: string) {
