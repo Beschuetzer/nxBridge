@@ -1,3 +1,4 @@
+import { GameDetailSizes, SortOptions } from '@nx-bridge/interfaces-and-types';
 
 export const GET_DEALS_CONTROLLER_STRING = 'getDeals';
 export const GET_GAMES_CONTROLLER_STRING = 'getGames';
@@ -39,5 +40,15 @@ export const dealDetailButtonChoices: [string, string] = ['Show', 'Hide'];
 
 export const MOBILE_START_WIDTH = 655;
 export const ANIMATION_DURATION = 500;
+
+export const SIZE_OPTIONS = {
+  [GameDetailSizes.small]: GameDetailSizes.small,
+  [GameDetailSizes.medium]: GameDetailSizes.medium,
+  [GameDetailSizes.large]: GameDetailSizes.large,
+}
+export const SORT_OPTIONS = {
+  [SortOptions.ascending]: SortOptions.ascending,
+  [SortOptions.descending]: SortOptions.descending,
+}
 
 

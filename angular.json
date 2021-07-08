@@ -93,6 +93,31 @@
         }
       }
     },
+    "computed-styles": {
+      "projectType": "library",
+      "root": "libs/computed-styles",
+      "sourceRoot": "libs/computed-styles/src",
+      "prefix": "nx-bridge",
+      "architect": {
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/computed-styles"],
+          "options": {
+            "jestConfig": "libs/computed-styles/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/computed-styles/src/**/*.ts",
+              "libs/computed-styles/src/**/*.html"
+            ]
+          }
+        }
+      }
+    },
     "constants": {
       "projectType": "library",
       "root": "libs/constants",

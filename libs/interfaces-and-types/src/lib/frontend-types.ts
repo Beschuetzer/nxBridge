@@ -259,4 +259,5 @@ export type Team = "EW" | "NS" | '';
 export type TeamFull = "eastWest" | "northSouth";
 export type Contract = { prefix: string, htmlEntity: string };
 
-export enum GameDetailSizes {small, medium, large};
+export enum GameDetailSizes {small = 'small', medium = 'medium', large = 'large'};
+export enum SortOptions {ascending = 'ascending', descending = 'descending'};

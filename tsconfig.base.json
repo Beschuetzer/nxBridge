@@ -19,6 +19,7 @@
       "@nx-bridge/api-mongoose-models": [
         "libs/api-mongoose-models/src/index.ts"
       ],
+      "@nx-bridge/computed-styles": ["libs/computed-styles/src/index.ts"],
       "@nx-bridge/constants": ["libs/constants/index.ts"],
       "@nx-bridge/deal-player": ["libs/deal-player/src/index.ts"],
       "@nx-bridge/grid": ["libs/grid/src/index.ts"],

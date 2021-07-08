@@ -12,5 +12,6 @@ module.exports = {
     '<rootDir>/libs/spinners',
     '<rootDir>/libs/pipes',
     '<rootDir>/libs/deal-player',
+    '<rootDir>/libs/computed-styles',
   ],
 };

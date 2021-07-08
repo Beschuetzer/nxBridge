@@ -1,7 +1,8 @@
 import { GameDetailSizes } from "@nx-bridge/interfaces-and-types";
 
-export let computedStyle = getComputedStyle(document.documentElement);
+export const computedStyle = getComputedStyle(document.documentElement);
 export const defaultFontSizeNumber = +computedStyle.getPropertyValue('--default-font-size').replace('rem', '');
+
 export const gameDetailSizes = {
   [GameDetailSizes.small]: {
     summaryHeightPercent: '100%',

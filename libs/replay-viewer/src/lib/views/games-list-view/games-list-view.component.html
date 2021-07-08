@@ -5,14 +5,24 @@
       <h2>
         Games played by <span>'{{ currentlyViewingUser.username }}'</span>:
       </h2>
-      <label class="ui field">
-        Size:&nbsp;
-        <select class="ui input">
-          <option value="small">S</option>
-          <option value="medium">M</option>
-          <option value="large">L</option>
-        </select>
-      </label>
+      <div>
+        <label class="ui field">
+          Size:&nbsp;
+          <select (change)="onSizeChange($event)" class="ui input">
+            <option value="{{sizeOptions.small}}">S</option>
+            <option value="{{sizeOptions.medium}}">M</option>
+            <option value="{{sizeOptions.large}}">L</option>
+          </select>
+        </label>
+        <label class="ui field">
+          Sort:&nbsp;
+          <select (change)="onSortChange($event)" class="ui input">
+            <option value="{{sortOptions.descending}}">{{sortOptions.descending | titlecase}}</option>
+            <option value="{{sortOptions.ascending}}">{{sortOptions.ascending | titlecase}}</option>
+          </select>
+        </label>
+      </div>
+
     </div>
     <nx-bridge-games-list></nx-bridge-games-list>
   </section>
