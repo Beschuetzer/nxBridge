@@ -275,8 +275,45 @@ export class LocalStorageManagerService {
         }
       }
     } else {
-      const indexToStartAt = Math.floor(games.length / 2);
+      let currentIndex = Math.floor(games.length / 2);
+      let maxIndex = games.length - 1;
+      let minIndex = 0;
+     
+      let currentGame = games[currentIndex];
+      let afterCurrentGame = games[currentIndex + 1];
 
+      //todo: check first and last indexes for easy cases
+
+      let iterationCount = 0;
+      let shouldContinue = true;
+      while (shouldContinue) {
+        //bail out if too many iterations
+        if (iterationCount > games.length - 2) shouldContinue = false;
+
+        currentGame = games[currentIndex];
+        afterCurrentGame = games[currentIndex + 1];
+
+        //this is the condition to satisfy
+        if (game.completionDate >= currentGame.completionDate && game.completionDate <= afterCurrentGame.completionDate) {
+          indexWhereConditionMet = currentIndex;
+          shouldContinue = false;
+        }
+
+        //#region adjusting indexes
+        let currentIsLarger = true;
+        if (game.completionDate < currentGame.completionDate) currentIsLarger = false;
+
+        if (currentIsLarger) {
+          maxIndex = currentIndex;
+          currentIndex = Math.floor((maxIndex - minIndex) / 2);
+        } else {
+          minIndex = currentIndex;
+          currentIndex = Math.floor((maxIndex - minIndex) / 2);
+        }
+        //#endregion
+        
+        iterationCount++;
+      }
       //todo: implement a binary search pproach
     }
 
