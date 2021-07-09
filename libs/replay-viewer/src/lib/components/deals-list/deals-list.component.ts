@@ -71,7 +71,6 @@ export class DealsListComponent implements OnInit {
   public northSouthPlayers: [string, string] | [] = [];
   public eastWestPlayers: [string, string] | [] = [];
   private isAllowedToClose = false;
-  private allowedToCloseTimeout: any;
 
   constructor(
     private elRef: ElementRef,
@@ -106,7 +105,7 @@ export class DealsListComponent implements OnInit {
 
     if (isFullSize) {
       this.store.dispatch(new SetIsViewingGame(true));
-      this.allowedToCloseTimeout = setTimeout(() => {
+      setTimeout(() => {
         this.isAllowedToClose = true;
       }, ANIMATION_DURATION * 2);
     } else {

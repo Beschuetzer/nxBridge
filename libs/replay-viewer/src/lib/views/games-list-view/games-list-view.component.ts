@@ -2,7 +2,7 @@ import { Component, ElementRef, HostBinding, OnInit, ViewChild } from '@angular/
 import { AppState, SetCurrentlyDisplayingGames, SetResultsPerPagePreference, SetSortingPreference } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
 import { LocalStorageUserWithGames, GameDetailDisplayPreferences, Game } from '@nx-bridge/interfaces-and-types';
-import { dealsListButtonFontSizeCssPropName, gameDetailHeightAboveBreakpointCssPropName, gameDetailHeightBelowBreakpointCssPropName, gameDetailSummaryHeightPercentageCssPropName, playerLabelsDisplayTypeCssPropName, playerNamesDisplayTypeCssPropName, RESULTS_PER_PAGE_OPTIONS, SIZE_OPTIONS, SORT_OPTIONS } from '@nx-bridge/constants';
+import { dealsListButtonFontSizeCssPropName, gameDetailHeightAboveBreakpointCssPropName, gameDetailHeightBelowBreakpointCssPropName, gameDetailSummaryHeightPercentageCssPropName, getNewTotalNumberOfPages, playerLabelsDisplayTypeCssPropName, playerNamesDisplayTypeCssPropName, RESULTS_PER_PAGE_OPTIONS, SIZE_OPTIONS, SORT_OPTIONS } from '@nx-bridge/constants';
 import { LocalStorageManagerService } from '../../services/local-storage-manager.service';
 import { gameDetailSizes } from '@nx-bridge/computed-styles';
 import { take } from 'rxjs/operators';
@@ -66,9 +66,12 @@ export class GamesListViewComponent implements OnInit {
       this.localStorageManager.saveResultsPerPagePreference(option.value);
     }
     
+    const newBatchNumber = getNewBatchNumber(this.currentBatch, this.resultsPerPage, +option.value);
+
     this.setResultsPerPagePreference(option.value);
     this.resultsPerPage = +option.value;
-    this.searchService.setCurrentlyDisplayingGames(this.currentBatch);
+    this.searchService.setCurrentlyDisplayingGames(newBatchNumber);
+    this.totalNumberOfPages = getNewTotalNumberOfPages(+option.value, this.totalGames);
   }
 
   onSizeChange(e: Event, shouldSave = true) {
