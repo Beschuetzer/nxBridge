@@ -54,8 +54,8 @@ export class GamesListViewComponent implements OnInit {
 
   onCurrentPageChange(e: Event) {
     const option = (e.currentTarget || e.target) as HTMLOptionElement;
+    this.changeCurrentlyDisplayingGames(this.resultsPerPage, +option.value);
     this.currentPage = +option.value;
-    this.changeCurrentlyDisplayingGames();
   }
 
   onResultsPerPageChange(e: Event, shouldSave = true) {
@@ -64,9 +64,9 @@ export class GamesListViewComponent implements OnInit {
       this.localStorageManager.saveResultsPerPagePreference(option.value);
     }
     
-    this.resultsPerPage = +option.value;
     this.setResultsPerPagePreference(option.value);
-    this.changeCurrentlyDisplayingGames();
+    this.changeCurrentlyDisplayingGames(+option.value, this.currentPage);
+    this.resultsPerPage = +option.value;
   }
 
   onSizeChange(e: Event, shouldSave = true) {
@@ -122,18 +122,25 @@ export class GamesListViewComponent implements OnInit {
       const childIndex = this.resultsPerPageOptions.findIndex(resultPerPage => resultPerPage === +this.preferences.resultsPerPage);
       const value = this.resultsPerPageOptions[childIndex];
 
-      debugger;
       const childToUse = (resultsElement as HTMLSelectElement).children[childIndex] as HTMLOptionElement;
       if(childToUse) childToUse.selected = true;
       this.onResultsPerPageChange({target: {value: value ? value : this.DEFAULT_RESULTS_PER_PAGE}} as any, false);
     }
   }
 
-  private changeCurrentlyDisplayingGames() {
-    //todo: use results per page and 
-    debugger;
-    const currentMinIndex = (this.currentPage - 1) * this.resultsPerPage;
-    const currentMaxIndex = currentMinIndex + this.resultsPerPage;
+  private changeCurrentlyDisplayingGames(newResultsPerPage: number, newCurrentPage: number) {
+    const currentlyDisplayingMinIndex = (this.currentPage - 1) * this.resultsPerPage;
+    const currentlyDisplayingMaxIndex = currentlyDisplayingMinIndex + this.resultsPerPage;
+
+    const newMinIndex = this.getNewMinIndex(currentlyDisplayingMinIndex, currentlyDisplayingMaxIndex, newResultsPerPage, newCurrentPage)
+    const newMaxIndex = newMinIndex + newResultsPerPage;
+
+    let games = [];
+    this.store.select('users').subscribe(userState => {
+      debugger;
+      games = userState?.currentlyViewingUser.games;
+      this.store.dispatch(new SetCurrentlyDisplayingGames(games?.slice(newMinIndex, newMaxIndex)));
+    })
   }
 
   private changeSize(newSize: string) {
@@ -144,6 +151,13 @@ export class GamesListViewComponent implements OnInit {
     document.documentElement.style.setProperty(playerLabelsDisplayTypeCssPropName, gameDetailSizes[newSize].playerLabelsDisplayType);
     document.documentElement.style.setProperty(playerNamesDisplayTypeCssPropName, gameDetailSizes[newSize].playerNamesDisplayType);
     document.documentElement.style.setProperty(dealsListButtonFontSizeCssPropName, gameDetailSizes[newSize].dealsListButtonFontSize);
+  }
+
+  private getNewMinIndex(currentlyDisplayingMinIndex: number, currentlyDisplayingMaxIndex: number, newResultsPerPage: number, newCurrentPage: number) {
+    //todo: how to get the lowest index that is a multiple of newResultsPerpage and less than currentlyDisplayingMinIndex?
+    
+    debugger;
+    return Math.floor(currentlyDisplayingMinIndex / newResultsPerPage) * newResultsPerPage;
   }
 
   private reverseCurrentlyDisplayingGames() {

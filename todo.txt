@@ -76,3 +76,9 @@ Testing------------
 
 
 -need to figure out how to reload currentlyDisplayingGames based on what number the user chooses in results per page
+
+-work on displaying results when changing either currentPage
+-work on displaying results when changing either resultsPerPage
+-changing resultsPerPage doesn't re-populate the number of page options
+
+-when switching from 25 to 10 (going down in resultsPerPage), the this.currentPage is incorrect

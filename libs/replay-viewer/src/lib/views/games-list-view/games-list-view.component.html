@@ -55,7 +55,7 @@
           <select #currentPage (change)="onCurrentPageChange($event)">
             <option
               *ngFor="let in of getArrayUpToNumber(totalNumberOfPages); let i = index"
-              [value]="(i + 1) * resultsPerPage"
+              [value]="i + 1"
             >
               {{ i + 1}}
             </option>
