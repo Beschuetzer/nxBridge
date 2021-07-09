@@ -240,7 +240,6 @@ export class LocalStorageManagerService {
     let indexWhereConditionMet = DEFAULT_RETURN_VALUE;
 
     //note: the point of the loops is to find where the condition is met and assign j to indexWhereConditionMet
-    console.log('games =', games);
 
     if (shouldDoLinearly) {
       const secondToLastGameToCheck = games[games.length - 2];
@@ -254,21 +253,21 @@ export class LocalStorageManagerService {
           const gameToCheckNext = games[j + 1];
 
           if (game.completionDate >= gameToCheck.completionDate) {
-            console.log('1------------------------------------------------');
+            // console.log('1------------------------------------------------');
             indexWhereConditionMet = -1;
             break;
           } else if (
             game.completionDate >= lastGameToCheck.completionDate &&
             game.completionDate <= secondToLastGameToCheck.completionDate
           ) {
-            console.log('2------------------------------------------------');
+            // console.log('2------------------------------------------------');
             indexWhereConditionMet = games.length - 2;
             break;
           } else if (
             game.completionDate < gameToCheck.completionDate &&
             game.completionDate >= gameToCheckNext.completionDate
           ) {
-            console.log('3------------------------------------------------');
+            // console.log('3------------------------------------------------');
             indexWhereConditionMet = j;
             break;
           }
@@ -315,14 +314,14 @@ export class LocalStorageManagerService {
             //#endregion
           }
 
-          if (iterationCount < 4) {
-            console.log('min =', minIndex);
-            console.log('max =', maxIndex);
-            console.log('current =', currentIndex);
-            console.log('maxIndex - minIndex) / 2 =', (maxIndex - minIndex) / 2 + minIndex);
-            console.log('currentIndex =', currentIndex);
-          }
-
+          // if (iterationCount < 4) {
+          //   console.log('min =', minIndex);
+          //   console.log('max =', maxIndex);
+          //   console.log('current =', currentIndex);
+          //   console.log('maxIndex - minIndex) / 2 =', (maxIndex - minIndex) / 2 + minIndex);
+          //   console.log('currentIndex =', currentIndex);
+          // }
+          
           iterationCount++;
         }
         // console.log('iterationCount =', iterationCount);
