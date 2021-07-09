@@ -16,6 +16,11 @@
   }
 
   &__title{
+    display: grid;
+    grid-template-columns: 1fr max-content 1fr;
+    grid-template-rows: repeat(3, 1fr);
+    justify-items: center;
+    align-items: center;
     margin: 0;
     padding: $default-font-size * .5 $default-font-size;
     text-align: center;
@@ -39,8 +44,14 @@
       margin-right: $default-font-size * .5;
     }
 
-    & h2{
+    & > *:nth-child(1){
       margin: 0 !important;
+    }
+    & > *:nth-child(n + 1) {
+      grid-column: 2 / span 1;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
     }
 
     & span {

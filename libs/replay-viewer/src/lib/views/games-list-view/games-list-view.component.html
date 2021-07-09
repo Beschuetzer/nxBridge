@@ -3,7 +3,7 @@
   <section class="games-view">
     <div class="games-view__title">
       <h2>
-        Games played by <span>'{{ currentlyViewingUser.username }}'</span>:
+        Games played by&nbsp;<span>'{{ currentlyViewingUser.username ? currentlyViewingUser.username : 'Player' }}'</span>:
       </h2>
       <div>
         <label class="ui field">
@@ -34,7 +34,7 @@
       </div>
       <div class="ui field">
         <label class="ui field">
-          Results per page:&nbsp;
+          Results / page:&nbsp;
           <select #results (change)="onResultsPerPageChange($event)">
             <option 
               *ngFor="let resultPerPageOptions of resultsPerPageOptions;"
@@ -55,7 +55,7 @@
               {{ i + 1}}
             </option>
           </select>
-          <span>of {{ totalGames }}</span>
+          <span>&nbsp;of {{ totalNumberOfPages ? totalNumberOfPages : 'N/A' }}</span>
         </label>
       </div>
     </div>
