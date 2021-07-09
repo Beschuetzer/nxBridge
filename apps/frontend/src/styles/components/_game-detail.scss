@@ -1,4 +1,5 @@
 .game-detail {
+  backface-visibility: hidden;
   border: $game-detail-border-thick;
   border-radius: $default-font-size * .5;
   box-shadow: $game-detail-box-shadow;
@@ -10,8 +11,8 @@
   position: relative;
   background-color: rgba(var(--color-white-rgb), 0);
   transition: 
-    transform $animation-duration * 1 $animation-easing-standard-easeInOutBack-smaller,
-    background-color $animation-duration $animation-easing-standard $animation-duration * 1
+    transform $animation-duration * 1 $animation-easing-standard,
+    background-color $animation-duration $animation-easing-standard $animation-duration * 1,
   ;
   
   @include respond(tab-port) {

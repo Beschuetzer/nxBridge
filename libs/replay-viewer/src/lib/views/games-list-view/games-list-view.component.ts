@@ -69,13 +69,20 @@ export class GamesListViewComponent implements OnInit {
     }
     if (sizeElement) {
       let childIndex = 0;
+      let value = this.sizeOptions.small;
 
-      if (this.preferences.size === this.sizeOptions.medium)  childIndex = 1;
-      else if (this.preferences.size === this.sizeOptions.large) childIndex = 2;
+      if (this.preferences.size === this.sizeOptions.medium)  {
+        childIndex = 1;
+        value = this.sizeOptions.medium;
+      }
+      else if (this.preferences.size === this.sizeOptions.large) {
+        childIndex = 2;
+        value = this.sizeOptions.large;
+      }
 
       const childToUse = (sizeElement as HTMLSelectElement).children[childIndex] as HTMLOptionElement;
       childToUse.selected = true;
-      this.onSizeChange({target: childToUse} as any, false);
+      this.onSizeChange({target: {value}} as any, false);
     }
   }
 
