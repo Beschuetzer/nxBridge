@@ -162,7 +162,7 @@ export function getNewBatchNumber(
       const newMinResult =  i * newResultsPerPage;
       const newMaxResult = newMinResult + (newResultsPerPage - 1);
       
-      if (currentMinResult > newMinResult && currentMinResult < newMaxResult) {
+      if (currentMinResult >= newMinResult && currentMinResult <= newMaxResult) {
         return i;
         break;
       } 

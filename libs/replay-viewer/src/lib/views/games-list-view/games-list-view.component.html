@@ -36,17 +36,11 @@
         <label class="ui field">
           Results per page:&nbsp;
           <select #results (change)="onResultsPerPageChange($event)">
-            <option value="{{ resultsPerPageOptions[0] }}">
-              {{ resultsPerPageOptions[0] }}
-            </option>
-            <option value="{{ resultsPerPageOptions[1] }}">
-              {{ resultsPerPageOptions[1] }}
-            </option>
-            <option value="{{ resultsPerPageOptions[2] }}">
-              {{ resultsPerPageOptions[2] }}
-            </option>
-            <option value="{{ resultsPerPageOptions[3] }}">
-              {{ resultsPerPageOptions[3] }}
+            <option 
+              *ngFor="let resultPerPageOptions of resultsPerPageOptions;"
+              [value]="resultPerPageOptions"
+            >
+              {{resultPerPageOptions}}
             </option>
           </select>
         </label>

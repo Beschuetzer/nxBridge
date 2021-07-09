@@ -128,9 +128,12 @@ export class GamesListViewComponent implements OnInit {
       const childIndex = this.resultsPerPageOptions.findIndex(resultPerPage => resultPerPage === +this.preferences.resultsPerPage);
       const value = this.resultsPerPageOptions[childIndex];
 
-      const childToUse = (resultsElement as HTMLSelectElement).children[childIndex] as HTMLOptionElement;
-      if(childToUse) childToUse.selected = true;
-      this.onResultsPerPageChange({target: {value: value ? value : this.DEFAULT_RESULTS_PER_PAGE}} as any, false);
+      //note: without timeOut, childToUse is undefined when refreshing /replays/games
+      setTimeout(() => {
+        const childToUse = (resultsElement as HTMLSelectElement).children[childIndex] as HTMLOptionElement;
+        if(childToUse) childToUse.selected = true;
+        this.onResultsPerPageChange({target: {value: value ? value : this.DEFAULT_RESULTS_PER_PAGE}} as any, false);
+      }, 50)
     }
   }
 
@@ -176,6 +179,7 @@ export class GamesListViewComponent implements OnInit {
   //   })}
 
   private selectCurrentPage(newBatchNumber: number) {
+    //note: timeout is needed to allow the re-render to take place
     setTimeout(() => {
       const currentPageElement = this.currentPageElement?.nativeElement as HTMLElement;
       const currentPageOptionElement = (currentPageElement?.children[newBatchNumber] as HTMLOptionElement);
