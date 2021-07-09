@@ -234,10 +234,14 @@ export class SearchService {
 
     if (!games) return;
     let sortPreference = JSON.stringify(SortOptions.ascending);
-    this.store.select('general').pipe(take(1)).subscribe(generalState => {sortPreference = generalState.sortingPreference});
+    let resultsPerPage = -1;
+    this.store.select('general').pipe(take(1)).subscribe(generalState => {
+      sortPreference = generalState.sortingPreference;
+      resultsPerPage = +generalState.resultsPerPagePreference;
+    });
 
     //todo: need to grab preferences from store then input into paginate games (1 and 25)
-    const gamesToUse = paginateGames(games, sortPreference, 1, 25);
+    const gamesToUse = paginateGames(games, sortPreference, 0, resultsPerPage);
     this.filterGames(gamesToUse)
 
     this.store.dispatch(new SetCurrentlyDisplayingGames(gamesToUse));

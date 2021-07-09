@@ -23,9 +23,15 @@ export class GamesListViewComponent implements OnInit {
   public sortOptions = SORT_OPTIONS;
   public resultsPerPageOptions = RESULTS_PER_PAGE_OPTIONS;
   public resultsPerPage = -1;
+  public totalNumberOfPages = -1;
   public currentPage = 1;
   public totalGames = -1;
   public preferences: GameDetailDisplayPreferences = {} as GameDetailDisplayPreferences;
+
+  getArrayUpToNumber(number: number) {
+    if (!number || number <= 0) return;
+    return Array(number).map((x, i) => i + 1);
+  }
 
   constructor(
     private store: Store<AppState>,
@@ -36,7 +42,7 @@ export class GamesListViewComponent implements OnInit {
      this.store.select('users').subscribe(userState => {
        this.currentlyViewingUser = userState.currentlyViewingUser;
        this.totalGames = userState.currentlyViewingUser?.games?.length;
-      //  this.totalNumberOfPages = this.totalGames / this.resultsPerPageOptions
+       this.totalNumberOfPages = Math.ceil(this.totalGames / this.resultsPerPage);
      })
 
      this.preferences = this.localStorageManager.getPreferences();
@@ -56,6 +62,7 @@ export class GamesListViewComponent implements OnInit {
       this.localStorageManager.saveResultsPerPagePreference(option.value);
     }
     
+    this.resultsPerPage = +option.value;
     this.setResultsPerPagePreference(option.value);
     this.changeCurrentlyDisplayingGames();
   }
@@ -121,6 +128,9 @@ export class GamesListViewComponent implements OnInit {
 
   private changeCurrentlyDisplayingGames() {
     //todo: use results per page and 
+    debugger;
+    const currentMinIndex = (this.currentPage - 1) * this.resultsPerPage;
+    const currentMaxIndex = currentMinIndex + this.resultsPerPage;
   }
 
   private changeSize(newSize: string) {
