@@ -8,7 +8,7 @@
   border-left: $games-list-border;
   border-right: $games-list-border;
   border-bottom: $games-list-border;
-  height: 100%;
+  // height: 100%;
   background: rgba(var(--color-primary-4-rgb), 1);
 
   @include respond($layout-breakpoint) {

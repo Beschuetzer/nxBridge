@@ -229,14 +229,13 @@ export class SearchService {
   }
 
   private setCurrentlyDisplayingGames(games: Game[]) {
-    debugger;
 
     if (!games) return;
     let sortPreference = JSON.stringify(SortOptions.ascending);
     this.store.select('general').pipe(take(1)).subscribe(generalState => {sortPreference = generalState.sortingPreference});
 
     //NOTE: assumming the games are sorted in descending order at this point (happens in)
-    const gamesToUse = this.paginateGames(games, sortPreference, 0, 25);
+    const gamesToUse = this.paginateGames(games, sortPreference, 1, 25);
     this.filterGames(gamesToUse)
 
     this.store.dispatch(new SetCurrentlyDisplayingGames(gamesToUse));
@@ -244,11 +243,13 @@ export class SearchService {
 
 
   private paginateGames(games: Game[], sortPreference: string, batchNumber: number, numberPerBatch: number) {
-    //TODO: will need to put in the pagination part
+    //batchNumber starts at 0
+
+    debugger;
     const batchStart = numberPerBatch * batchNumber;
     const batchEnd = batchStart + numberPerBatch;
     let toReturnGames: Game[]; 
-    if (sortPreference === SortOptions.ascending) toReturnGames = games.slice(batchStart, batchEnd);
+    if (sortPreference === SortOptions.descending) toReturnGames = games.slice(batchStart, batchEnd);
     else {
       //todo: use a for loop in reverse to 'slice' games into toReturnGames 
       // for (let i = games.length; i < array.length; i++) {
