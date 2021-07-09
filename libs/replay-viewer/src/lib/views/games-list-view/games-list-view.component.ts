@@ -6,6 +6,7 @@ import { dealsListButtonFontSizeCssPropName, gameDetailHeightAboveBreakpointCssP
 import { LocalStorageManagerService } from '../../services/local-storage-manager.service';
 import { gameDetailSizes } from '@nx-bridge/computed-styles';
 import { take } from 'rxjs/operators';
+import { SearchService } from '../../services/search.service';
 
 @Component({
   selector: 'nx-bridge-games-list-view',
@@ -25,7 +26,7 @@ export class GamesListViewComponent implements OnInit {
   public resultsPerPageOptions = RESULTS_PER_PAGE_OPTIONS;
   public resultsPerPage = this.DEFAULT_RESULTS_PER_PAGE;
   public totalNumberOfPages = -1;
-  public currentPage = 1;
+  public currentBatch = 0;
   public totalGames = -1;
   public preferences: GameDetailDisplayPreferences = {} as GameDetailDisplayPreferences;
 
@@ -37,6 +38,7 @@ export class GamesListViewComponent implements OnInit {
   constructor(
     private store: Store<AppState>,
     private localStorageManager: LocalStorageManagerService,
+    private searchService: SearchService,
   ) { }
 
   ngOnInit(): void {
@@ -54,8 +56,8 @@ export class GamesListViewComponent implements OnInit {
 
   onCurrentPageChange(e: Event) {
     const option = (e.currentTarget || e.target) as HTMLOptionElement;
-    this.changeCurrentPage(+option.value);
-    this.currentPage = +option.value;
+    this.currentBatch = +option.value;
+    this.searchService.setCurrentlyDisplayingGames(this.currentBatch);
   }
 
   onResultsPerPageChange(e: Event, shouldSave = true) {
@@ -65,8 +67,8 @@ export class GamesListViewComponent implements OnInit {
     }
     
     this.setResultsPerPagePreference(option.value);
-    this.changeCurrentlyDisplayingGames(+option.value, this.currentPage);
     this.resultsPerPage = +option.value;
+    this.searchService.setCurrentlyDisplayingGames(this.currentBatch);
   }
 
   onSizeChange(e: Event, shouldSave = true) {
@@ -80,7 +82,7 @@ export class GamesListViewComponent implements OnInit {
     if (shouldSave) this.localStorageManager.saveSortPreference(option.value);
 
     this.setSortPreference(option.value);
-    this.reverseCurrentlyDisplayingGames();
+    this.searchService.setCurrentlyDisplayingGames(this.currentBatch);
   }
 
   setOptionElementsPerPreferences() {
@@ -128,23 +130,15 @@ export class GamesListViewComponent implements OnInit {
     }
   }
 
-  private changeCurrentPage(newPage: number) {
-    debugger;
-    const newMinIndex = newPage * this.resultsPerPage;
-    const newMaxIndex = newMinIndex + this.resultsPerPage;
+  // private changeCurrentlyDisplayingGames(newResultsPerPage: number, newCurrentPage: number) {
+  //   const currentlyDisplayingMinIndex = (this.currentBatch) * this.resultsPerPage;
+  //   const currentlyDisplayingMaxIndex = currentlyDisplayingMinIndex + this.resultsPerPage;
 
-    this.setCurrentlyDisplayingGamesByIndexes(newMinIndex, newMaxIndex);
-  }
+  //   const newMinIndex = this.getNewMinIndex(currentlyDisplayingMinIndex, currentlyDisplayingMaxIndex, newResultsPerPage, newCurrentPage)
+  //   const newMaxIndex = newMinIndex + newResultsPerPage;
 
-  private changeCurrentlyDisplayingGames(newResultsPerPage: number, newCurrentPage: number) {
-    const currentlyDisplayingMinIndex = (this.currentPage - 1) * this.resultsPerPage;
-    const currentlyDisplayingMaxIndex = currentlyDisplayingMinIndex + this.resultsPerPage;
-
-    const newMinIndex = this.getNewMinIndex(currentlyDisplayingMinIndex, currentlyDisplayingMaxIndex, newResultsPerPage, newCurrentPage)
-    const newMaxIndex = newMinIndex + newResultsPerPage;
-
-    this.setCurrentlyDisplayingGamesByIndexes(newMinIndex, newMaxIndex);
-  }
+  //   this.setCurrentlyDisplayingGamesByIndexes(newMinIndex, newMaxIndex);
+  // }
 
   private changeSize(newSize: string) {
     if (!newSize) return;
@@ -156,27 +150,26 @@ export class GamesListViewComponent implements OnInit {
     document.documentElement.style.setProperty(dealsListButtonFontSizeCssPropName, gameDetailSizes[newSize].dealsListButtonFontSize);
   }
 
-  private getNewMinIndex(currentlyDisplayingMinIndex: number, currentlyDisplayingMaxIndex: number, newResultsPerPage: number, newCurrentPage: number) {
-    //todo: how to get the lowest index that is a multiple of newResultsPerpage and less than currentlyDisplayingMinIndex?
+  // private getNewMinIndex(currentlyDisplayingMinIndex: number, currentlyDisplayingMaxIndex: number, newResultsPerPage: number, newCurrentPage: number) {
+  //   //todo: how to get the lowest index that is a multiple of newResultsPerpage and less than currentlyDisplayingMinIndex?
     
-    debugger;
-    return Math.floor(currentlyDisplayingMinIndex / newResultsPerPage) * newResultsPerPage;
-  }
+  //   return Math.floor(currentlyDisplayingMinIndex / newResultsPerPage) * newResultsPerPage;
+  // }
 
-  private reverseCurrentlyDisplayingGames() {
-    let currentlyDisplayingGames: Game[] = [];
-    this.store.select('games').pipe(take(1)).subscribe(gameState => {
-      currentlyDisplayingGames = JSON.parse(JSON.stringify(gameState.currentlyDisplayingGames));
-      currentlyDisplayingGames.reverse();
-      this.store.dispatch(new SetCurrentlyDisplayingGames(currentlyDisplayingGames));
-    });
-  }
+  // private reverseCurrentlyDisplayingGames() {
+  //   let currentlyDisplayingGames: Game[] = [];
+  //   this.store.select('games').pipe(take(1)).subscribe(gameState => {
+  //     currentlyDisplayingGames = JSON.parse(JSON.stringify(gameState.currentlyDisplayingGames));
+  //     currentlyDisplayingGames.reverse();
+  //     this.store.dispatch(new SetCurrentlyDisplayingGames(currentlyDisplayingGames));
+  //   });
+  // }
 
-  private setCurrentlyDisplayingGamesByIndexes(newMinIndex: number, newMaxIndex: number) { 
-    this.store.select('users').subscribe(userState => {
-      const games = userState?.currentlyViewingUser.games;
-      this.store.dispatch(new SetCurrentlyDisplayingGames(games?.slice(newMinIndex, newMaxIndex)));
-    })}
+  // private setCurrentlyDisplayingGamesByIndexes(newMinIndex: number, newMaxIndex: number) { 
+  //   this.store.select('users').subscribe(userState => {
+  //     const games = userState?.currentlyViewingUser.games;
+  //     this.store.dispatch(new SetCurrentlyDisplayingGames(games?.slice(newMinIndex, newMaxIndex)));
+  //   })}
 
   private setDefaultResultsPerPage() {
     const resultsElement = (this.resultsElement?.nativeElement as HTMLSelectElement);

@@ -97,7 +97,6 @@ export function sortAscending(games: Game[]) {
 export function paginateGames(games: Game[], sortPreference: string, batchNumber: number, numberPerBatch: number) {
   //batchNumber starts at 0
 
-  debugger;
   const batchStart = numberPerBatch * batchNumber;
   const batchEnd = batchStart + numberPerBatch;
   let toReturnGames: Game[]; 

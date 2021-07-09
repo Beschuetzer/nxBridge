@@ -1,5 +1,10 @@
 import { Injectable } from '@angular/core';
 import {
+  RESULTS_PER_PAGE_OPTIONS,
+  SIZE_OPTIONS,
+  SORT_OPTIONS,
+} from '@nx-bridge/constants';
+import {
   EmptyLocalStorageGamesReturn,
   EmptyLocalStorageUsersReturn,
   Game,
@@ -183,19 +188,9 @@ export class LocalStorageManagerService {
   }
 
   getPreferences(): GameDetailDisplayPreferences {
-    const sortLocalStorageValue = localStorage.getItem(
-      this.sortPreferenceInLocalStorage
-    );
-    const sizeLocalStorageValue = localStorage.getItem(
-      this.sizePreferenceInLocalStorage
-    );
-    const resultsLocalStorageValue = localStorage.getItem(
-      this.resultsPerPagePreferenceInLocalStorage
-    );
-
-    const sort = sortLocalStorageValue ? sortLocalStorageValue : '';
-    const size = sizeLocalStorageValue ? sizeLocalStorageValue : '';
-    const resultsPerPage = resultsLocalStorageValue ? resultsLocalStorageValue : '';
+    const sort = this.getSortPreference();
+    const size = this.getSizePreference();
+    const resultsPerPage = this.getResultsPerPagePreference();
 
     return {
       sort,
@@ -204,8 +199,36 @@ export class LocalStorageManagerService {
     };
   }
 
+  getResultsPerPagePreference() {
+    const resultsLocalStorageValue = localStorage.getItem(
+      this.resultsPerPagePreferenceInLocalStorage
+    );
+    return resultsLocalStorageValue
+      ? resultsLocalStorageValue
+      : `${RESULTS_PER_PAGE_OPTIONS[RESULTS_PER_PAGE_OPTIONS.length - 1]}`;
+  }
+
+  getSizePreference() {
+    const sizeLocalStorageValue = localStorage.getItem(
+      this.sizePreferenceInLocalStorage
+    );
+    return sizeLocalStorageValue ? sizeLocalStorageValue : SIZE_OPTIONS.small;
+  }
+
+  getSortPreference() {
+    const sortLocalStorageValue = localStorage.getItem(
+      this.sortPreferenceInLocalStorage
+    );
+    return sortLocalStorageValue
+      ? sortLocalStorageValue
+      : SORT_OPTIONS.descending;
+  }
+
   saveResultsPerPagePreference(resultsPerPagePreference: string) {
-    localStorage.setItem(this.resultsPerPagePreferenceInLocalStorage, resultsPerPagePreference);
+    localStorage.setItem(
+      this.resultsPerPagePreferenceInLocalStorage,
+      resultsPerPagePreference
+    );
   }
 
   saveSizePreference(sizePreference: string) {
@@ -293,14 +316,15 @@ export class LocalStorageManagerService {
       const lastGame = games[DEFAULT_RETURN_VALUE];
       const firstGame = games[minIndex];
 
-      if (game.completionDate >= firstGame.completionDate) indexWhereConditionMet = -1;
-      else if (game.completionDate <= lastGame.completionDate) indexWhereConditionMet = DEFAULT_RETURN_VALUE;
+      if (game.completionDate >= firstGame.completionDate)
+        indexWhereConditionMet = -1;
+      else if (game.completionDate <= lastGame.completionDate)
+        indexWhereConditionMet = DEFAULT_RETURN_VALUE;
       else {
         let iterationCount = 0;
 
         // eslint-disable-next-line no-constant-condition
         while (true) {
-          
           //bail out if too many iterations
           if (iterationCount > games.length - 2) break;
 
@@ -309,13 +333,17 @@ export class LocalStorageManagerService {
           afterCurrentGame = games[currentIndex + 1];
 
           //this is the condition to satisfy
-          if (game.completionDate <= currentGame.completionDate && game.completionDate >= afterCurrentGame.completionDate) {
+          if (
+            game.completionDate <= currentGame.completionDate &&
+            game.completionDate >= afterCurrentGame.completionDate
+          ) {
             indexWhereConditionMet = currentIndex;
             break;
           } else {
             //#region adjusting indexes
             let currentIsLarger = true;
-            if (game.completionDate > currentGame.completionDate) currentIsLarger = false;
+            if (game.completionDate > currentGame.completionDate)
+              currentIsLarger = false;
 
             if (currentIsLarger) minIndex = currentIndex;
             else maxIndex = currentIndex;
@@ -331,7 +359,7 @@ export class LocalStorageManagerService {
           //   console.log('maxIndex - minIndex) / 2 =', (maxIndex - minIndex) / 2 + minIndex);
           //   console.log('currentIndex =', currentIndex);
           // }
-          
+
           iterationCount++;
         }
         // console.log('iterationCount =', iterationCount);

@@ -19,11 +19,11 @@ import {
   LocalStorageUserWithGames,
   SortOptions,
 } from '@nx-bridge/interfaces-and-types';
-import { paginateGames } from '@nx-bridge/constants';
+import { paginateGames, SORT_OPTIONS } from '@nx-bridge/constants';
 import { Game } from '@nx-bridge/interfaces-and-types';
 import { LocalStorageManagerService } from './local-storage-manager.service';
 import { ERROR_APPENDING_GAMES } from '@nx-bridge/api-errors';
-import { take } from 'rxjs/operators';
+import { switchMap, take } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -76,17 +76,44 @@ export class SearchService {
     };
   }
 
-  private getLocalUserId() {
-    const localStorageUsers = this.localStorageManager.getLocalStorageUsers();
-    // debugger;
+  setCurrentlyDisplayingGames(batchNumber = 0) {
+    //NOTE: assumming the games are sorted in descending order at this point (happens in getLocalStorageUserWithGames)
 
-    if (!localStorageUsers) return '';
-    let localUserId = this.localStorageManager.getIdFromUsername(this.username);
+    let sortPreference: string;
+    let resultsPerPage: string;
+    let games: Game[];
 
-    if (!localUserId)
-      localUserId = this.localStorageManager.getIdFromEmail(this.email);
+    this.store
+      .select('general')
+      .pipe(
+        take(1),
+        switchMap((generalState) => {
+          sortPreference = generalState.sortingPreference;
+          resultsPerPage = generalState.resultsPerPagePreference;
 
-    return localUserId;
+          if (!sortPreference)
+            sortPreference = this.localStorageManager.getSortPreference();
+          if (!resultsPerPage)
+            resultsPerPage = this.localStorageManager.getResultsPerPagePreference();
+
+          return this.store.select('users').pipe(take(1));
+        })
+      )
+      .subscribe((userState) => {
+        games = userState.currentlyViewingUser.games;
+
+        debugger;
+        //note: batch number starts at 0 (meaning results 0 - 0 * resultsPerPage)
+        const gamesToUse = paginateGames(
+          games,
+          sortPreference,
+          batchNumber,
+          +resultsPerPage
+        );
+        this.filterGames(gamesToUse);
+
+        this.store.dispatch(new SetCurrentlyDisplayingGames(gamesToUse));
+      });
   }
 
   startRequest(username: string, email: string) {
@@ -107,6 +134,19 @@ export class SearchService {
         });
     } else this.getGameCount();
     return '';
+  }
+
+  private getLocalUserId() {
+    const localStorageUsers = this.localStorageManager.getLocalStorageUsers();
+    // debugger;
+
+    if (!localStorageUsers) return '';
+    let localUserId = this.localStorageManager.getIdFromUsername(this.username);
+
+    if (!localUserId)
+      localUserId = this.localStorageManager.getIdFromEmail(this.email);
+
+    return localUserId;
   }
 
   private handleGetUserResponse(getUserResponse: GetUserResponse) {
@@ -225,27 +265,10 @@ export class SearchService {
           : ({} as LocalStorageUserWithGames)
       )
     );
-    this.setCurrentlyDisplayingGames(localStorageUserWithGames ? localStorageUserWithGames.games : []);
+    this.setCurrentlyDisplayingGames();
     this.store.dispatch(new SetIsLoading(false));
   }
 
-  private setCurrentlyDisplayingGames(games: Game[]) {
-    //NOTE: assumming the games are sorted in descending order at this point (happens in getLocalStorageUserWithGames)
-
-    if (!games) return;
-    let sortPreference = JSON.stringify(SortOptions.ascending);
-    let resultsPerPage = -1;
-    this.store.select('general').pipe(take(1)).subscribe(generalState => {
-      sortPreference = generalState.sortingPreference;
-      resultsPerPage = +generalState.resultsPerPagePreference;
-    });
-
-    const gamesToUse = paginateGames(games, sortPreference, 0, resultsPerPage);
-    this.filterGames(gamesToUse)
-
-    this.store.dispatch(new SetCurrentlyDisplayingGames(gamesToUse));
-  }
-  
   private filterGames(games: Game[]) {
     //TODO: will need to put in the filter parts
   }

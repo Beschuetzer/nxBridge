@@ -72,7 +72,7 @@ Testing------------
 
 -add filter parts in search.service
 -finish sortDescending and sortAscending()
--finish paginateGames() in functions (need to paginate when in ascending order;  easy way is jsut to reverse then do the same slic as for descending)
+-finish paginateGames() in functions (need to paginate when in ascending order;  easy way is jsut to reverse then do the same slice as for descending)
 
 
 -need to figure out how to reload currentlyDisplayingGames based on what number the user chooses in results per page

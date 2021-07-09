@@ -1,7 +1,9 @@
 import { GameDetailSizes } from "@nx-bridge/interfaces-and-types";
 
 export const computedStyle = getComputedStyle(document.documentElement);
-export const defaultFontSizeNumber = +computedStyle.getPropertyValue('--default-font-size').replace('rem', '');
+
+//note: this number has to match $default-font-size sass variable to work properly (in rem);
+export const defaultFontSizeNumber = 1.6;
 
 export const gameDetailSizes: {[key: string]: any} = {
   [GameDetailSizes.small]: {
