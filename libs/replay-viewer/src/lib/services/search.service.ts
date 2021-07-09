@@ -19,6 +19,7 @@ import {
   LocalStorageUserWithGames,
   SortOptions,
 } from '@nx-bridge/interfaces-and-types';
+import { paginateGames } from '@nx-bridge/constants';
 import { Game } from '@nx-bridge/interfaces-and-types';
 import { LocalStorageManagerService } from './local-storage-manager.service';
 import { ERROR_APPENDING_GAMES } from '@nx-bridge/api-errors';
@@ -229,36 +230,17 @@ export class SearchService {
   }
 
   private setCurrentlyDisplayingGames(games: Game[]) {
+    //NOTE: assumming the games are sorted in descending order at this point (happens in getLocalStorageUserWithGames)
 
     if (!games) return;
     let sortPreference = JSON.stringify(SortOptions.ascending);
     this.store.select('general').pipe(take(1)).subscribe(generalState => {sortPreference = generalState.sortingPreference});
 
-    //NOTE: assumming the games are sorted in descending order at this point (happens in)
-    const gamesToUse = this.paginateGames(games, sortPreference, 1, 25);
+    //todo: need to grab preferences from store then input into paginate games (1 and 25)
+    const gamesToUse = paginateGames(games, sortPreference, 1, 25);
     this.filterGames(gamesToUse)
 
     this.store.dispatch(new SetCurrentlyDisplayingGames(gamesToUse));
-  }
-
-
-  private paginateGames(games: Game[], sortPreference: string, batchNumber: number, numberPerBatch: number) {
-    //batchNumber starts at 0
-
-    debugger;
-    const batchStart = numberPerBatch * batchNumber;
-    const batchEnd = batchStart + numberPerBatch;
-    let toReturnGames: Game[]; 
-    if (sortPreference === SortOptions.descending) toReturnGames = games.slice(batchStart, batchEnd);
-    else {
-      //todo: use a for loop in reverse to 'slice' games into toReturnGames 
-      // for (let i = games.length; i < array.length; i++) {
-      //   const element = array[i];
-        
-      // }
-      toReturnGames = games.slice(batchStart === 0 ? -1 : -batchStart, -batchEnd);
-    }
-    return toReturnGames;
   }
   
   private filterGames(games: Game[]) {

@@ -59,5 +59,10 @@ export const SORT_OPTIONS = {
   [SortOptions.ascending]: SortOptions.ascending,
   [SortOptions.descending]: SortOptions.descending,
 }
-
+export const RESULTS_PER_PAGE_OPTIONS = [
+  10,
+  25,
+  50,
+  100,
+];
 

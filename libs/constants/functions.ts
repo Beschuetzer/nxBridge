@@ -1,4 +1,4 @@
-import { Deal, Game } from '@nx-bridge/interfaces-and-types';
+import { Deal, Game, SortOptions } from '@nx-bridge/interfaces-and-types';
 import * as mongoose from 'mongoose';
 import { getIsBidPlayable } from './playing/functions';
 
@@ -92,4 +92,23 @@ export function sortDescending(games: Game[]) {
 export function sortAscending(games: Game[]) {
   //todo: look up which sorting algorithm to use
   // games.reverse();
+}
+
+export function paginateGames(games: Game[], sortPreference: string, batchNumber: number, numberPerBatch: number) {
+  //batchNumber starts at 0
+
+  debugger;
+  const batchStart = numberPerBatch * batchNumber;
+  const batchEnd = batchStart + numberPerBatch;
+  let toReturnGames: Game[]; 
+  if (sortPreference === SortOptions.descending) toReturnGames = games.slice(batchStart, batchEnd);
+  else {
+    //todo: use a for loop in reverse to 'slice' games into toReturnGames 
+    // for (let i = games.length; i < array.length; i++) {
+    //   const element = array[i];
+      
+    // }
+    toReturnGames = games.slice(batchStart === 0 ? -1 : -batchStart, -batchEnd);
+  }
+  return toReturnGames;
 }

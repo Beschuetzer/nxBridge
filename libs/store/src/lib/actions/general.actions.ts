@@ -1,9 +1,10 @@
-
 import { Action } from '@ngrx/store';
 
 export const SET_IS_LOADING = '[General] SET_IS_LOADING';
 export const SET_SORTING_PREFERENCE = '[General] SET_SORTING_PREFERENCE';
 export const SET_LOADING_ERROR = '[General] SET_LOADING_ERROR';
+export const SET_RESULTS_PER_PAGE_PREFERENCE =
+  '[General] SET_RESULTS_PER_PAGE_PREFERENCE';
 
 export class SetLoadingError implements Action {
   readonly type = SET_LOADING_ERROR;
@@ -20,4 +21,13 @@ export class SetSortingPreference implements Action {
   constructor(public payload: string) {}
 }
 
-export type GeneralActions = SetIsLoading | SetLoadingError | SetSortingPreference;
+export class SetResultsPerPagePreference implements Action {
+  readonly type = SET_RESULTS_PER_PAGE_PREFERENCE;
+  constructor(public payload: string) {}
+}
+
+export type GeneralActions =
+  | SetIsLoading
+  | SetLoadingError
+  | SetSortingPreference
+  | SetResultsPerPagePreference;

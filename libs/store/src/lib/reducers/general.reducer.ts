@@ -4,12 +4,14 @@ export interface GeneralState {
   isLoading: boolean,
   loadingError: string,
   sortingPreference: string,
+  resultsPerPagePreference: string,
 }
 
 const INITIAL_STATE: GeneralState = {
   isLoading: false,
-  loadingError: "",
-  sortingPreference: "",
+  loadingError: '',
+  sortingPreference: '',
+  resultsPerPagePreference: '',
 };
 
 export function generalReducer(
@@ -32,6 +34,11 @@ export function generalReducer(
       return {
         ...state,
         sortingPreference: action.payload,
+      };
+    case fromGeneralActions.SET_RESULTS_PER_PAGE_PREFERENCE:
+      return {
+        ...state,
+        resultsPerPagePreference: action.payload,
       };
     default:
       return state;

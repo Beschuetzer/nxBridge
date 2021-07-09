@@ -70,6 +70,9 @@ Testing------------
 
 -need a function to remove the oldest localStorageUser by last access date and call when storage is full or approaching it
 
+-add filter parts in search.service
 -finish sortDescending and sortAscending()
--finish paginateGames() in search.service
--write tests for getIndexToAddGameIntoGames()
+-finish paginateGames() in functions (need to paginate when in ascending order;  easy way is jsut to reverse then do the same slic as for descending)
+
+
+-need to figure out how to reload currentlyDisplayingGames based on what number the user chooses in results per page

@@ -9,17 +9,58 @@
         <label class="ui field">
           Size:&nbsp;
           <select (change)="onSizeChange($event)" class="ui input" #size>
-            <option value="{{sizeOptions.small}}">{{sizeOptions.small | slice : 0 : 1 | titlecase}}</option>
-            <option value="{{sizeOptions.medium}}">{{sizeOptions.medium | slice : 0 : 1 | titlecase}}</option>
-            <option value="{{sizeOptions.large}}">{{sizeOptions.large | slice : 0 : 1 | titlecase}}</option>
+            <option value="{{ sizeOptions.small }}">
+              {{ sizeOptions.small | slice: 0:1 | titlecase }}
+            </option>
+            <option value="{{ sizeOptions.medium }}">
+              {{ sizeOptions.medium | slice: 0:1 | titlecase }}
+            </option>
+            <option value="{{ sizeOptions.large }}">
+              {{ sizeOptions.large | slice: 0:1 | titlecase }}
+            </option>
           </select>
         </label>
         <label class="ui field">
           Sort:&nbsp;
           <select (change)="onSortChange($event)" class="ui input" #sort>
-            <option value="{{sortOptions.ascending}}">{{sortOptions.ascending | titlecase}}</option>
-            <option value="{{sortOptions.descending}}">{{sortOptions.descending | titlecase}}</option>
+            <option value="{{ sortOptions.ascending }}">
+              {{ sortOptions.ascending | titlecase }}
+            </option>
+            <option value="{{ sortOptions.descending }}">
+              {{ sortOptions.descending | titlecase }}
+            </option>
           </select>
+        </label>
+      </div>
+      <div class="ui field">
+        <label class="ui field">
+          Results per page:&nbsp;
+          <select #results (change)="onResultsPerPageChange($event)">
+            <option value="{{ resultsPerPageOptions[0] }}">
+              {{ resultsPerPageOptions[0] }}
+            </option>
+            <option value="{{ resultsPerPageOptions[1] }}">
+              {{ resultsPerPageOptions[1] }}
+            </option>
+            <option value="{{ resultsPerPageOptions[2] }}">
+              {{ resultsPerPageOptions[2] }}
+            </option>
+            <option value="{{ resultsPerPageOptions[3] }}">
+              {{ resultsPerPageOptions[3] }}
+            </option>
+          </select>
+        </label>
+        <label *ngIf=" totalGames && totalGames !== -1" class="ui field">
+          Page:&nbsp;
+          <select #currentPage (change)="onCurrentPageChange($event)">
+            <option
+              *ngFor="let resultPerPage of resultsPerPageOptions; let i = index"
+              [value]="resultPerPage"
+            >
+              {{ i }}
+            </option>
+          </select>
+          <span>of {{ totalGames }}</span>
         </label>
       </div>
     </div>

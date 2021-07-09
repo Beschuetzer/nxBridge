@@ -9,7 +9,6 @@ import {
   LocalStorageUsers,
   LocalStorageUserWithGames,
 } from '@nx-bridge/interfaces-and-types';
-import { sortDescending } from '@nx-bridge/constants';
 
 @Injectable({
   providedIn: 'root',
@@ -19,6 +18,7 @@ export class LocalStorageManagerService {
   public gamesInLocalStorage = 'games';
   public sortPreferenceInLocalStorage = 'sort';
   public sizePreferenceInLocalStorage = 'size';
+  public resultsPerPagePreferenceInLocalStorage = 'resultsPerPage';
   public EMPTY_LOCAL_STORAGE_USERS_RETURNS = null;
   public EMPTY_LOCAL_STORAGE_GAMES_RETURNS = {};
   public EMPTY_USER_ID_RETURNS = '';
@@ -189,13 +189,23 @@ export class LocalStorageManagerService {
     const sizeLocalStorageValue = localStorage.getItem(
       this.sizePreferenceInLocalStorage
     );
+    const resultsLocalStorageValue = localStorage.getItem(
+      this.resultsPerPagePreferenceInLocalStorage
+    );
+
     const sort = sortLocalStorageValue ? sortLocalStorageValue : '';
     const size = sizeLocalStorageValue ? sizeLocalStorageValue : '';
+    const resultsPerPage = resultsLocalStorageValue ? resultsLocalStorageValue : '';
 
     return {
       sort,
       size,
+      resultsPerPage,
     };
+  }
+
+  saveResultsPerPagePreference(resultsPerPagePreference: string) {
+    localStorage.setItem(this.resultsPerPagePreferenceInLocalStorage, resultsPerPagePreference);
   }
 
   saveSizePreference(sizePreference: string) {
