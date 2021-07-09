@@ -26,6 +26,7 @@ import {
   getPartnerFromDirection,
   getDirectionFromSeating,
   getDeclarerFromDeal,
+  ANIMATION_DURATION,
 } from '@nx-bridge/constants';
 import {
   CardinalDirection,
@@ -38,6 +39,7 @@ import {
   AddFetchedDeals as AddFetchedDeals,
   AppState,
   CurrentlyViewingGame,
+  generalReducer,
   SetCurrentlyViewingGame,
   SetIsViewingGame,
 } from '@nx-bridge/store';
@@ -68,6 +70,8 @@ export class DealsListComponent implements OnInit {
   public buttonChoicesDetails: [string, string] = dealsListDetailsButtonChoices;
   public northSouthPlayers: [string, string] | [] = [];
   public eastWestPlayers: [string, string] | [] = [];
+  private isAllowedToClose = false;
+  private allowedToCloseTimeout: any;
 
   constructor(
     private elRef: ElementRef,
@@ -81,6 +85,8 @@ export class DealsListComponent implements OnInit {
   }
 
   onDealsButtonClick(e: Event) {
+    if (this.getIsGameAlreadyOpen() && !this.isAllowedToClose) return;
+
     const button = (e.currentTarget || e.target) as HTMLElement;
     this.handleDealsButtonLogic(button);
     this.dispatchIsViewingGame(button);
@@ -98,8 +104,27 @@ export class DealsListComponent implements OnInit {
   private dispatchIsViewingGame(button: HTMLElement) {
     const isFullSize = this.toggleDeals(button);
 
-    if (isFullSize) this.store.dispatch(new SetIsViewingGame(true));
-    else this.store.dispatch(new SetIsViewingGame(false));
+    if (isFullSize) {
+      this.store.dispatch(new SetIsViewingGame(true));
+      this.allowedToCloseTimeout = setTimeout(() => {
+        this.isAllowedToClose = true;
+      }, ANIMATION_DURATION * 2);
+    } else {
+      this.isAllowedToClose = false;
+      this.store.dispatch(new SetIsViewingGame(false));
+    }
+  }
+
+  private getIsGameAlreadyOpen() {
+    let isGameAlreadyOpen = false;
+    this.store
+      .select('games')
+      .pipe(take(1))
+      .subscribe((gamesState) => {
+        isGameAlreadyOpen = gamesState.isViewingGame;
+        console.log('isOpenAlready =', isGameAlreadyOpen);
+      });
+    return isGameAlreadyOpen;
   }
 
   private getItemsFromDB() {
@@ -318,7 +343,7 @@ export class DealsListComponent implements OnInit {
   private toggleDealItems(e: Event) {
     const itemsToChange = this.elRef.nativeElement.querySelectorAll(
       `.${DEAL_DETAIL_CLASSNAME}__tables`
-      );
+    );
     const clickedButton = (e.currentTarget || e.target) as HTMLButtonElement;
 
     let isOpening = false;

@@ -95,8 +95,8 @@ export function sortAscending(games: Game[]) {
 }
 
 export function paginateGames(games: Game[], sortPreference: string, batchNumber: number, numberPerBatch: number) {
-  //batchNumber starts at 0
-
+  //note: batchNumber starts at 0
+  if (!games || games.length <= 0) return [];
   const batchStart = numberPerBatch * batchNumber;
   const batchEnd = batchStart + numberPerBatch;
   let toReturnGames: Game[]; 
