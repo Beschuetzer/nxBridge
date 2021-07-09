@@ -240,7 +240,6 @@ export class SearchService {
       resultsPerPage = +generalState.resultsPerPagePreference;
     });
 
-    //todo: need to grab preferences from store then input into paginate games (1 and 25)
     const gamesToUse = paginateGames(games, sortPreference, 0, resultsPerPage);
     this.filterGames(gamesToUse)
 

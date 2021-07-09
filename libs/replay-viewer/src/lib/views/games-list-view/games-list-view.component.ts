@@ -18,11 +18,12 @@ export class GamesListViewComponent implements OnInit {
   @ViewChild('results', { static: true }) resultsElement: ElementRef | undefined;
   @ViewChild('currentPage', { static: true }) currentPageElement: ElementRef | undefined;
   @HostBinding('class.games-list-view') get classname() {return true};
+  private DEFAULT_RESULTS_PER_PAGE = 100;
   public currentlyViewingUser: LocalStorageUserWithGames = {} as LocalStorageUserWithGames;
   public sizeOptions = SIZE_OPTIONS;
   public sortOptions = SORT_OPTIONS;
   public resultsPerPageOptions = RESULTS_PER_PAGE_OPTIONS;
-  public resultsPerPage = -1;
+  public resultsPerPage = this.DEFAULT_RESULTS_PER_PAGE;
   public totalNumberOfPages = -1;
   public currentPage = 1;
   public totalGames = -1;
@@ -45,8 +46,9 @@ export class GamesListViewComponent implements OnInit {
        this.totalNumberOfPages = Math.ceil(this.totalGames / this.resultsPerPage);
      })
 
+     this.setDefaultResultsPerPage();
      this.preferences = this.localStorageManager.getPreferences();
-     this.setPreferences();
+     this.setOptionElementsPerPreferences();
      this.changeSize(this.preferences.size);
   }
 
@@ -81,7 +83,7 @@ export class GamesListViewComponent implements OnInit {
     this.reverseCurrentlyDisplayingGames();
   }
 
-  setPreferences() {
+  setOptionElementsPerPreferences() {
     const sortElement = this.sortElement?.nativeElement;
     const sizeElement = this.sizeElement?.nativeElement;
     const resultsElement = this.resultsElement?.nativeElement;
@@ -120,9 +122,10 @@ export class GamesListViewComponent implements OnInit {
       const childIndex = this.resultsPerPageOptions.findIndex(resultPerPage => resultPerPage === +this.preferences.resultsPerPage);
       const value = this.resultsPerPageOptions[childIndex];
 
+      debugger;
       const childToUse = (resultsElement as HTMLSelectElement).children[childIndex] as HTMLOptionElement;
-      childToUse.selected = true;
-      this.onResultsPerPageChange({target: {value}} as any, false);
+      if(childToUse) childToUse.selected = true;
+      this.onResultsPerPageChange({target: {value: value ? value : this.DEFAULT_RESULTS_PER_PAGE}} as any, false);
     }
   }
 
@@ -150,6 +153,12 @@ export class GamesListViewComponent implements OnInit {
       currentlyDisplayingGames.reverse();
       this.store.dispatch(new SetCurrentlyDisplayingGames(currentlyDisplayingGames));
     });
+  }
+
+  private setDefaultResultsPerPage() {
+    const resultsElement = (this.resultsElement?.nativeElement as HTMLSelectElement);
+    const lastResultOption = (resultsElement.children[resultsElement.children.length - 1] as HTMLOptionElement);
+    if (lastResultOption) lastResultOption.selected = true;
   }
 
   private setSortPreference(newSortPreference: string) {
