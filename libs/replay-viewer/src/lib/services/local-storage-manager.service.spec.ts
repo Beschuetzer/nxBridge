@@ -231,7 +231,7 @@ describe('LocalStorageManagerService', () => {
 describe('getIndexToAddGameIntoGames - linearly', () => {
   let service: LocalStorageManagerService;
 
-  const numberofGames = 100
+  const numberofGames = 24
   const games = getDescendingArray(numberofGames);
 
   beforeEach(() => {

@@ -234,21 +234,21 @@ export class LocalStorageManagerService {
     //assumes games is in descending order already
     //assumes completionDates are unique (they are date ints)
     //find index at which game.completionDate >= games[index].completionDate and <= game[index + 1].completionDate then return that index + 1;
-    const maxNumberOfGamesToDoLinearly = 100;
+    const maxNumberOfGamesToDoLinearly = 25;
     const shouldDoLinearly = games.length <= maxNumberOfGamesToDoLinearly;
-    let indexWhereConditionMet = games.length - 1;
+    const DEFAULT_RETURN_VALUE = games.length - 1;
+    let indexWhereConditionMet = DEFAULT_RETURN_VALUE;
 
-    //note: the point of the loop if to find where the condition is met and assign j to indexWhereConditionMet
-    debugger;
+    //note: the point of the loops is to find where the condition is met and assign j to indexWhereConditionMet
     console.log('games =', games);
 
     if (shouldDoLinearly) {
       const secondToLastGameToCheck = games[games.length - 2];
-      const lastGameToCheck = games[games.length - 1];
+      const lastGameToCheck = games[DEFAULT_RETURN_VALUE];
 
       if (game.completionDate > lastGameToCheck.completionDate) {
         for (let j = 0; j < games.length; j++) {
-          if (j === games.length - 1) indexWhereConditionMet = j;
+          if (j === DEFAULT_RETURN_VALUE) indexWhereConditionMet = j;
 
           const gameToCheck = games[j];
           const gameToCheckNext = games[j + 1];
@@ -276,48 +276,59 @@ export class LocalStorageManagerService {
       }
     } else {
       let currentIndex = Math.floor(games.length / 2);
-      let maxIndex = games.length - 1;
+      let maxIndex = DEFAULT_RETURN_VALUE;
       let minIndex = 0;
-     
-      let currentGame = games[currentIndex];
-      let afterCurrentGame = games[currentIndex + 1];
+      let afterCurrentGame: Game;
+      let currentGame: Game;
 
-      //todo: check first and last indexes for easy cases
+      const lastGame = games[DEFAULT_RETURN_VALUE];
+      const firstGame = games[minIndex];
 
-      let iterationCount = 0;
-      let shouldContinue = true;
-      while (shouldContinue) {
-        //bail out if too many iterations
-        if (iterationCount > games.length - 2) shouldContinue = false;
+      if (game.completionDate >= firstGame.completionDate) indexWhereConditionMet = -1;
+      else if (game.completionDate <= lastGame.completionDate) indexWhereConditionMet = DEFAULT_RETURN_VALUE;
+      else {
+        let iterationCount = 0;
 
-        currentGame = games[currentIndex];
-        afterCurrentGame = games[currentIndex + 1];
+        // eslint-disable-next-line no-constant-condition
+        while (true) {
+          
+          //bail out if too many iterations
+          if (iterationCount > games.length - 2) break;
 
-        //this is the condition to satisfy
-        if (game.completionDate >= currentGame.completionDate && game.completionDate <= afterCurrentGame.completionDate) {
-          indexWhereConditionMet = currentIndex;
-          shouldContinue = false;
+          //afterCurrentGame should never be undefined as the if and else if checks above will prevent it
+          currentGame = games[currentIndex];
+          afterCurrentGame = games[currentIndex + 1];
+
+          //this is the condition to satisfy
+          if (game.completionDate <= currentGame.completionDate && game.completionDate >= afterCurrentGame.completionDate) {
+            indexWhereConditionMet = currentIndex;
+            break;
+          } else {
+            //#region adjusting indexes
+            let currentIsLarger = true;
+            if (game.completionDate > currentGame.completionDate) currentIsLarger = false;
+
+            if (currentIsLarger) minIndex = currentIndex;
+            else maxIndex = currentIndex;
+
+            currentIndex = Math.floor((maxIndex - minIndex) / 2 + minIndex);
+            //#endregion
+          }
+
+          if (iterationCount < 4) {
+            console.log('min =', minIndex);
+            console.log('max =', maxIndex);
+            console.log('current =', currentIndex);
+            console.log('maxIndex - minIndex) / 2 =', (maxIndex - minIndex) / 2 + minIndex);
+            console.log('currentIndex =', currentIndex);
+          }
+
+          iterationCount++;
         }
-
-        //#region adjusting indexes
-        let currentIsLarger = true;
-        if (game.completionDate < currentGame.completionDate) currentIsLarger = false;
-
-        if (currentIsLarger) {
-          maxIndex = currentIndex;
-          currentIndex = Math.floor((maxIndex - minIndex) / 2);
-        } else {
-          minIndex = currentIndex;
-          currentIndex = Math.floor((maxIndex - minIndex) / 2);
-        }
-        //#endregion
-        
-        iterationCount++;
+        // console.log('iterationCount =', iterationCount);
       }
-      //todo: implement a binary search pproach
     }
 
-    console.log('returning =', indexWhereConditionMet + 1);
     return indexWhereConditionMet + 1;
   }
 
