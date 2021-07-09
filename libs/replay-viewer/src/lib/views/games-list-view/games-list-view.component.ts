@@ -54,7 +54,7 @@ export class GamesListViewComponent implements OnInit {
 
   onCurrentPageChange(e: Event) {
     const option = (e.currentTarget || e.target) as HTMLOptionElement;
-    this.changeCurrentlyDisplayingGames(this.resultsPerPage, +option.value);
+    this.changeCurrentPage(+option.value);
     this.currentPage = +option.value;
   }
 
@@ -128,6 +128,14 @@ export class GamesListViewComponent implements OnInit {
     }
   }
 
+  private changeCurrentPage(newPage: number) {
+    debugger;
+    const newMinIndex = newPage * this.resultsPerPage;
+    const newMaxIndex = newMinIndex + this.resultsPerPage;
+
+    this.setCurrentlyDisplayingGamesByIndexes(newMinIndex, newMaxIndex);
+  }
+
   private changeCurrentlyDisplayingGames(newResultsPerPage: number, newCurrentPage: number) {
     const currentlyDisplayingMinIndex = (this.currentPage - 1) * this.resultsPerPage;
     const currentlyDisplayingMaxIndex = currentlyDisplayingMinIndex + this.resultsPerPage;
@@ -135,12 +143,7 @@ export class GamesListViewComponent implements OnInit {
     const newMinIndex = this.getNewMinIndex(currentlyDisplayingMinIndex, currentlyDisplayingMaxIndex, newResultsPerPage, newCurrentPage)
     const newMaxIndex = newMinIndex + newResultsPerPage;
 
-    let games = [];
-    this.store.select('users').subscribe(userState => {
-      debugger;
-      games = userState?.currentlyViewingUser.games;
-      this.store.dispatch(new SetCurrentlyDisplayingGames(games?.slice(newMinIndex, newMaxIndex)));
-    })
+    this.setCurrentlyDisplayingGamesByIndexes(newMinIndex, newMaxIndex);
   }
 
   private changeSize(newSize: string) {
@@ -168,6 +171,12 @@ export class GamesListViewComponent implements OnInit {
       this.store.dispatch(new SetCurrentlyDisplayingGames(currentlyDisplayingGames));
     });
   }
+
+  private setCurrentlyDisplayingGamesByIndexes(newMinIndex: number, newMaxIndex: number) { 
+    this.store.select('users').subscribe(userState => {
+      const games = userState?.currentlyViewingUser.games;
+      this.store.dispatch(new SetCurrentlyDisplayingGames(games?.slice(newMinIndex, newMaxIndex)));
+    })}
 
   private setDefaultResultsPerPage() {
     const resultsElement = (this.resultsElement?.nativeElement as HTMLSelectElement);
