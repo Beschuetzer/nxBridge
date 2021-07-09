@@ -1,11 +1,10 @@
 import { Component, ElementRef, HostBinding, OnInit, ViewChild } from '@angular/core';
-import { AppState, SetCurrentlyDisplayingGames, SetResultsPerPagePreference, SetSortingPreference } from '@nx-bridge/store';
+import { AppState, SetResultsPerPagePreference, SetSortingPreference } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
-import { LocalStorageUserWithGames, GameDetailDisplayPreferences, Game } from '@nx-bridge/interfaces-and-types';
-import { dealsListButtonFontSizeCssPropName, gameDetailHeightAboveBreakpointCssPropName, gameDetailHeightBelowBreakpointCssPropName, gameDetailSummaryHeightPercentageCssPropName, getNewTotalNumberOfPages, playerLabelsDisplayTypeCssPropName, playerNamesDisplayTypeCssPropName, RESULTS_PER_PAGE_OPTIONS, SIZE_OPTIONS, SORT_OPTIONS } from '@nx-bridge/constants';
+import { LocalStorageUserWithGames, GameDetailDisplayPreferences } from '@nx-bridge/interfaces-and-types';
+import { dealsListButtonFontSizeCssPropName, gameDetailHeightAboveBreakpointCssPropName, gameDetailHeightBelowBreakpointCssPropName, gameDetailSummaryHeightPercentageCssPropName, getNewBatchNumber, getNewTotalNumberOfPages, playerLabelsDisplayTypeCssPropName, playerNamesDisplayTypeCssPropName, RESULTS_PER_PAGE_OPTIONS, SIZE_OPTIONS, SORT_OPTIONS } from '@nx-bridge/constants';
 import { LocalStorageManagerService } from '../../services/local-storage-manager.service';
 import { gameDetailSizes } from '@nx-bridge/computed-styles';
-import { take } from 'rxjs/operators';
 import { SearchService } from '../../services/search.service';
 
 @Component({
@@ -17,7 +16,7 @@ export class GamesListViewComponent implements OnInit {
   @ViewChild('size', { static: true }) sizeElement: ElementRef | undefined;
   @ViewChild('sort', { static: true }) sortElement: ElementRef | undefined;
   @ViewChild('results', { static: true }) resultsElement: ElementRef | undefined;
-  @ViewChild('currentPage', { static: true }) currentPageElement: ElementRef | undefined;
+  @ViewChild('currentPage') currentPageElement: ElementRef | undefined;
   @HostBinding('class.games-list-view') get classname() {return true};
   private DEFAULT_RESULTS_PER_PAGE = 100;
   public currentlyViewingUser: LocalStorageUserWithGames = {} as LocalStorageUserWithGames;
@@ -66,12 +65,14 @@ export class GamesListViewComponent implements OnInit {
       this.localStorageManager.saveResultsPerPagePreference(option.value);
     }
     
-    const newBatchNumber = getNewBatchNumber(this.currentBatch, this.resultsPerPage, +option.value);
+    debugger;
+    this.currentBatch = getNewBatchNumber(this.currentBatch, this.resultsPerPage, +option.value, this.totalGames);
 
     this.setResultsPerPagePreference(option.value);
     this.resultsPerPage = +option.value;
-    this.searchService.setCurrentlyDisplayingGames(newBatchNumber);
+    this.searchService.setCurrentlyDisplayingGames(this.currentBatch);
     this.totalNumberOfPages = getNewTotalNumberOfPages(+option.value, this.totalGames);
+    this.selectCurrentPage(this.currentBatch);
   }
 
   onSizeChange(e: Event, shouldSave = true) {
@@ -173,6 +174,15 @@ export class GamesListViewComponent implements OnInit {
   //     const games = userState?.currentlyViewingUser.games;
   //     this.store.dispatch(new SetCurrentlyDisplayingGames(games?.slice(newMinIndex, newMaxIndex)));
   //   })}
+
+  private selectCurrentPage(newBatchNumber: number) {
+    setTimeout(() => {
+      const currentPageElement = this.currentPageElement?.nativeElement as HTMLElement;
+      const currentPageOptionElement = (currentPageElement?.children[newBatchNumber] as HTMLOptionElement);
+      if (currentPageOptionElement) currentPageOptionElement.selected = true;
+    }, 50)
+    
+  }
 
   private setDefaultResultsPerPage() {
     const resultsElement = (this.resultsElement?.nativeElement as HTMLSelectElement);

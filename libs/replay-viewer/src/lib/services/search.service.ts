@@ -102,7 +102,7 @@ export class SearchService {
       .subscribe((userState) => {
         games = userState.currentlyViewingUser.games;
 
-        debugger;
+        // debugger;
         //note: batch number starts at 0 (meaning results 0 - 0 * resultsPerPage)
         const gamesToUse = paginateGames(
           games,

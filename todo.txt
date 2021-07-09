@@ -81,3 +81,5 @@ Testing------------
 -changing resultsPerPage doesn't re-populate the number of page options
 
 -when switching from 25 to 10 (going down in resultsPerPage), the this.currentPage is incorrect
+
+

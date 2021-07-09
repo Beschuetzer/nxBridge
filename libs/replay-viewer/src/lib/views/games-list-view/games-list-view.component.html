@@ -50,7 +50,8 @@
             </option>
           </select>
         </label>
-        <label *ngIf=" totalGames && totalGames !== -1" class="ui field">
+        <label 
+        class="ui field">
           Page:&nbsp;
           <select #currentPage (change)="onCurrentPageChange($event)">
             <option

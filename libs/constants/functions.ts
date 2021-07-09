@@ -147,16 +147,31 @@ export function getNewTotalNumberOfPages(
 export function getNewBatchNumber(
   currentBatchNumber: number,
   currentResultsPerPage: number,
-  newResultsPerPage: number
+  newResultsPerPage: number,
+  totalGames: number
 ) {
-  const minResultShowing = currentBatchNumber * currentResultsPerPage;
-  const maxResultShowing = minResultShowing + currentResultsPerPage;
+  let newBatchNumber = -1;
+  const maxNumberOfIterations = Math.ceil(totalGames / newResultsPerPage);
+  const currentMinResult = currentBatchNumber * currentResultsPerPage;
+  const currentMaxResult = currentMinResult + (currentResultsPerPage - 1);
 
-  if (newResultsPerPage > currentResultsPerPage) {
+  if (newResultsPerPage === currentResultsPerPage) return currentBatchNumber;
+  // if (newResultsPerPage > currentResultsPerPage) {
     //when going up in resultsPerPage
+    for (let i = 0; i < maxNumberOfIterations; i++) {
+      const newMinResult =  i * newResultsPerPage;
+      const newMaxResult = newMinResult + (newResultsPerPage - 1);
+      
+      if (currentMinResult > newMinResult && currentMinResult < newMaxResult) {
+        return i;
+        break;
+      } 
+    }
 
-  } else if (newResultsPerPage < currentResultsPerPage) {
+    return 0;
+  // } else if (newResultsPerPage < currentResultsPerPage) {
     //when going down in resultsPerPage
-    
-  } else return currentBatchNumber;
+
+  // } 
+
 }
