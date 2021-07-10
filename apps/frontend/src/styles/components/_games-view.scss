@@ -1,5 +1,5 @@
 .games-view {
-  background-color: rgba(var(--color-primary-1-rgb), 1);
+  background-image: linear-gradient(to right, var(--color-primary-1), var(--color-black));
   color: var(--color-primary-1);
   width: 100%;
   grid-column: 2 / -1;

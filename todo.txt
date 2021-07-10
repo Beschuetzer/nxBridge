@@ -76,6 +76,7 @@ Testing------------
 -finish sortDescending and sortAscending()?
 -finish paginateGames() in functions (need to paginate when in ascending order;  easy way is jsut to reverse then do the same slice as for descending)
 
+-refactor options boxs in games-list-view
 
 
 
