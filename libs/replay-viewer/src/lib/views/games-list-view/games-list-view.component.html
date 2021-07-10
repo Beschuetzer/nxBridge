@@ -5,60 +5,8 @@
       <h2>
         Games played by&nbsp;<span>'{{ currentlyViewingUser.username ? currentlyViewingUser.username : 'Player' }}'</span>:
       </h2>
-      <div>
-        <label class="ui field">
-          Size:&nbsp;
-          <select (change)="onSizeChange($event)" class="ui input" #size>
-            <option value="{{ sizeOptions.small }}">
-              {{ sizeOptions.small | slice: 0:1 | titlecase }}
-            </option>
-            <option value="{{ sizeOptions.medium }}">
-              {{ sizeOptions.medium | slice: 0:1 | titlecase }}
-            </option>
-            <option value="{{ sizeOptions.large }}">
-              {{ sizeOptions.large | slice: 0:1 | titlecase }}
-            </option>
-          </select>
-        </label>
-        <label class="ui field">
-          Sort:&nbsp;
-          <select (change)="onSortChange($event)" class="ui input" #sort>
-            <option value="{{ sortOptions.ascending }}">
-              {{ sortOptions.ascending | titlecase }}
-            </option>
-            <option value="{{ sortOptions.descending }}">
-              {{ sortOptions.descending | titlecase }}
-            </option>
-          </select>
-        </label>
-      </div>
-      <div class="ui field">
-        <label class="ui field">
-          Results / page:&nbsp;
-          <select #results (change)="onResultsPerPageChange($event)">
-            <option 
-              *ngFor="let resultPerPageOptions of resultsPerPageOptions;"
-              [value]="resultPerPageOptions"
-            >
-              {{resultPerPageOptions}}
-            </option>
-          </select>
-        </label>
-        <label 
-        class="ui field">
-          Page:&nbsp;
-          <select #currentPage (change)="onCurrentPageChange($event)">
-            <option
-              *ngFor="let in of getArrayUpToNumber(totalNumberOfPages); let i = index"
-              [value]="i"
-            >
-              {{ i + 1}}
-            </option>
-          </select>
-          <span>&nbsp;of {{ totalNumberOfPages ? totalNumberOfPages : 'N/A' }}</span>
-        </label>
-      </div>
     </div>
+    <nx-bridge-options></nx-bridge-options>
     <nx-bridge-games-list></nx-bridge-games-list>
   </section>
 </nx-bridge-grid>

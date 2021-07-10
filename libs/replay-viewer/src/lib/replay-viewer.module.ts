@@ -14,6 +14,7 @@ import { GridModule } from '@nx-bridge/grid';
 import { SpinnersModule } from '@nx-bridge/spinners';
 import { PipesModule } from '@nx-bridge/pipes';
 import { DealPlayerModule } from '@nx-bridge/deal-player';
+import { OptionsComponent } from './options/options.component';
 @NgModule({
   declarations: [
     LandingPageComponent,
@@ -23,6 +24,7 @@ import { DealPlayerModule } from '@nx-bridge/deal-player';
     DealsListComponent,
     DealDetailComponent,
     GamesListViewComponent,
+    OptionsComponent,
   ],
   imports: [
     ReactiveFormsModule,
