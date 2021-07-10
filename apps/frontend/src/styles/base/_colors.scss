@@ -16,7 +16,9 @@ $color-primary-2: #8ac6d0;
 $color-primary-3: #f4d262;
 $color-primary-4: #fbeeac;
 $color-red: #7b3428;
+$color-red-light: #FF9494;
 $color-green: #537b28;
+$color-green-light: #89C549;
 
 :root {
 	--color-grey-light-1: #{$color-grey-light-1};
@@ -33,7 +35,9 @@ $color-green: #537b28;
 	--color-grey-80: #{$color-grey-80};
 	--color-white: 	#{$color-white};
 	--color-red: #{$color-red};
+	--color-red-light: #{$color-red-light};
 	--color-green: #{$color-green};
+	--color-green-light: #{$color-green-light};
 	--color-black-rgb: 	#{hexToRGB($color-black)};
   --color-grey-20-rgb: #{hexToRGB($color-grey-20)};
 	--color-grey-40-rgb: #{hexToRGB($color-grey-40)};
@@ -41,7 +45,9 @@ $color-green: #537b28;
 	--color-grey-80-rgb: #{hexToRGB($color-grey-80)};
 	--color-white-rgb: 	#{hexToRGB($color-white)};
 	--color-red-rgb: #{hexToRGB($color-red)};
+	--color-red-light-rgb: #{hexToRGB($color-red-light)};
 	--color-green-rgb: #{hexToRGB($color-green)};
+	--color-green-light-rgb: #{hexToRGB($color-green-light)};
 
 	--color-primary-1: #{$color-primary-1};
 	--color-primary-1-light: #{$color-primary-1-light};

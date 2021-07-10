@@ -30,7 +30,7 @@
     border-bottom: $games-list-border;
   }
 
-  & *:not(.button, input) {
+  & *:not(.button, input, .color-red-light, .color-green-light) {
     color: var(--color-primary-4) !important;
     margin-bottom: 0 !important;
   }

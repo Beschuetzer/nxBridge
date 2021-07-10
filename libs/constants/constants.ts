@@ -29,6 +29,7 @@ export const DEAL_DETAIL_CLASSNAME = 'deal-detail';
 export const GAME_DETAIL_CLASSNAME = 'game-detail';
 export const GAMES_VIEW_CLASSNAME = 'games-view';
 export const DEAL_PLAYER_CLASSNAME = 'deal-player';
+export const FILTER_MANAGER_CLASSNAME = 'filter-manager';
 export const FULL_SIZE_CLASSNAME = 'full-size';
 export const COLOR_RED_CLASSNAME = 'color-red';
 export const COLOR_BLACK_CLASSNAME = 'color-black';

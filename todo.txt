@@ -87,6 +87,7 @@ filtering-----------------------
   -create new component that handles validating inputs and dispatching changes
 
 
+-finish validateDate()
 
 
 

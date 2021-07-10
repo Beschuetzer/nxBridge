@@ -1,6 +1,6 @@
 <section class="ui form">
-  <h2 class="ui header">Filter by:</h2>
-  <div class="filter-manager__applied field">{{ appliedFiltersMsg }}</div>
+  <h2 class="ui header">Filter</h2>
+  <div #applied class="filter-manager__applied ui field"></div>
   <div class="filter-manager__options field">
     <label>
       <input #date (click)="onDateClick($event)" type="checkbox" />
@@ -13,11 +13,16 @@
   </div>
 
   <div class="filter-manager__details">
-    <div *ngIf="game.checked === true">
-      <span>Game details here</span>
+    <div *ngIf="date.checked" class="filter-manager__date">
+      <label>
+        Games Completed Before:
+        <input (change)="onDateBeforeChange($event)" type="datetime-local" />
+      </label>
+      <label>
+        Games Completed After:
+        <input (change)="onDateAfterChange($event)" type="datetime-local" />
+      </label>
     </div>
-    <div *ngIf="date.checked">
-      <span>Date details here</span>
-    </div>
+    <div *ngIf="game.checked === true">Game details</div>
   </div>
 </section>

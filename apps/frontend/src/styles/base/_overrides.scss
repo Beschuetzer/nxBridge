@@ -11,10 +11,10 @@
 
 .search .ui.red.message {
   background-color: rgba(var(--color-primary-4-rgb), 1) !important;
-  margin-top: $default-font-size !important;
+  margin-top: $default-font-size * .5 !important;
 
   @include respond($layout-breakpoint) {
-    margin-top: $default-font-size * .5 !important;
+    margin-top: $default-font-size * .25 !important;
   }
 }
 
