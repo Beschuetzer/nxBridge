@@ -1,13 +1,17 @@
 <nx-bridge-grid>
   <nx-bridge-search></nx-bridge-search>
   <section class="games-view">
-    <div class="games-view__title">
-      <h2>
-        Games played by&nbsp;<span>'{{ currentlyViewingUser.username ? currentlyViewingUser.username : 'Player' }}'</span>:
-      </h2>
+    <div>
+      <div class="games-view__header">
+        <div class="games-view__title">
+          <h2>
+            Games played by&nbsp;<span>'{{ currentlyViewingUser.username ? currentlyViewingUser.username : 'Player' }}'</span>:
+          </h2>
+        </div>
+        <nx-bridge-options></nx-bridge-options>
+      </div>
+      <nx-bridge-games-list></nx-bridge-games-list>
     </div>
-    <nx-bridge-options></nx-bridge-options>
-    <nx-bridge-games-list></nx-bridge-games-list>
   </section>
 </nx-bridge-grid>
 

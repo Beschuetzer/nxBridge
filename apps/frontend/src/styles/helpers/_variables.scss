@@ -62,6 +62,14 @@ $game-summary-color: var(--color-primary-4);
 $game-summary-border-bottom: 1px solid var(--color-primary-4);
 $game-detail-inner-width-full-size: $default-font-size * 33;
 
+
+$games-view-background-image: linear-gradient(
+  var(--games-view-title-gradient-direction),
+  rgba(#{$games-list-gradient-color-1}, 1),
+  rgba(#{$games-list-gradient-color-1}, 1) calc(#{$games-list-black-gradient-amount} + 11%),
+  rgba(#{$games-list-gradient-color-2}, 1),
+);
+
 //deal-detail
 $deal-detail-table-border: 1px solid rgba(var(--color-primary-1-rgb), 1);
 $deal-detail-username-color: var(--color-primary-1);

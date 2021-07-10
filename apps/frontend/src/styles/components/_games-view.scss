@@ -4,11 +4,11 @@
   width: 100%;
   grid-column: 2 / -1;
   grid-row: 2 / -1;
-  overflow: hidden;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: grid;
+  grid-template-rows: min-content max-content max-content;
+  justify-items: center;
 
   @include respond($layout-breakpoint) {
     grid-column: 1/-1;
@@ -16,46 +16,24 @@
   }
 
   &__title{
-    display: grid;
-    grid-template-columns: 1fr max-content 1fr;
-    grid-template-rows: repeat(3, 1fr);
-    justify-items: center;
-    align-items: center;
     margin: 0;
     padding: $default-font-size * .5 $default-font-size;
     text-align: center;
     width: 100%;
     color: var(--color-primary-4);
     // border-bottom: $games-list-border;
-    background-image: linear-gradient(
-      var(--games-view-title-gradient-direction),
-      rgba(#{$games-list-gradient-color-1}, 1),
-      rgba(#{$games-list-gradient-color-1}, 1) calc(#{$games-list-black-gradient-amount} + 11%),
-      rgba(#{$games-list-gradient-color-2}, 1),
-    );
+    background-image: $games-view-background-image;
     box-shadow: $games-list-outer-box-shadow-bottom;
 
     @include respond($layout-breakpoint) {
       --games-view-title-gradient-direction: #{$search-linear-gradient-direction};
       padding: 0 $default-font-size $default-font-size * .5 $default-font-size;
     }
+  }
 
-    & label:nth-of-type(1) {
-      margin-right: $default-font-size * .5;
-    }
-
-    & > *:nth-child(1){
-      margin: 0 !important;
-    }
-    & > *:nth-child(n + 1) {
-      grid-column: 2 / span 1;
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    & span {
-      color: var(--color-primary-3);
-    }
+  &__header {
+    width: 100%;
+    display: grid;
+    justify-items: center;
   }
 }

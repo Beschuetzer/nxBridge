@@ -1,0 +1,27 @@
+.options {
+  width: 100%;
+  color: var(--color-primary-4);
+  background-image: $games-view-background-image;
+  display: grid;
+  grid-template-rows: min-content min-content;
+  justify-content: center;
+
+  & label:nth-of-type(1) {
+    margin-right: $default-font-size * 1;
+  }
+
+  & > *:nth-child(1){
+    margin: 0 !important;
+  }
+  & > *:nth-child(n + 1) {
+    // grid-column: 2 / span 1;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+
+  }
+
+  & span {
+    color: var(--color-primary-3);
+  }
+}
