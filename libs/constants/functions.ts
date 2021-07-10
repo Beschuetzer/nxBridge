@@ -123,16 +123,14 @@ export function paginateGames(
   if (!games || games.length <= 0) return [];
   const batchStart = numberPerBatch * batchNumber;
   const batchEnd = batchStart + numberPerBatch;
-  let toReturnGames: Game[];
+  let toReturnGames: Game[] = [];
   if (sortPreference === SortOptions.descending)
     toReturnGames = games.slice(batchStart, batchEnd);
   else {
-    //todo: use a for loop in reverse to 'slice' games into toReturnGames
-    // for (let i = games.length; i < array.length; i++) {
-    //   const element = array[i];
-
-    // }
-    toReturnGames = games.slice(batchStart === 0 ? -1 : -batchStart, -batchEnd);
+    for (let i = 0; i < games.length; i++) {
+      const game = games[games.length - 1 - i];
+      if (i >= batchStart && i <= batchEnd) toReturnGames.push(game);
+    }
   }
   return toReturnGames;
 }
