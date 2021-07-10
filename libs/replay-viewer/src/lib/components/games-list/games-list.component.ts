@@ -5,6 +5,7 @@ import { Game } from '@nx-bridge/interfaces-and-types';
 import { ANIMATION_DURATION, dealsListDealsButtonChoices, DEALS_LIST_CLASSNAME, DEAL_DETAIL_CLASSNAME, DISPLAY_NONE_CLASSNAME, FULL_SIZE_CLASSNAME, GAMES_VIEW_CLASSNAME, OVERFLOW_Y_SCROLL_CLASSNAME, toggleClassOnList, toggleInnerHTML } from '@nx-bridge/constants';
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { DealPlayerService } from 'libs/deal-player/src/lib/deal-player.service';
+import { ReplayViewerDealService } from '../../services/replay-viewer.deal.service';
 
 @Component({
   selector: 'nx-bridge-games-list',
@@ -23,6 +24,7 @@ export class GamesListComponent implements OnInit {
     private dealPlayerService: DealPlayerService,
     private store: Store<AppState>,
     private renderer: Renderer2,
+    private replayViewerDealService: ReplayViewerDealService,
   ) {}
 
   ngOnInit(): void {
@@ -40,6 +42,9 @@ export class GamesListComponent implements OnInit {
 
     const target = e.target as any;
     if ((target)?.classList.contains(FULL_SIZE_CLASSNAME)) {
+      this.replayViewerDealService.setGameDetailBorderToNormal();
+
+
       const items = target.querySelectorAll(`.${DEAL_DETAIL_CLASSNAME}`);
       if (items && items.length > 0) toggleClassOnList(items, DISPLAY_NONE_CLASSNAME);
 
@@ -48,6 +53,7 @@ export class GamesListComponent implements OnInit {
 
       const button = target.querySelector(`.${DEALS_LIST_CLASSNAME}__button-deals`);
       toggleInnerHTML(button, dealsListDealsButtonChoices);
+
       
       target.classList.remove(FULL_SIZE_CLASSNAME);
       this.store.dispatch(new SetIsViewingGame(false));

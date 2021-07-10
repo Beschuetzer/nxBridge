@@ -26,7 +26,7 @@
     text-align: center;
     width: 100%;
     color: var(--color-primary-4);
-    border-bottom: $games-list-border;
+    // border-bottom: $games-list-border;
     background-image: linear-gradient(
       var(--games-view-title-gradient-direction),
       rgba(#{$games-list-gradient-color-1}, 1),

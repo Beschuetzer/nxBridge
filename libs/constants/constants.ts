@@ -33,6 +33,7 @@ export const FULL_SIZE_CLASSNAME = 'full-size';
 export const COLOR_RED_CLASSNAME = 'color-red';
 export const COLOR_BLACK_CLASSNAME = 'color-black';
 export const HEADER_CLASSNAME = 'navbar';
+export const GAME_DETAIL_BORDER_BOTTOM_CLASSNAME = 'game-detail-border-bottom';
 
 export const dealsListDealsButtonChoices: [string, string] = ['Open', '&#10006;'];
 export const dealsListDetailsButtonChoices: [string, string] = ['Show All', 'Hide All'];
@@ -48,6 +49,14 @@ export const gameDetailSummaryHeightPercentageCssPropName =  '--game-detail-summ
 export const playerLabelsDisplayTypeCssPropName =  '--player-labels-display-type';
 export const playerNamesDisplayTypeCssPropName =  '--player-names-display-type';
 export const dealsListButtonFontSizeCssPropName =  '--deals-list-button-font-size';
+export const gameDetailBorderCssPropName = '--game-detail-border';
+export const colorBlackCssPropName = '--color-black-rgb';
+export const colorPrimary1CssPropName = '--color-primary-1-rgb';
+export const colorPrimary4CssPropName = '--color-primary-4-rgb';
+
+export const gameDetailBorderOpen = `1px solid rgba(var(${colorBlackCssPropName}), 1)`;
+export const gameDetailBorderClosed = `2px solid rgba(var(${colorPrimary4CssPropName}), .25)`;
+export const dealDetailButtonBorder = `1px solid rgba(var(${colorPrimary1CssPropName}), 0.5) !important;`
 
 
 export const SIZE_OPTIONS = {

@@ -43,8 +43,10 @@ $games-list-gradient-color-3: var(--color-primary-1-rgb);
 $games-list-black-gradient-amount: 75%;
 
 //game-detail
-$game-detail-border: 1px solid var(--color-black);
-$game-detail-border-thick: 2px solid var(--color-black);
+$game-detail-border-open: 1px solid rgba(var(--color-black-rgb), 1);
+
+$game-detail-border: 1px solid rgba(var(--color-primary-4-rgb), .25);
+$game-detail-border-thick: 2px solid rgba(var(--color-primary-4-rgb), .25);
 $game-detail-padding-sides: $default-font-size * 0.5;
 $game-detail-box-shadow: 0 4px 8px 0px rgba(var(--color-black-rgb), .5);
 $game-detail-background: linear-gradient(
@@ -142,4 +144,5 @@ $border-radius-full-screen: $default-font-size * 0.5;
   --player-labels-display-type: flex;
   --player-names-display-type: grid;
   --deals-list-button-font-size: $default-font-size * 2;
+  --game-detail-border: #{$game-detail-border-thick};
 }

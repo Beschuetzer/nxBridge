@@ -1,6 +1,6 @@
 .game-detail {
   backface-visibility: hidden;
-  border: $game-detail-border-thick;
+  border: var(--game-detail-border);
   border-radius: $default-font-size * .5;
   box-shadow: $game-detail-box-shadow;
   overflow: hidden;
@@ -30,7 +30,6 @@
   }
 
   &__summary {
-    // &.sticky {
     height: var(--game-detail-summary-height-percentage);
     width: 100%;
     position: sticky;
@@ -38,20 +37,13 @@
     padding: var(--game-detail-padding-sides);
     background-image: $game-detail-background;
     color: $game-summary-color;
-    // backdrop-filter: blur(10px);
     border-bottom: $game-summary-border-bottom;
-    // }
   }
 
   &__score {
     height: calc(100% - #{var(--game-detail-summary-height-percentage)});
-    // position: sticky;
-    // top: 8.6rem;
-    // margin: var(--game-detail-padding-sides) 0;
     background-image: $game-detail-background;
     color: $game-summary-color;
-    // padding-bottom: var(--game-detail-padding-sides);
-    border-bottom: $game-summary-border-bottom;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -156,8 +148,8 @@
       max-width: $game-detail-inner-width-full-size;
       width: 100%;
       margin: 0 auto;
-      border-left: $game-detail-border-thick;
-      border-right: $game-detail-border-thick;
+      border-left: var(--game-detail-border);
+      border-right: var(--game-detail-border);
       // box-shadow: $scrollbar-box-shadow;
 
       &:nth-last-child(n + 2) {
@@ -225,7 +217,7 @@
 
       }
       &__summary {
-        border-top: $game-detail-border-thick;
+        border-top: var(--game-detail-border);
         border-radius: $border-radius-full-screen $border-radius-full-screen 0 0;
       }
 

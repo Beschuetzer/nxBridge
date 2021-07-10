@@ -27,6 +27,11 @@ import {
   getDirectionFromSeating,
   getDeclarerFromDeal,
   ANIMATION_DURATION,
+  GAME_DETAIL_BORDER_BOTTOM_CLASSNAME,
+  gameDetailBorderCssPropName,
+  colorBlackCssPropName,
+  gameDetailBorderOpen,
+  gameDetailBorderClosed,
 } from '@nx-bridge/constants';
 import {
   CardinalDirection,
@@ -46,6 +51,7 @@ import {
 import { Store } from '@ngrx/store';
 import { take } from 'rxjs/operators';
 import { debug } from 'node:console';
+import { ReplayViewerDealService } from '../../services/replay-viewer.deal.service';
 
 @Component({
   selector: 'nx-bridge-deals-list',
@@ -75,7 +81,8 @@ export class DealsListComponent implements OnInit {
   constructor(
     private elRef: ElementRef,
     private http: HttpClient,
-    private store: Store<AppState>
+    private store: Store<AppState>,
+    private replayViewerDealService: ReplayViewerDealService,
   ) {}
 
   // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
@@ -160,7 +167,9 @@ export class DealsListComponent implements OnInit {
           date,
         } as CurrentlyViewingGame)
       );
-    } else
+      this.replayViewerDealService.setGameDetailBorderToBlack();
+    } else {
+      this.replayViewerDealService.setGameDetailBorderToNormal();
       this.store.dispatch(
         new SetCurrentlyViewingGame({
           seating: {} as Seating,
@@ -168,6 +177,8 @@ export class DealsListComponent implements OnInit {
           date: -1,
         } as CurrentlyViewingGame)
       );
+    }
+    this.toggleGameDetailScoreBorder();
   }
 
   private handleGetDealsFromDBResponse(deals: Deal[]) {
@@ -215,6 +226,19 @@ export class DealsListComponent implements OnInit {
 
       this.dealCountMessage = `${winningTeam}${afterWinners}${larger}${betweenPlayed}${smaller}`;
     }
+  }
+
+  private toggleGameDetailScoreBorder() {
+    const gameDetail = (this.elRef.nativeElement as HTMLElement).closest(
+      `.${GAME_DETAIL_CLASSNAME}`
+    ) as HTMLElement;
+    const gameDetailScorelement = gameDetail.querySelector(
+      `.${GAME_DETAIL_CLASSNAME}__score`
+    ) as HTMLElement;
+    toggleClassOnList(
+      [gameDetailScorelement],
+      GAME_DETAIL_BORDER_BOTTOM_CLASSNAME
+    );
   }
 
   private getDealWinnerFromScoreDifference(

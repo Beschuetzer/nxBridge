@@ -1,7 +1,7 @@
 .deal-detail {
   display: grid;
   grid-template-columns: 1fr min-content;
-  border-top: $game-detail-border;
+  border-top: $game-detail-border-open;
   // padding: 0 $default-font-size * .5;
   // grid-column-gap: $default-font-size * .75;
 
@@ -45,7 +45,7 @@
     grid-column-gap: $default-font-size * 0.25;
     align-items: center;
     // text-align: center;
-    border-bottom: $game-detail-border;
+    // border-bottom: $game-detail-border;
 
     @include respond($layout-breakpoint) {
       grid-template-columns: max-content 1fr;
@@ -223,7 +223,7 @@
     margin-right: 0 !important;
     border-radius: 0 !important;
     border-top: $game-summary-border-bottom !important;
-    border-bottom: $game-summary-border-bottom !important;
+    // border-bottom: $deal-detail-separator !important;
 
     @include respond($layout-breakpoint) {
       border-top: $deal-detail-separator !important;
