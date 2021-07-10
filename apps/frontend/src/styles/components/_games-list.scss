@@ -6,11 +6,11 @@
   grid-gap: $default-font-size * .5;
   overflow-y: auto;
   overflow-x: hidden;
-  border-left: $games-list-border;
-  border-right: $games-list-border;
-  // border-bottom: $games-list-border;
-  // height: 100%;
-  background: rgba(var(--color-black-rgb), 1);
+  // border-left: $games-list-border;
+  // border-right: $games-list-border;
+  // // border-bottom: $games-list-border;
+  // // height: 100%;
+  // background: rgba(var(--color-black-rgb), 1);
 
   @include respond($layout-breakpoint) {
     padding: $default-font-size * .25;

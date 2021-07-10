@@ -72,11 +72,21 @@ Testing------------
 -need a function to remove the oldest localStorageUser by last access date and call when storage is full or approaching it
 
 -consider change "Games played by..." wording and font-size
--add filter parts in search.service
 -finish sortDescending and sortAscending()?
--finish paginateGames() in functions (need to paginate when in ascending order;  easy way is jsut to reverse then do the same slice as for descending)
 
--refactor options boxs in games-list-view
+filtering-----------------------
+  -layout:
+    --date ones are mutually exclusive but can have any combination from different types (e.g. date-based and player-based)
+    --have checkboxes called 'date' and 'players' that expand to show relavent fields when checked
+    --label / h4 that shows filters currently applied
+  -options: 
+    1) filter before date and time?
+    2) filter after date and time?
+    3) filter between dates and time?
+    4) filter by players in game
+  -create new component that handles validating inputs and dispatching changes
+
+
 
 
 
