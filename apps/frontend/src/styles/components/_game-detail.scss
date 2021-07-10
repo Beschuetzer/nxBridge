@@ -37,7 +37,7 @@
     padding: var(--game-detail-padding-sides);
     background-image: $game-detail-background;
     color: $game-summary-color;
-    border-bottom: $game-summary-border-bottom;
+    border-bottom: $game-detail-score-border-open;
   }
 
   &__score {

@@ -1,112 +1,110 @@
 .w-100 {
-	width: 100% !important;
+  width: 100% !important;
 }
 .h-100 {
-	height: 100% !important;
+  height: 100% !important;
 }
 .h-auto {
-	height: auto !important;
+  height: auto !important;
 }
 .text-align-center {
-	text-align: center !important;
+  text-align: center !important;
 }
 
 //flexbox
 .flex {
-	display: flex !important;
+  display: flex !important;
 }
 .align-center {
-	align-items: center !important;
+  align-items: center !important;
 }
 .justify-content-center {
-	justify-content: center !important;
+  justify-content: center !important;
 }
 
 //misc
 .transparent {
-	background-color: transparent !important;
-	background-image: none !important;
-	border: none !important;
-	box-shadow: none !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 .overflow-hidden {
-	overflow: hidden !important;
+  overflow: hidden !important;
 }
 
-.overflow-y-scroll {
-	overflow-y: scroll !important;
+.overflow-y-auto {
+  overflow-y: auto !important;
 }
-
 
 .transition-none {
-	transition: none !important;
+  transition: none !important;
 }
 
 .visible {
-	visibility: visible !important;
-	opacity: 1 !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
 .hidden {
-	visibility: hidden !important;
-	opacity: 0 !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
 }
 
 .full-opacity {
-	opacity: 1 !important;
+  opacity: 1 !important;
 }
 
 .d-none {
-	display: none !important;
+  display: none !important;
 }
 
 .scale-1 {
-	transform: scale(1) !important;
+  transform: scale(1) !important;
 }
 
 .margin-0 {
-	margin: 0 !important;
+  margin: 0 !important;
 }
 
 .margin-top-1 {
-	margin-top: $default-font-size * 1 !important;
+  margin-top: $default-font-size * 1 !important;
 }
 
 .margin-top-2 {
-	margin-top: $default-font-size * 2 !important;
+  margin-top: $default-font-size * 2 !important;
 }
 
 .margin-bottom-1 {
-	margin-bottom: $default-font-size * 1 !important;
+  margin-bottom: $default-font-size * 1 !important;
 }
 
 .margin-bottom-2 {
-	margin-bottom: $default-font-size * 2 !important;
+  margin-bottom: $default-font-size * 2 !important;
 }
 
 .padding-0 {
-	padding: 0 !important;
+  padding: 0 !important;
 }
 
 .padding-top-1 {
-	padding-top: $default-font-size * 1 !important;
+  padding-top: $default-font-size * 1 !important;
 }
 
 .padding-top-2 {
-	padding-top: $default-font-size * 2 !important;
+  padding-top: $default-font-size * 2 !important;
 }
 
 .padding-bottom-1 {
-	padding-bottom: $default-font-size * 1 !important;
+  padding-bottom: $default-font-size * 1 !important;
 }
 
 .padding-bottom-2 {
-	padding-bottom: $default-font-size * 2 !important;
+  padding-bottom: $default-font-size * 2 !important;
 }
 //Dealing with SiteNav filter bug on pages like '/bridge'
 // .no-filter {filter: none !important}
-
 
 //color
 .color-1 {
@@ -122,93 +120,95 @@
   color: var(--color-primary-4) !important;
 }
 .color-black {
-	color: var(--color-black) !important;
+  color: var(--color-black) !important;
 }
 .color-green {
-	color: var(--color-green) !important;
+  color: var(--color-green) !important;
 }
 .color-white {
-	color: var(--color-white) !important;
+  color: var(--color-white) !important;
 }
 
 .hover-color-1 {
-	&:hover {
-		color: var(--color-primary-1) !important;
-	}
+  &:hover {
+    color: var(--color-primary-1) !important;
+  }
 }
 .hover-color-2 {
-	&:hover {
-		color: var(--color-primary-2) !important;
-	}
+  &:hover {
+    color: var(--color-primary-2) !important;
+  }
 }
 .hover-color-3 {
-	&:hover {
-		color: var(--color-primary-3) !important;
-	}
+  &:hover {
+    color: var(--color-primary-3) !important;
+  }
 }
 .hover-color-4 {
-	&:hover {
-		color: var(--color-primary-4) !important;
-	}
+  &:hover {
+    color: var(--color-primary-4) !important;
+  }
 }
 .hover-color-black {
-	&:hover {
-		color: var(--color-black) !important;
-	}
+  &:hover {
+    color: var(--color-black) !important;
+  }
 }
 .hover-color-white {
-	&:hover {
-		color: var(--color-white) !important;
-	}
+  &:hover {
+    color: var(--color-white) !important;
+  }
 }
 
 .bg-color-1 {
   background-color: var(--color-primary-1) !important;
-	&:hover {
-		background-color: rgba(var(--color-primary-1-rgb),.5) !important;
-	}
+  &:hover {
+    background-color: rgba(var(--color-primary-1-rgb), 0.5) !important;
+  }
 }
 .bg-color-2 {
   background-color: var(--color-primary-2) !important;
-	&:hover {
-		background-color: rgba(var(--color-primary-2-rgb),.5) !important;
-	}
+  &:hover {
+    background-color: rgba(var(--color-primary-2-rgb), 0.5) !important;
+  }
 }
 .bg-color-3 {
   background-color: var(--color-primary-3) !important;
-	&:hover {
-		background-color: rgba(var(--color-primary-3-rgb),.5) !important;
-	}
+  &:hover {
+    background-color: rgba(var(--color-primary-3-rgb), 0.5) !important;
+  }
 }
 .bg-color-4 {
   background-color: var(--color-primary-4) !important;
-	&:hover {
-		background-color: rgba(var(--color-primary-4-rgb),.5) !important;
-	}
+  &:hover {
+    background-color: rgba(var(--color-primary-4-rgb), 0.5) !important;
+  }
 }
 
 .hover-bg-color-1 {
-	&:hover {
-		background-color: var(--color-primary-1) !important;
-	}
+  &:hover {
+    background-color: var(--color-primary-1) !important;
+  }
 }
 .hover-bg-color-2 {
-	&:hover {
-		background-color: var(--color-primary-2) !important;
-	}
-} 
+  &:hover {
+    background-color: var(--color-primary-2) !important;
+  }
+}
 .hover-bg-color-3 {
-	&:hover { 
-		background-color: var(--color-primary-3) !important;
-	}
+  &:hover {
+    background-color: var(--color-primary-3) !important;
+  }
 }
 .hover-bg-color-4 {
-	&:hover {
-		background-color: var(--color-primary-4) !important;
-	}
+  &:hover {
+    background-color: var(--color-primary-4) !important;
+  }
 }
 
-
 .game-detail-border-bottom {
-	border-bottom: $game-detail-border;
+  border-bottom: $game-detail-score-border-open;
+}
+.deal-detail-button-border-bottom {
+  border-bottom: 1px solid rgba(var(--color-primary-1-rgb), 0.5) !important;
 }

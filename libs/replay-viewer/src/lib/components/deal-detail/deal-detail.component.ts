@@ -21,6 +21,7 @@ import {
   COLOR_BLACK_CLASSNAME,
   COLOR_RED_CLASSNAME,
   dealDetailButtonChoices,
+  DEAL_DETAIL_BUTTON_BORDER_BOTTOM_CLASSNAME,
   DEAL_DETAIL_CLASSNAME,
   DISPLAY_NONE_CLASSNAME,
   GAME_DETAIL_CLASSNAME,
@@ -44,6 +45,7 @@ import {
   SetCurrentlyViewingDeal,
   SetCurrentlyViewingDealContract,
 } from '@nx-bridge/store';
+import { ReplayViewerDealService } from '../../services/replay-viewer.deal.service';
 @Component({
   selector: 'nx-bridge-deal-detail',
   templateUrl: './deal-detail.component.html',
@@ -72,7 +74,8 @@ export class DealDetailComponent implements OnInit {
   constructor(
     private renderer: Renderer2,
     private elRef: ElementRef,
-    private store: Store<AppState>
+    private store: Store<AppState>,
+    private replayViewDealService: ReplayViewerDealService,
   ) {}
 
   ngOnInit(): void {
@@ -88,6 +91,9 @@ export class DealDetailComponent implements OnInit {
 
   onDetailClick(e: Event) {
     const button = (e.currentTarget || e.target) as HTMLElement;
+    const buttonSibling = button.nextElementSibling as HTMLElement;
+    this.replayViewDealService.toggleButtonBottomBorder([button, buttonSibling]);
+
     const item = this.elRef.nativeElement.querySelector(
       `.${DEAL_DETAIL_CLASSNAME}__tables`
     );
@@ -460,5 +466,7 @@ export class DealDetailComponent implements OnInit {
   private getNewElement(elementType: string) {
     return this.renderer.createElement(elementType);
   }
+
+  
   //#endregion
 }

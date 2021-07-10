@@ -28,10 +28,6 @@ import {
   getDeclarerFromDeal,
   ANIMATION_DURATION,
   GAME_DETAIL_BORDER_BOTTOM_CLASSNAME,
-  gameDetailBorderCssPropName,
-  colorBlackCssPropName,
-  gameDetailBorderOpen,
-  gameDetailBorderClosed,
 } from '@nx-bridge/constants';
 import {
   CardinalDirection,
@@ -39,19 +35,19 @@ import {
   Deal,
   Seating,
   Team,
+  ToggleDealDetailButtonBehaviour,
 } from '@nx-bridge/interfaces-and-types';
 import {
   AddFetchedDeals as AddFetchedDeals,
   AppState,
   CurrentlyViewingGame,
-  generalReducer,
   SetCurrentlyViewingGame,
   SetIsViewingGame,
 } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
 import { take } from 'rxjs/operators';
-import { debug } from 'node:console';
 import { ReplayViewerDealService } from '../../services/replay-viewer.deal.service';
+import { debug } from 'node:console';
 
 @Component({
   selector: 'nx-bridge-deals-list',
@@ -99,6 +95,7 @@ export class DealsListComponent implements OnInit {
   }
 
   onShowDetails(e: Event) {
+    this.toggleDealButtonsBorderBottoms(e);
     this.toggleDealItems(e);
 
     toggleInnerHTML(
@@ -361,6 +358,15 @@ export class DealsListComponent implements OnInit {
       ],
       FULL_SIZE_CLASSNAME
     );
+  }
+
+  private toggleDealButtonsBorderBottoms(e: Event) {
+    const button = (e.currentTarget || e.target) as HTMLElement;
+    const isOpening = !button.innerHTML.match(/show/i);
+    const gameDetail = (this.elRef.nativeElement as HTMLElement)?.closest(`.${GAME_DETAIL_CLASSNAME}`);
+    const dealDetailViewButtons = gameDetail?.querySelectorAll(`.${DEAL_DETAIL_CLASSNAME}__view-button`);
+    const dealWatchDetailButtons = gameDetail?.querySelectorAll(`.${DEAL_DETAIL_CLASSNAME}__watch-button`);
+    this.replayViewerDealService.toggleButtonBottomBorder([...dealDetailViewButtons as any, ...dealWatchDetailButtons as any], isOpening ? ToggleDealDetailButtonBehaviour.open : ToggleDealDetailButtonBehaviour.close);
   }
 
   private toggleDealItems(e: Event) {

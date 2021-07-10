@@ -260,5 +260,6 @@ export type TeamFull = "eastWest" | "northSouth";
 export type Contract = { prefix: string, htmlEntity: string };
 export type GameDetailDisplayPreferences = {sort: string, size: string, resultsPerPage: string};
 
+export enum ToggleDealDetailButtonBehaviour {toggle, open , close};
 export enum GameDetailSizes {small = 'small', medium = 'medium', large = 'large'};
 export enum SortOptions {ascending = 'ascending', descending = 'descending'};

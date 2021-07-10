@@ -75,6 +75,8 @@ Testing------------
 -finish sortDescending and sortAscending()?
 -finish paginateGames() in functions (need to paginate when in ascending order;  easy way is jsut to reverse then do the same slice as for descending)
 
+-move deal components private methods to RepplayViewerDealService?
+
 
 
 

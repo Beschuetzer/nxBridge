@@ -44,7 +44,6 @@ export class GamesListComponent implements OnInit {
     if ((target)?.classList.contains(FULL_SIZE_CLASSNAME)) {
       this.replayViewerDealService.setGameDetailBorderToNormal();
 
-
       const items = target.querySelectorAll(`.${DEAL_DETAIL_CLASSNAME}`);
       if (items && items.length > 0) toggleClassOnList(items, DISPLAY_NONE_CLASSNAME);
 

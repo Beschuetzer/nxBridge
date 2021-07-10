@@ -65,7 +65,6 @@ export class GamesListViewComponent implements OnInit {
       this.localStorageManager.saveResultsPerPagePreference(option.value);
     }
     
-    debugger;
     this.currentBatch = getNewBatchNumber(this.currentBatch, this.resultsPerPage, +option.value, this.totalGames);
 
     this.setResultsPerPagePreference(option.value);

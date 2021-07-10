@@ -19,7 +19,7 @@ export const GET_GAME_COUNT_URL = `/api/${GET_GAME_COUNT_CONTROLLER_STRING}`;
 export const GET_USER_URL = `/api/${GET_USER_CONTROLLER_STRING}`;
 export const GET_USERS_URL = `/api/${GET_USERS_CONTROLLER_STRING}`;
 
-export const OVERFLOW_Y_SCROLL_CLASSNAME = 'overflow-y-scroll';
+export const OVERFLOW_Y_SCROLL_CLASSNAME = 'overflow-y-auto';
 export const HEIGHT_AUTO_CLASSNAME = 'h-auto';
 export const HIDDEN_CLASSNAME = 'hidden';
 export const VISIBLE_CLASSNAME = 'visible';
@@ -34,47 +34,50 @@ export const COLOR_RED_CLASSNAME = 'color-red';
 export const COLOR_BLACK_CLASSNAME = 'color-black';
 export const HEADER_CLASSNAME = 'navbar';
 export const GAME_DETAIL_BORDER_BOTTOM_CLASSNAME = 'game-detail-border-bottom';
+export const DEAL_DETAIL_BUTTON_BORDER_BOTTOM_CLASSNAME =
+  'deal-detail-button-border-bottom';
 
-export const dealsListDealsButtonChoices: [string, string] = ['Open', '&#10006;'];
-export const dealsListDetailsButtonChoices: [string, string] = ['Show All', 'Hide All'];
+export const dealsListDealsButtonChoices: [string, string] = [
+  'Open',
+  '&#10006;',
+];
+export const dealsListDetailsButtonChoices: [string, string] = [
+  'Show All',
+  'Hide All',
+];
 export const dealDetailButtonChoices: [string, string] = ['Show', 'Hide'];
 
 export const MOBILE_START_WIDTH = 655;
 export const ANIMATION_DURATION = 500;
 
-
-export const gameDetailHeightAboveBreakpointCssPropName =  '--game-detail-height-above-breakpoint';
-export const gameDetailHeightBelowBreakpointCssPropName =  '--game-detail-height-below-breakpoint';
-export const gameDetailSummaryHeightPercentageCssPropName =  '--game-detail-summary-height-percentage';
-export const playerLabelsDisplayTypeCssPropName =  '--player-labels-display-type';
-export const playerNamesDisplayTypeCssPropName =  '--player-names-display-type';
-export const dealsListButtonFontSizeCssPropName =  '--deals-list-button-font-size';
+export const gameDetailHeightAboveBreakpointCssPropName =
+  '--game-detail-height-above-breakpoint';
+export const gameDetailHeightBelowBreakpointCssPropName =
+  '--game-detail-height-below-breakpoint';
+export const gameDetailSummaryHeightPercentageCssPropName =
+  '--game-detail-summary-height-percentage';
+export const playerLabelsDisplayTypeCssPropName =
+  '--player-labels-display-type';
+export const playerNamesDisplayTypeCssPropName = '--player-names-display-type';
+export const dealsListButtonFontSizeCssPropName =
+  '--deals-list-button-font-size';
 export const gameDetailBorderCssPropName = '--game-detail-border';
+
 export const colorBlackCssPropName = '--color-black-rgb';
 export const colorPrimary1CssPropName = '--color-primary-1-rgb';
 export const colorPrimary4CssPropName = '--color-primary-4-rgb';
 
 export const gameDetailBorderOpen = `1px solid rgba(var(${colorBlackCssPropName}), 1)`;
 export const gameDetailBorderClosed = `2px solid rgba(var(${colorPrimary4CssPropName}), .25)`;
-export const dealDetailButtonBorder = `1px solid rgba(var(${colorPrimary1CssPropName}), 0.5) !important;`
-
+export const dealDetailButtonBorder = `1px solid rgba(var(${colorPrimary1CssPropName}), 0.5) !important;`;
 
 export const SIZE_OPTIONS = {
   [GameDetailSizes.small]: GameDetailSizes.small,
   [GameDetailSizes.medium]: GameDetailSizes.medium,
   [GameDetailSizes.large]: GameDetailSizes.large,
-}
+};
 export const SORT_OPTIONS = {
   [SortOptions.ascending]: SortOptions.ascending,
   [SortOptions.descending]: SortOptions.descending,
-}
-export const RESULTS_PER_PAGE_OPTIONS = [
-  1,
-  2,
-  5,
-  10,
-  25,
-  50,
-  100,
-];
-
+};
+export const RESULTS_PER_PAGE_OPTIONS = [1, 2, 5, 10, 25, 50, 100];

@@ -2,17 +2,14 @@
   display: grid;
   grid-template-columns: 1fr min-content;
   border-top: $game-detail-border-open;
-  // padding: 0 $default-font-size * .5;
-  // grid-column-gap: $default-font-size * .75;
 
   &:last-of-type {
-    border-bottom: $game-detail-border;
+    border-bottom: $game-detail-border-open;
   }
 
   &__details {
     display: grid;
     grid-template-rows: repeat(5, min-content);
-    // grid-row-gap: $default-font-size * .25;
 
     & > * {
       padding: 0 0 0 var(--game-detail-padding-sides);
@@ -32,7 +29,6 @@
     }
 
     &-suit {
-      // text-align: center;
     }
   }
 
@@ -44,13 +40,10 @@
     grid-template-columns: max-content 1fr max-content;
     grid-column-gap: $default-font-size * 0.25;
     align-items: center;
-    // text-align: center;
-    // border-bottom: $game-detail-border;
 
     @include respond($layout-breakpoint) {
       grid-template-columns: max-content 1fr;
       padding: 0;
-      // font-size: $default-font-size * 0.75;
 
       & > *:nth-child(-n + 2) {
         line-break: anywhere;
@@ -105,8 +98,6 @@
     }
 
     &-text {
-      // display: grid;
-      // grid-template-columns: max-content 1fr;
     }
   }
 
@@ -132,9 +123,6 @@
       grid-template-columns: min-content repeat(4, 1fr);
       grid-template-rows: min-content repeat(4, 1fr);
       padding: 0 var(--game-detail-padding-sides);
-      // grid-column-gap: $default-font-size;
-      // justify-items: center;
-      // align-items: center;
 
       @include respond($layout-breakpoint) {
         padding: 0 $default-font-size * 0.5;
@@ -163,7 +151,6 @@
       }
 
       //left column of table (suits)
-
       & > div:nth-child(5n + 1) {
         padding: 0 $default-font-size * 0.25;
         font-weight: 1000;
@@ -182,7 +169,6 @@
     &-table {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      // grid-template-rows: min-content repeat(4, 1fr);
       padding: 0 var(--game-detail-padding-sides) $default-font-size * 0.5
         var((--game-detail-padding-sides));
 
@@ -217,13 +203,10 @@
   }
 
   & button {
-    // margin-top: $default-font-size * .5 !important;
     width: 100%;
     max-width: 100%;
     margin-right: 0 !important;
     border-radius: 0 !important;
-    border-top: $game-summary-border-bottom !important;
-    // border-bottom: $deal-detail-separator !important;
 
     @include respond($layout-breakpoint) {
       border-top: $deal-detail-separator !important;
@@ -233,8 +216,8 @@
 
   &__view-button,
   &__watch-button {
-    // width: $default-font-size * 6 !important;
     border-left: $deal-detail-separator !important;
+
   }
 
   &__view-button {
