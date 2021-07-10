@@ -23,6 +23,9 @@ $scrollbar-box-shadow: inset 0 0 $default-font-size * 0.5
   rgba(var(--color-primary-1-rgb), 0.5);
 $scrollbar-track-background: var(--color-primary-1);
 $scrollbar-thumb-background: var(--color-primary-4);
+$header-height: $default-font-size * 2.5;
+
+
 
 //login-card
 $login-card-logo: '../../bridge-logo.svg';

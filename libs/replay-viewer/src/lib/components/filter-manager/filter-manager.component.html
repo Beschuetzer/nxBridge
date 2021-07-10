@@ -1,0 +1,23 @@
+<section class="ui form">
+  <h2 class="ui header">Filter by:</h2>
+  <div class="filter-manager__applied field">{{ appliedFiltersMsg }}</div>
+  <div class="filter-manager__options field">
+    <label>
+      <input #date (click)="onDateClick($event)" type="checkbox" />
+      Date
+    </label>
+    <label>
+      <input #game (click)="onGameClick($event)" type="checkbox" />
+      Game
+    </label>
+  </div>
+
+  <div class="filter-manager__details">
+    <div *ngIf="game.checked === true">
+      <span>Game details here</span>
+    </div>
+    <div *ngIf="date.checked">
+      <span>Date details here</span>
+    </div>
+  </div>
+</section>

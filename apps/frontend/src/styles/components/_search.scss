@@ -1,11 +1,13 @@
 .search {
+  position: relative;
   grid-column: 1 / span 1;
   grid-row: 2 / -1;
-  padding: $default-font-size * 0.5;
+  padding: $default-font-size * 5 $default-font-size * 0.5 $default-font-size * 0.5 $default-font-size * 0.5;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-width: 25vmin;
+  min-width: 25vmin;  
   background-image: linear-gradient(
     var(--search-linear-gradient-direction),
     rgba(var(--color-black-rgb), 1),

@@ -3,6 +3,6 @@
   grid-row: 1 / span 1;
 
   background-color: rgba(var(--color-primary-3-rgb), .5);
-  min-height: $default-font-size * 3;
+  height: $header-height;
   border-bottom: $games-list-border;
 }
