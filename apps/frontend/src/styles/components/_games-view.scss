@@ -18,7 +18,7 @@
   &__title{
     display: grid;
     grid-template-columns: 1fr max-content 1fr;
-    grid-template-rows: repeat(3, 1fr);
+    grid-template-rows: repeat(3, max-content);
     justify-items: center;
     align-items: center;
     margin: 0;
@@ -30,7 +30,7 @@
     background-image: linear-gradient(
       var(--games-view-title-gradient-direction),
       rgba(#{$games-list-gradient-color-1}, 1),
-      rgba(#{$games-list-gradient-color-1}, 1) calc(#{$games-list-black-gradient-amount} + 11%),
+      rgba(#{$games-list-gradient-color-1}, 1) calc(#{$games-list-black-gradient-amount} + 19%),
       rgba(#{$games-list-gradient-color-2}, 1),
     );
     box-shadow: $games-list-outer-box-shadow-bottom;
@@ -40,18 +40,44 @@
       padding: 0 $default-font-size $default-font-size * .5 $default-font-size;
     }
 
-    & label:nth-of-type(1) {
-      margin-right: $default-font-size * .5;
+    & label {
+        @include respond(small-font) {
+          font-size: $default-font-size * .5 !important;
+        }
+
+      &:nth-of-type(1) {
+        margin-right: $default-font-size * .5;
+      }
     }
 
     & > *:nth-child(1){
       margin: 0 !important;
     }
+
+    & > *:nth-child(1) {
+      justify-content: center;
+       
+      @include respond(small-font) {
+        flex-direction: column;
+        font-size: $default-font-size * .75;
+      }
+    }
+
     & > *:nth-child(n + 1) {
       grid-column: 2 / span 1;
       width: 100%;
       display: flex;
+    }
+
+    & > *:nth-child(n + 2) {
       justify-content: space-between;
+      padding: $default-font-size * .25 0;
+
+      @include respond(small-font) {
+        justify-content: center;
+        padding: 0;
+
+      }
     }
 
     & span {

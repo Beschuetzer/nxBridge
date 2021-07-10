@@ -210,7 +210,7 @@
 
     @include respond($layout-breakpoint) {
       border-top: $deal-detail-separator !important;
-      border-bottom: none !important;
+      // border-bottom: none !important;
     }
   }
 

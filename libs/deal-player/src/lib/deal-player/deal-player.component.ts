@@ -421,7 +421,7 @@ export class DealPlayerComponent implements OnInit {
     if (
       suitHtmlEntity === suitsHtmlEntities[0] ||
       suitHtmlEntity === suitsHtmlEntities[3]
-    )
+    ) 
       colorClass = COLOR_BLACK_CLASSNAME;
     this.renderer.removeClass(numberElement, COLOR_BLACK_CLASSNAME);
     this.renderer.removeClass(suitEntityElement, COLOR_BLACK_CLASSNAME);
@@ -429,7 +429,7 @@ export class DealPlayerComponent implements OnInit {
     this.renderer.removeClass(suitEntityElement, COLOR_RED_CLASSNAME);
     this.renderer.addClass(numberElement, colorClass);
     this.renderer.addClass(suitEntityElement, colorClass);
-    this.renderer.setProperty(numberElement, 'innerHTML', number);
+    this.renderer.setProperty(numberElement, 'innerHTML', number === "10" || number === 10 ? "T" : number);
     this.renderer.setProperty(suitEntityElement, 'innerHTML', suitHtmlEntity);
   }
 }

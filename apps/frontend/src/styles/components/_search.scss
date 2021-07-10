@@ -15,7 +15,6 @@
   box-shadow: $games-list-outer-box-shadow-left;
 
   @include respond($layout-breakpoint) {
-    // --search-linear-gradient-direction: #{$search-linear-gradient-direction-layout-breakpoint};
     background-image: linear-gradient(
       to top,
       rgba(var(--color-black-rgb), 1),
@@ -36,12 +35,8 @@
 
   & .login-card__buttons {
     @include respond($layout-breakpoint) {
-      // margin-bottom: $semantic-ui-text-default-font-size / 2 !important;
     }
   }
-  // & .header {
-  //   font-size: $default-font-size * 2 !important;
-  // }
 
   & label {
     text-align: left;    
@@ -58,8 +53,12 @@
   & form {
     width: 100%;
 
-    @include respond($layout-breakpoint) {
+    & input, & button {
+      @include respond($layout-breakpoint) {
+        font-size: $default-font-size * .5 !important;
+      }
     }
+    
 
     & > div {
       &:last-of-type {
@@ -70,6 +69,10 @@
           grid-template-columns: repeat(2, 1fr);
           column-gap: $default-font-size * 0.25;
           margin-top: $default-font-size * 0.5;
+        }
+
+        @include respond($layout-breakpoint) {
+          margin-top: $default-font-size * .25;
         }
       }
     }
