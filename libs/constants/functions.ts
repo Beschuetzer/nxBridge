@@ -129,7 +129,7 @@ export function paginateGames(
   else {
     for (let i = 0; i < games.length; i++) {
       const game = games[games.length - 1 - i];
-      if (i >= batchStart && i <= batchEnd) toReturnGames.push(game);
+      if (i >= batchStart && i < batchEnd) toReturnGames.push(game);
     }
   }
   return toReturnGames;

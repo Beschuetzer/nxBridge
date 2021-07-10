@@ -85,7 +85,10 @@ export class GamesListViewComponent implements OnInit {
     if (shouldSave) this.localStorageManager.saveSortPreference(option.value);
 
     this.setSortPreference(option.value);
+
+    this.currentBatch = this.currentBatch === 0 ? this.totalNumberOfPages - 1 : (this.totalNumberOfPages - 1) - this.currentBatch;
     this.searchService.setCurrentlyDisplayingGames(this.currentBatch);
+    this.selectCurrentPage(this.currentBatch)
   }
 
   setOptionElementsPerPreferences() {
@@ -136,16 +139,6 @@ export class GamesListViewComponent implements OnInit {
     }
   }
 
-  // private changeCurrentlyDisplayingGames(newResultsPerPage: number, newCurrentPage: number) {
-  //   const currentlyDisplayingMinIndex = (this.currentBatch) * this.resultsPerPage;
-  //   const currentlyDisplayingMaxIndex = currentlyDisplayingMinIndex + this.resultsPerPage;
-
-  //   const newMinIndex = this.getNewMinIndex(currentlyDisplayingMinIndex, currentlyDisplayingMaxIndex, newResultsPerPage, newCurrentPage)
-  //   const newMaxIndex = newMinIndex + newResultsPerPage;
-
-  //   this.setCurrentlyDisplayingGamesByIndexes(newMinIndex, newMaxIndex);
-  // }
-
   private changeSize(newSize: string) {
     if (!newSize) return;
     document.documentElement.style.setProperty(gameDetailHeightAboveBreakpointCssPropName, gameDetailSizes[newSize].gameDetailHeight.aboveBreakpoint);
@@ -155,27 +148,6 @@ export class GamesListViewComponent implements OnInit {
     document.documentElement.style.setProperty(playerNamesDisplayTypeCssPropName, gameDetailSizes[newSize].playerNamesDisplayType);
     document.documentElement.style.setProperty(dealsListButtonFontSizeCssPropName, gameDetailSizes[newSize].dealsListButtonFontSize);
   }
-
-  // private getNewMinIndex(currentlyDisplayingMinIndex: number, currentlyDisplayingMaxIndex: number, newResultsPerPage: number, newCurrentPage: number) {
-  //   //todo: how to get the lowest index that is a multiple of newResultsPerpage and less than currentlyDisplayingMinIndex?
-    
-  //   return Math.floor(currentlyDisplayingMinIndex / newResultsPerPage) * newResultsPerPage;
-  // }
-
-  // private reverseCurrentlyDisplayingGames() {
-  //   let currentlyDisplayingGames: Game[] = [];
-  //   this.store.select('games').pipe(take(1)).subscribe(gameState => {
-  //     currentlyDisplayingGames = JSON.parse(JSON.stringify(gameState.currentlyDisplayingGames));
-  //     currentlyDisplayingGames.reverse();
-  //     this.store.dispatch(new SetCurrentlyDisplayingGames(currentlyDisplayingGames));
-  //   });
-  // }
-
-  // private setCurrentlyDisplayingGamesByIndexes(newMinIndex: number, newMaxIndex: number) { 
-  //   this.store.select('users').subscribe(userState => {
-  //     const games = userState?.currentlyViewingUser.games;
-  //     this.store.dispatch(new SetCurrentlyDisplayingGames(games?.slice(newMinIndex, newMaxIndex)));
-  //   })}
 
   private selectCurrentPage(newBatchNumber: number) {
     //note: timeout is needed to allow the re-render to take place
