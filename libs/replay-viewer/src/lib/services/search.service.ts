@@ -10,20 +10,24 @@ import {
   AppState,
   SetCurrentlyDisplayingGames,
   SetCurrentlyViewingUser,
+  SetFilteredGames,
   SetIsLoading,
   SetLoadingError,
+  FilterState,
+  SetIsFilterSame,
 } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
 import {
+  Filters,
   GetUserResponse,
   LocalStorageUserWithGames,
-  SortOptions,
 } from '@nx-bridge/interfaces-and-types';
-import { paginateGames, SORT_OPTIONS } from '@nx-bridge/constants';
+import { filtersInitial, paginateGames } from '@nx-bridge/constants';
 import { Game } from '@nx-bridge/interfaces-and-types';
 import { LocalStorageManagerService } from './local-storage-manager.service';
 import { ERROR_APPENDING_GAMES } from '@nx-bridge/api-errors';
 import { switchMap, take } from 'rxjs/operators';
+import { } from '@nx-bridge/store';
 
 @Injectable({
   providedIn: 'root',
@@ -104,13 +108,13 @@ export class SearchService {
 
         // debugger;
         //note: batch number starts at 0 (meaning results 0 - 0 * resultsPerPage)
+        const filteredGames = this.filterGames(games);
         const gamesToUse = paginateGames(
-          games,
+          filteredGames,
           sortPreference,
           batchNumber,
           +resultsPerPage
         );
-        this.filterGames(gamesToUse);
 
         this.store.dispatch(new SetCurrentlyDisplayingGames(gamesToUse));
       });
@@ -271,5 +275,74 @@ export class SearchService {
 
   private filterGames(games: Game[]) {
     //TODO: will need to put in the filter parts
+    let isFilterSame;
+    let filteredGames = games;
+    let filters: Filters = filtersInitial;
+
+    this.store
+      .select('filters')
+      .pipe(
+        take(1), 
+        switchMap(filterState => {
+          debugger;
+          isFilterSame = filterState.isFilterSame;
+          filters = this.getFilters(filterState);
+          return this.store.select('games').pipe(take(1));
+      }))
+      .subscribe((gameState) => {
+        if (gameState.filteredGames && gameState.filteredGames.length > 0) filteredGames = gameState.filteredGames;
+      });
+
+    if (isFilterSame) return filteredGames;
+
+    const filteredGame = this.applyFilters(games, filters);
+    this.store.dispatch(new SetFilteredGames(filteredGame));
+    this.store.dispatch(new SetIsFilterSame(true));
+    return filteredGame;
+  }
+
+  private applyFilters(games: Game[], filters: Filters) {
+    let filteredGames: Game[] = games;
+
+    filteredGames = this.getBeforeDate(filteredGames, filters.beforeDate);
+    filteredGames = this.getAfterDate(filteredGames, filters.afterDate);
+
+    return filteredGames;
+  }
+
+  private getBeforeDate(games: Game[], beforeDate: number) {
+    if (!beforeDate) return games;
+    
+    const toReturn: Game[] = [];
+    for (let i = 0; i < games.length; i++) {
+      const game = games[i];
+      if (game.completionDate <= beforeDate) toReturn.push(game);
+    }
+
+    return toReturn;
+  }
+
+  private getAfterDate(games: Game[], afterDate: number) {
+    if (!afterDate) return games;
+
+    const toReturn: Game[] = [];
+    for (let i = 0; i < games.length; i++) {
+      const game = games[i];
+      if (game.completionDate >= afterDate) toReturn.push(game);
+    }
+
+    return toReturn;
+  }
+
+  private getFilters(filterState: FilterState) {
+    const filters: Filters = {} as Filters;
+    const filterKeys = Object.keys(filterState);
+
+    for (let i = 0; i < filterKeys.length; i++) {
+      const filterKey = filterKeys[i];
+      filters[filterKey] = filterState[filterKey];
+    }
+
+    return filters;
   }
 }

@@ -6,9 +6,8 @@ import {
   Renderer2,
 } from '@angular/core';
 import { FILTER_MANAGER_CLASSNAME } from '@nx-bridge/constants';
-import { AppState } from '@nx-bridge/store';
+import { AppState, SetAfterDate, SetBeforeDate, SetIsFilterSame } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
-import { SetAfterDate, SetBeforeDate } from 'libs/store/src/lib/actions/filter.actions';
 
 enum DateType {
   before,
@@ -111,7 +110,13 @@ export class FilterManagerComponent implements OnInit {
     const shouldDispatchChange = this.handleDateChange(e, DateType.before);
 
     let dateToDispatch = this.beforeDate.date?.getTime();
-    if (!shouldDispatchChange) dateToDispatch = 0;
+    
+    if (!shouldDispatchChange) {
+      dateToDispatch = 0;
+    }
+    else {
+      this.store.dispatch(new SetIsFilterSame(false));
+    }
 
     this.store.dispatch(new SetBeforeDate(dateToDispatch as number));
   }
@@ -120,7 +125,12 @@ export class FilterManagerComponent implements OnInit {
     const shouldDispatchChange = this.handleDateChange(e, DateType.after);
     
     let dateToDispatch = this.afterDate.date?.getTime();
-    if (!shouldDispatchChange) dateToDispatch = 0;
+    if (!shouldDispatchChange) {
+      dateToDispatch = 0;
+    }
+    else {
+      this.store.dispatch(new SetIsFilterSame(false));
+    }
 
     this.store.dispatch(new SetAfterDate(dateToDispatch as number));
   }

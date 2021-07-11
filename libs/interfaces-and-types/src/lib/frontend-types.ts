@@ -1,9 +1,14 @@
+export interface Filters {
+  [key: string]: any,
+  beforeDate: number,
+  afterDate: number,
+}
+
 export interface Deal extends DealCore {
   [key: string]: any;
   players: ObjectId[];
   // _id: string;
 }
-
 
 export interface DealGameIncomplete extends DealCore {
   agreeWithClaim: AgreeWithClaim;

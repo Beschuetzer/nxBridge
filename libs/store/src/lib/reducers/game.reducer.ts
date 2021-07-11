@@ -4,6 +4,7 @@ import * as fromGameActions from '../actions/game.actions';
 export interface GameState {
   games: Game[];
   currentlyDisplayingGames: Game[];
+  filteredGames: Game[];
   currentlyViewingGame: fromGameActions.CurrentlyViewingGame;
   isViewingGame: boolean;
 }
@@ -11,6 +12,7 @@ export interface GameState {
 const INITIAL_STATE: GameState = {
   games: [],
   currentlyDisplayingGames: [] as Game[],
+  filteredGames: [] as Game[],
   currentlyViewingGame: {} as fromGameActions.CurrentlyViewingGame,
   isViewingGame: false,
 };
@@ -34,6 +36,11 @@ export function gameReducer(
       return {
         ...state,
         currentlyDisplayingGames: action.payload,
+      };
+    case fromGameActions.SET_FILTERED_GAMES:
+      return {
+        ...state,
+        filteredGames: action.payload,
       };
     case fromGameActions.SET_IS_VIEWING_GAME:
       return {
