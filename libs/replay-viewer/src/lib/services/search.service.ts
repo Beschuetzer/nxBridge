@@ -80,11 +80,11 @@ export class SearchService {
     };
   }
 
-  setCurrentlyDisplayingGames(batchNumber = 0) {
+  setCurrentlyDisplayingGames() {
     //NOTE: assumming the games are sorted in descending order at this point (happens in getLocalStorageUserWithGames)
-
     let sortPreference: string;
     let resultsPerPage: string;
+    let batchNumber: number;
     let games: Game[];
 
     this.store
@@ -94,6 +94,7 @@ export class SearchService {
         switchMap((generalState) => {
           sortPreference = generalState.sortingPreference;
           resultsPerPage = generalState.resultsPerPagePreference;
+          batchNumber = generalState.batchNumber;
 
           if (!sortPreference)
             sortPreference = this.localStorageManager.getSortPreference();

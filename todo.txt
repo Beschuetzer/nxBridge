@@ -86,7 +86,7 @@ filtering-----------------------
     4) filter by players in game
 
 
-
+-need to create reducersObj with strings for each reducer name
 -need to work on filterGames();
 
 

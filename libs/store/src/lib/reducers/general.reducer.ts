@@ -5,6 +5,7 @@ export interface GeneralState {
   loadingError: string,
   sortingPreference: string,
   resultsPerPagePreference: string,
+  batchNumber: number,
 }
 
 const INITIAL_STATE: GeneralState = {
@@ -12,6 +13,7 @@ const INITIAL_STATE: GeneralState = {
   loadingError: '',
   sortingPreference: '',
   resultsPerPagePreference: '',
+  batchNumber: 0,
 };
 
 export function generalReducer(
@@ -39,6 +41,11 @@ export function generalReducer(
       return {
         ...state,
         resultsPerPagePreference: action.payload,
+      };
+    case fromGeneralActions.SET_BATCH_NUMBER:
+      return {
+        ...state,
+        batchNumber: action.payload,
       };
     default:
       return state;

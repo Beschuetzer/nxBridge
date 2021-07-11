@@ -1,5 +1,5 @@
 import { Component, ElementRef, HostBinding, OnInit, ViewChild } from '@angular/core';
-import { AppState, SetResultsPerPagePreference, SetSortingPreference } from '@nx-bridge/store';
+import { AppState, SetBatchNumber, SetResultsPerPagePreference, SetSortingPreference } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
 import { LocalStorageUserWithGames, GameDetailDisplayPreferences } from '@nx-bridge/interfaces-and-types';
 import { dealsListButtonFontSizeCssPropName, gameDetailHeightAboveBreakpointCssPropName, gameDetailHeightBelowBreakpointCssPropName, gameDetailSummaryHeightPercentageCssPropName, getNewBatchNumber, getNewTotalNumberOfPages, playerLabelsDisplayTypeCssPropName, playerNamesDisplayTypeCssPropName, RESULTS_PER_PAGE_OPTIONS, SIZE_OPTIONS, SORT_OPTIONS } from '@nx-bridge/constants';
@@ -56,7 +56,8 @@ export class GamesListViewComponent implements OnInit {
   onCurrentPageChange(e: Event) {
     const option = (e.currentTarget || e.target) as HTMLOptionElement;
     this.currentBatch = +option.value;
-    this.searchService.setCurrentlyDisplayingGames(this.currentBatch);
+    this.store.dispatch(new SetBatchNumber(this.currentBatch));
+    this.searchService.setCurrentlyDisplayingGames();
   }
 
   onResultsPerPageChange(e: Event, shouldSave = true) {
@@ -66,10 +67,11 @@ export class GamesListViewComponent implements OnInit {
     }
     
     this.currentBatch = getNewBatchNumber(this.currentBatch, this.resultsPerPage, +option.value, this.totalGames);
+    this.store.dispatch(new SetBatchNumber(this.currentBatch));
 
     this.setResultsPerPagePreference(option.value);
     this.resultsPerPage = +option.value;
-    this.searchService.setCurrentlyDisplayingGames(this.currentBatch);
+    this.searchService.setCurrentlyDisplayingGames();
     this.totalNumberOfPages = getNewTotalNumberOfPages(+option.value, this.totalGames);
     this.selectCurrentPage(this.currentBatch);
   }
@@ -87,7 +89,9 @@ export class GamesListViewComponent implements OnInit {
     this.setSortPreference(option.value);
 
     this.currentBatch = this.currentBatch === 0 ? this.totalNumberOfPages - 1 : (this.totalNumberOfPages - 1) - this.currentBatch;
-    this.searchService.setCurrentlyDisplayingGames(this.currentBatch);
+    this.store.dispatch(new SetBatchNumber(this.currentBatch));
+
+    this.searchService.setCurrentlyDisplayingGames();
     this.selectCurrentPage(this.currentBatch)
   }
 
