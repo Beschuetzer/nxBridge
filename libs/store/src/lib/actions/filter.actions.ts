@@ -19,6 +19,7 @@ export class SetIsFilterSame implements Action {
   constructor(public payload: boolean) {}
 }
 
+
 export type FilterActions =
   | SetBeforeDate
   | SetAfterDate

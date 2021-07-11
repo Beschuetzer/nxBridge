@@ -65,7 +65,6 @@ export class FilterManagerComponent implements OnInit {
   handleDateChange(e: Event, dateType: DateType) {
     let shouldDispatchChange = false;
     const input = (e.currentTarget || e.target) as HTMLInputElement;
-    console.log('input.value =', input.value);
     const { isDateInValid, dateObj, isSingle } = this.validateDate(
       input.value,
       dateType
@@ -191,14 +190,15 @@ export class FilterManagerComponent implements OnInit {
   }
 
   private validateDate(date: string, dateType: DateType) {
+    debugger;
     let isDateInValid = false;
     let isSingle = true;
     const dateObj = new Date(date);
     if (this.beforeDate?.date && dateType === DateType.after) {
-      isDateInValid = this.beforeDate.date.getTime() >= dateObj.getTime();
+      isDateInValid = this.beforeDate.date.getTime() <= dateObj.getTime();
       isSingle = false;
     } else if (this.afterDate?.date && DateType.before) {
-      isDateInValid = this.afterDate.date.getTime() <= dateObj.getTime();
+      isDateInValid = this.afterDate.date.getTime() >= dateObj.getTime();
       isSingle = false;
     } else isDateInValid = !date;
     return { isDateInValid, dateObj, isSingle };

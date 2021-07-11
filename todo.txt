@@ -86,8 +86,8 @@ filtering-----------------------
     4) filter by players in game
 
 
--add filteredGames array which feeds into currentlyViewingGames
--add isFilterSame to store (changes whenever never value dispatched); use to check whether need to rerun filterGames()
+
+-need to work on validateDate() and filterGames();
 
 
 

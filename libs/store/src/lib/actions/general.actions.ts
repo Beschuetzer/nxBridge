@@ -1,5 +1,4 @@
 import { Action } from '@ngrx/store';
-
 export const SET_IS_LOADING = '[General] SET_IS_LOADING';
 export const SET_SORTING_PREFERENCE = '[General] SET_SORTING_PREFERENCE';
 export const SET_LOADING_ERROR = '[General] SET_LOADING_ERROR';

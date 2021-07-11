@@ -15,12 +15,12 @@
   <div class="filter-manager__details">
     <div *ngIf="date.checked" class="filter-manager__date">
       <label>
-        Completed before:
-        <input (change)="onDateBeforeChange($event)" type="datetime-local" />
-      </label>
-      <label>
         Completed after:
         <input (change)="onDateAfterChange($event)" type="datetime-local" />
+      </label>
+      <label>
+        Completed before:
+        <input (change)="onDateBeforeChange($event)" type="datetime-local" />
       </label>
     </div>
     <div *ngIf="game.checked === true">Game details</div>

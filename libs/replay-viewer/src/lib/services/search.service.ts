@@ -106,6 +106,7 @@ export class SearchService {
       .subscribe((userState) => {
         games = userState.currentlyViewingUser.games;
 
+        if (!games) return;
         // debugger;
         //note: batch number starts at 0 (meaning results 0 - 0 * resultsPerPage)
         const filteredGames = this.filterGames(games);
@@ -274,7 +275,7 @@ export class SearchService {
   }
 
   private filterGames(games: Game[]) {
-    //TODO: will need to put in the filter parts
+    if (!games) return games;
     let isFilterSame;
     let filteredGames = games;
     let filters: Filters = filtersInitial;
@@ -284,14 +285,15 @@ export class SearchService {
       .pipe(
         take(1), 
         switchMap(filterState => {
-          debugger;
           isFilterSame = filterState.isFilterSame;
-          filters = this.getFilters(filterState);
+          filters = {...filterState};
           return this.store.select('games').pipe(take(1));
       }))
       .subscribe((gameState) => {
         if (gameState.filteredGames && gameState.filteredGames.length > 0) filteredGames = gameState.filteredGames;
       });
+
+    debugger;
 
     if (isFilterSame) return filteredGames;
 
@@ -332,17 +334,5 @@ export class SearchService {
     }
 
     return toReturn;
-  }
-
-  private getFilters(filterState: FilterState) {
-    const filters: Filters = {} as Filters;
-    const filterKeys = Object.keys(filterState);
-
-    for (let i = 0; i < filterKeys.length; i++) {
-      const filterKey = filterKeys[i];
-      filters[filterKey] = filterState[filterKey];
-    }
-
-    return filters;
   }
 }
