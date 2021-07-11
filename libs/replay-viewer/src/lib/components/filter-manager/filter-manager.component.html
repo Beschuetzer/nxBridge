@@ -1,5 +1,8 @@
 <section class="ui form">
-  <h2 class="ui header">Filters:</h2>
+  <div>
+    <h2 class="ui header">Filters:</h2>
+    <button type="button" (click)="onReset()" >Reset</button>
+  </div>
   <div #applied class="filter-manager__applied ui field"></div>
   <div class="filter-manager__options field">
     <label>

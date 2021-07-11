@@ -83,7 +83,3 @@ export const SORT_OPTIONS = {
 };
 export const RESULTS_PER_PAGE_OPTIONS = [1, 2, 5, 10, 25, 50, 100];
 
-export const filtersInitial = {
-  beforeDate: 0,
-  afterDate: 0,
-}

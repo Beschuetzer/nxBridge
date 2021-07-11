@@ -1,7 +1,5 @@
 export interface Filters {
   [key: string]: any,
-  beforeDate: number,
-  afterDate: number,
 }
 
 export interface DateObj {

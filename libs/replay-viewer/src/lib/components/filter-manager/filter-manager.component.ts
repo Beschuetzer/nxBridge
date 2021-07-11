@@ -16,6 +16,7 @@ import { Store } from '@ngrx/store';
 import { DateObj } from '@nx-bridge/interfaces-and-types';
 import { filter, take } from 'rxjs/operators';
 import { SearchService } from '../../services/search.service';
+import { FiltermanagerService } from '../../services/filtermanager.service';
 
 enum DateType {
   before,
@@ -64,7 +65,8 @@ export class FilterManagerComponent implements OnInit {
     private renderer: Renderer2,
     private elRef: ElementRef,
     private store: Store<AppState>,
-    private searchService: SearchService
+    private searchService: SearchService,
+    private filterManagerService: FiltermanagerService,
   ) {}
 
   ngOnInit(): void {
@@ -126,6 +128,10 @@ export class FilterManagerComponent implements OnInit {
   }
 
   onGameClick(e: Event) {}
+
+  onReset() {
+    this.filterManagerService.reset();
+  }
 
   private appendFiltersToAppliedDiv() {
     const filterManager = this.elRef.nativeElement as HTMLElement;

@@ -13,7 +13,6 @@ import {
   SetFilteredGames,
   SetIsLoading,
   SetLoadingError,
-  FilterState,
   SetIsFilterSame,
 } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
@@ -22,12 +21,13 @@ import {
   GetUserResponse,
   LocalStorageUserWithGames,
 } from '@nx-bridge/interfaces-and-types';
-import { filtersInitial, paginateGames } from '@nx-bridge/constants';
+import { paginateGames } from '@nx-bridge/constants';
 import { Game } from '@nx-bridge/interfaces-and-types';
 import { LocalStorageManagerService } from './local-storage-manager.service';
 import { ERROR_APPENDING_GAMES } from '@nx-bridge/api-errors';
 import { switchMap, take } from 'rxjs/operators';
 import { } from '@nx-bridge/store';
+import { FiltermanagerService } from './filtermanager.service';
 
 @Injectable({
   providedIn: 'root',
@@ -45,6 +45,7 @@ export class SearchService {
   constructor(
     private localStorageManager: LocalStorageManagerService,
     private helpersService: HelpersService,
+    private filterManagerService: FiltermanagerService,
     private store: Store<AppState>
   ) {}
 
@@ -125,7 +126,7 @@ export class SearchService {
   startRequest(username: string, email: string) {
     const shouldContinue = this.getShouldContinue(username, email);
     if (!shouldContinue)
-      return `Already viewing games by that user.  Try scrolling down.`;
+      return `Already viewing games by '${username}.  Try resetting filters'`;
 
     this.needToCreateLocalStorageUser = false;
     this.username = username;
@@ -191,7 +192,7 @@ export class SearchService {
     if (!games) return games;
     let isFilterSame = true;
     let filteredGames = games;
-    let filters: Filters = filtersInitial;
+    let filters: Filters = this.filterManagerService.filtersInitial;
 
     this.store
       .select('filters')
