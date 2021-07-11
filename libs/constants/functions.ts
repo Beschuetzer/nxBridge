@@ -1,4 +1,4 @@
-import { Deal, Game, SortOptions } from '@nx-bridge/interfaces-and-types';
+import { DateObj, Deal, Game, SortOptions } from '@nx-bridge/interfaces-and-types';
 import * as mongoose from 'mongoose';
 import { getIsBidPlayable } from './playing/functions';
 
@@ -171,5 +171,16 @@ export function getNewBatchNumber(
     //when going down in resultsPerPage
 
   // } 
+}
 
+export function getDateAndTimeString(filterName: DateObj, filterMsg: string) {
+  if (!filterName?.date) return 'N/A';
+  const date = filterName.date.toLocaleDateString();
+  const shortDate =
+    date.substr(0, date.length - 4) +
+    date.substr(date.length - 2, date.length);
+  const time = filterName.date.toLocaleTimeString();
+  const shortTime = time.replace(/(:\d{2}) .*$/i, '');
+  const amOrPm = time.substr(-2, 2);
+  return `${filterMsg}${shortTime}${amOrPm} on ${shortDate}`;
 }

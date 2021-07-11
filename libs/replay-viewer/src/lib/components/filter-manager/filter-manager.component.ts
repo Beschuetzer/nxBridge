@@ -6,22 +6,14 @@ import {
   Renderer2,
   ViewChild,
 } from '@angular/core';
-import { FILTER_MANAGER_CLASSNAME } from '@nx-bridge/constants';
+import { FILTER_MANAGER_CLASSNAME, getDateAndTimeString } from '@nx-bridge/constants';
 import {
-  AppState,
-  SetAfterDate,
-  SetBeforeDate,
-  SetIsFilterSame,
+  AppState, SetAfterDate, SetBeforeDate, SetIsFilterSame,
 } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
-import { DateObj } from '@nx-bridge/interfaces-and-types';
+import { DateObj, DateType } from '@nx-bridge/interfaces-and-types';
 import { SearchService } from '../../services/search.service';
 import { FiltermanagerService } from '../../services/filtermanager.service';
-
-enum DateType {
-  before,
-  after,
-}
 
 @Component({
   selector: 'nx-bridge-filter-manager',
@@ -29,12 +21,12 @@ enum DateType {
   styleUrls: ['./filter-manager.component.scss'],
 })
 export class FilterManagerComponent implements OnInit {
-  //NOTE: new checkboxes need to be added to resetFilterCheckboxes()
+  //NOTE: new checkboxes need to be added to resetFilterCheckboxes() in reset()
   @ViewChild('game') gameCheckbox: ElementRef | null = null;
   @ViewChild('date') dateCheckbox: ElementRef | null = null;
   @ViewChild('player') playerCheckbox: ElementRef | null = null;
 
-  //NOTE: new filters need to be added to resetFilterValues() and to filterManagerService's filters object
+  //NOTE: new filters need to be added to resetFilterValues() in reset() and to filterManagerService's filters object
   @ViewChild('beforeDate') beforeDateFilterElement: ElementRef | null = null;
   @ViewChild('afterDate') afterDateFilterElement: ElementRef | null = null;
   
@@ -110,7 +102,7 @@ export class FilterManagerComponent implements OnInit {
     } else {
       this.changeErrorClasses(filterNameElement, true);
       filterName.date = dateObj;
-      filterNameElement.innerHTML = this.getDateAndTimeString(
+      filterNameElement.innerHTML = getDateAndTimeString(
         filterName,
         filterMsg
       );
@@ -123,6 +115,7 @@ export class FilterManagerComponent implements OnInit {
     return shouldDispatchChange;
   }
 
+  //NOTE: need this to trigger *ngIf properly
   onDateClick(e: Event) {return}
 
   onDateBeforeChange(e: Event) {
@@ -139,13 +132,32 @@ export class FilterManagerComponent implements OnInit {
     this.dispatchChanges(this.afterDate, shouldDispatchChange, DateType.after);
   }
 
+  //NOTE: need this to trigger *ngIf properly
   onGameClick(e: Event) {return}
+
+  //NOTE: need this to trigger *ngIf properly
   onPlayerClick(e: Event) {return}
 
   onReset() {
-    this.resetFilterCheckboxes();
-    this.resetFilterValues();
+    const filterCheckboxElements = [this.gameCheckbox, this.dateCheckbox, this.playerCheckbox];
+    const filterElements = [this.beforeDateFilterElement, this.afterDateFilterElement];
+
+    this.beforeDate.date = null;
+    this.afterDate.date = null;
+
+    this.filterManagerService.resetElements(filterCheckboxElements as ElementRef[], 'checked', false)
+    this.filterManagerService.resetElements(filterElements as ElementRef[], 'value', '')
     this.filterManagerService.reset();
+
+    const filterManagerApplied = document.querySelector(`.${FILTER_MANAGER_CLASSNAME}__applied`);
+    const children = filterManagerApplied?.children;
+
+    if (children) {
+      for (let i = 0; i < children.length; i++) {
+        const child = children[i];
+        child.innerHTML = '';
+      }
+    }
   }
 
   private appendFiltersToAppliedDiv() {
@@ -171,7 +183,7 @@ export class FilterManagerComponent implements OnInit {
   private dispatchChanges(
     filterName: DateObj,
     shouldDispatchChange: boolean,
-    dateType: DateType
+    dateType: DateType,
   ) {
     let dateToDispatch = filterName.date?.getTime();
 
@@ -202,38 +214,8 @@ export class FilterManagerComponent implements OnInit {
     return { filterMsg, filterName, filterNameElement };
   }
 
-  private getDateAndTimeString(filterName: DateObj, filterMsg: string) {
-    if (!filterName?.date) return 'N/A';
-    const date = filterName.date.toLocaleDateString();
-    const shortDate =
-      date.substr(0, date.length - 4) +
-      date.substr(date.length - 2, date.length);
-    const time = filterName.date.toLocaleTimeString();
-    const shortTime = time.replace(/(:\d{2}) .*$/i, '');
-    const amOrPm = time.substr(-2, 2);
-    return `${filterMsg}${shortTime}${amOrPm} on ${shortDate}`;
-  }
-
   private getNewElement(elementType: string) {
     return this.renderer.createElement(elementType);
-  }
-
-  private resetFilterCheckboxes() {
-    const filterCheckboxElements = [this.gameCheckbox, this.dateCheckbox, this.playerCheckbox];
-    for (let i = 0; i < filterCheckboxElements.length; i++) {
-      const filterElement = filterCheckboxElements[i]?.nativeElement;
-      if (filterElement) filterElement.checked = false;
-      
-    }
-  }
-
-  private resetFilterValues() {
-    const filterElements = [this.beforeDateFilterElement, this.afterDateFilterElement];
-    for (let i = 0; i < filterElements.length; i++) {
-      const filterElement = filterElements[i]?.nativeElement;
-      if (filterElement) filterElement.value = '';
-      
-    }
   }
 
   private setInputErrorClassnames(
@@ -259,10 +241,13 @@ export class FilterManagerComponent implements OnInit {
     const dateObj = new Date(date);
     const proposedTime =  dateObj.getTime();
     const currentTime = Date.now() - 60001;
-    console.log('currentTime-proposedTime =', currentTime-proposedTime);
 
     const beforeOrAfterString = dateType === DateType.before ? 'before' : 'after';
     let exactErrorString = isSingle ? 'single' : 'multiple';
+
+    console.log('beforeDate.date =', beforeDate.date);
+    console.log('afterDate.date =', beforeDate.date);
+    console.log('date =', date);
     
     if (proposedTime >= currentTime && dateType === DateType.after) {
       exactErrorString = 'afterNow';

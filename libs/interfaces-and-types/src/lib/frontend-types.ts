@@ -6,6 +6,11 @@ export interface DateObj {
   date: Date | null;
 }
 
+export enum DateType {
+  before,
+  after,
+}
+
 export interface Deal extends DealCore {
   [key: string]: any;
   players: ObjectId[];

@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
+import { ElementRef, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Filters } from '@nx-bridge/interfaces-and-types';
+import { } from '@nx-bridge/constants';
 import { AppState, SetBeforeDate, SetAfterDate } from '@nx-bridge/store';
 
 @Injectable({
@@ -37,6 +38,13 @@ export class FiltermanagerService {
         const filterResetAction = this.filterResetActions[filter];
         this.store.dispatch(filterResetAction);
       }
+    }
+  }
+
+  resetElements(elements: ElementRef[], valueToReset: string, defaultValue: unknown) {
+    for (let i = 0; i < elements.length; i++) {
+      const element = elements[i]?.nativeElement;
+      if (element) element[valueToReset] = defaultValue;
     }
   }
 }
