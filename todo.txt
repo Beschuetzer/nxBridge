@@ -87,7 +87,7 @@ filtering-----------------------
 
 
 
--need to work on validateDate() and filterGames();
+-need to work on filterGames();
 
 
 

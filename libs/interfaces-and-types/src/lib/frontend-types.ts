@@ -4,6 +4,10 @@ export interface Filters {
   afterDate: number,
 }
 
+export interface DateObj {
+  date: Date | null;
+}
+
 export interface Deal extends DealCore {
   [key: string]: any;
   players: ObjectId[];

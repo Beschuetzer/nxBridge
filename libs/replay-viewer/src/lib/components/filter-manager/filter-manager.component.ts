@@ -6,8 +6,15 @@ import {
   Renderer2,
 } from '@angular/core';
 import { FILTER_MANAGER_CLASSNAME } from '@nx-bridge/constants';
-import { AppState, SetAfterDate, SetBeforeDate, SetIsFilterSame } from '@nx-bridge/store';
+import {
+  AppState,
+  SetAfterDate,
+  SetBeforeDate,
+  SetIsFilterSame,
+} from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
+import { DateObj } from '@nx-bridge/interfaces-and-types';
+import { filter } from 'rxjs/operators';
 
 enum DateType {
   before,
@@ -37,20 +44,20 @@ export class FilterManagerComponent implements OnInit {
         valid: 'Before: &nbsp;',
         invalid: {
           single: 'Invalid before date.',
-          multiple: 'Before date >= after date.',
+          multiple: 'Before date <= after date.',
         },
       },
       after: {
         valid: 'After: &nbsp;',
         invalid: {
           single: 'Invalid after date.',
-          multiple: 'After date <= before date.',
+          multiple: 'After date >= before date.',
         },
       },
     },
   };
-  public beforeDate: { date: Date | null } = { date: null };
-  public afterDate: { date: Date | null } = { date: null };
+  public beforeDate: DateObj = { date: null };
+  public afterDate: DateObj = { date: null };
 
   constructor(
     private renderer: Renderer2,
@@ -67,7 +74,9 @@ export class FilterManagerComponent implements OnInit {
     const input = (e.currentTarget || e.target) as HTMLInputElement;
     const { isDateInValid, dateObj, isSingle } = this.validateDate(
       input.value,
-      dateType
+      dateType,
+      this.beforeDate,
+      this.afterDate
     );
 
     const {
@@ -85,15 +94,7 @@ export class FilterManagerComponent implements OnInit {
     } else {
       this.changeErrorClasses(filterNameElement, true);
       filterName.date = dateObj;
-
-      const date = filterName.date.toLocaleDateString();
-      const shortDate =
-        date.substr(0, date.length - 4) +
-        date.substr(date.length - 2, date.length);
-      const time = filterName.date.toLocaleTimeString();
-      const shortTime = time.replace(/(:\d{2}) .*$/i, '');
-      const amOrPm = time.substr(-2, 2);
-      filterNameElement.innerHTML = `${filterMsg}${shortTime}${amOrPm} on ${shortDate}`;
+      filterNameElement.innerHTML = this.getDateAndTimeString(filterName, filterMsg);
       shouldRemoveInputErrorClassnames = true;
       shouldDispatchChange = true;
     }
@@ -109,11 +110,10 @@ export class FilterManagerComponent implements OnInit {
     const shouldDispatchChange = this.handleDateChange(e, DateType.before);
 
     let dateToDispatch = this.beforeDate.date?.getTime();
-    
+
     if (!shouldDispatchChange) {
       dateToDispatch = 0;
-    }
-    else {
+    } else {
       this.store.dispatch(new SetIsFilterSame(false));
     }
 
@@ -122,12 +122,11 @@ export class FilterManagerComponent implements OnInit {
 
   onDateAfterChange(e: Event) {
     const shouldDispatchChange = this.handleDateChange(e, DateType.after);
-    
+
     let dateToDispatch = this.afterDate.date?.getTime();
     if (!shouldDispatchChange) {
       dateToDispatch = 0;
-    }
-    else {
+    } else {
       this.store.dispatch(new SetIsFilterSame(false));
     }
 
@@ -152,8 +151,8 @@ export class FilterManagerComponent implements OnInit {
     );
     if (!appliedDiv) return;
 
-    this.renderer.appendChild(appliedDiv, this.beforeDateElement);
     this.renderer.appendChild(appliedDiv, this.afterDateElement);
+    this.renderer.appendChild(appliedDiv, this.beforeDateElement);
   }
 
   private getCorrectFilter(dateType: DateType, isSingle: boolean) {
@@ -175,6 +174,18 @@ export class FilterManagerComponent implements OnInit {
     return { filterMsg, filterMsgError, filterName, filterNameElement };
   }
 
+  private getDateAndTimeString(filterName: DateObj, filterMsg: string) {
+    if (!filterName?.date)  return 'N/A';
+    const date = filterName.date.toLocaleDateString();
+    const shortDate =
+      date.substr(0, date.length - 4) +
+      date.substr(date.length - 2, date.length);
+    const time = filterName.date.toLocaleTimeString();
+    const shortTime = time.replace(/(:\d{2}) .*$/i, '');
+    const amOrPm = time.substr(-2, 2);
+    return `${filterMsg}${shortTime}${amOrPm} on ${shortDate}`;
+  }
+
   private getNewElement(elementType: string) {
     return this.renderer.createElement(elementType);
   }
@@ -189,16 +200,20 @@ export class FilterManagerComponent implements OnInit {
     });
   }
 
-  private validateDate(date: string, dateType: DateType) {
-    debugger;
+  private validateDate(
+    date: string,
+    dateType: DateType,
+    beforeDate: DateObj,
+    afterDate: DateObj
+  ) {
     let isDateInValid = false;
     let isSingle = true;
     const dateObj = new Date(date);
-    if (this.beforeDate?.date && dateType === DateType.after) {
-      isDateInValid = this.beforeDate.date.getTime() <= dateObj.getTime();
+    if (beforeDate?.date && dateType === DateType.after) {
+      isDateInValid = beforeDate.date.getTime() <= dateObj.getTime();
       isSingle = false;
-    } else if (this.afterDate?.date && DateType.before) {
-      isDateInValid = this.afterDate.date.getTime() >= dateObj.getTime();
+    } else if (afterDate?.date && dateType === DateType.before) {
+      isDateInValid = afterDate.date.getTime() >= dateObj.getTime();
       isSingle = false;
     } else isDateInValid = !date;
     return { isDateInValid, dateObj, isSingle };

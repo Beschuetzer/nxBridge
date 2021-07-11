@@ -293,7 +293,7 @@ export class SearchService {
         if (gameState.filteredGames && gameState.filteredGames.length > 0) filteredGames = gameState.filteredGames;
       });
 
-    debugger;
+    // debugger;
 
     if (isFilterSame) return filteredGames;
 
