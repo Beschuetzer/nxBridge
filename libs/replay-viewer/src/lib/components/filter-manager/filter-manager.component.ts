@@ -46,7 +46,7 @@ export class FilterManagerComponent implements OnInit {
   private inputErrorClassnames = ['ng-touched', 'ng-dirty', 'ng-invalid'];
   private beforeDateElement: HTMLElement = this.getNewElement('div');
   private afterDateElement: HTMLElement = this.getNewElement('div');
-  private filtersMsgs = {
+  private filtersMsgs: {[key: string]: any} = {
     none: 'No Filters applied',
     game: {
       player: '',
@@ -64,6 +64,7 @@ export class FilterManagerComponent implements OnInit {
         invalid: {
           single: 'Invalid after date.',
           multiple: 'After date >= before date.',
+          afterNow: 'After date is after now.'
         },
       },
     },
@@ -88,7 +89,7 @@ export class FilterManagerComponent implements OnInit {
   handleDateChange(e: Event, dateType: DateType) {
     let shouldDispatchChange = false;
     const input = (e.currentTarget || e.target) as HTMLInputElement;
-    const { isDateInValid, dateObj, isSingle } = this.validateDate(
+    const { isDateInValid, dateObj, isSingle, filterMsgError } = this.validateDate(
       input.value,
       dateType,
       this.beforeDate,
@@ -97,10 +98,9 @@ export class FilterManagerComponent implements OnInit {
 
     const {
       filterMsg,
-      filterMsgError,
       filterName,
       filterNameElement,
-    } = this.getCorrectFilter(dateType, isSingle);
+    } = this.getCorrectFilter(dateType);
 
     let shouldRemoveInputErrorClassnames = false;
     if (isDateInValid) {
@@ -188,23 +188,18 @@ export class FilterManagerComponent implements OnInit {
     this.searchService.setCurrentlyDisplayingGames();
   }
 
-  private getCorrectFilter(dateType: DateType, isSingle: boolean) {
+  private getCorrectFilter(dateType: DateType) {
     let filterName = this.beforeDate;
     let filterNameElement = this.beforeDateElement;
     let filterMsg = this.filtersMsgs.date.before.valid;
-    let filterMsgError = isSingle
-      ? this.filtersMsgs.date.before.invalid.single
-      : this.filtersMsgs.date.before.invalid.multiple;
+    
     if (dateType === DateType.after) {
       filterName = this.afterDate;
       filterNameElement = this.afterDateElement;
       filterMsg = this.filtersMsgs.date.after.valid;
-      filterMsgError = isSingle
-        ? this.filtersMsgs.date.after.invalid.single
-        : this.filtersMsgs.date.after.invalid.multiple;
     }
 
-    return { filterMsg, filterMsgError, filterName, filterNameElement };
+    return { filterMsg, filterName, filterNameElement };
   }
 
   private getDateAndTimeString(filterName: DateObj, filterMsg: string) {
@@ -257,16 +252,34 @@ export class FilterManagerComponent implements OnInit {
     beforeDate: DateObj,
     afterDate: DateObj
   ) {
+
     let isDateInValid = false;
     let isSingle = true;
+
     const dateObj = new Date(date);
-    if (beforeDate?.date && dateType === DateType.after) {
-      isDateInValid = beforeDate.date.getTime() <= dateObj.getTime();
+    const proposedTime =  dateObj.getTime();
+    const currentTime = Date.now() - 60001;
+    console.log('currentTime-proposedTime =', currentTime-proposedTime);
+
+    const beforeOrAfterString = dateType === DateType.before ? 'before' : 'after';
+    let exactErrorString = isSingle ? 'single' : 'multiple';
+    
+    if (proposedTime >= currentTime && dateType === DateType.after) {
+      exactErrorString = 'afterNow';
+      isDateInValid = true;
+      if (beforeDate?.date) isSingle = false;
+    }
+    else if (beforeDate?.date && dateType === DateType.after) {
+      isDateInValid = beforeDate.date.getTime() <= proposedTime;
       isSingle = false;
     } else if (afterDate?.date && dateType === DateType.before) {
-      isDateInValid = afterDate.date.getTime() >= dateObj.getTime();
+      isDateInValid = afterDate.date.getTime() >= proposedTime;
       isSingle = false;
     } else isDateInValid = !date;
-    return { isDateInValid, dateObj, isSingle };
+
+
+    const filterMsgError = (this.filtersMsgs.date[beforeOrAfterString as any] as any).invalid[exactErrorString];
+
+    return { isDateInValid, dateObj, isSingle, filterMsgError };
   }
 }

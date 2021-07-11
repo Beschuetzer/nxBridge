@@ -190,7 +190,6 @@ export class SearchService {
   }
 
   private filterGames(games: Game[]) {
-    debugger;
     if (!games) return games;
     let isFilterSame = true;
     let filteredGames = games;
