@@ -87,7 +87,7 @@ filtering-----------------------
 
 
 -need to create reducersObj with strings for each reducer name
--need to work on filterGames();
+-add clear button next to filters that resets all filters
 
 
 

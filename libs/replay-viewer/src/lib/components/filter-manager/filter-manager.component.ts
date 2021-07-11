@@ -14,7 +14,8 @@ import {
 } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
 import { DateObj } from '@nx-bridge/interfaces-and-types';
-import { filter } from 'rxjs/operators';
+import { filter, take } from 'rxjs/operators';
+import { SearchService } from '../../services/search.service';
 
 enum DateType {
   before,
@@ -62,7 +63,8 @@ export class FilterManagerComponent implements OnInit {
   constructor(
     private renderer: Renderer2,
     private elRef: ElementRef,
-    private store: Store<AppState>
+    private store: Store<AppState>,
+    private searchService: SearchService
   ) {}
 
   ngOnInit(): void {
@@ -94,7 +96,10 @@ export class FilterManagerComponent implements OnInit {
     } else {
       this.changeErrorClasses(filterNameElement, true);
       filterName.date = dateObj;
-      filterNameElement.innerHTML = this.getDateAndTimeString(filterName, filterMsg);
+      filterNameElement.innerHTML = this.getDateAndTimeString(
+        filterName,
+        filterMsg
+      );
       shouldRemoveInputErrorClassnames = true;
       shouldDispatchChange = true;
     }
@@ -108,12 +113,16 @@ export class FilterManagerComponent implements OnInit {
 
   onDateBeforeChange(e: Event) {
     const shouldDispatchChange = this.handleDateChange(e, DateType.before);
-    this.dispatchChanges(this.beforeDate, shouldDispatchChange);
+    this.dispatchChanges(
+      this.beforeDate,
+      shouldDispatchChange,
+      DateType.before
+    );
   }
 
   onDateAfterChange(e: Event) {
     const shouldDispatchChange = this.handleDateChange(e, DateType.after);
-    this.dispatchChanges(this.afterDate, shouldDispatchChange);
+    this.dispatchChanges(this.afterDate, shouldDispatchChange, DateType.after);
   }
 
   onGameClick(e: Event) {}
@@ -138,7 +147,11 @@ export class FilterManagerComponent implements OnInit {
     });
   }
 
-  private dispatchChanges(filterName: DateObj, shouldDispatchChange: boolean) {
+  private dispatchChanges(
+    filterName: DateObj,
+    shouldDispatchChange: boolean,
+    dateType: DateType
+  ) {
     let dateToDispatch = filterName.date?.getTime();
 
     if (!shouldDispatchChange) {
@@ -147,8 +160,11 @@ export class FilterManagerComponent implements OnInit {
       this.store.dispatch(new SetIsFilterSame(false));
     }
 
-    this.store.dispatch(new SetBeforeDate(dateToDispatch as number));
-    
+    if (dateType === DateType.before)
+      this.store.dispatch(new SetBeforeDate(dateToDispatch as number));
+    else this.store.dispatch(new SetAfterDate(dateToDispatch as number));
+
+    this.searchService.setCurrentlyDisplayingGames();
   }
 
   private getCorrectFilter(dateType: DateType, isSingle: boolean) {
@@ -171,7 +187,7 @@ export class FilterManagerComponent implements OnInit {
   }
 
   private getDateAndTimeString(filterName: DateObj, filterMsg: string) {
-    if (!filterName?.date)  return 'N/A';
+    if (!filterName?.date) return 'N/A';
     const date = filterName.date.toLocaleDateString();
     const shortDate =
       date.substr(0, date.length - 4) +
