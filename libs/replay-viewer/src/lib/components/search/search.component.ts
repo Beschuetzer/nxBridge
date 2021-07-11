@@ -131,7 +131,7 @@ export class SearchComponent implements OnInit {
         if (punctuation) {
           if (!this.isNoGamesError) {
             term += punctuation[0];
-            errorWithoutTerm = errorWithoutTerm.replace(punctuation[0], '');
+            errorWithoutTerm = errorWithoutTerm.replace(new RegExp(punctuation[0] + '$'), '');
           }
         }
 

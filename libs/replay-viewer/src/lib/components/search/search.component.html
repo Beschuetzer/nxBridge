@@ -41,11 +41,14 @@
     <ng-template #space>
       <p *ngIf="!error">&nbsp;</p>
     </ng-template>
-    <div *ngIf="error && !isNoGamesError" class="ui red message">
-      {{ error }}<b>{{ errorHighlightedValue }}</b>
+    <div *ngIf="error && !isNoGamesError" class="ui red message"
+      innerHTML="{{ error }}<b>{{ errorHighlightedValue }}</b>"
+    >
+      
     </div>
-    <div *ngIf="error && isNoGamesError" class="ui red message">
-      <b>{{ errorHighlightedValue }}</b> {{ error }}
+    <div *ngIf="error && isNoGamesError" class="ui red message"
+      innerHTML="<b>{{ errorHighlightedValue }}</b> {{ error }}"
+    >
     </div>
   </div>
 

@@ -182,9 +182,9 @@ export class SearchService {
     } else {
       this.store.dispatch(
         new SetLoadingError(
-          `There is no user with the ${
+          `There is no user with that ${
             this.username ? 'username' : 'email'
-          } of '${this.username ? this.username : this.email}'.`
+          }. &nbsp;&nbsp;They may have recently changed their ${this.username ? 'username' : 'email'} to something other than '${this.username ? this.username : this.email}'.`
         )
       );
       this.store.dispatch(new SetIsLoading(false));
