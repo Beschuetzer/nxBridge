@@ -43,6 +43,7 @@ export function generalReducer(
         resultsPerPagePreference: action.payload,
       };
     case fromGeneralActions.SET_BATCH_NUMBER:
+      if (isNaN(action.payload)) return state;
       return {
         ...state,
         batchNumber: action.payload,
