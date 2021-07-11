@@ -108,41 +108,15 @@ export class FilterManagerComponent implements OnInit {
 
   onDateBeforeChange(e: Event) {
     const shouldDispatchChange = this.handleDateChange(e, DateType.before);
-
-    let dateToDispatch = this.beforeDate.date?.getTime();
-
-    if (!shouldDispatchChange) {
-      dateToDispatch = 0;
-    } else {
-      this.store.dispatch(new SetIsFilterSame(false));
-    }
-
-    this.store.dispatch(new SetBeforeDate(dateToDispatch as number));
+    this.dispatchChanges(this.beforeDate, shouldDispatchChange);
   }
 
   onDateAfterChange(e: Event) {
     const shouldDispatchChange = this.handleDateChange(e, DateType.after);
-
-    let dateToDispatch = this.afterDate.date?.getTime();
-    if (!shouldDispatchChange) {
-      dateToDispatch = 0;
-    } else {
-      this.store.dispatch(new SetIsFilterSame(false));
-    }
-
-    this.store.dispatch(new SetAfterDate(dateToDispatch as number));
+    this.dispatchChanges(this.afterDate, shouldDispatchChange);
   }
 
   onGameClick(e: Event) {}
-
-  private changeErrorClasses(element: HTMLElement, shouldRemove = false) {
-    if (!element) return;
-
-    this.errorClassnames.forEach((classname) => {
-      if (shouldRemove) this.renderer.removeClass(element, classname);
-      else this.renderer.addClass(element, classname);
-    });
-  }
 
   private appendFiltersToAppliedDiv() {
     const filterManager = this.elRef.nativeElement as HTMLElement;
@@ -153,6 +127,28 @@ export class FilterManagerComponent implements OnInit {
 
     this.renderer.appendChild(appliedDiv, this.afterDateElement);
     this.renderer.appendChild(appliedDiv, this.beforeDateElement);
+  }
+
+  private changeErrorClasses(element: HTMLElement, shouldRemove = false) {
+    if (!element) return;
+
+    this.errorClassnames.forEach((classname) => {
+      if (shouldRemove) this.renderer.removeClass(element, classname);
+      else this.renderer.addClass(element, classname);
+    });
+  }
+
+  private dispatchChanges(filterName: DateObj, shouldDispatchChange: boolean) {
+    let dateToDispatch = filterName.date?.getTime();
+
+    if (!shouldDispatchChange) {
+      dateToDispatch = 0;
+    } else {
+      this.store.dispatch(new SetIsFilterSame(false));
+    }
+
+    this.store.dispatch(new SetBeforeDate(dateToDispatch as number));
+    
   }
 
   private getCorrectFilter(dateType: DateType, isSingle: boolean) {

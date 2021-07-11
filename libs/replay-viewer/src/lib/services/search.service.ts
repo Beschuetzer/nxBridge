@@ -141,6 +141,15 @@ export class SearchService {
     return '';
   }
 
+  private applyFilters(games: Game[], filters: Filters) {
+    let filteredGames: Game[] = games;
+
+    filteredGames = this.getBeforeDate(filteredGames, filters.beforeDate);
+    filteredGames = this.getAfterDate(filteredGames, filters.afterDate);
+
+    return filteredGames;
+  }
+
   private getLocalUserId() {
     const localStorageUsers = this.localStorageManager.getLocalStorageUsers();
     // debugger;
@@ -175,6 +184,57 @@ export class SearchService {
       );
       this.store.dispatch(new SetIsLoading(false));
     }
+  }
+
+  private filterGames(games: Game[]) {
+    if (!games) return games;
+    let isFilterSame = true;
+    let filteredGames = games;
+    let filters: Filters = filtersInitial;
+
+    this.store
+      .select('filters')
+      .pipe(
+        take(1), 
+        switchMap(filterState => {
+          isFilterSame = filterState.isFilterSame;
+          filters = {...filterState};
+          return this.store.select('games').pipe(take(1));
+      }))
+      .subscribe((gameState) => {
+        if (isFilterSame && gameState.filteredGames?.length > 0) filteredGames = gameState.filteredGames;
+      });
+
+    if (isFilterSame) return filteredGames;
+
+    filteredGames = this.applyFilters(games, filters);
+    this.store.dispatch(new SetFilteredGames(filteredGames));
+    this.store.dispatch(new SetIsFilterSame(true));
+    return filteredGames;
+  }
+
+  private getAfterDate(games: Game[], afterDate: number) {
+    if (!afterDate) return games;
+
+    const toReturn: Game[] = [];
+    for (let i = 0; i < games.length; i++) {
+      const game = games[i];
+      if (game.completionDate >= afterDate) toReturn.push(game);
+    }
+
+    return toReturn;
+  }
+
+  private getBeforeDate(games: Game[], beforeDate: number) {
+    if (!beforeDate) return games;
+    
+    const toReturn: Game[] = [];
+    for (let i = 0; i < games.length; i++) {
+      const game = games[i];
+      if (game.completionDate <= beforeDate) toReturn.push(game);
+    }
+
+    return toReturn;
   }
 
   private getGameCount() {
@@ -274,65 +334,4 @@ export class SearchService {
     this.store.dispatch(new SetIsLoading(false));
   }
 
-  private filterGames(games: Game[]) {
-    if (!games) return games;
-    let isFilterSame;
-    let filteredGames = games;
-    let filters: Filters = filtersInitial;
-
-    this.store
-      .select('filters')
-      .pipe(
-        take(1), 
-        switchMap(filterState => {
-          isFilterSame = filterState.isFilterSame;
-          filters = {...filterState};
-          return this.store.select('games').pipe(take(1));
-      }))
-      .subscribe((gameState) => {
-        if (gameState.filteredGames && gameState.filteredGames.length > 0) filteredGames = gameState.filteredGames;
-      });
-
-    // debugger;
-
-    if (isFilterSame) return filteredGames;
-
-    const filteredGame = this.applyFilters(games, filters);
-    this.store.dispatch(new SetFilteredGames(filteredGame));
-    this.store.dispatch(new SetIsFilterSame(true));
-    return filteredGame;
-  }
-
-  private applyFilters(games: Game[], filters: Filters) {
-    let filteredGames: Game[] = games;
-
-    filteredGames = this.getBeforeDate(filteredGames, filters.beforeDate);
-    filteredGames = this.getAfterDate(filteredGames, filters.afterDate);
-
-    return filteredGames;
-  }
-
-  private getBeforeDate(games: Game[], beforeDate: number) {
-    if (!beforeDate) return games;
-    
-    const toReturn: Game[] = [];
-    for (let i = 0; i < games.length; i++) {
-      const game = games[i];
-      if (game.completionDate <= beforeDate) toReturn.push(game);
-    }
-
-    return toReturn;
-  }
-
-  private getAfterDate(games: Game[], afterDate: number) {
-    if (!afterDate) return games;
-
-    const toReturn: Game[] = [];
-    for (let i = 0; i < games.length; i++) {
-      const game = games[i];
-      if (game.completionDate >= afterDate) toReturn.push(game);
-    }
-
-    return toReturn;
-  }
 }
