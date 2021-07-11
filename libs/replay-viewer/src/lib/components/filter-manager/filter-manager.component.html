@@ -1,13 +1,25 @@
 <section class="ui form">
-  <div>
+  <div class="{{ FILTER_MANANGER_CLASSNAME }}__header">
     <h2 class="ui header">Filters:</h2>
-    <button type="button" (click)="onReset()" >Reset</button>
+    <button
+      class="{{
+        FILTER_MANANGER_CLASSNAME
+      }}__reset ui button color-white bg-color-red  margin-0"
+      type="button"
+      (click)="onReset()"
+    >
+      Reset
+    </button>
   </div>
-  <div #applied class="filter-manager__applied ui field"></div>
-  <div class="filter-manager__options field">
+  <div #applied class="{{ FILTER_MANANGER_CLASSNAME }}__applied ui field"></div>
+  <div class="{{ FILTER_MANANGER_CLASSNAME }}__options field">
     <label>
       <input #date (click)="onDateClick($event)" type="checkbox" />
       Date
+    </label>
+    <label>
+      <input #player (click)="onPlayerClick($event)" type="checkbox" />
+      Player
     </label>
     <label>
       <input #game (click)="onGameClick($event)" type="checkbox" />
@@ -15,17 +27,27 @@
     </label>
   </div>
 
-  <div class="filter-manager__details">
-    <div *ngIf="date.checked" class="filter-manager__date">
+  <div class="{{ FILTER_MANANGER_CLASSNAME }}__details">
+    <div *ngIf="date.checked" class="{{ FILTER_MANANGER_CLASSNAME }}__date">
       <label>
         Completed after:
-        <input (change)="onDateAfterChange($event)" type="datetime-local" />
+        <input
+          #afterDate
+          (change)="onDateAfterChange($event)"
+          type="datetime-local"
+        />
       </label>
       <label>
         Completed before:
-        <input (change)="onDateBeforeChange($event)" type="datetime-local" />
+        <input
+          #beforeDate
+          (change)="onDateBeforeChange($event)"
+          type="datetime-local"
+        />
       </label>
     </div>
+    
+    <div *ngIf="player.checked === true">player details</div>
     <div *ngIf="game.checked === true">Game details</div>
   </div>
 </section>

@@ -13,6 +13,7 @@
   }
 
 
+
   &__applied {
     padding: 0 $default-font-size * .25;
   }
@@ -25,6 +26,12 @@
   
   &__details {
     
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 
   &__date {

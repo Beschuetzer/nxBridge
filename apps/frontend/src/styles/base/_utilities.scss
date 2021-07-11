@@ -168,6 +168,11 @@
     color: var(--color-white) !important;
   }
 }
+.hover-color-red {
+  &:hover {
+    color: var(--color-red) !important;
+  }
+}
 
 .bg-color-1 {
   background-color: var(--color-primary-1) !important;
@@ -193,6 +198,12 @@
     background-color: rgba(var(--color-primary-4-rgb), 0.5) !important;
   }
 }
+.bg-color-red {
+  background-color: var(--color-red) !important;
+  &:hover {
+    background-color: rgba(var(--color-red-rgb), 0.5) !important;
+  }
+}
 
 .hover-bg-color-1 {
   &:hover {
@@ -212,6 +223,11 @@
 .hover-bg-color-4 {
   &:hover {
     background-color: var(--color-primary-4) !important;
+  }
+}
+.hover-bg-color-red {
+  &:hover {
+    background-color: var(--color-red) !important;
   }
 }
 

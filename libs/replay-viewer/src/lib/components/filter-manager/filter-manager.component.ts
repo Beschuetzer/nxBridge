@@ -4,6 +4,7 @@ import {
   HostBinding,
   OnInit,
   Renderer2,
+  ViewChild,
 } from '@angular/core';
 import { FILTER_MANAGER_CLASSNAME } from '@nx-bridge/constants';
 import {
@@ -14,7 +15,6 @@ import {
 } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
 import { DateObj } from '@nx-bridge/interfaces-and-types';
-import { filter, take } from 'rxjs/operators';
 import { SearchService } from '../../services/search.service';
 import { FiltermanagerService } from '../../services/filtermanager.service';
 
@@ -29,9 +29,19 @@ enum DateType {
   styleUrls: ['./filter-manager.component.scss'],
 })
 export class FilterManagerComponent implements OnInit {
+  //NOTE: new checkboxes need to be added to resetFilterCheckboxes()
+  @ViewChild('game') gameCheckbox: ElementRef | null = null;
+  @ViewChild('date') dateCheckbox: ElementRef | null = null;
+  @ViewChild('player') playerCheckbox: ElementRef | null = null;
+
+  //NOTE: new filters need to be added to resetFilterValues()
+  @ViewChild('beforeDate') beforeDateFilterElement: ElementRef | null = null;
+  @ViewChild('afterDate') afterDateFilterElement: ElementRef | null = null;
+  
   @HostBinding('class.filter-manager') get classname() {
     return true;
   }
+
   private errorClassnames = ['color-red-light'];
   private inputErrorClassnames = ['ng-touched', 'ng-dirty', 'ng-invalid'];
   private beforeDateElement: HTMLElement = this.getNewElement('div');
@@ -58,8 +68,10 @@ export class FilterManagerComponent implements OnInit {
       },
     },
   };
+  
   public beforeDate: DateObj = { date: null };
   public afterDate: DateObj = { date: null };
+  public FILTER_MANANGER_CLASSNAME = FILTER_MANAGER_CLASSNAME;
 
   constructor(
     private renderer: Renderer2,
@@ -129,7 +141,13 @@ export class FilterManagerComponent implements OnInit {
 
   onGameClick(e: Event) {}
 
+  onPlayerClick(e: Event) {
+
+  }
+
   onReset() {
+    this.resetFilterCheckboxes();
+    this.resetFilterValues();
     this.filterManagerService.reset();
   }
 
@@ -206,6 +224,24 @@ export class FilterManagerComponent implements OnInit {
 
   private getNewElement(elementType: string) {
     return this.renderer.createElement(elementType);
+  }
+
+  private resetFilterCheckboxes() {
+    const filterCheckboxElements = [this.gameCheckbox, this.dateCheckbox, this.playerCheckbox];
+    for (let i = 0; i < filterCheckboxElements.length; i++) {
+      const filterElement = filterCheckboxElements[i]?.nativeElement;
+      if (filterElement) filterElement.checked = false;
+      
+    }
+  }
+
+  private resetFilterValues() {
+    const filterElements = [this.beforeDateFilterElement, this.afterDateFilterElement];
+    for (let i = 0; i < filterElements.length; i++) {
+      const filterElement = filterElements[i]?.nativeElement;
+      if (filterElement) filterElement.value = '';
+      
+    }
   }
 
   private setInputErrorClassnames(
