@@ -83,6 +83,7 @@ export class SearchService {
   }
 
   setCurrentlyDisplayingGames() {
+
     //NOTE: assumming the games are sorted in descending order at this point (happens in getLocalStorageUserWithGames)
     let sortPreference: string;
     let resultsPerPage: string;
@@ -112,6 +113,7 @@ export class SearchService {
         if (!games) return;
         // debugger;
         //note: batch number starts at 0 (meaning results 0 - 0 * resultsPerPage)
+
         const filteredGames = this.filterGames(games);
         const gamesToUse = paginateGames(
           filteredGames,

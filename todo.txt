@@ -92,7 +92,6 @@ filtering-----------------------
   2) 'contract is ...'
   3) 'declarer is ...'
 
--fix bug where loading one user then loading another doesn't show the new users games until clicking reset button in filters
 
 
 

@@ -4,7 +4,7 @@ import { take, map } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { SearchService } from '../../services/search.service';
 import { Store } from '@ngrx/store';
-import { AppState, SetIsLoading, SetLoadingError } from '@nx-bridge/store';
+import { AppState, SetIsFilterSame, SetIsLoading, SetLoadingError } from '@nx-bridge/store';
 import { ReducerNames } from '@nx-bridge/interfaces-and-types';
 
 @Component({
@@ -86,6 +86,7 @@ export class SearchComponent implements OnInit {
   }
 
   onSubmit() {
+    this.store.dispatch(new SetIsFilterSame(false));
     this.store.dispatch(new SetIsLoading(true));
     const email = this.initialForm.get('email');
     const username = this.initialForm.get('username');
