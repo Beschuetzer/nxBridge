@@ -22,6 +22,7 @@ export class FilterManagerComponent implements OnInit {
     return true;
   }
   private errorClassnames = ['color-red-light'];
+  private inputErrorClassnames = ['ng-touched', 'ng-dirty', 'ng-invalid'];
   private beforeDateElement: HTMLElement = this.getNewElement('div');
   private afterDateElement: HTMLElement = this.getNewElement('div');
   private filtersMsgs = {
@@ -31,24 +32,24 @@ export class FilterManagerComponent implements OnInit {
     },
     date: {
       before: {
-        valid: 'Before: ',
-        invalid: 'Invalid before date.',
+        valid: 'Before: &nbsp;',
+        invalid: {
+          single: 'Invalid before date.',
+          multiple: 'Before date >= after date.'
+        },
       },
       after: {
-        valid: 'After: ',
-        invalid: 'Invalid after date.',
+        valid: 'After: &nbsp;',
+        invalid: {
+          single: 'Invalid after date.',
+          multiple: 'After date <= before date.'
+        },
+        
       },
-      // between: {
-      //   valid: {
-      //     pre: "Between ",
-      //     post: " and ",
-      //   },
-      //   invalid: "Invalid between date.",
-      // },
     },
   };
-  public beforeDate: Date | null = null;
-  public afterDate: Date | null = null;
+  public beforeDate: {date: Date | null} = {date: null};
+  public afterDate: {date: Date | null} = {date: null};
 
   constructor(private renderer: Renderer2, private elRef: ElementRef) {}
 
@@ -58,28 +59,31 @@ export class FilterManagerComponent implements OnInit {
 
   handleDateChange(e: Event, dateType: DateType) {
     const input = (e.currentTarget || e.target) as HTMLInputElement;
-    const isInputInValid = this.validateDate(input.value, dateType);
+    console.log('input.value =', input.value);
+    const {isDateInValid, dateObj, isSingle} = this.validateDate(input.value, dateType);
 
-    let filterName = this.beforeDate;
-    let filterNameElement = this.beforeDateElement;
-    let filterMsg = this.filtersMsgs.date.before.valid;
-    let filterMsgError = this.filtersMsgs.date.before.invalid;
-    if (dateType === DateType.after) {
-      filterName = this.afterDate;
-      filterNameElement = this.afterDateElement;
-      filterMsg = this.filtersMsgs.date.after.valid;
-      filterMsgError = this.filtersMsgs.date.after.invalid;
-    }
+    const {filterMsg, filterMsgError, filterName, filterNameElement} = this.getCorrectFilter(dateType, isSingle);
 
-    if (isInputInValid) {
-      filterName = null;
+    let shouldRemoveInputErrorClassnames = false;
+    if (isDateInValid) {
+      filterName.date = null;
       filterNameElement.innerHTML = filterMsgError;
       this.changeErrorClasses(filterNameElement, false);
     } else {
+      
       this.changeErrorClasses(filterNameElement, true);
-      filterName = new Date(input.value as string);
-      filterNameElement.innerHTML = `${filterMsg}${filterName.toDateString()}`;
+      filterName.date = dateObj;
+      
+      const date = filterName.date.toLocaleDateString();
+      const shortDate = date.substr(0, date.length - 4) + date.substr(date.length - 2, date.length);
+      const time = filterName.date.toLocaleTimeString();
+      const shortTime = time.replace(/(:\d{2}) .*$/i, '');
+      const amOrPm = time.substr(-2, 2);
+      filterNameElement.innerHTML = `${filterMsg}${shortTime}${amOrPm} on ${shortDate}`;
+      shouldRemoveInputErrorClassnames = true;
     }
+
+    this.setInputErrorClassnames(input, shouldRemoveInputErrorClassnames);
   }
 
   onDateClick(e: Event) {}
@@ -114,12 +118,46 @@ export class FilterManagerComponent implements OnInit {
     this.renderer.appendChild(appliedDiv, this.afterDateElement);
   }
 
+  private getCorrectFilter(dateType: DateType, isSingle: boolean) {
+    let filterName = this.beforeDate;
+    let filterNameElement = this.beforeDateElement;
+    let filterMsg = this.filtersMsgs.date.before.valid;
+    let filterMsgError = isSingle ? this.filtersMsgs.date.before.invalid.single : this.filtersMsgs.date.before.invalid.multiple;
+    if (dateType === DateType.after) {
+      filterName = this.afterDate;
+      filterNameElement = this.afterDateElement;
+      filterMsg = this.filtersMsgs.date.after.valid;
+      filterMsgError = isSingle ? this.filtersMsgs.date.after.invalid.single : this.filtersMsgs.date.after.invalid.multiple;
+    }
+
+    return {filterMsg, filterMsgError, filterName, filterNameElement}
+  }
+
   private getNewElement(elementType: string) {
     return this.renderer.createElement(elementType);
   }
 
+  private setInputErrorClassnames(input: HTMLInputElement, shouldRemoveInputErrorClassnames: boolean) {
+    this.inputErrorClassnames.forEach(classname => {
+      if (shouldRemoveInputErrorClassnames) input.classList.remove(classname);
+      else input.classList.add(classname);
+    })
+  }
+
   private validateDate(date: string, dateType: DateType) {
-    //todo: -need a validation function that checks whether the date given is valid in relation to the other date given (if it is given)
-    return !date;
+    let isDateInValid = false;
+    let isSingle = true;
+    const dateObj = new Date(date);
+    if (this.beforeDate?.date && dateType === DateType.after)  {
+      isDateInValid = this.beforeDate.date.getTime() >= dateObj.getTime();
+      isSingle = false;
+    }
+
+    else if (this.afterDate?.date && DateType.before) {
+      isDateInValid = this.afterDate.date.getTime() <= dateObj.getTime();
+      isSingle = false;
+    }
+    else isDateInValid = !date;
+    return {isDateInValid, dateObj, isSingle};
   }
 }

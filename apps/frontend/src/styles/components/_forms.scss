@@ -14,5 +14,5 @@ input.ng-touched.ng-dirty.ng-valid {
 }
 
 input.ng-touched.ng-dirty.ng-invalid {
-  border: 1px solid rgba(var(--color-primary-3-rgb), 1) !important;
+  border: 1px solid rgba(var(--color-red-light-rgb), 1) !important;
 }

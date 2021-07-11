@@ -28,7 +28,7 @@
   }
 
   &__date {
-    padding-top: $default-font-size * .5;
+    padding-top: $default-font-size * .25;
      
     & label {
       flex-direction: column;
@@ -37,7 +37,8 @@
 
     & input {
       padding: $default-font-size * .25 $default-font-size * .125 !important;
-      font-size: $default-font-size * .45 !important;
+      // font-size: $default-font-size * .45 !important;
+      // font-size: $default-font-size *  !important;
     }
   }
 }

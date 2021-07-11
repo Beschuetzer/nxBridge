@@ -1,5 +1,5 @@
 <section class="ui form">
-  <h2 class="ui header">Filter</h2>
+  <h2 class="ui header">Filters:</h2>
   <div #applied class="filter-manager__applied ui field"></div>
   <div class="filter-manager__options field">
     <label>
@@ -15,11 +15,11 @@
   <div class="filter-manager__details">
     <div *ngIf="date.checked" class="filter-manager__date">
       <label>
-        Games Completed Before:
+        Completed before:
         <input (change)="onDateBeforeChange($event)" type="datetime-local" />
       </label>
       <label>
-        Games Completed After:
+        Completed after:
         <input (change)="onDateAfterChange($event)" type="datetime-local" />
       </label>
     </div>
