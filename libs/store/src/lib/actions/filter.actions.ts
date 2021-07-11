@@ -1,0 +1,18 @@
+import { Action } from '@ngrx/store';
+
+export const SET_BEFORE_DATE = '[Filter] SET_BEFORE_DATE';
+export const SET_AFTER_DATE = '[Filter] SET_AFTER_DATE';
+
+export class SetBeforeDate implements Action {
+  readonly type = SET_BEFORE_DATE;
+  constructor(public payload: number) {}
+}
+
+export class SetAfterDate implements Action {
+  readonly type = SET_AFTER_DATE;
+  constructor(public payload: number) {}
+}
+
+export type FilterActions =
+  | SetBeforeDate
+  | SetAfterDate;

@@ -84,7 +84,6 @@ filtering-----------------------
     2) filter after date and time?
     3) filter between dates and time?
     4) filter by players in game
-  -create new component that handles validating inputs and dispatching changes
 
 
 

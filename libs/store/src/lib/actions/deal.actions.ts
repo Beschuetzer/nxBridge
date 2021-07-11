@@ -1,4 +1,4 @@
-import { Action } from '@ngrx/store';
+import { Action as fromFilterActions } from '@ngrx/store';
 import { Contract, Deal } from '@nx-bridge/interfaces-and-types';
 
 export const SET_DEALS_AS_STRING = '[Deals] SET_DEALS_AS_STRINGS';
@@ -15,22 +15,22 @@ export interface CurrentlyViewingDeal extends Deal {
   summaryPost: string;
 }
 
-export class SetDealsAsStrings implements Action {
+export class SetDealsAsStrings implements fromFilterActions {
   readonly type = SET_DEALS_AS_STRING;
   constructor(public payload: string[]) {}
 }
 
-export class AddFetchedDeals implements Action {
+export class AddFetchedDeals implements fromFilterActions {
   readonly type = ADD_FETCHED_DEALS;
   constructor(public payload: Deal[]) {}
 }
 
-export class SetCurrentlyViewingDeal implements Action {
+export class SetCurrentlyViewingDeal implements fromFilterActions {
   readonly type = SET_CURRENTLY_VIEWING_DEAL;
   constructor(public payload: CurrentlyViewingDeal) {}
 }
 
-export class SetCurrentlyViewingDealContract implements Action {
+export class SetCurrentlyViewingDealContract implements fromFilterActions {
   readonly type = SET_CURRENTLY_VIEWING_DEAL_CONTRACT;
   constructor(public payload: Contract) {}
 }
