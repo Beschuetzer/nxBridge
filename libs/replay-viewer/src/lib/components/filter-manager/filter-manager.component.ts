@@ -158,6 +158,9 @@ export class FilterManagerComponent implements OnInit {
         child.innerHTML = '';
       }
     }
+
+    //NOTE: this could be any filter as long as it gets called (in order to show all un-filtered games)
+    this.dispatchChanges(this.afterDate, true, DateType.after);
   }
 
   private appendFiltersToAppliedDiv() {

@@ -4,19 +4,20 @@ import * as fromUser from './user.reducer';
 import * as fromFilter from './filter.reducer';
 import * as fromGeneral from './general.reducer';
 import { ActionReducerMap } from "@ngrx/store";
+import { ReducerNames } from '@nx-bridge/interfaces-and-types';
 
 export interface AppState {
-  deals: fromDeal.DealState,
-  games: fromGame.GameState,
-  users: fromUser.UserState,
-  filters: fromFilter.FilterState,
-  general: fromGeneral.GeneralState,
+  [ReducerNames.deals]: fromDeal.DealState,
+  [ReducerNames.games]: fromGame.GameState,
+  [ReducerNames.users]: fromUser.UserState,
+  [ReducerNames.filters]: fromFilter.FilterState,
+  [ReducerNames.general]: fromGeneral.GeneralState,
 }
 
 export const appReducer: ActionReducerMap<AppState> = {
-  deals: fromDeal.dealReducer as any,
-  games: fromGame.gameReducer as any,
-  users: fromUser.userReducer as any,
-  filters: fromFilter.filterReducer as any,
-  general: fromGeneral.generalReducer as any,
+  [ReducerNames.deals]: fromDeal.dealReducer as any,
+  [ReducerNames.games]: fromGame.gameReducer as any,
+  [ReducerNames.users]: fromUser.userReducer as any,
+  [ReducerNames.filters]: fromFilter.filterReducer as any,
+  [ReducerNames.general]: fromGeneral.generalReducer as any,
 };

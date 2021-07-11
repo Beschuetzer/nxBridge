@@ -33,6 +33,7 @@ import {
   CardinalDirection,
   CardValuesAsString,
   Deal,
+  ReducerNames,
   Seating,
   Team,
   ToggleDealDetailButtonBehaviour,
@@ -121,7 +122,7 @@ export class DealsListComponent implements OnInit {
   private getIsGameAlreadyOpen() {
     let isGameAlreadyOpen = false;
     this.store
-      .select('games')
+      .select(ReducerNames.games)
       .pipe(take(1))
       .subscribe((gamesState) => {
         isGameAlreadyOpen = gamesState.isViewingGame;

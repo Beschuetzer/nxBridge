@@ -85,9 +85,13 @@ filtering-----------------------
     3) filter between dates and time?
     4) filter by players in game
 
+-work on player filter:
+  1) 'player had card'
+-work on game filter:
+  1) 'game contains user'
+  2) 'contract is ...'
+  3) 'declarer is ...'
 
--need to create reducersObj with strings for each reducer name
--add clear button next to filters that resets all filters
 
 
 

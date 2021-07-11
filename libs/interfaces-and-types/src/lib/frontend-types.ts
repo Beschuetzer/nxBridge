@@ -1,3 +1,4 @@
+
 export interface Filters {
   [key: string]: any,
 }
@@ -54,6 +55,14 @@ export interface Preferences {
   cardBackPreference: number;
   colorTheme: string;
   setHonorsAutomatically: boolean;
+}
+
+export enum ReducerNames {
+  deals = 'deals',
+  games = 'games',
+  users = 'users',
+  filters = 'filters',
+  general = 'general',
 }
 
 export interface Stats {

@@ -20,13 +20,14 @@ import {
   Filters,
   GetUserResponse,
   LocalStorageUserWithGames,
+  ReducerNames,
 } from '@nx-bridge/interfaces-and-types';
 import { paginateGames } from '@nx-bridge/constants';
 import { Game } from '@nx-bridge/interfaces-and-types';
 import { LocalStorageManagerService } from './local-storage-manager.service';
 import { ERROR_APPENDING_GAMES } from '@nx-bridge/api-errors';
 import { switchMap, take } from 'rxjs/operators';
-import { } from '@nx-bridge/store';
+import {} from '@nx-bridge/store';
 import { FiltermanagerService } from './filtermanager.service';
 
 @Injectable({
@@ -89,7 +90,7 @@ export class SearchService {
     let games: Game[];
 
     this.store
-      .select('general')
+      .select(ReducerNames.general)
       .pipe(
         take(1),
         switchMap((generalState) => {
@@ -102,7 +103,7 @@ export class SearchService {
           if (!resultsPerPage)
             resultsPerPage = this.localStorageManager.getResultsPerPagePreference();
 
-          return this.store.select('users').pipe(take(1));
+          return this.store.select(ReducerNames.users).pipe(take(1));
         })
       )
       .subscribe((userState) => {
@@ -195,16 +196,18 @@ export class SearchService {
     let filters: Filters = this.filterManagerService.filtersInitial;
 
     this.store
-      .select('filters')
+      .select(ReducerNames.filters)
       .pipe(
-        take(1), 
-        switchMap(filterState => {
+        take(1),
+        switchMap((filterState) => {
           isFilterSame = filterState.isFilterSame;
-          filters = {...filterState};
-          return this.store.select('games').pipe(take(1));
-      }))
+          filters = { ...filterState };
+          return this.store.select(ReducerNames.games).pipe(take(1));
+        })
+      )
       .subscribe((gameState) => {
-        if (isFilterSame && gameState.filteredGames?.length > 0) filteredGames = gameState.filteredGames;
+        if (isFilterSame && gameState.filteredGames?.length > 0)
+          filteredGames = gameState.filteredGames;
       });
 
     if (isFilterSame) return filteredGames;
@@ -229,7 +232,7 @@ export class SearchService {
 
   private getBeforeDate(games: Game[], beforeDate: number) {
     if (!beforeDate) return games;
-    
+
     const toReturn: Game[] = [];
     for (let i = 0; i < games.length; i++) {
       const game = games[i];
@@ -254,7 +257,7 @@ export class SearchService {
   private getShouldContinue(username: string, email: string) {
     let shouldContinue = false;
     this.store
-      .select('users')
+      .select(ReducerNames.users)
       .pipe(take(1))
       .subscribe((userState) => {
         if (username)
@@ -335,5 +338,4 @@ export class SearchService {
     this.setCurrentlyDisplayingGames();
     this.store.dispatch(new SetIsLoading(false));
   }
-
 }

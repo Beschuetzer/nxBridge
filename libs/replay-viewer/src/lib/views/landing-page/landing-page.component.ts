@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { AppState} from '@nx-bridge/store';
+import { AppState } from '@nx-bridge/store';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SearchService } from '../../services/search.service';
-
+import { ReducerNames } from '@nx-bridge/interfaces-and-types';
 
 @Component({
   selector: 'nx-bridge-landing-page',
@@ -15,7 +15,7 @@ export class LandingPageComponent implements OnInit {
     private searchService: SearchService,
     private store: Store<AppState>,
     private router: Router,
-    private route: ActivatedRoute,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -23,13 +23,15 @@ export class LandingPageComponent implements OnInit {
   }
 
   private subscribeToGames() {
-    this.store.select('users').subscribe(usersState => {
+    this.store.select(ReducerNames.users).subscribe((usersState) => {
       if (!usersState?.currentlyViewingUser?.games) return;
-      if (usersState.currentlyViewingUser.games.length > 0 && this.searchService.shouldNavigateToGames) {
-        this.router.navigate(['games'], {relativeTo: this.route});
+      if (
+        usersState.currentlyViewingUser.games.length > 0 &&
+        this.searchService.shouldNavigateToGames
+      ) {
+        this.router.navigate(['games'], { relativeTo: this.route });
         this.searchService.shouldNavigateToGames = false;
       }
     });
   }
-  
 }

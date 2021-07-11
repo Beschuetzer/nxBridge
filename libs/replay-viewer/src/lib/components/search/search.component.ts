@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { SearchService } from '../../services/search.service';
 import { Store } from '@ngrx/store';
 import { AppState, SetIsLoading, SetLoadingError } from '@nx-bridge/store';
+import { ReducerNames } from '@nx-bridge/interfaces-and-types';
 
 @Component({
   selector: 'nx-bridge-search',
@@ -68,7 +69,7 @@ export class SearchComponent implements OnInit {
 
   onInputClick() {
     this.store
-      .select('general')
+      .select(ReducerNames.general)
       .pipe(
         take(1),
         map((generalState) => {
@@ -107,17 +108,14 @@ export class SearchComponent implements OnInit {
           Validators.maxLength(12),
           SearchService.noEmpty,
         ]),
-        email: new FormControl(null, [
-          Validators.email,
-          SearchService.noEmpty,
-        ]),
+        email: new FormControl(null, [Validators.email, SearchService.noEmpty]),
       },
       SearchService.numberRequired(1)
     );
   }
 
   private subscribeToLoadingErrorMessage() {
-    this.store.select('general').subscribe(generalState => {
+    this.store.select(ReducerNames.general).subscribe((generalState) => {
       const errorMessageWhole = generalState.loadingError;
       const termToHighlight = errorMessageWhole.match(/'.+'/i);
       const punctuation = errorMessageWhole.match(/[.?]$/i);
@@ -127,8 +125,8 @@ export class SearchComponent implements OnInit {
 
       if (termToHighlight) {
         let term = termToHighlight[0];
-        let errorWithoutTerm = errorMessageWhole.replace(term, '')
-       
+        let errorWithoutTerm = errorMessageWhole.replace(term, '');
+
         if (punctuation) {
           if (!this.isNoGamesError) {
             term += punctuation[0];
@@ -138,16 +136,15 @@ export class SearchComponent implements OnInit {
 
         this.error = errorWithoutTerm;
         this.errorHighlightedValue = term;
-
       } else {
         this.error = errorMessageWhole;
       }
-    })
+    });
   }
 
   private subscribeToIsLoading() {
-    this.store.select('general').subscribe(generalState => {
+    this.store.select(ReducerNames.general).subscribe((generalState) => {
       this.isLoading = generalState.isLoading;
-    })
+    });
   }
 }

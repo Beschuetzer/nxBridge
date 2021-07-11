@@ -1,7 +1,7 @@
 import { Component, HostBinding, OnInit, Renderer2 } from '@angular/core';
 import { AppState, SetIsViewingGame } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
-import { Game } from '@nx-bridge/interfaces-and-types';
+import { Game, ReducerNames } from '@nx-bridge/interfaces-and-types';
 import { ANIMATION_DURATION, dealsListDealsButtonChoices, DEALS_LIST_CLASSNAME, DEAL_DETAIL_CLASSNAME, DISPLAY_NONE_CLASSNAME, FULL_SIZE_CLASSNAME, GAMES_VIEW_CLASSNAME, OVERFLOW_Y_SCROLL_CLASSNAME, toggleClassOnList, toggleInnerHTML } from '@nx-bridge/constants';
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { DealPlayerService } from 'libs/deal-player/src/lib/deal-player.service';
@@ -28,7 +28,7 @@ export class GamesListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.store.select('games').subscribe((gameState) => {
+    this.store.select(ReducerNames.games).subscribe((gameState) => {
       if (gameState.currentlyDisplayingGames) this.games = gameState.currentlyDisplayingGames;
       else this.games = [];
     });

@@ -34,7 +34,7 @@
       border-radius: 0 !important;
 
       @include respond(tab-port) {
-        width: 14.9rem;
+        width: 14.8rem;
       }
 
       @include respond($layout-breakpoint) {

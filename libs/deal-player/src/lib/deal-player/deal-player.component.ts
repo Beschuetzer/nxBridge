@@ -31,7 +31,7 @@ import {
   DealState,
   GameState,
 } from '@nx-bridge/store';
-import { Contract, Hands, Seating } from '@nx-bridge/interfaces-and-types';
+import { Contract, Hands, ReducerNames, Seating } from '@nx-bridge/interfaces-and-types';
 import { DealPlayerService } from '../deal-player.service';
 
 @Component({
@@ -78,11 +78,11 @@ export class DealPlayerComponent implements OnInit {
       this.dealPlayerService.onResize.bind(this.dealPlayerService)
     );
 
-    this.store.select('games').subscribe((gameState) => {
+    this.store.select(ReducerNames.games).subscribe((gameState) => {
       this.handleGamesUpdates(gameState);
     });
 
-    this.store.select('deals').subscribe((dealState) => {
+    this.store.select(ReducerNames.deals).subscribe((dealState) => {
       this.handleDealsUpdates(dealState);
       this.addHeightAuto();
     });
