@@ -28,12 +28,9 @@ export class GamesListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.store.select('users').subscribe((userState) => {
-      this.games = userState.currentlyViewingUser.games;
-    });
-
     this.store.select('games').subscribe((gameState) => {
-      if (gameState.currentlyDisplayingGames && gameState.currentlyDisplayingGames.length > 0) this.games = gameState.currentlyDisplayingGames;
+      if (gameState.currentlyDisplayingGames) this.games = gameState.currentlyDisplayingGames;
+      else this.games = [];
     });
   }
 

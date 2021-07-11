@@ -34,7 +34,7 @@ export class FilterManagerComponent implements OnInit {
   @ViewChild('date') dateCheckbox: ElementRef | null = null;
   @ViewChild('player') playerCheckbox: ElementRef | null = null;
 
-  //NOTE: new filters need to be added to resetFilterValues()
+  //NOTE: new filters need to be added to resetFilterValues() and to filterManagerService's filters object
   @ViewChild('beforeDate') beforeDateFilterElement: ElementRef | null = null;
   @ViewChild('afterDate') afterDateFilterElement: ElementRef | null = null;
   
@@ -68,7 +68,7 @@ export class FilterManagerComponent implements OnInit {
       },
     },
   };
-  
+
   public beforeDate: DateObj = { date: null };
   public afterDate: DateObj = { date: null };
   public FILTER_MANANGER_CLASSNAME = FILTER_MANAGER_CLASSNAME;
@@ -123,7 +123,7 @@ export class FilterManagerComponent implements OnInit {
     return shouldDispatchChange;
   }
 
-  onDateClick(e: Event) {}
+  onDateClick(e: Event) {return}
 
   onDateBeforeChange(e: Event) {
     const shouldDispatchChange = this.handleDateChange(e, DateType.before);
@@ -139,11 +139,8 @@ export class FilterManagerComponent implements OnInit {
     this.dispatchChanges(this.afterDate, shouldDispatchChange, DateType.after);
   }
 
-  onGameClick(e: Event) {}
-
-  onPlayerClick(e: Event) {
-
-  }
+  onGameClick(e: Event) {return}
+  onPlayerClick(e: Event) {return}
 
   onReset() {
     this.resetFilterCheckboxes();

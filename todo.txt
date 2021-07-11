@@ -92,5 +92,7 @@ filtering-----------------------
 -move stuff to FiltermanagerService
 -how to setup filters such taht all I need to do is add the name of it in 'filters' and the reset part is taken care automatically?
 
+-add error msg if user selects a date after today for the afterDate filter
+
 
 

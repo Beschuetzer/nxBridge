@@ -7,6 +7,7 @@ import { AppState, SetBeforeDate, SetAfterDate } from '@nx-bridge/store';
   providedIn: 'root'
 })
 export class FiltermanagerService {
+  //NOTE: new filters need to be added to all three filter objects below
   public filters = {
     beforeDate: {
       string: 'beforeDate',

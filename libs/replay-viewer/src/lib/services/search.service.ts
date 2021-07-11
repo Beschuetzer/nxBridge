@@ -28,6 +28,7 @@ import { ERROR_APPENDING_GAMES } from '@nx-bridge/api-errors';
 import { switchMap, take } from 'rxjs/operators';
 import { } from '@nx-bridge/store';
 import { FiltermanagerService } from './filtermanager.service';
+import { debug } from 'node:console';
 
 @Injectable({
   providedIn: 'root',
@@ -189,6 +190,7 @@ export class SearchService {
   }
 
   private filterGames(games: Game[]) {
+    debugger;
     if (!games) return games;
     let isFilterSame = true;
     let filteredGames = games;
