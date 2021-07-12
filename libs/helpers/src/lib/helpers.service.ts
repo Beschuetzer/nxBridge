@@ -1,7 +1,7 @@
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Game, GetUserResponse, UserIds } from '@nx-bridge/interfaces-and-types';
+import { Deal, Game, GetUserResponse, UserIds } from '@nx-bridge/interfaces-and-types';
 import * as ngrxStore from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
 import {
@@ -14,6 +14,8 @@ import {
   USERS_STRING,
   GET_GAME_COUNT_URL,
   GET_GAMES_LAST_STRING,
+  DEALS_STRING,
+  GET_DEALS_URL,
 } from '@nx-bridge/constants';
 
 @Injectable({ providedIn: 'root' })
@@ -21,8 +23,13 @@ export class HelpersService {
   constructor(
     private http: HttpClient,
     private store: Store<ngrxStore.AppState>,
-    private router: Router
+    private router: Router,
   ) {}
+
+  getDeals(deals: string[]) {
+    if (!deals || deals.length === 0) return;
+    return this.http.post<Deal[]>(`${GET_DEALS_URL}`, {deals});
+  }
 
   getGameCount(userId: string) {
     const queryStringToUse = `${USER_ID_STRING}=${userId}`;
@@ -48,9 +55,9 @@ export class HelpersService {
     });
   }
 
-  loadDealsIntoRedux(games: Game[]) {
-    const deals = [];
-    if (!games) return;
+  getDealsAsStrings(games: Game[]) {
+    const deals: string[] = [];
+    if (!games) return deals;
     for (let i = 0; i < games.length; i++) {
       const game = games[i];
       if (!game || !game.deals) continue;
@@ -59,6 +66,6 @@ export class HelpersService {
         deals.push(deal);
       }
     }
-    this.store.dispatch(new ngrxStore.SetDealsAsStrings(deals));
+    return deals;
   }
 }

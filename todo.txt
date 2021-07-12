@@ -64,13 +64,15 @@ filtering-----------------------
     3) filter between dates and time?
     4) filter by players in game
 
-
--work on game filter:
+-game filters:
   1) 'game contains user'
-  2) 'contract is ...'
-  3) 'declarer is ...'
+
+-work on Deal filter:
+  1) 'contract is ...'
+  2) 'declarer is ...'
 
 -work on player filter:
   1) 'player had card'
 
 -makes sure to have the player had card filter be an array (for possible future expansion to multiples of this type)
+-add filters service and move all search service filter-related methods there

@@ -14,9 +14,11 @@ import {
   SetIsLoading,
   SetLoadingError,
   SetIsFilterSame,
+  SetDealsAsStrings,
 } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
 import {
+  Deal,
   Filters,
   GetUserResponse,
   LocalStorageUserWithGames,
@@ -150,7 +152,7 @@ export class SearchService {
   private applyFilters(games: Game[], filters: Filters) {
     let filteredGames: Game[] = games;
 
-    //NOTE: add new filtering function here
+    //NOTE: add new filtering function here; arrange in order of least to most cpu intensive to minimize cpu load
     filteredGames = this.getBeforeDate(filteredGames, filters.beforeDate);
     filteredGames = this.getAfterDate(filteredGames, filters.afterDate);
     filteredGames = this.getPlayerHasCard(filteredGames, filters.playerHasCard);
@@ -259,8 +261,58 @@ export class SearchService {
       });
   }
 
-  private getPlayerHasCard(games: Game[], filters: PlayerHasCard[]) {
+  private getLocalStorageUserWithGames(games: Game[]) {
+    if (this.needToCreateLocalStorageUser)
+      this.localStorageManager.createLocalStorageUser(
+        this.userId,
+        this.username,
+        this.email,
+        games,
+        this.gameCountFromServer + this.localGameCount
+      );
+    else {
+      const result = this.localStorageManager.appendGamesToLocalStorageUser(
+        this.userId as string,
+        games
+      );
+
+      if (!result)
+        return this.store.dispatch(new SetLoadingError(ERROR_APPENDING_GAMES));
+    }
+
+    this.localStorageManager.updateEmailAndUsername(
+      this.userId,
+      this.username,
+      this.email
+    );
+
+    return this.localStorageManager.getPopulatedLocalStorageUser(
+      this.userId
+    );
+  }
+
+  private getPlayerHasCard(games: Game[], playerHasCards: PlayerHasCard[]) {
+    if (!playerHasCards || playerHasCards.length <= 0) return games;
+    const toReturn = [];
+    
     debugger;
+
+    for (let i = 0; i < games.length; i++) {
+      const game = games[i];
+
+      for (let j = 0; j < game.deals.length; j++) {
+        const dealId = game.deals[j];
+
+        //todo: check if store.deals.fetchedDeals contains the deal, if not fetch it and store in
+        // const deal = this.localStorageManager.get
+        // const handToCheck = deal.hands
+
+        for (let j = 0; j < playerHasCards.length; j++) {
+          const playerHasCard = playerHasCards[j];
+        }
+      }
+    }
+
     return games;
   }
 
@@ -308,37 +360,13 @@ export class SearchService {
   private handleGetGamesResponse(games: Game[]) {
     console.log('games =', games);
 
-    if (this.needToCreateLocalStorageUser)
-      this.localStorageManager.createLocalStorageUser(
-        this.userId,
-        this.username,
-        this.email,
-        games,
-        this.gameCountFromServer + this.localGameCount
-      );
-    else {
-      const result = this.localStorageManager.appendGamesToLocalStorageUser(
-        this.userId as string,
-        games
-      );
+    const localStorageUserWithGames = this.getLocalStorageUserWithGames(games);
+    if (!localStorageUserWithGames) return;
 
-      if (!result)
-        return this.store.dispatch(new SetLoadingError(ERROR_APPENDING_GAMES));
-    }
-
-    this.localStorageManager.updateEmailAndUsername(
-      this.userId,
-      this.username,
-      this.email
-    );
-
-    const localStorageUserWithGames = this.localStorageManager.getPopulatedLocalStorageUser(
-      this.userId
-    );
     this.localStorageManager.saveUserIds(localStorageUserWithGames?.userIds as string[]);
-    this.helpersService.loadDealsIntoRedux(
-      localStorageUserWithGames?.games as Game[]
-    );
+
+    this.loadDeals(localStorageUserWithGames as LocalStorageUserWithGames);
+    
     this.store.dispatch(
       new SetCurrentlyViewingUser(
         localStorageUserWithGames
@@ -348,5 +376,18 @@ export class SearchService {
     );
     this.setCurrentlyDisplayingGames();
     this.store.dispatch(new SetIsLoading(false));
+  }
+
+  private loadDeals(localStorageUserWithGames: LocalStorageUserWithGames) {
+    const dealsAsStrings = this.helpersService.getDealsAsStrings(
+      localStorageUserWithGames?.games as Game[]
+    );
+
+    this.store.dispatch(new SetDealsAsStrings(dealsAsStrings));
+    this.helpersService.getDeals(dealsAsStrings)?.subscribe((deals: Deal[]) => {
+      console.log('deals =', deals);
+      if (dealsAsStrings?.length <= 0) return;
+      // this.store.dispatch(new SetDea)
+    });
   }
 }
