@@ -65,6 +65,8 @@ export class FilterManagerComponent implements OnInit {
   public beforeDate: DateObj = { date: null };
   public afterDate: DateObj = { date: null };
   public FILTER_MANANGER_CLASSNAME = FILTER_MANAGER_CLASSNAME;
+  public playerNames = ['Pick a username', 'player 1', 'player 2', 'player 3', 'player 4'];
+  public cardsAsNumbers = ['Pick a Card', ...Array(52).keys()];
 
   constructor(
     private renderer: Renderer2,

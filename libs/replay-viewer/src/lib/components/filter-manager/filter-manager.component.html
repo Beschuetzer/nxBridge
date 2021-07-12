@@ -47,7 +47,25 @@
       </label>
     </div>
     
-    <div *ngIf="player.checked === true">player details</div>
+    <div
+      *ngIf="player.checked === true"
+      class="{{FILTER_MANANGER_CLASSNAME}}__player" 
+    >
+      <span>Username:</span>
+      <select #players class="">
+        <option
+          *ngFor="let playerName of playerNames; let i = index"
+        >{{playerName}}</option>
+      </select>
+      <span>&nbsp;had the&nbsp;</span>
+      <select #cards class="">
+        <option
+          *ngFor="let cardAsNumber of cardsAsNumbers;"
+        >
+        {{cardAsNumber}}
+        </option>
+      </select>
+    </div>
     <div *ngIf="game.checked === true">Game details</div>
   </div>
 </section>

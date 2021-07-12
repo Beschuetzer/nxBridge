@@ -92,6 +92,6 @@ filtering-----------------------
   2) 'contract is ...'
   3) 'declarer is ...'
 
-
+-add players to localStorage and Store (pull on initial load)
 
 

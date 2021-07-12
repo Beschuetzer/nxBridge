@@ -27,10 +27,10 @@
     grid-row: 2 / span 1;
     width: 100%;
     padding: $default-font-size * 0.25;
-    border-bottom: $games-list-border;
+    border-bottom: $deal-player-border-thin;
   }
 
-  & *:not(.button, input, .color-red-light, .color-green-light) {
+  & *:not(select, option, input, .button, .color-red-light, .color-green-light) {
     color: var(--color-primary-4) !important;
     margin-bottom: 0 !important;
   }

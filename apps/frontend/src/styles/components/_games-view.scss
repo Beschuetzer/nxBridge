@@ -37,7 +37,7 @@
 
     @include respond($layout-breakpoint) {
       --games-view-title-gradient-direction: #{$search-linear-gradient-direction};
-      padding: 0 $default-font-size $default-font-size * .5 $default-font-size;
+      padding: $default-font-size * .25;
     }
 
     & label {
