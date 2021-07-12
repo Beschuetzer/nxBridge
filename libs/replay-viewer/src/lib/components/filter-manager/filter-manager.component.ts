@@ -10,8 +10,8 @@ import { FILTER_MANAGER_CLASSNAME, getDateAndTimeString } from '@nx-bridge/const
 import {
   AppState, SetAfterDate, SetBeforeDate, SetIsFilterSame,
 } from '@nx-bridge/store';
-import { Store } from '@ngrx/store';
-import { DateObj, DateType } from '@nx-bridge/interfaces-and-types';
+import { ReducerManager, Store } from '@ngrx/store';
+import { DateObj, DateType, ReducerNames, UserIds } from '@nx-bridge/interfaces-and-types';
 import { SearchService } from '../../services/search.service';
 import { FiltermanagerService } from '../../services/filtermanager.service';
 
@@ -65,7 +65,7 @@ export class FilterManagerComponent implements OnInit {
   public beforeDate: DateObj = { date: null };
   public afterDate: DateObj = { date: null };
   public FILTER_MANANGER_CLASSNAME = FILTER_MANAGER_CLASSNAME;
-  public playerNames = ['Pick a username', 'player 1', 'player 2', 'player 3', 'player 4'];
+  public playerNames = ['Pick a username'];
   public cardsAsNumbers = ['Pick a Card', ...Array(52).keys()];
 
   constructor(
@@ -78,6 +78,10 @@ export class FilterManagerComponent implements OnInit {
 
   ngOnInit(): void {
     this.appendFiltersToAppliedDiv();
+
+    this.store.select(ReducerNames.users).subscribe(userState => {
+      if (userState.userIds && this.playerNames.length === 1) this.populatePlayerNames(userState.userIds);
+    })
   }
 
   handleDateChange(e: Event, dateType: DateType) {
@@ -221,6 +225,13 @@ export class FilterManagerComponent implements OnInit {
 
   private getNewElement(elementType: string) {
     return this.renderer.createElement(elementType);
+  }
+
+  private populatePlayerNames(userIds: UserIds) {
+    if (!userIds) return;
+    const usernames = Object.values(userIds);
+    if (usernames.length <= 0) return;
+    this.playerNames.push(...usernames);
   }
 
   private setInputErrorClassnames(

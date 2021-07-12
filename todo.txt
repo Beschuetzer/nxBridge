@@ -64,13 +64,11 @@ filtering-----------------------
     3) filter between dates and time?
     4) filter by players in game
 
--work on player filter:
-  1) 'player had card'
+
 -work on game filter:
   1) 'game contains user'
   2) 'contract is ...'
   3) 'declarer is ...'
 
--test to make sure that store: users.userIds are set properly
-
-
+-work on player filter:
+  1) 'player had card'
