@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { FILTER_MANAGER_CLASSNAME, getDateAndTimeString, maxCardValue, minCardValue } from '@nx-bridge/constants';
 import {
-  AppState, SetAfterDate, SetBeforeDate, SetIsFilterSame,
+  AppState, SetAfterDate, SetBeforeDate, SetIsFilterSame, SetPlayerHasCard,
 } from '@nx-bridge/store';
 import { ReducerManager, Store } from '@ngrx/store';
 import { DateObj, DateType, ReducerNames, UserIds } from '@nx-bridge/interfaces-and-types';
@@ -169,9 +169,10 @@ export class FilterManagerComponent implements OnInit {
 
     if (shouldRemoveCardErrors && shouldRemoveUsernameErrors) {
       //inputs are valid
-      console.log('valid------------------------------------------------');
+      //note: if using more than one playerHasCard filter, will need to refine the dispatch
+      this.store.dispatch(new SetPlayerHasCard([{[selectedUsername]: selectedCard}]));
+      this.searchService.setCurrentlyDisplayingGames();
     }
-
   }
 
   //NOTE: need this to trigger *ngIf properly
@@ -294,10 +295,6 @@ export class FilterManagerComponent implements OnInit {
     const beforeOrAfterString = dateType === DateType.before ? 'before' : 'after';
     let exactErrorString = isSingle ? 'single' : 'multiple';
 
-    console.log('beforeDate.date =', beforeDate.date);
-    console.log('afterDate.date =', beforeDate.date);
-    console.log('date =', date);
-    
     if (proposedTime >= currentTime && dateType === DateType.after) {
       exactErrorString = 'afterNow';
       isDateInValid = true;

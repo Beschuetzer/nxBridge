@@ -2,7 +2,7 @@ import { ElementRef, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Filters } from '@nx-bridge/interfaces-and-types';
 import { } from '@nx-bridge/constants';
-import { AppState, SetBeforeDate, SetAfterDate } from '@nx-bridge/store';
+import { AppState, SetBeforeDate, SetAfterDate, SetPlayerHasCard } from '@nx-bridge/store';
 
 @Injectable({
   providedIn: 'root'
@@ -16,14 +16,19 @@ export class FiltermanagerService {
     afterDate: {
       string: 'afterDate',
     },
+    playerHasCard: {
+      string: 'playerHasCard',
+    }
   };
   public filtersInitial: Filters = {
     [this.filters.beforeDate.string]: 0,
     [this.filters.afterDate.string]: 0,
+    [this.filters.playerHasCard.string]: [],
   };
   public filterResetActions = {
     [this.filters.beforeDate.string]: new SetBeforeDate(this.filtersInitial?.beforeDate),
-    [this.filters.afterDate.string]: new SetAfterDate(this.filtersInitial?.afterDate)
+    [this.filters.afterDate.string]: new SetAfterDate(this.filtersInitial?.afterDate),
+    [this.filters.playerHasCard.string]: new SetPlayerHasCard(this.filtersInitial?.playerHasCard)
   }
   
 
