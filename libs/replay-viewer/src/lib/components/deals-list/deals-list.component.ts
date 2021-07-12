@@ -10,8 +10,6 @@ import {
   DEAL_DETAIL_CLASSNAME,
   DISPLAY_NONE_CLASSNAME,
   FULL_SIZE_CLASSNAME,
-  GET_DEALS_URL,
-  DEALS_STRING,
   toggleClassOnList,
   toggleInnerHTML,
   GAME_DETAIL_CLASSNAME,
@@ -39,7 +37,6 @@ import {
   ToggleDealDetailButtonBehaviour,
 } from '@nx-bridge/interfaces-and-types';
 import {
-  AddFetchedDeals as AddFetchedDeals,
   AppState,
   CurrentlyViewingGame,
   SetCurrentlyViewingGame,
@@ -48,7 +45,6 @@ import {
 import { Store } from '@ngrx/store';
 import { take } from 'rxjs/operators';
 import { ReplayViewerDealService } from '../../services/replay-viewer.deal.service';
-import { debug } from 'node:console';
 
 @Component({
   selector: 'nx-bridge-deals-list',
@@ -131,15 +127,15 @@ export class DealsListComponent implements OnInit {
     return isGameAlreadyOpen;
   }
 
-  private getItemsFromDB() {
-    const itemsToGet = this.getDealsToGet();
-    this.isLoading = true;
-    this.http
-      .post<Deal[]>(GET_DEALS_URL, { [`${DEALS_STRING}`]: itemsToGet })
-      .subscribe((deals) => {
-        this.handleGetDealsFromDBResponse(deals);
-      });
-  }
+  // private getItemsFromDB() {
+  //   const itemsToGet = this.getDealsToGet();
+  //   this.isLoading = true;
+  //   this.http
+  //     .post<Deal[]>(GET_DEALS_URL, { [`${DEALS_STRING}`]: itemsToGet })
+  //     .subscribe((deals) => {
+  //       this.handleGetDealsFromDBResponse(deals);
+  //     });
+  // }
 
   private getDealsToGet() {
     //todo: this can be optimized later to only get Deals not in localStorage already
@@ -158,11 +154,13 @@ export class DealsListComponent implements OnInit {
         ?.querySelector(`.${GAME_DETAIL_CLASSNAME}__header-date`)
         ?.innerHTML?.trim();
 
+        debugger;
       this.store.dispatch(
         new SetCurrentlyViewingGame({
           seating: this.seating,
           name: name,
           date,
+          dealsssssssssss: this.deals,
         } as CurrentlyViewingGame)
       );
       this.replayViewerDealService.setGameDetailBorderToBlack();
@@ -173,18 +171,33 @@ export class DealsListComponent implements OnInit {
           seating: {} as Seating,
           name: '',
           date: -1,
+          deals: [],
         } as CurrentlyViewingGame)
       );
     }
     this.toggleGameDetailScoreBorder();
   }
 
-  private handleGetDealsFromDBResponse(deals: Deal[]) {
-    this.deals = deals;
-    this.store.dispatch(new AddFetchedDeals(deals));
-    this.isLoading = false;
-    this.setTeams();
-    this.setDealCountMessage();
+  // private handleGetDealsFromDBResponse(deals: Deal[]) {
+  //   this.deals = deals;
+  //   this.store.dispatch(new AddFetchedDeals(deals));
+  //   this.isLoading = false;
+  //   this.setTeams();
+  //   this.setDealCountMessage();
+  // }
+
+  private loadRelevantDeals() {
+    // let deals = {};
+    //   this.store.select(ReducerNames.games).pipe(take(1)).subscribe(gameState => {
+    //     currentlyViewingGame = gameState.currentlyViewingGame.deals;
+    //   })
+
+
+    //   const dealsAsList: Deal[] = [];
+    //   this.deals = dealsAsList;
+    //   this.setTeams();
+    //   this.setDealCountMessage();
+    //   this.isLoading = false;
   }
 
   private setDealCountMessage() {
@@ -342,7 +355,7 @@ export class DealsListComponent implements OnInit {
     );
 
     if (!items || items.length <= 0) {
-      this.getItemsFromDB();
+      return this.loadRelevantDeals();
     } else {
       toggleClassOnList(items, DISPLAY_NONE_CLASSNAME);
     }

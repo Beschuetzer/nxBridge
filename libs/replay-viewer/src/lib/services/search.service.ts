@@ -15,10 +15,13 @@ import {
   SetLoadingError,
   SetIsFilterSame,
   SetDealsAsStrings,
+  SetFetchedDeals,
+  DealState,
 } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
 import {
   Deal,
+  FetchedDeals,
   Filters,
   GetUserResponse,
   LocalStorageUserWithGames,
@@ -158,6 +161,10 @@ export class SearchService {
     filteredGames = this.getPlayerHasCard(filteredGames, filters.playerHasCard);
 
     return filteredGames;
+  }
+
+  private getFetchedDeals(deals: Deal[]): FetchedDeals {
+    
   }
 
   private getLocalUserId() {
@@ -379,15 +386,25 @@ export class SearchService {
   }
 
   private loadDeals(localStorageUserWithGames: LocalStorageUserWithGames) {
+    //todo: don't need dealsAsString if downloading all deals?
     const dealsAsStrings = this.helpersService.getDealsAsStrings(
       localStorageUserWithGames?.games as Game[]
     );
-
+    if (dealsAsStrings.length <= 0) return;
     this.store.dispatch(new SetDealsAsStrings(dealsAsStrings));
-    this.helpersService.getDeals(dealsAsStrings)?.subscribe((deals: Deal[]) => {
-      console.log('deals =', deals);
-      if (dealsAsStrings?.length <= 0) return;
-      // this.store.dispatch(new SetDea)
-    });
+
+    let dealsAlreadyFetched: FetchedDeals = {};
+
+    this.store.select(ReducerNames.deals).pipe(
+      take(1),
+      switchMap((dealState: DealState) => {
+        //todo: work on optimizing how deals are fetched (only fetch ones not already fetched; also need to )
+        dealsAlreadyFetched = dealState.fetchedDeals;
+        return this.helpersService.getDeals(dealsAsStrings)
+      })
+    ).subscribe((deals: Deal[]) => {
+      const fetchedDeals = this.getFetchedDeals(deals);
+      this.store.dispatch(new SetFetchedDeals(fetchedDeals))
+    })
   }
 }

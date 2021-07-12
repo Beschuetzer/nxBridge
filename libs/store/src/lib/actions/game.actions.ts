@@ -1,5 +1,5 @@
 import { Action as fromGeneralActions } from '@ngrx/store';
-import { Game, Seating } from '@nx-bridge/interfaces-and-types';
+import { Deal, Game, Seating } from '@nx-bridge/interfaces-and-types';
 
 export const SET_GAMES = '[Games] SET_GAMES';
 export const SET_CURRENTLY_VIEWING_GAME = '[Games] SET_CURRENTLY_VIEWING_GAME';
@@ -11,6 +11,7 @@ export interface CurrentlyViewingGame {
   seating: Seating;
   date: string | number;
   name: string;
+  deals: Deal[];
 }
 
 export class SetCurrentlyViewingGame implements fromGeneralActions {

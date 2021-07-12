@@ -15,6 +15,9 @@ export interface ErrorMessage {
   message: string;
   status: number;
 }
+export interface FetchedDeals {
+  [key: string]: Deal;
+}
 export interface Filters {
   [key: string]: any;
 }

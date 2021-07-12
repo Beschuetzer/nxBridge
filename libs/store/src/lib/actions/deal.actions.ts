@@ -1,8 +1,8 @@
 import { Action as fromFilterActions } from '@ngrx/store';
-import { Contract, Deal } from '@nx-bridge/interfaces-and-types';
+import { Contract, Deal, FetchedDeals } from '@nx-bridge/interfaces-and-types';
 
 export const SET_DEALS_AS_STRING = '[Deals] SET_DEALS_AS_STRINGS';
-export const ADD_FETCHED_DEALS = '[Deals] ADD_FETCHED_DEALS';
+export const SET_FETCHED_DEALS = '[Deals] ADD_FETCHED_DEALS';
 export const SET_CURRENTLY_VIEWING_DEAL = '[Deals] SET_CURRENTLY_VIEWING_DEAL';
 export const SET_CURRENTLY_VIEWING_DEAL_CONTRACT = '[Deals] SET_CURRENTLY_VIEWING_DEAL_CONTRACT';
 
@@ -20,9 +20,9 @@ export class SetDealsAsStrings implements fromFilterActions {
   constructor(public payload: string[]) {}
 }
 
-export class AddFetchedDeals implements fromFilterActions {
-  readonly type = ADD_FETCHED_DEALS;
-  constructor(public payload: Deal[]) {}
+export class SetFetchedDeals implements fromFilterActions {
+  readonly type = SET_FETCHED_DEALS;
+  constructor(public payload: FetchedDeals) {}
 }
 
 export class SetCurrentlyViewingDeal implements fromFilterActions {
@@ -37,6 +37,6 @@ export class SetCurrentlyViewingDealContract implements fromFilterActions {
 
 export type DealActions =
   | SetDealsAsStrings
-  | AddFetchedDeals
+  | SetFetchedDeals
   | SetCurrentlyViewingDeal
   | SetCurrentlyViewingDealContract;

@@ -27,7 +27,6 @@ export class HelpersService {
   ) {}
 
   getDeals(deals: string[]) {
-    if (!deals || deals.length === 0) return;
     return this.http.post<Deal[]>(`${GET_DEALS_URL}`, {deals});
   }
 

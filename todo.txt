@@ -76,3 +76,8 @@ filtering-----------------------
 
 -makes sure to have the player had card filter be an array (for possible future expansion to multiples of this type)
 -add filters service and move all search service filter-related methods there
+
+-no longer need to have AddFetchedDeals called when opening a GameDetail?
+-need to check before fetching deals and just fetch deals not already fetched
+
+-store deals as objs with _id as key
