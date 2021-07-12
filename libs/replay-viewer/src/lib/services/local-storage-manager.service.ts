@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Store } from '@ngrx/store';
 import {
   RESULTS_PER_PAGE_OPTIONS,
   SIZE_OPTIONS,
@@ -14,9 +15,9 @@ import {
   LocalStorageUser,
   LocalStorageUsers,
   LocalStorageUserWithGames,
-  User,
   UserIds,
 } from '@nx-bridge/interfaces-and-types';
+import { AppState, SetUserIds } from '@nx-bridge/store';
 
 @Injectable({
   providedIn: 'root',
@@ -35,6 +36,7 @@ export class LocalStorageManagerService {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor(
     private helpersService: HelpersService,
+    private store: Store<AppState>
   ) {}
 
   appendGamesToLocalStorageUser(userId: string, games: Game[]) {
@@ -237,19 +239,34 @@ export class LocalStorageManagerService {
       : SORT_OPTIONS.descending;
   }
 
+  getSpecificUserIdsInLocalStorage(userIds: string[]) {
+    const userIdsInLocalStorage = this.getUserIdsInLocalStorage();
+    if (!userIdsInLocalStorage) return null;
+
+    const toReturn: UserIds = {};
+
+    for (let i = 0; i < userIds.length; i++) {
+      const userId = userIds[i];
+      const userIdUsername = userIdsInLocalStorage[userId as any];
+      if (userIdUsername) toReturn[userId as any] = userIdUsername;
+    }
+
+    return toReturn;
+  }
+
   getUserIdsInLocalStorage(): UserIds | null {
-    const maxLife = 259200000;  //3 days ( 1000 * 3600 * 72 )
-    const userIdsInLocalStorage = localStorage.getItem(this.userIdsInLocalStorage);
+    const maxLife = 259200000; //3 days ( 1000 * 3600 * 72 )
+    const userIdsInLocalStorage = localStorage.getItem(
+      this.userIdsInLocalStorage
+    );
     if (userIdsInLocalStorage) {
       const parsed = JSON.parse(userIdsInLocalStorage);
       if (Math.abs(parsed.lastSearchDate - Date.now()) >= maxLife) {
         localStorage.removeItem(this.userIdsInLocalStorage);
         return null;
       }
-
       return parsed;
-    }
-    else return null;
+    } else return null;
   }
 
   saveResultsPerPagePreference(resultsPerPagePreference: string) {
@@ -268,6 +285,7 @@ export class LocalStorageManagerService {
   }
 
   saveUserIds(userIds: string[]) {
+    //gets already stored values and combines them with new values and then saves the whole shebang
     const userIdsInLocalStorage = this.getUserIdsInLocalStorage();
 
     const userIdsToFetch = [];
@@ -278,16 +296,32 @@ export class LocalStorageManagerService {
       }
     }
 
-    this.helpersService.getUsers(userIdsInLocalStorage ? userIdsToFetch : userIds)?.subscribe(userIdObjs => {
-      const toSave: {[key: string]: string | number} = {};
-      for (let i = 0; i < userIdObjs.length; i++) {
-        const userIdObj: {[key: string]: string} = userIdObjs[i];
-        const keys = Object.keys(userIdObj);
-        toSave[keys[0]] = userIdObj[keys[0]];
-      }
-      toSave['lastSearchDate'] = (userIdsInLocalStorage as any)?.lastSearchDate ? (userIdsInLocalStorage as any)?.lastSearchDate : Date.now();
-      localStorage.setItem(this.userIdsInLocalStorage, JSON.stringify({...userIdsInLocalStorage, ...toSave}));
-    })
+    this.helpersService
+      .getUsers(userIdsInLocalStorage ? userIdsToFetch : userIds)
+      ?.subscribe((userIdObjs: any) => {
+        const toSave: UserIds = {};
+
+        if (userIdObjs) {
+          for (let i = 0; i < userIdObjs.length; i++) {
+            const userIdObj: UserIds = userIdObjs[i];
+            const keys = Object.keys(userIdObj);
+            toSave[keys[0]] = userIdObj[keys[0]];
+          }
+        }
+
+        toSave['lastSearchDate'] = (userIdsInLocalStorage as any)
+          ?.lastSearchDate
+          ? (userIdsInLocalStorage as any)?.lastSearchDate
+          : Date.now();
+
+        const combination = { ...userIdsInLocalStorage, ...toSave };
+        localStorage.setItem(
+          this.userIdsInLocalStorage,
+          JSON.stringify(combination)
+        );
+      });
+
+    this.loadUserIdObjsIntoRedux(userIds);
   }
 
   updateEmailAndUsername(userId: string, username: string, email: string) {
@@ -418,6 +452,19 @@ export class LocalStorageManagerService {
     }
 
     return indexWhereConditionMet + 1;
+  }
+
+  private loadUserIdObjsIntoRedux(relevantUserIds: string[]) {
+    let userIdObjs: UserIds | null = this.getSpecificUserIdsInLocalStorage(
+      relevantUserIds
+    );
+    if (!userIdObjs) {
+      setTimeout(() => {
+        userIdObjs = this.getSpecificUserIdsInLocalStorage(relevantUserIds);
+        if (!userIdObjs) userIdObjs = {} as UserIds;
+        this.store.dispatch(new SetUserIds(userIdObjs));
+      }, 500);
+    } else this.store.dispatch(new SetUserIds(userIdObjs));
   }
 
   private saveGameIds(games: Game[]) {

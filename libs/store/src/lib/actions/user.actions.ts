@@ -1,12 +1,12 @@
 import { Action } from "@ngrx/store";
-import { LocalStorageUser, LocalStorageUserWithGames, User } from "@nx-bridge/interfaces-and-types";
+import { LocalStorageUserWithGames, UserIds } from "@nx-bridge/interfaces-and-types";
 
 export const SET_USERS = '[Users] SET_USERS';
 export const SET_CURRENTLY_VIEWING_USER = '[Users] SET_CURRENTLY_VIEWING_USER';
 
-export class SetUsers implements Action {
+export class SetUserIds implements Action {
   readonly type = SET_USERS;
-  constructor(public payload: User[]){}
+  constructor(public payload: UserIds){}
 }
 
 export class SetCurrentlyViewingUser implements Action {
@@ -14,4 +14,4 @@ export class SetCurrentlyViewingUser implements Action {
   constructor(public payload: LocalStorageUserWithGames){}
 }
 
-export type UserActions = SetUsers | SetCurrentlyViewingUser;
+export type UserActions = SetUserIds | SetCurrentlyViewingUser;

@@ -11,28 +11,7 @@ Components:
   1. UserInputs (inputs for username and email, input for filter before and filter after (three ways to use: get games before date, after date, or between dates), dropdown to select nth page to view when more than specified-amount-to-view-per-page number of games available
 
 Optimizations------------------------------------------------------
-  -store the gamecount for the user and see if it matches the stored value, if so then no need to pull any more, if not, pull and store all games in localstorage?
-  -figure out how to sensibly cache looked up games into local storage and then when making new requests, check last search date for that userId/email and send a request to only get games since that date. 
-    -could have localStorage item 'queriesByName' and 'queriesByEmail: 
-    {
-      'username' : {
-        date: Date.now(),
-        games: localStorage.getItem('games')[username]
-      }
-    }
-    (need both email and username versions?)
-    {
-      'email' : {
-        date: Date.now(),
-        games: localStorage.getItem('games')[username]
-      }
-    }
-    -then have a separate games item where the actual games are stored:
-    {
-      'username': Game[]
-    }
-  -cache looked up deals (executed in DealsList) in a similar fashion
-  -cache userObjs too (have to get 4 for each game)
+  -need to keep track of how many times each userId is queried and use that info to remove the least queried usernames when space runs short
 
 Prettification-------------------
   -game-detail__score width is a bit 'off'
@@ -92,6 +71,6 @@ filtering-----------------------
   2) 'contract is ...'
   3) 'declarer is ...'
 
--add players to localStorage and Store (pull on initial load)
+-test to make sure that store: users.userIds are set properly
 
 

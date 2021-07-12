@@ -108,7 +108,7 @@ export interface User {
   salt: string | null;
 }
 
-export interface UserId {
+export interface UserIds {
   [key: string]: string,
 }
 
@@ -284,7 +284,6 @@ export type Team = "EW" | "NS" | '';
 export type TeamFull = "eastWest" | "northSouth";
 export type Contract = { prefix: string, htmlEntity: string };
 export type GameDetailDisplayPreferences = {sort: string, size: string, resultsPerPage: string};
-export type UserIds = UserId[];
 
 export enum ToggleDealDetailButtonBehaviour {toggle, open , close};
 export enum GameDetailSizes {small = 'small', medium = 'medium', large = 'large'};
