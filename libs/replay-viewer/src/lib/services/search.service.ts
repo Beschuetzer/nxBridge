@@ -131,8 +131,6 @@ export class SearchService {
     if (!shouldContinue)
       return `Already viewing games by '${username}.  Try resetting filters'`;
 
-    //todo: get the usernames here and store then in store and localstorage
-
     this.needToCreateLocalStorageUser = false;
     this.username = username;
     this.email = email;
@@ -326,9 +324,10 @@ export class SearchService {
       this.email
     );
 
-    const localStorageUserWithGames = this.localStorageManager.getLocalStorageUserWithGames(
+    const localStorageUserWithGames = this.localStorageManager.getPopulatedLocalStorageUser(
       this.userId
     );
+    this.localStorageManager.saveUserIds(localStorageUserWithGames?.userIds as string[]);
     this.helpersService.loadDealsIntoRedux(
       localStorageUserWithGames?.games as Game[]
     );

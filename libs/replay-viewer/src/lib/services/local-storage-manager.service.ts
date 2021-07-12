@@ -4,6 +4,7 @@ import {
   SIZE_OPTIONS,
   SORT_OPTIONS,
 } from '@nx-bridge/constants';
+import { HelpersService } from '@nx-bridge/helpers';
 import {
   EmptyLocalStorageGamesReturn,
   EmptyLocalStorageUsersReturn,
@@ -13,6 +14,8 @@ import {
   LocalStorageUser,
   LocalStorageUsers,
   LocalStorageUserWithGames,
+  User,
+  UserIds,
 } from '@nx-bridge/interfaces-and-types';
 
 @Injectable({
@@ -24,12 +27,15 @@ export class LocalStorageManagerService {
   public sortPreferenceInLocalStorage = 'sort';
   public sizePreferenceInLocalStorage = 'size';
   public resultsPerPagePreferenceInLocalStorage = 'resultsPerPage';
+  public userIdsInLocalStorage = 'userIds';
   public EMPTY_LOCAL_STORAGE_USERS_RETURNS = null;
   public EMPTY_LOCAL_STORAGE_GAMES_RETURNS = {};
   public EMPTY_USER_ID_RETURNS = '';
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  constructor() {}
+  constructor(
+    private helpersService: HelpersService,
+  ) {}
 
   appendGamesToLocalStorageUser(userId: string, games: Game[]) {
     const localStorageUser = this.getLocalStorageUser(userId);
@@ -158,13 +164,14 @@ export class LocalStorageManagerService {
     return JSON.parse(itemInStorage) as LocalStorageUsers;
   }
 
-  getLocalStorageUserWithGames(
+  getPopulatedLocalStorageUser(
     userId: string
   ): LocalStorageUserWithGames | EmptyLocalStorageUsersReturn {
     const localStorageUser = this.getLocalStorageUser(userId) as any;
     if (!localStorageUser) return this.EMPTY_LOCAL_STORAGE_USERS_RETURNS;
 
     const games: Game[] = [];
+    const userIdsInGames: string[] = [];
 
     for (let i = 0; i < localStorageUser.gameIds.length; i++) {
       const gameId = localStorageUser.gameIds[i];
@@ -179,10 +186,16 @@ export class LocalStorageManagerService {
           const indexToUse = this.getIndexToAddGameIntoGames(games, game);
           games.splice(indexToUse, 0, game);
         }
+
+        for (let j = 0; j < game.players.length; j++) {
+          const playerId = game.players[j];
+          if (!userIdsInGames.includes(playerId)) userIdsInGames.push(playerId);
+        }
       }
     }
 
     localStorageUser.games = games;
+    localStorageUser.userIds = userIdsInGames;
     delete localStorageUser.gameIds;
     return localStorageUser;
   }
@@ -224,6 +237,21 @@ export class LocalStorageManagerService {
       : SORT_OPTIONS.descending;
   }
 
+  getUserIdsInLocalStorage(): UserIds | null {
+    const maxLife = 259200000;  //3 days ( 1000 * 3600 * 72 )
+    const userIdsInLocalStorage = localStorage.getItem(this.userIdsInLocalStorage);
+    if (userIdsInLocalStorage) {
+      const parsed = JSON.parse(userIdsInLocalStorage);
+      if (Math.abs(parsed.lastSearchDate - Date.now()) >= maxLife) {
+        localStorage.removeItem(this.userIdsInLocalStorage);
+        return null;
+      }
+
+      return parsed;
+    }
+    else return null;
+  }
+
   saveResultsPerPagePreference(resultsPerPagePreference: string) {
     localStorage.setItem(
       this.resultsPerPagePreferenceInLocalStorage,
@@ -237,6 +265,29 @@ export class LocalStorageManagerService {
 
   saveSortPreference(sortPreference: string) {
     localStorage.setItem(this.sortPreferenceInLocalStorage, sortPreference);
+  }
+
+  saveUserIds(userIds: string[]) {
+    const userIdsInLocalStorage = this.getUserIdsInLocalStorage();
+
+    const userIdsToFetch = [];
+    if (userIdsInLocalStorage) {
+      for (let i = 0; i < userIds.length; i++) {
+        const userId = userIds[i];
+        if (!userIdsInLocalStorage[userId as any]) userIdsToFetch.push(userId);
+      }
+    }
+
+    this.helpersService.getUsers(userIdsInLocalStorage ? userIdsToFetch : userIds)?.subscribe(userIdObjs => {
+      const toSave: {[key: string]: string | number} = {};
+      for (let i = 0; i < userIdObjs.length; i++) {
+        const userIdObj: {[key: string]: string} = userIdObjs[i];
+        const keys = Object.keys(userIdObj);
+        toSave[keys[0]] = userIdObj[keys[0]];
+      }
+      toSave['lastSearchDate'] = (userIdsInLocalStorage as any)?.lastSearchDate ? (userIdsInLocalStorage as any)?.lastSearchDate : Date.now();
+      localStorage.setItem(this.userIdsInLocalStorage, JSON.stringify({...userIdsInLocalStorage, ...toSave}));
+    })
   }
 
   updateEmailAndUsername(userId: string, username: string, email: string) {
