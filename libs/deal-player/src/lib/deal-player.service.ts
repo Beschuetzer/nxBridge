@@ -1,13 +1,31 @@
 import { Injectable } from '@angular/core';
 import * as paper from 'paper';
-import { cardinalDirections, cardsPerDeck, cardsPerHand, createHandArrayFromFlatArray, DEAL_PLAYER_CLASSNAME, flatten, getDirectionFromSeating, getLinearPercentOfMaxMatchWithinRange, getUserWhoPlayedCard, MOBILE_START_WIDTH, suitsAsCapitalizedStrings } from '@nx-bridge/constants';
-import { Deal, Hand, Hands, ReducerNames, Seating } from '@nx-bridge/interfaces-and-types';
+import {
+  cardinalDirections,
+  cardsPerDeck,
+  cardsPerHand,
+  createHandArrayFromFlatArray,
+  DEAL_PLAYER_CLASSNAME,
+  flatten,
+  getDirectionFromSeating,
+  getLinearPercentOfMaxMatchWithinRange,
+  getUserWhoPlayedCard,
+  MOBILE_START_WIDTH,
+  suitsAsCapitalizedStrings,
+} from '@nx-bridge/constants';
+import {
+  Deal,
+  Hand,
+  Hands,
+  ReducerNames,
+  Seating,
+} from '@nx-bridge/interfaces-and-types';
 import { Store } from '@ngrx/store';
 import { AppState } from '@nx-bridge/store';
 import { take } from 'rxjs/operators';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DealPlayerService {
   public firstCardPlayed = -1;
@@ -61,9 +79,9 @@ export class DealPlayerService {
   private redrawTimeout: any;
 
   constructor(
-    private store: Store<AppState>,
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  ) { }
+    private store: Store<AppState>
+  ) // eslint-disable-next-line @typescript-eslint/no-empty-function
+  {}
 
   getCorrectlyArrangedHand(hand: number[], direction: string) {
     if (
@@ -74,32 +92,53 @@ export class DealPlayerService {
     return hand;
   }
 
-  getHandWithTrumpOnLeft(hand: Hand){
+  getHandWithTrumpOnLeft(hand: Hand) {
     //note: hand will be in order spades, hearts, clubs, diamonds
     let contract = '';
-    this.store.select(ReducerNames.deals).pipe(take(1)).subscribe(dealState => {
-      contract = dealState.currentlyViewingDeal.contract;
-    })
+    this.store
+      .select(ReducerNames.deals)
+      .pipe(take(1))
+      .subscribe((dealState) => {
+        contract = dealState.currentlyViewingDeal.contract;
+      });
 
-    const possibleContractSuits = [...suitsAsCapitalizedStrings.map(suit => suit.substr(0, suit.length - 1).toLowerCase()), 'no trump'];
-    const suitIndex = possibleContractSuits.findIndex(suit => {
-      debugger;
+    const possibleContractSuits = [
+      ...suitsAsCapitalizedStrings.map((suit) =>
+        suit.substr(0, suit.length - 1).toLowerCase()
+      ),
+      'no trump',
+    ];
+    const suitIndex = possibleContractSuits.findIndex((suit) => {
       const regExp = new RegExp(suit, 'i');
-      return contract.match(regExp)});
+      return contract.match(regExp);
+    });
 
-    let newHand = hand;
-    debugger;
-    //don't have to do anything if contract is NT or spades;
-    if (suitIndex >= 4) return hand;
-    else if (suitIndex === 0) {
+    const spades = [...hand[0]];
+    const hearts = [...hand[1]];
+    const clubs = [...hand[2]];
+    const diamonds = [...hand[3]];
+    
+    if (suitIndex === 0) {
       //clubs
-      return [hand[3], hand[0], hand[1], hand[2]]
-    }
-    else if (suitIndex === 1) {
+      if (!hearts || hearts.length === 0) return [clubs, diamonds, spades, hearts];
+      return [clubs, hearts, spades, diamonds];
+    } else if (suitIndex === 1) {
       //diamonds
-    }
-    else if (suitIndex === 2) {
+      if (!spades || spades.length === 0) return [diamonds, clubs, hearts, spades];
+      return [diamonds, spades, hearts, clubs];
+    } else if (suitIndex === 2) {
       //hearts
+      if (!spades || spades.length === 0) return [hearts, clubs, diamonds, spades];
+      return [hearts, spades, diamonds, clubs];
+    } else if (suitIndex === 4){
+      if (!hearts || hearts.length === 0) return [spades, diamonds, clubs, hearts];
+      return hand;
+    } else if (suitIndex === 5) {
+      if (!hearts || hearts.length === 0) return [spades, diamonds, clubs, hearts];
+      if (!spades || spades.length === 0) return [diamonds, clubs, hearts, spades];
+      if (!diamonds || diamonds.length === 0) return [spades, hearts, clubs, diamonds];
+      if (!clubs || clubs.length === 0) return [hearts, spades, diamonds, clubs];
+      return hand;
     }
     else return hand;
   }
@@ -222,33 +261,33 @@ export class DealPlayerService {
 
   onResize(e: Event) {
     // setTimeout(() => {
-      clearTimeout(this.redrawTimeout);
+    clearTimeout(this.redrawTimeout);
 
-      this.isMobile = window.innerWidth <= MOBILE_START_WIDTH;
-      this.redrawTimeout = setTimeout(() => {
-        this.cardScaleAmount = this.isMobile
-          ? this.MIN_SCALE_AMOUNT_MOBILE
-          : window.innerWidth < this.SCALE_AMOUNT_THRESHOLD_VIEW_PORT_WIDTH
-          ? getLinearPercentOfMaxMatchWithinRange(
-              window.innerWidth as number,
-              MOBILE_START_WIDTH,
-              this.SCALE_AMOUNT_THRESHOLD_VIEW_PORT_WIDTH,
-              this.MIN_SCALE_AMOUNT_NORMAL,
-              this.MAX_SCALE_AMOUNT_BELOW_THRESHOLD
-            )
-          : getLinearPercentOfMaxMatchWithinRange(
-              window.innerWidth as number,
-              this.MIN_TARGET_VIEW_PORT_WIDTH,
-              this.MAX_TARGET_VIEW_PORT_WIDTH,
-              this.MIN_SCALE_AMOUNT_NORMAL,
-              this.MAX_SCALE_AMOUNT_ABOVE_THRESHOLD
-            );
-            
-        this.setCardsSize();
-        this.setCanvasMetrics();
-        this.setCardMetrics();
-        this.positionHands();
-      }, 125);
+    this.isMobile = window.innerWidth <= MOBILE_START_WIDTH;
+    this.redrawTimeout = setTimeout(() => {
+      this.cardScaleAmount = this.isMobile
+        ? this.MIN_SCALE_AMOUNT_MOBILE
+        : window.innerWidth < this.SCALE_AMOUNT_THRESHOLD_VIEW_PORT_WIDTH
+        ? getLinearPercentOfMaxMatchWithinRange(
+            window.innerWidth as number,
+            MOBILE_START_WIDTH,
+            this.SCALE_AMOUNT_THRESHOLD_VIEW_PORT_WIDTH,
+            this.MIN_SCALE_AMOUNT_NORMAL,
+            this.MAX_SCALE_AMOUNT_BELOW_THRESHOLD
+          )
+        : getLinearPercentOfMaxMatchWithinRange(
+            window.innerWidth as number,
+            this.MIN_TARGET_VIEW_PORT_WIDTH,
+            this.MAX_TARGET_VIEW_PORT_WIDTH,
+            this.MIN_SCALE_AMOUNT_NORMAL,
+            this.MAX_SCALE_AMOUNT_ABOVE_THRESHOLD
+          );
+
+      this.setCardsSize();
+      this.setCanvasMetrics();
+      this.setCardMetrics();
+      this.positionHands();
+    }, 125);
     // }, 250);
   }
 
@@ -361,7 +400,10 @@ export class DealPlayerService {
     ] as [string, string, string, string];
   }
 
-  setCardsRotationAndPosition(positionToSetCardsTo = 0, rotationToSetCardsTo = 0) {
+  setCardsRotationAndPosition(
+    positionToSetCardsTo = 0,
+    rotationToSetCardsTo = 0
+  ) {
     for (let i = 0; i < this.cards.length; i++) {
       const card = this.cards[i] as paper.Raster;
       card.position.x = positionToSetCardsTo;
@@ -463,9 +505,7 @@ export class DealPlayerService {
 
   setFirstCardPlayedAndPlayer() {
     if (this.firstCardPlayed === -1)
-      this.firstCardPlayed = flatten(
-        this.deal?.cardPlayOrder
-      )[0];
+      this.firstCardPlayed = flatten(this.deal?.cardPlayOrder)[0];
     this.firstCardPlayer = getUserWhoPlayedCard(
       this.deal?.hands as Hands,
       this.firstCardPlayed
@@ -519,5 +559,4 @@ export class DealPlayerService {
     this.handsToRender = { ...tempHands };
     this.positionHands();
   }
-
 }
