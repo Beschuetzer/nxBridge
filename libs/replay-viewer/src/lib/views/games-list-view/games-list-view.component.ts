@@ -74,11 +74,14 @@ export class GamesListViewComponent implements OnInit {
   ngOnInit(): void {
     this.store.select(ReducerNames.users).subscribe((userState) => {
       this.currentlyViewingUser = userState.currentlyViewingUser;
-      this.totalGames = userState.currentlyViewingUser?.games?.length;
+    });
+
+    this.store.select(ReducerNames.games).subscribe(gameState => {
+      this.totalGames = gameState.filteredGames?.length;
       this.totalNumberOfPages = Math.ceil(
         this.totalGames / this.resultsPerPage
       );
-    });
+    })
 
     this.setDefaultResultsPerPage();
     this.preferences = this.localStorageManager.getPreferences();

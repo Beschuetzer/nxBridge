@@ -120,7 +120,7 @@ export class SearchService {
         const gamesToUse = paginateGames(
           filteredGames,
           sortPreference,
-          batchNumber,
+          batchNumber > 0 ? batchNumber : 0,
           +resultsPerPage
         );
 

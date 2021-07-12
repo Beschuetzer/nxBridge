@@ -148,7 +148,6 @@ export function getNewBatchNumber(
   newResultsPerPage: number,
   totalGames: number
 ) {
-  let newBatchNumber = -1;
   const maxNumberOfIterations = Math.ceil(totalGames / newResultsPerPage);
   const currentMinResult = currentBatchNumber * currentResultsPerPage;
   const currentMaxResult = currentMinResult + (currentResultsPerPage - 1);
@@ -162,7 +161,6 @@ export function getNewBatchNumber(
       
       if (currentMinResult >= newMinResult && currentMinResult <= newMaxResult) {
         return i;
-        break;
       } 
     }
 
