@@ -72,5 +72,9 @@
 
   &__player {
     padding: $default-font-size * .5 0;
+
+    &-options {
+      font-size: $semantic-ui-text-default-font-size * 1.25;
+    }
   }
 }

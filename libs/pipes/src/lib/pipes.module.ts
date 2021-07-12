@@ -5,6 +5,7 @@ import { SuitToStringPipe } from './suit-to-string.pipe';
 import { GetHtmlEntityFromSuitPipe } from './get-html-entity-from-suit.pipe';
 import { SafeHtmlPipe } from './safe-html.pipe';
 import { ReplacePipe } from './replace.pipe';
+import { CardAsNumberToCardHtmlEntityStringPipe } from './card-as-number-to-card-html-entity-string.pipe';
 
 @NgModule({
   imports: [CommonModule],
@@ -13,7 +14,8 @@ import { ReplacePipe } from './replace.pipe';
     SuitToStringPipe,
     GetHtmlEntityFromSuitPipe,
     SafeHtmlPipe,
-    ReplacePipe
+    ReplacePipe,
+    CardAsNumberToCardHtmlEntityStringPipe
   ],
   exports: [
     JoinNamesPipe,
@@ -21,6 +23,7 @@ import { ReplacePipe } from './replace.pipe';
     GetHtmlEntityFromSuitPipe,
     SafeHtmlPipe,
     ReplacePipe,
+    CardAsNumberToCardHtmlEntityStringPipe,
   ]
 })
 export class PipesModule {}

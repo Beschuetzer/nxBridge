@@ -72,3 +72,5 @@ filtering-----------------------
 
 -work on player filter:
   1) 'player had card'
+
+-makes sure to have the player had card filter be an array (for possible future expansion to multiples of this type)

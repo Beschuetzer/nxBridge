@@ -46,24 +46,24 @@
         />
       </label>
     </div>
-    
+
     <div
       *ngIf="player.checked === true"
-      class="{{FILTER_MANANGER_CLASSNAME}}__player" 
+      class="{{ FILTER_MANANGER_CLASSNAME }}__player"
     >
       <span>Username:</span>
       <select #players class="">
-        <option
-          *ngFor="let playerName of playerNames; let i = index"
-        >{{playerName}}</option>
+        <option *ngFor="let playerName of playerNames; let i = index">
+          {{ playerName }}
+        </option>
       </select>
       <span>&nbsp;had the&nbsp;</span>
       <select #cards class="">
         <option
-          *ngFor="let cardAsNumber of cardsAsNumbers;"
-        >
-        {{cardAsNumber}}
-        </option>
+          *ngFor="let cardAsNumber of cardsAsNumbers; let i = index"
+          innerHTML="{{ cardAsNumber | cardAsNumberToCardHtmlEntityString }}"
+          [ngClass]="{ 'color-red': i >= 14 && i <= 39, 'color-black' : i < 14 || i > 39, 'filter-manager__player-options' : true}"
+        ></option>
       </select>
     </div>
     <div *ngIf="game.checked === true">Game details</div>
