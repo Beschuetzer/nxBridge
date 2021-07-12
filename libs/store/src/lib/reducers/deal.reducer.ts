@@ -1,4 +1,4 @@
-import { Contract, Deal, FetchedDeals } from '@nx-bridge/interfaces-and-types';
+import { Contract, FetchedDeals } from '@nx-bridge/interfaces-and-types';
 import * as fromDealActions from '../actions/deal.actions';
 
 export interface DealState {
@@ -29,6 +29,11 @@ export function dealReducer(
       return {
         ...state,
         fetchedDeals: action.payload,
+      };
+    case fromDealActions.ADD_FETCHED_DEALS:
+      return {
+        ...state,
+        fetchedDeals: {...state.fetchedDeals, ...action.payload},
       };
     case fromDealActions.SET_CURRENTLY_VIEWING_DEAL:
       return {

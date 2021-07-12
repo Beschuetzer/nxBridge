@@ -57,7 +57,7 @@ export class GetUserService {
 
   private getErrorResponse(): Promise<ErrorMessage> {
     return new Promise((res, rej) => {
-      res({ message: 'Something went wrong in getUser()', status: 400 });
+      res({ message: 'Error in getUser', status: 400 });
     });
   }
 }

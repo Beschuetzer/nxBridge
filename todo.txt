@@ -78,7 +78,5 @@ filtering-----------------------
 
 -makes sure to have the player had card filter be an array (for possible future expansion to multiples of this type)
 
--work on optimizing loadDeals in search service
--need to check before fetching deals and just fetch deals not already fetched
 
-
+-have replay sort the trump on left

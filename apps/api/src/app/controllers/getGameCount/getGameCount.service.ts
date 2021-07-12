@@ -24,7 +24,7 @@ export class GetGameCountService {
 
   private getErrorResponse(): Promise<ErrorMessage> {
     return new Promise((res, rej) => {
-      res({ message: 'No userId given', status: 400 });
+      res({ message: 'Error in getGameCount', status: 400 });
     });
   }
 }

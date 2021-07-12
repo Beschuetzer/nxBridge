@@ -43,7 +43,7 @@ export class GetUsersService {
 
   private getErrorResponse(): Promise<ErrorMessage> {
     return new Promise((res, rej) => {
-      res({ message: 'Something went wrong in getUses()', status: 400 });
+      res({ message: 'Error in getUsers()', status: 400 });
     });
   }
 }

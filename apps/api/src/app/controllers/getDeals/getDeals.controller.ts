@@ -28,7 +28,6 @@ export class GetDealsController {
     @Body(DEALS_STRING) deals: string[]
   ): ControllerResponse<DealModel> {
     console.log('deals------------------------------------------------');
-    console.log('deals =', deals);
     return await this.getDealsService.getDealsInfo(deals);
   }
 }

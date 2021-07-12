@@ -28,14 +28,14 @@ export class GetGamesService {
     } catch (err) {
       console.log('err =', err);
       return new Promise((res, rej) => {
-        res({message: "No gameId given", status: 400});
+        res({message: "Error in getGame", status: 400});
       }) 
     }
   }
 
   private getErrorResponse(): Promise<ErrorMessage> {
     return new Promise((res, rej) => {
-      res({message: "No userId given", status: 400});
+      res({message: "Error in getGames", status: 400});
     });
   }
 

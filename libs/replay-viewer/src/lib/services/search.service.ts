@@ -15,6 +15,7 @@ import {
   SetDealsAsStrings,
   SetFetchedDeals,
   DealState,
+  AddFetchedDeals,
 } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
 import {
@@ -85,7 +86,6 @@ export class SearchService {
   }
 
   setCurrentlyDisplayingGames() {
-
     //NOTE: assumming the games are sorted in descending order at this point (happens in getLocalStorageUserWithGames)
     let sortPreference: string;
     let resultsPerPage: string;
@@ -148,13 +148,24 @@ export class SearchService {
     return '';
   }
 
-  private getFetchedDeals(deals: Deal[]): FetchedDeals {
+  private convertDealsToFetchedDeals(deals: Deal[]): FetchedDeals {
     const toReturn: FetchedDeals = {};
     for (let i = 0; i < deals.length; i++) {
       const deal = deals[i];
       toReturn[deal._id] = deal;
     }
     return toReturn;
+  }
+
+  private getDealsToLoad(neededDealsAsStrings: string[], alreadyFetchedDeals: FetchedDeals): string[] {
+    const dealsToLoad: string[] = [];
+
+    for (let i = 0; i < neededDealsAsStrings.length; i++) {
+      const neededDealAsString = neededDealsAsStrings[i];
+      if (!alreadyFetchedDeals[neededDealAsString]) dealsToLoad.push(neededDealAsString);
+    }
+
+    return dealsToLoad;
   }
 
   private getLocalUserId() {
@@ -168,29 +179,6 @@ export class SearchService {
       localUserId = this.localStorageManager.getIdFromEmail(this.email);
 
     return localUserId;
-  }
-
-  private handleGetUserResponse(getUserResponse: GetUserResponse) {
-    if (getUserResponse) {
-      const localStorageUser = this.localStorageManager.getLocalStorageUser(
-        getUserResponse.id
-      );
-
-      if (!localStorageUser) this.needToCreateLocalStorageUser = true;
-
-      this.username = getUserResponse.username;
-      this.userId = getUserResponse.id;
-      this.getGameCount();
-    } else {
-      this.store.dispatch(
-        new SetLoadingError(
-          `There is no user with that ${
-            this.username ? 'username' : 'email'
-          }. &nbsp;&nbsp;They may have recently changed their ${this.username ? 'username' : 'email'} to something other than '${this.username ? this.username : this.email}'.`
-        )
-      );
-      this.store.dispatch(new SetIsLoading(false));
-    }
   }
 
   private getGameCount() {
@@ -248,7 +236,7 @@ export class SearchService {
       });
 
     return shouldContinue;
-  }
+  }  
 
   private handleGetGameCountResponse() {
     const numberOfGamesToGet = Math.abs(
@@ -297,25 +285,48 @@ export class SearchService {
     this.store.dispatch(new SetIsLoading(false));
   }
 
+  private handleGetUserResponse(getUserResponse: GetUserResponse) {
+    if (getUserResponse) {
+      const localStorageUser = this.localStorageManager.getLocalStorageUser(
+        getUserResponse.id
+      );
+
+      if (!localStorageUser) this.needToCreateLocalStorageUser = true;
+
+      this.username = getUserResponse.username;
+      this.userId = getUserResponse.id;
+      this.getGameCount();
+    } else {
+      this.store.dispatch(
+        new SetLoadingError(
+          `There is no user with that ${
+            this.username ? 'username' : 'email'
+          }. &nbsp;&nbsp;They may have recently changed their ${this.username ? 'username' : 'email'} to something other than '${this.username ? this.username : this.email}'.`
+        )
+      );
+      this.store.dispatch(new SetIsLoading(false));
+    }
+  }
+
   private loadDeals(localStorageUserWithGames: LocalStorageUserWithGames) {
-    const dealsAsStrings = this.helpersService.getDealsAsStrings(
+    const neededDealsAsStrings = this.helpersService.getDealsAsStrings(
       localStorageUserWithGames?.games as Game[]
     );
-    if (dealsAsStrings.length <= 0) return;
-    this.store.dispatch(new SetDealsAsStrings(dealsAsStrings));
+    if (neededDealsAsStrings.length <= 0) return;
+    this.store.dispatch(new SetDealsAsStrings(neededDealsAsStrings));
 
-    let dealsAlreadyFetched: FetchedDeals = {};
 
     this.store.select(ReducerNames.deals).pipe(
       take(1),
       switchMap((dealState: DealState) => {
         //todo: work on optimizing how deals are fetched (only fetch ones not already fetched; also need to )
-        dealsAlreadyFetched = dealState.fetchedDeals;
-        return this.helpersService.getDeals(dealsAsStrings)
+        const dealsToGet = this.getDealsToLoad(neededDealsAsStrings, dealState.fetchedDeals)
+        console.log('dealsToGet =', dealsToGet);
+        return this.helpersService.getDeals(dealsToGet);
       })
     ).subscribe((deals: Deal[]) => {
-      const fetchedDeals = this.getFetchedDeals(deals);
-      this.store.dispatch(new SetFetchedDeals(fetchedDeals))
+      const fetchedDeals = this.convertDealsToFetchedDeals(deals);
+      this.store.dispatch(new AddFetchedDeals(fetchedDeals));
     })
   }
 }

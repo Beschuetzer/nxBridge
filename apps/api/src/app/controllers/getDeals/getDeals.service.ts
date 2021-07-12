@@ -35,7 +35,6 @@ export class GetDealsService {
     try {
       if (!deals || deals.length <= 0) return this.getErrorResponse();
       const mongooseObjs = getMongooseObjsFromStrings(deals);
-      console.log('mongooseObjs =', mongooseObjs);
       return await this.DealsModel.find({_id: {$in: mongooseObjs}});
     } catch (err) {
       return this.getErrorResponse();
@@ -44,7 +43,7 @@ export class GetDealsService {
 
   private getErrorResponse(): Promise<ErrorMessage> { 
     return new Promise((res, rej) => {
-      res({message: "No Deals Provided in getDealsInfo", status: 400} as ErrorMessage);
+      res({message: "Error in getDealsInfo", status: 400} as ErrorMessage);
     }) 
   }
 }

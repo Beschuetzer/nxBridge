@@ -3,8 +3,10 @@ import { Contract, Deal, FetchedDeals } from '@nx-bridge/interfaces-and-types';
 
 export const SET_DEALS_AS_STRING = '[Deals] SET_DEALS_AS_STRINGS';
 export const SET_FETCHED_DEALS = '[Deals] SET_FETCHED_DEALS';
+export const ADD_FETCHED_DEALS = '[Deals] ADD_FETCHED_DEALS';
 export const SET_CURRENTLY_VIEWING_DEAL = '[Deals] SET_CURRENTLY_VIEWING_DEAL';
-export const SET_CURRENTLY_VIEWING_DEAL_CONTRACT = '[Deals] SET_CURRENTLY_VIEWING_DEAL_CONTRACT';
+export const SET_CURRENTLY_VIEWING_DEAL_CONTRACT =
+  '[Deals] SET_CURRENTLY_VIEWING_DEAL_CONTRACT';
 
 export interface CurrentlyViewingDeal extends Deal {
   dealNumber: number | string;
@@ -25,6 +27,11 @@ export class SetFetchedDeals implements fromFilterActions {
   constructor(public payload: FetchedDeals) {}
 }
 
+export class AddFetchedDeals implements fromFilterActions {
+  readonly type = ADD_FETCHED_DEALS;
+  constructor(public payload: FetchedDeals) {}
+}
+
 export class SetCurrentlyViewingDeal implements fromFilterActions {
   readonly type = SET_CURRENTLY_VIEWING_DEAL;
   constructor(public payload: CurrentlyViewingDeal) {}
@@ -39,4 +46,5 @@ export type DealActions =
   | SetDealsAsStrings
   | SetFetchedDeals
   | SetCurrentlyViewingDeal
-  | SetCurrentlyViewingDealContract;
+  | SetCurrentlyViewingDealContract
+  | AddFetchedDeals;
