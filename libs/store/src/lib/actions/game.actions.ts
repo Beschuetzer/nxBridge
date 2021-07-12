@@ -11,7 +11,7 @@ export interface CurrentlyViewingGame {
   seating: Seating;
   date: string | number;
   name: string;
-  deals: Deal[];
+  deals: string[];
 }
 
 export class SetCurrentlyViewingGame implements fromGeneralActions {

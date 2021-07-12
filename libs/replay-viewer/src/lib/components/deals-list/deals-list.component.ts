@@ -31,6 +31,7 @@ import {
   CardinalDirection,
   CardValuesAsString,
   Deal,
+  FetchedDeals,
   ReducerNames,
   Seating,
   Team,
@@ -139,7 +140,21 @@ export class DealsListComponent implements OnInit {
 
   private getDealsToGet() {
     //todo: this can be optimized later to only get Deals not in localStorage already
-    return this.dealsAsStrings;
+    if (!this.dealsAsStrings) return [];
+
+    let fetchedDeals: FetchedDeals = {};
+    const dealsToReturn: Deal[] = [];
+    
+    this.store.select(ReducerNames.deals).pipe(take(1)).subscribe(dealState => {
+      fetchedDeals = dealState.fetchedDeals;
+    })
+
+    for (let i = 0; i < this.dealsAsStrings.length; i++) {
+      const dealAsString = this.dealsAsStrings[i];
+      dealsToReturn.push(fetchedDeals[dealAsString]);
+    }
+
+    return dealsToReturn;
   }
 
   private handleDealsButtonLogic(button: HTMLElement) {
@@ -154,13 +169,12 @@ export class DealsListComponent implements OnInit {
         ?.querySelector(`.${GAME_DETAIL_CLASSNAME}__header-date`)
         ?.innerHTML?.trim();
 
-        debugger;
       this.store.dispatch(
         new SetCurrentlyViewingGame({
           seating: this.seating,
           name: name,
           date,
-          dealsssssssssss: this.deals,
+          deals: this.dealsAsStrings,
         } as CurrentlyViewingGame)
       );
       this.replayViewerDealService.setGameDetailBorderToBlack();
@@ -187,17 +201,10 @@ export class DealsListComponent implements OnInit {
   // }
 
   private loadRelevantDeals() {
-    // let deals = {};
-    //   this.store.select(ReducerNames.games).pipe(take(1)).subscribe(gameState => {
-    //     currentlyViewingGame = gameState.currentlyViewingGame.deals;
-    //   })
-
-
-    //   const dealsAsList: Deal[] = [];
-    //   this.deals = dealsAsList;
-    //   this.setTeams();
-    //   this.setDealCountMessage();
-    //   this.isLoading = false;
+    this.deals = this.getDealsToGet();
+    this.setTeams();
+    this.setDealCountMessage();
+    this.isLoading = false;
   }
 
   private setDealCountMessage() {
@@ -355,7 +362,7 @@ export class DealsListComponent implements OnInit {
     );
 
     if (!items || items.length <= 0) {
-      return this.loadRelevantDeals();
+      this.loadRelevantDeals();
     } else {
       toggleClassOnList(items, DISPLAY_NONE_CLASSNAME);
     }

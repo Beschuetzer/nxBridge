@@ -164,7 +164,13 @@ export class SearchService {
   }
 
   private getFetchedDeals(deals: Deal[]): FetchedDeals {
-    
+    const toReturn: FetchedDeals = {};
+    for (let i = 0; i < deals.length; i++) {
+      const deal = deals[i];
+      toReturn[deal._id] = deal;
+    }
+    return toReturn;
+    debugger;
   }
 
   private getLocalUserId() {
