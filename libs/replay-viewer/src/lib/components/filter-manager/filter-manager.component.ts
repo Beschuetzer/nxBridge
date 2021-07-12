@@ -6,7 +6,7 @@ import {
   Renderer2,
   ViewChild,
 } from '@angular/core';
-import { FILTER_MANAGER_CLASSNAME, getDateAndTimeString } from '@nx-bridge/constants';
+import { FILTER_MANAGER_CLASSNAME, getDateAndTimeString, maxCardValue, minCardValue } from '@nx-bridge/constants';
 import {
   AppState, SetAfterDate, SetBeforeDate, SetIsFilterSame,
 } from '@nx-bridge/store';
@@ -14,6 +14,7 @@ import { ReducerManager, Store } from '@ngrx/store';
 import { DateObj, DateType, ReducerNames, UserIds } from '@nx-bridge/interfaces-and-types';
 import { SearchService } from '../../services/search.service';
 import { FiltermanagerService } from '../../services/filtermanager.service';
+import { lstat } from 'node:fs';
 
 @Component({
   selector: 'nx-bridge-filter-manager',
@@ -29,6 +30,8 @@ export class FilterManagerComponent implements OnInit {
   //NOTE: new filters need to be added to resetFilterValues() in reset() and to filterManagerService's filters object
   @ViewChild('beforeDate') beforeDateFilterElement: ElementRef | null = null;
   @ViewChild('afterDate') afterDateFilterElement: ElementRef | null = null;
+  @ViewChild('players') playersFilterElement: ElementRef | null = null;
+  @ViewChild('cards') cardsFilterElement: ElementRef | null = null;
   
   @HostBinding('class.filter-manager') get classname() {
     return true;
@@ -36,6 +39,7 @@ export class FilterManagerComponent implements OnInit {
 
   private errorClassnames = ['color-red-light'];
   private inputErrorClassnames = ['ng-touched', 'ng-dirty', 'ng-invalid'];
+
   private beforeDateElement: HTMLElement = this.getNewElement('div');
   private afterDateElement: HTMLElement = this.getNewElement('div');
   private filtersMsgs: {[key: string]: any} = {
@@ -60,6 +64,10 @@ export class FilterManagerComponent implements OnInit {
         },
       },
     },
+    playerHasCard: {
+      valid: '',
+      invalid: ''
+    }
   };
 
   public beforeDate: DateObj = { date: null };
@@ -67,6 +75,10 @@ export class FilterManagerComponent implements OnInit {
   public FILTER_MANANGER_CLASSNAME = FILTER_MANAGER_CLASSNAME;
   public playerNames = ['Pick a username'];
   public cardsAsNumbers = ['Pick a Card', ...Array(52).keys()];
+
+  get joinedInputErrorClassnames () {
+    return this.inputErrorClassnames.join(' ');
+  }
 
   constructor(
     private renderer: Renderer2,
@@ -78,7 +90,6 @@ export class FilterManagerComponent implements OnInit {
 
   ngOnInit(): void {
     this.appendFiltersToAppliedDiv();
-
     this.store.select(ReducerNames.users).subscribe(userState => {
       if (userState.userIds && this.playerNames.length === 1) this.populatePlayerNames(userState.userIds);
     })
@@ -140,6 +151,28 @@ export class FilterManagerComponent implements OnInit {
 
   //NOTE: need this to trigger *ngIf properly
   onGameClick(e: Event) {return}
+
+  onPlayerHasCardClick(e: Event) {
+    const cardSelectElement = this.cardsFilterElement?.nativeElement as HTMLSelectElement;
+    const usernameSelectElement = this.playersFilterElement?.nativeElement as HTMLSelectElement;
+
+    const selectedCard = +cardSelectElement?.value;
+    const selectedUsername = usernameSelectElement?.value;
+
+    let shouldRemoveCardErrors = false;
+    let shouldRemoveUsernameErrors = false;
+    if (selectedCard >= minCardValue && selectedCard <= maxCardValue) shouldRemoveCardErrors = true;
+    if (!selectedUsername.match(this.playerNames[0])) shouldRemoveUsernameErrors = true;
+
+    this.setInputErrorClassnames(cardSelectElement, shouldRemoveCardErrors);
+    this.setInputErrorClassnames(usernameSelectElement, shouldRemoveUsernameErrors);
+
+    if (shouldRemoveCardErrors && shouldRemoveUsernameErrors) {
+      //inputs are valid
+      console.log('valid------------------------------------------------');
+    }
+
+  }
 
   //NOTE: need this to trigger *ngIf properly
   onPlayerClick(e: Event) {return}
@@ -235,7 +268,7 @@ export class FilterManagerComponent implements OnInit {
   }
 
   private setInputErrorClassnames(
-    input: HTMLInputElement,
+    input: HTMLElement,
     shouldRemoveInputErrorClassnames: boolean
   ) {
     this.inputErrorClassnames.forEach((classname) => {

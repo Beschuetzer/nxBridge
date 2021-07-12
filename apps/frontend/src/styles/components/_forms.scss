@@ -9,10 +9,10 @@
 
 }
 
-input.ng-touched.ng-dirty.ng-valid {
+.ng-touched.ng-dirty.ng-valid:is(input, select) {
   border: 1px solid rgba(var(--color-primary-1-rgb),.5) !important;
 }
 
-input.ng-touched.ng-dirty.ng-invalid {
+.ng-touched.ng-dirty.ng-invalid:is(input, select) {
   border: 1px solid rgba(var(--color-red-light-rgb), 1) !important;
 }

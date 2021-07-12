@@ -52,17 +52,31 @@
       class="{{ FILTER_MANANGER_CLASSNAME }}__player"
     >
       <span>Username:</span>
-      <select #players class="">
+      <select
+        #players
+        (click)="onPlayerHasCardClick($event)"
+        class="{{ joinedInputErrorClassnames }}"
+      >
         <option *ngFor="let playerName of playerNames; let i = index">
           {{ playerName }}
         </option>
       </select>
       <span>&nbsp;had the&nbsp;</span>
-      <select #cards class="">
+      <select
+        class="{{ joinedInputErrorClassnames }}"
+        (click)="onPlayerHasCardClick($event)"
+        #cards
+        class=""
+      >
         <option
           *ngFor="let cardAsNumber of cardsAsNumbers; let i = index"
           innerHTML="{{ cardAsNumber | cardAsNumberToCardHtmlEntityString }}"
-          [ngClass]="{ 'color-red': i >= 14 && i <= 39, 'color-black' : i < 14 || i > 39, 'filter-manager__player-options' : true}"
+          [ngClass]="{
+            'color-red': i >= 14 && i <= 39,
+            'color-black': i < 14 || i > 39,
+            'filter-manager__player-options': true
+          }"
+          [value]="i - 1"
         ></option>
       </select>
     </div>
