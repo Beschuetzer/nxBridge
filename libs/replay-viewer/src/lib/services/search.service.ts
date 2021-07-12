@@ -131,6 +131,8 @@ export class SearchService {
     if (!shouldContinue)
       return `Already viewing games by '${username}.  Try resetting filters'`;
 
+    //todo: get the usernames here and store then in store and localstorage
+
     this.needToCreateLocalStorageUser = false;
     this.username = username;
     this.email = email;

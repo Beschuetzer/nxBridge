@@ -11,7 +11,7 @@ export class GetUsersController {
   @Post()
   async getData(
     @Body(USERS_STRING) users: string[],
-  ): ControllerResponse<User> {
+  ): ControllerResponse<User | {[key:string]: string}> {
     return await this.getUsersService.getUsers(users);
   }
 }
