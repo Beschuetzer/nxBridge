@@ -20,6 +20,7 @@ import {
   Filters,
   GetUserResponse,
   LocalStorageUserWithGames,
+  PlayerHasCard,
   ReducerNames,
 } from '@nx-bridge/interfaces-and-types';
 import { paginateGames } from '@nx-bridge/constants';
@@ -149,8 +150,10 @@ export class SearchService {
   private applyFilters(games: Game[], filters: Filters) {
     let filteredGames: Game[] = games;
 
+    //NOTE: add new filtering function here
     filteredGames = this.getBeforeDate(filteredGames, filters.beforeDate);
     filteredGames = this.getAfterDate(filteredGames, filters.afterDate);
+    filteredGames = this.getPlayerHasCard(filteredGames, filters.playerHasCard);
 
     return filteredGames;
   }
@@ -254,6 +257,11 @@ export class SearchService {
         this.gameCountFromServer = gameCount;
         this.handleGetGameCountResponse();
       });
+  }
+
+  private getPlayerHasCard(games: Game[], filters: PlayerHasCard[]) {
+    debugger;
+    return games;
   }
 
   private getShouldContinue(username: string, email: string) {

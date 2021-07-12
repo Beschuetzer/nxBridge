@@ -27,7 +27,7 @@ export class FilterManagerComponent implements OnInit {
   @ViewChild('date') dateCheckbox: ElementRef | null = null;
   @ViewChild('player') playerCheckbox: ElementRef | null = null;
 
-  //NOTE: new filters need to be added to resetFilterValues() in reset() and to filterManagerService's filters object
+  //NOTE: new filters need to be added to filterManagerService's filter objects and search service's applyFilters();  remember: to call store action 'SetIsFilterSame' with false to tell searchService.setCurrentlyDisplayingGames() to run through the filters
   @ViewChild('beforeDate') beforeDateFilterElement: ElementRef | null = null;
   @ViewChild('afterDate') afterDateFilterElement: ElementRef | null = null;
   @ViewChild('players') playersFilterElement: ElementRef | null = null;
@@ -170,6 +170,7 @@ export class FilterManagerComponent implements OnInit {
     if (shouldRemoveCardErrors && shouldRemoveUsernameErrors) {
       //inputs are valid
       //note: if using more than one playerHasCard filter, will need to refine the dispatch
+      this.store.dispatch(new SetIsFilterSame(false));
       this.store.dispatch(new SetPlayerHasCard([{[selectedUsername]: selectedCard}]));
       this.searchService.setCurrentlyDisplayingGames();
     }
