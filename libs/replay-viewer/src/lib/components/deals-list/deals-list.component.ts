@@ -128,16 +128,6 @@ export class DealsListComponent implements OnInit {
     return isGameAlreadyOpen;
   }
 
-  // private getItemsFromDB() {
-  //   const itemsToGet = this.getDealsToGet();
-  //   this.isLoading = true;
-  //   this.http
-  //     .post<Deal[]>(GET_DEALS_URL, { [`${DEALS_STRING}`]: itemsToGet })
-  //     .subscribe((deals) => {
-  //       this.handleGetDealsFromDBResponse(deals);
-  //     });
-  // }
-
   private getDealsToGet() {
     //todo: this can be optimized later to only get Deals not in localStorage already
     if (!this.dealsAsStrings) return [];
@@ -191,14 +181,6 @@ export class DealsListComponent implements OnInit {
     }
     this.toggleGameDetailScoreBorder();
   }
-
-  // private handleGetDealsFromDBResponse(deals: Deal[]) {
-  //   this.deals = deals;
-  //   this.store.dispatch(new AddFetchedDeals(deals));
-  //   this.isLoading = false;
-  //   this.setTeams();
-  //   this.setDealCountMessage();
-  // }
 
   private loadRelevantDeals() {
     this.deals = this.getDealsToGet();

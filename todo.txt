@@ -1,7 +1,9 @@
+reminders -------------------------------------------------
+  -any bottlenecks likely come from the deal-handling branch
+
 known bugs --------------------------
   -Deal 1 trick 6 of yougurt 2/16 7:24pm bug where order of playing is reversed (it seems to be an issue with the deal and how it was saved)
   -sluggish resize and no card reset when opening one deal in a game, then resize, then open another (doesn't seems to be from deal-player.service migration)
-
 
 Known Quirks-----------------
   -since users can change username and email, the user has to know the current username or email in order to get results (would have to keep track user username changes on A# maj bridge to remedy )
@@ -75,9 +77,9 @@ filtering-----------------------
   1) 'player had card'
 
 -makes sure to have the player had card filter be an array (for possible future expansion to multiples of this type)
--add filters service and move all search service filter-related methods there
 
--no longer need to have AddFetchedDeals called when opening a GameDetail?
+-work on optimizing loadDeals in search service
 -need to check before fetching deals and just fetch deals not already fetched
 
--store deals as objs with _id as key
+
+-when applying filter, the number of pages option doesn't reflect the number being displayed

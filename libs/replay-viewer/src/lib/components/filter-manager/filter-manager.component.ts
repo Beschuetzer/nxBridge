@@ -27,7 +27,7 @@ export class FilterManagerComponent implements OnInit {
   @ViewChild('date') dateCheckbox: ElementRef | null = null;
   @ViewChild('player') playerCheckbox: ElementRef | null = null;
 
-  //NOTE: new filters need to be added to filterManagerService's filter objects and search service's applyFilters();  remember: to call store action 'SetIsFilterSame' with false to tell searchService.setCurrentlyDisplayingGames() to run through the filters
+  //NOTE: new filters need to be added to filterManagerService's filter objects and applyFilters();  remember: to set store action 'SetIsFilterSame' to false before calling searchService.setCurrentlyDisplayingGames() to make sure filters are checked
   @ViewChild('beforeDate') beforeDateFilterElement: ElementRef | null = null;
   @ViewChild('afterDate') afterDateFilterElement: ElementRef | null = null;
   @ViewChild('players') playersFilterElement: ElementRef | null = null;

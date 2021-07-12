@@ -10,10 +10,8 @@ import {
   AppState,
   SetCurrentlyDisplayingGames,
   SetCurrentlyViewingUser,
-  SetFilteredGames,
   SetIsLoading,
   SetLoadingError,
-  SetIsFilterSame,
   SetDealsAsStrings,
   SetFetchedDeals,
   DealState,
@@ -22,10 +20,8 @@ import { Store } from '@ngrx/store';
 import {
   Deal,
   FetchedDeals,
-  Filters,
   GetUserResponse,
   LocalStorageUserWithGames,
-  PlayerHasCard,
   ReducerNames,
 } from '@nx-bridge/interfaces-and-types';
 import { paginateGames } from '@nx-bridge/constants';
@@ -120,7 +116,7 @@ export class SearchService {
         // debugger;
         //note: batch number starts at 0 (meaning results 0 - 0 * resultsPerPage)
 
-        const filteredGames = this.filterGames(games);
+        const filteredGames = this.filterManagerService.filterGames(games);
         const gamesToUse = paginateGames(
           filteredGames,
           sortPreference,
@@ -152,17 +148,6 @@ export class SearchService {
     return '';
   }
 
-  private applyFilters(games: Game[], filters: Filters) {
-    let filteredGames: Game[] = games;
-
-    //NOTE: add new filtering function here; arrange in order of least to most cpu intensive to minimize cpu load
-    filteredGames = this.getBeforeDate(filteredGames, filters.beforeDate);
-    filteredGames = this.getAfterDate(filteredGames, filters.afterDate);
-    filteredGames = this.getPlayerHasCard(filteredGames, filters.playerHasCard);
-
-    return filteredGames;
-  }
-
   private getFetchedDeals(deals: Deal[]): FetchedDeals {
     const toReturn: FetchedDeals = {};
     for (let i = 0; i < deals.length; i++) {
@@ -170,7 +155,6 @@ export class SearchService {
       toReturn[deal._id] = deal;
     }
     return toReturn;
-    debugger;
   }
 
   private getLocalUserId() {
@@ -207,59 +191,6 @@ export class SearchService {
       );
       this.store.dispatch(new SetIsLoading(false));
     }
-  }
-
-  private filterGames(games: Game[]) {
-    if (!games) return games;
-    let isFilterSame = true;
-    let filteredGames = games;
-    let filters: Filters = this.filterManagerService.filtersInitial;
-
-    this.store
-      .select(ReducerNames.filters)
-      .pipe(
-        take(1),
-        switchMap((filterState) => {
-          isFilterSame = filterState.isFilterSame;
-          filters = { ...filterState };
-          return this.store.select(ReducerNames.games).pipe(take(1));
-        })
-      )
-      .subscribe((gameState) => {
-        if (isFilterSame && gameState.filteredGames?.length > 0)
-          filteredGames = gameState.filteredGames;
-      });
-
-    if (isFilterSame) return filteredGames;
-
-    filteredGames = this.applyFilters(games, filters);
-    this.store.dispatch(new SetFilteredGames(filteredGames));
-    this.store.dispatch(new SetIsFilterSame(true));
-    return filteredGames;
-  }
-
-  private getAfterDate(games: Game[], afterDate: number) {
-    if (!afterDate) return games;
-
-    const toReturn: Game[] = [];
-    for (let i = 0; i < games.length; i++) {
-      const game = games[i];
-      if (game.completionDate >= afterDate) toReturn.push(game);
-    }
-
-    return toReturn;
-  }
-
-  private getBeforeDate(games: Game[], beforeDate: number) {
-    if (!beforeDate) return games;
-
-    const toReturn: Game[] = [];
-    for (let i = 0; i < games.length; i++) {
-      const game = games[i];
-      if (game.completionDate <= beforeDate) toReturn.push(game);
-    }
-
-    return toReturn;
   }
 
   private getGameCount() {
@@ -302,31 +233,6 @@ export class SearchService {
     return this.localStorageManager.getPopulatedLocalStorageUser(
       this.userId
     );
-  }
-
-  private getPlayerHasCard(games: Game[], playerHasCards: PlayerHasCard[]) {
-    if (!playerHasCards || playerHasCards.length <= 0) return games;
-    const toReturn = [];
-    
-    debugger;
-
-    for (let i = 0; i < games.length; i++) {
-      const game = games[i];
-
-      for (let j = 0; j < game.deals.length; j++) {
-        const dealId = game.deals[j];
-
-        //todo: check if store.deals.fetchedDeals contains the deal, if not fetch it and store in
-        // const deal = this.localStorageManager.get
-        // const handToCheck = deal.hands
-
-        for (let j = 0; j < playerHasCards.length; j++) {
-          const playerHasCard = playerHasCards[j];
-        }
-      }
-    }
-
-    return games;
   }
 
   private getShouldContinue(username: string, email: string) {
@@ -392,7 +298,6 @@ export class SearchService {
   }
 
   private loadDeals(localStorageUserWithGames: LocalStorageUserWithGames) {
-    //todo: don't need dealsAsString if downloading all deals?
     const dealsAsStrings = this.helpersService.getDealsAsStrings(
       localStorageUserWithGames?.games as Game[]
     );
