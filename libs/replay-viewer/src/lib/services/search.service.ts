@@ -319,9 +319,7 @@ export class SearchService {
     this.store.select(ReducerNames.deals).pipe(
       take(1),
       switchMap((dealState: DealState) => {
-        //todo: work on optimizing how deals are fetched (only fetch ones not already fetched; also need to )
         const dealsToGet = this.getDealsToLoad(neededDealsAsStrings, dealState.fetchedDeals)
-        console.log('dealsToGet =', dealsToGet);
         return this.helpersService.getDeals(dealsToGet);
       })
     ).subscribe((deals: Deal[]) => {

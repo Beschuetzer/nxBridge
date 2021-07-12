@@ -122,6 +122,7 @@
     --game-detail-padding-sides: #{$default-font-size * 4.25};
     font-size: $default-font-size * 0.75;
     border: none;
+    border-radius: 0;
     position: absolute;
     top: 0%;
     left: 100%;

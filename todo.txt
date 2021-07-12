@@ -78,5 +78,5 @@ filtering-----------------------
 
 -makes sure to have the player had card filter be an array (for possible future expansion to multiples of this type)
 
-
+-clicking too quickly on a game-detail after initial load causes issues (maybe do after click of some sort that can reset the game-detail?)
 -have replay sort the trump on left

@@ -1,7 +1,11 @@
 import { Injectable } from '@angular/core';
 import * as paper from 'paper';
-import { cardinalDirections, cardsPerDeck, cardsPerHand, createHandArrayFromFlatArray, DEAL_PLAYER_CLASSNAME, flatten, getDirectionFromSeating, getLinearPercentOfMaxMatchWithinRange, getUserWhoPlayedCard, MOBILE_START_WIDTH } from '@nx-bridge/constants';
-import { Deal, Hand, Hands, Seating } from '@nx-bridge/interfaces-and-types';
+import { cardinalDirections, cardsPerDeck, cardsPerHand, createHandArrayFromFlatArray, DEAL_PLAYER_CLASSNAME, flatten, getDirectionFromSeating, getLinearPercentOfMaxMatchWithinRange, getUserWhoPlayedCard, MOBILE_START_WIDTH, suitsAsCapitalizedStrings } from '@nx-bridge/constants';
+import { Deal, Hand, Hands, ReducerNames, Seating } from '@nx-bridge/interfaces-and-types';
+import { Store } from '@ngrx/store';
+import { AppState } from '@nx-bridge/store';
+import { take } from 'rxjs/operators';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -57,6 +61,7 @@ export class DealPlayerService {
   private redrawTimeout: any;
 
   constructor(
+    private store: Store<AppState>,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   ) { }
 
@@ -67,6 +72,36 @@ export class DealPlayerService {
     )
       return hand.reverse();
     return hand;
+  }
+
+  getHandWithTrumpOnLeft(hand: Hand){
+    //note: hand will be in order spades, hearts, clubs, diamonds
+    let contract = '';
+    this.store.select(ReducerNames.deals).pipe(take(1)).subscribe(dealState => {
+      contract = dealState.currentlyViewingDeal.contract;
+    })
+
+    const possibleContractSuits = [...suitsAsCapitalizedStrings.map(suit => suit.substr(0, suit.length - 1).toLowerCase()), 'no trump'];
+    const suitIndex = possibleContractSuits.findIndex(suit => {
+      debugger;
+      const regExp = new RegExp(suit, 'i');
+      return contract.match(regExp)});
+
+    let newHand = hand;
+    debugger;
+    //don't have to do anything if contract is NT or spades;
+    if (suitIndex >= 4) return hand;
+    else if (suitIndex === 0) {
+      //clubs
+      return [hand[3], hand[0], hand[1], hand[2]]
+    }
+    else if (suitIndex === 1) {
+      //diamonds
+    }
+    else if (suitIndex === 2) {
+      //hearts
+    }
+    else return hand;
   }
 
   getStartingPosition(numberOfCardsInHand: number, direction: string) {
@@ -254,7 +289,8 @@ export class DealPlayerService {
 
   positionHand(hand: Hand, direction: string) {
     if (this.cardSpacingIncrement === -1) return;
-    const flatHand = flatten(hand);
+    const handWithTrumpOnLeft = this.getHandWithTrumpOnLeft(hand);
+    const flatHand = flatten(handWithTrumpOnLeft);
     const startingPosition = this.getStartingPosition(
       flatHand.length,
       direction
@@ -483,4 +519,5 @@ export class DealPlayerService {
     this.handsToRender = { ...tempHands };
     this.positionHands();
   }
+
 }
