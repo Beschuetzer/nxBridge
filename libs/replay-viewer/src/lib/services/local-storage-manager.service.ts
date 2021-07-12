@@ -33,6 +33,12 @@ export class LocalStorageManagerService {
   public EMPTY_LOCAL_STORAGE_GAMES_RETURNS = {};
   public EMPTY_USER_ID_RETURNS = '';
 
+  private checkForIdsInterval: any;
+  private checkForIdsIntervalDuration = 1000;
+  private maxTimesToCheckForIds = 10;
+  private isFinishedSavingUserIds = false;
+  private userIdsMaxLife = 259200000; //3 days ( 1000 * 3600 * 72 );
+
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor(
     private helpersService: HelpersService,
@@ -255,13 +261,12 @@ export class LocalStorageManagerService {
   }
 
   getUserIdsInLocalStorage(): UserIds | null {
-    const maxLife = 259200000; //3 days ( 1000 * 3600 * 72 )
     const userIdsInLocalStorage = localStorage.getItem(
       this.userIdsInLocalStorage
     );
     if (userIdsInLocalStorage) {
       const parsed = JSON.parse(userIdsInLocalStorage);
-      if (Math.abs(parsed.lastSearchDate - Date.now()) >= maxLife) {
+      if (Math.abs(parsed.lastSearchDate - Date.now()) >= this.userIdsMaxLife) {
         localStorage.removeItem(this.userIdsInLocalStorage);
         return null;
       }
@@ -286,6 +291,7 @@ export class LocalStorageManagerService {
 
   saveUserIds(userIds: string[]) {
     //gets already stored values and combines them with new values and then saves the whole shebang
+    this.isFinishedSavingUserIds = false;
     const userIdsInLocalStorage = this.getUserIdsInLocalStorage();
 
     const userIdsToFetch = [];
@@ -319,6 +325,7 @@ export class LocalStorageManagerService {
           this.userIdsInLocalStorage,
           JSON.stringify(combination)
         );
+        this.isFinishedSavingUserIds = true;
       });
 
     this.loadUserIdObjsIntoRedux(userIds);
@@ -455,15 +462,31 @@ export class LocalStorageManagerService {
   }
 
   private loadUserIdObjsIntoRedux(relevantUserIds: string[]) {
+    clearInterval(this.checkForIdsInterval);
     let userIdObjs: UserIds | null = this.getSpecificUserIdsInLocalStorage(
       relevantUserIds
     );
-    if (!userIdObjs) {
-      setTimeout(() => {
+
+    if (!userIdObjs || Object.keys(userIdObjs).length !== relevantUserIds.length) {
+      let checkCount = 0;
+      this.checkForIdsInterval = setInterval(() => {
+        checkCount++;
+
+        if (checkCount === this.maxTimesToCheckForIds || this.isFinishedSavingUserIds) {
+          clearInterval(this.checkForIdsInterval);
+          userIdObjs = this.getSpecificUserIdsInLocalStorage(relevantUserIds);
+          if (!userIdObjs) userIdObjs = {} as UserIds;
+          this.store.dispatch(new SetUserIds(userIdObjs));
+        }
+
         userIdObjs = this.getSpecificUserIdsInLocalStorage(relevantUserIds);
-        if (!userIdObjs) userIdObjs = {} as UserIds;
-        this.store.dispatch(new SetUserIds(userIdObjs));
-      }, 500);
+        
+        if (userIdObjs && Object.keys(userIdObjs).length === relevantUserIds.length) {
+          clearInterval(this.checkForIdsInterval);
+          this.store.dispatch(new SetUserIds(userIdObjs));
+        }
+
+      }, this.checkForIdsIntervalDuration);
     } else this.store.dispatch(new SetUserIds(userIdObjs));
   }
 

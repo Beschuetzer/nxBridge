@@ -7,6 +7,7 @@ import {getMongooseObjsFromStrings} from '@nx-bridge/constants';
 
 @Injectable({ providedIn: 'root'})
 export class GetUsersService {
+
   constructor(
     @InjectModel('User') private userModel: Model<User>,
   ) {}
@@ -35,7 +36,9 @@ export class GetUsersService {
     const mongooseObjs = getMongooseObjsFromStrings(users);
     const response = await this.userModel.find({_id: {$in: mongooseObjs}});
     // const newResponse = response.map(userObj => {return {...(userObj as any)._doc, salt: null, hash: null, email: null, resetPasswordToken: null} as User})
-    return response.map(userObj =>  { return {[userObj._id]: userObj.username} });
+    return response.map(userObj =>  { 
+      return {[userObj._id]: userObj.username};
+    });
   }
 
   private getErrorResponse(): Promise<ErrorMessage> {
