@@ -81,7 +81,7 @@ export interface Room {
   timesUpComplete: boolean;
 }
 export interface PlayerHasCard {
-  [key: string]: number;
+  [key: string]: number[];
 }
 export interface Preferences {
   sound: {

@@ -8,13 +8,14 @@ import {
 } from '@angular/core';
 import { FILTER_MANAGER_CLASSNAME, getDateAndTimeString, maxCardValue, minCardValue } from '@nx-bridge/constants';
 import {
+  AddPlayerHasCard,
   AppState, SetAfterDate, SetBeforeDate, SetIsFilterSame, SetPlayerHasCard,
 } from '@nx-bridge/store';
-import { ReducerManager, Store } from '@ngrx/store';
-import { DateObj, DateType, ReducerNames, UserIds } from '@nx-bridge/interfaces-and-types';
+import { Store } from '@ngrx/store';
+import { DateObj, DateType, PlayerHasCard, ReducerNames, UserIds } from '@nx-bridge/interfaces-and-types';
 import { SearchService } from '../../services/search.service';
 import { FiltermanagerService } from '../../services/filtermanager.service';
-import { lstat } from 'node:fs';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'nx-bridge-filter-manager',
@@ -170,9 +171,19 @@ export class FilterManagerComponent implements OnInit {
     if (shouldRemoveCardErrors && shouldRemoveUsernameErrors) {
       //inputs are valid
       //note: if using more than one playerHasCard filter, will need to refine the dispatch
-      this.store.dispatch(new SetIsFilterSame(false));
-      this.store.dispatch(new SetPlayerHasCard([{[selectedUsername]: selectedCard}]));
-      this.searchService.setCurrentlyDisplayingGames();
+      let playerHasCard: PlayerHasCard = {};
+      this.store.select(ReducerNames.filters).pipe(take(1)).subscribe(filterState => {
+        debugger;
+        playerHasCard = filterState.playerHasCard;
+        const currentUsernameCards = playerHasCard[selectedUsername];
+        const isInitialPresent = playerHasCard['initial'];
+        if (!isInitialPresent && currentUsernameCards?.includes(selectedCard)) return;
+
+        if (isInitialPresent) this.store.dispatch(new SetPlayerHasCard({[selectedUsername]: [selectedCard]}));
+        else this.store.dispatch(new AddPlayerHasCard({[selectedUsername]: [selectedCard]}));
+        this.store.dispatch(new SetIsFilterSame(false));
+        this.searchService.setCurrentlyDisplayingGames();
+      })
     }
   }
 

@@ -73,10 +73,15 @@ filtering-----------------------
   1) 'contract is ...'
   2) 'declarer is ...'
 
+
+
+-clicking too quickly on a game-detail after initial load causes issues (maybe do after click of some sort that can reset the game-detail?)
+
 -work on player filter:
   1) 'player had card'
 
+-when adding multiple playerHasCard values, first check that no other player has that card, if so return and show error.
+-display every playerHasCard in ui
+-when clicking search, reset all filters
 -makes sure to have the player had card filter be an array (for possible future expansion to multiples of this type)
-
--clicking too quickly on a game-detail after initial load causes issues (maybe do after click of some sort that can reset the game-detail?)
--have replay sort the trump on left
+*added click reset in deal-player resets the canvas too*

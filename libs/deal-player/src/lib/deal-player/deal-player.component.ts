@@ -160,11 +160,11 @@ export class DealPlayerComponent implements OnInit {
   }
 
   onRestart() {
-    this.onPause();
     this.resetTable();
     this.onPause();
     this.dealPlayerService.resetCardsPlayed();
     this.trickNumber = 0;
+    this.playCard(-1)
   }
 
   private addHeightAuto() {
