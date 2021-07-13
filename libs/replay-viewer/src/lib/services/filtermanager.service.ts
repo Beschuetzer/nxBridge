@@ -13,6 +13,7 @@ import {
   SetPlayerHasCard,
   SetFilteredGames,
   SetIsFilterSame,
+  SetDealsThatMatchPlayerHasCardFilters,
 } from '@nx-bridge/store';
 import { switchMap, take } from 'rxjs/operators';
 import { flatten } from '@nx-bridge/constants';
@@ -36,7 +37,7 @@ export class FiltermanagerService {
   public filtersInitial: Filters = {
     [this.filters.beforeDate.string]: 0,
     [this.filters.afterDate.string]: 0,
-    [this.filters.playerHasCard.string]: {initial: [1]},
+    [this.filters.playerHasCard.string]: { initial: [1] },
   };
   public filterResetActions = {
     [this.filters.beforeDate.string]: new SetBeforeDate(
@@ -150,30 +151,51 @@ export class FiltermanagerService {
         fetchedDeals = dealState.fetchedDeals;
       });
 
-    debugger;
     const toReturn = [];
+    const dealsThatMatch: string[] = [];
     for (let i = 0; i < games.length; i++) {
       const game = games[i];
-      let canSkipToNextGame = false;
+      
+      let hasGameBeenAdded = false;
       for (let j = 0; j < game.deals.length; j++) {
         const dealId = game.deals[j];
         const deal = fetchedDeals[dealId];
+
+        let canSkipToNextDeal = false;
+        let shouldAddDeal = true;
         for (const username in playerHasCards) {
           if (Object.prototype.hasOwnProperty.call(playerHasCards, username)) {
-            const cardToCheckFor = playerHasCards[username];
+            const cardsToCheckFor = playerHasCards[username];
             const handToCheck = deal.hands[username];
-            if (!handToCheck || handToCheck.length <= 0 ) break;
-            const flatHand = flatten(handToCheck);
-            if (flatHand.includes(cardToCheckFor)) {
-              canSkipToNextGame = true;
-              toReturn.push(game);
+            if (!handToCheck || handToCheck.length <= 0) {
+              shouldAddDeal = false;
               break;
             }
+
+            const flatHand = flatten(handToCheck);
+            for (let k = 0; k < cardsToCheckFor.length; k++) {
+              const cardToCheckFor = cardsToCheckFor[k];
+              if (!flatHand.includes(cardToCheckFor)) {
+                shouldAddDeal = false;
+                canSkipToNextDeal = true;
+                break;
+              }
+            }
+            if (canSkipToNextDeal) break;
           }
         }
-        if (canSkipToNextGame) break;
+        
+        if (shouldAddDeal) {
+          if (!hasGameBeenAdded) {
+            hasGameBeenAdded = true;
+            toReturn.push(game);
+          }
+          dealsThatMatch.push(dealId);
+        }
       }
     }
+
+    this.store.dispatch(new SetDealsThatMatchPlayerHasCardFilters(dealsThatMatch));
 
     return toReturn;
   }

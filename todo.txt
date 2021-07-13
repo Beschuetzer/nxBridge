@@ -83,4 +83,6 @@ filtering-----------------------
 -when adding multiple playerHasCard values, first check that no other player has that card, if so return and show error.
 -display every playerHasCard in ui
 -when clicking search, reset all filters
+-change how filter messages are displayed (add filterItem component that has an x button to remove just that specific filter;  needs input of message and reset action )
+-add some visual indication of the deals that satisfy playerHasCard (would need to a store array and then check each deal on deals-list load)
 -makes sure to have the player had card filter be an array (for possible future expansion to multiples of this type)

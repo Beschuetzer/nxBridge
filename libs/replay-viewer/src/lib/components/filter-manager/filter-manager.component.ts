@@ -169,11 +169,8 @@ export class FilterManagerComponent implements OnInit {
     this.setInputErrorClassnames(usernameSelectElement, shouldRemoveUsernameErrors);
 
     if (shouldRemoveCardErrors && shouldRemoveUsernameErrors) {
-      //inputs are valid
-      //note: if using more than one playerHasCard filter, will need to refine the dispatch
       let playerHasCard: PlayerHasCard = {};
       this.store.select(ReducerNames.filters).pipe(take(1)).subscribe(filterState => {
-        debugger;
         playerHasCard = filterState.playerHasCard;
         const currentUsernameCards = playerHasCard[selectedUsername];
         const isInitialPresent = playerHasCard['initial'];

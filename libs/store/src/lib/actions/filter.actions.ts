@@ -6,6 +6,12 @@ export const SET_AFTER_DATE = '[Filter] SET_AFTER_DATE';
 export const SET_PLAYER_HAS_CARD = '[Filter] SET_PLAYER_HAS_CARD';
 export const ADD_PLAYER_HAS_CARD = '[Filter] ADD_PLAYER_HAS_CARD';
 export const SET_IS_FILTER_SAME = '[Filter] SET_IS_FILTER_SAME';
+export const SET_DEALS_THAT_MATCH_PLAYER_HAS_CARD_FILTERS =
+  '[Filter] SET_DEALS_THAT_MATCH_PLAYER_HAS_CARD_FILTERS';
+export class SetDealsThatMatchPlayerHasCardFilters implements Action {
+  readonly type = SET_DEALS_THAT_MATCH_PLAYER_HAS_CARD_FILTERS;
+  constructor(public payload: string[]) {}
+}
 
 export class SetBeforeDate implements Action {
   readonly type = SET_BEFORE_DATE;
@@ -37,4 +43,5 @@ export type FilterActions =
   | SetAfterDate
   | SetIsFilterSame
   | SetPlayerHasCard
-  | AddPlayerHasCard;
+  | AddPlayerHasCard
+  | SetDealsThatMatchPlayerHasCardFilters;

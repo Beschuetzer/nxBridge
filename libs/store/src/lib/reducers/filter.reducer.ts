@@ -8,6 +8,7 @@ export interface FilterState {
   afterDate: number;
   isFilterSame: boolean;
   playerHasCard: PlayerHasCard;
+  dealsThatMatchPlayerHasCardFilters: string[];
 }
 
 const INITIAL_STATE: FilterState = {
@@ -15,6 +16,7 @@ const INITIAL_STATE: FilterState = {
   afterDate: 0,
   isFilterSame: false,
   playerHasCard: {initial: [1]},
+  dealsThatMatchPlayerHasCardFilters: [],
 };
 
 export function filterReducer(
@@ -37,8 +39,13 @@ export function filterReducer(
         ...state,
         playerHasCard: action.payload,
       };
+    case fromFilterActions.SET_DEALS_THAT_MATCH_PLAYER_HAS_CARD_FILTERS:
+      return {
+        ...state,
+        dealsThatMatchPlayerHasCardFilters: action.payload,
+      };
+      
     case fromFilterActions.ADD_PLAYER_HAS_CARD:
-      debugger;      
       const newPlayerHasCard = {...action.payload};
       const usernameKey: string = Object.keys(newPlayerHasCard)[0];
       const usernameValues = state.playerHasCard[usernameKey];
