@@ -77,4 +77,13 @@
       font-size: $semantic-ui-text-default-font-size * 1.25;
     }
   }
+
+  &__item {
+    display: flex;
+    justify-content: space-between;
+
+    & button {
+      color: var(--color-red);
+    }
+  }
 }

@@ -11,7 +11,14 @@
       Reset
     </button>
   </div>
-  <div #applied class="filter-manager__applied ui field"></div>
+  <div #applied class="filter-manager__applied ui field">
+    <nx-bridge-filter-manager-item
+      *ngFor="let filterItem of filterItems; let i = index;"
+      [message]="filterItem.msg"
+      [indexOfItem]="i"
+      (deletion)="onFilterItemDeletion($event)"
+    ></nx-bridge-filter-manager-item>
+  </div>
   <div class="{{ FILTER_MANANGER_CLASSNAME }}__options field">
     <label>
       <input #date (click)="onDateClick($event)" type="checkbox" />

@@ -21,6 +21,10 @@ export interface FetchedDeals {
 export interface Filters {
   [key: string]: any;
 }
+export interface FilterItem {
+  msg: string;
+  name: string;
+}
 export interface Game {
   deals: ObjectId[];
   room: Room;
