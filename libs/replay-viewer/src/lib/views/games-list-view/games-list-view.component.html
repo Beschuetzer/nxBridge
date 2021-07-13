@@ -59,6 +59,13 @@
         </label>
       </div>
     </div>
+    <div
+      *ngIf="totalGames"
+      class="games-view__summary"
+    >
+    <span><b>{{totalGames}}</b>&nbsp;</span>
+    <span>{{totalGames === 1 ? 'game' : 'games'}} found matching criteria:</span>
+    </div>
     <nx-bridge-games-list></nx-bridge-games-list>
   </section>
 </nx-bridge-grid>

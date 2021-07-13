@@ -131,7 +131,7 @@ export class SearchService {
   startRequest(username: string, email: string) {
     const shouldContinue = this.getShouldContinue(username, email);
     if (!shouldContinue)
-      return `Already viewing games by '${username}.  Try resetting filters'`;
+      return `Already viewing games by <b>'${username}'</b>.&nbsp;&nbsp;Try resetting filters, if you see no games.`;
 
     this.needToCreateLocalStorageUser = false;
     this.username = username;

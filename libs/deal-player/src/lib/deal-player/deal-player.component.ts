@@ -119,7 +119,8 @@ export class DealPlayerComponent implements OnInit {
 
   onNextFour() {
     this.resetTable();
-    this.playCard(this.dealPlayerService.playCount + 3);
+    const desiredPlayCount = this.dealPlayerService.playCount + 3;
+    this.playCard(desiredPlayCount >= 51 ? 51 : desiredPlayCount);
     this.onPause();
   }
 

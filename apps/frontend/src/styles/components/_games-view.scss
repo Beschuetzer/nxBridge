@@ -84,4 +84,13 @@
       color: var(--color-primary-3);
     }
   }
+
+  &__summary {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    color: var(--color-primary-3);
+    padding-left: $default-font-size * .5;
+  }
 }

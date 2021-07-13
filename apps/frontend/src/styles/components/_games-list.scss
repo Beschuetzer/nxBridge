@@ -2,7 +2,7 @@
   width: 100%;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr));
-  padding: $default-font-size * .5;
+  padding: 0 $default-font-size * .5 $default-font-size * .5 $default-font-size * .5;
   grid-gap: $default-font-size * .5;
   overflow-y: auto;
   overflow-x: hidden;
