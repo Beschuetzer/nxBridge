@@ -21,6 +21,7 @@ import {
   COLOR_BLACK_CLASSNAME,
   MOBILE_START_WIDTH,
   HEIGHT_AUTO_CLASSNAME,
+  NOT_AVAILABLE_STRING,
 } from '@nx-bridge/constants';
 
 import { Store } from '@ngrx/store';
@@ -192,10 +193,10 @@ export class DealPlayerComponent implements OnInit {
   }
 
   private displayCardInTable(cardAsNumber: number) {
-    let numberToUse = 'N/A';
+    let numberToUse = NOT_AVAILABLE_STRING;
     let suitHtmlEntity = '';
 
-    if (cardAsNumber !== ('N/A' as any)) {
+    if (cardAsNumber !== (NOT_AVAILABLE_STRING as any)) {
       numberToUse = getCharacterFromCardAsNumber(cardAsNumber);
       suitHtmlEntity = getHtmlEntityFromSuitOrCardAsNumber(cardAsNumber);
       const userWhoPlayedCard = getUserWhoPlayedCard(

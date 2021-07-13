@@ -13,8 +13,9 @@
   </div>
   <div #applied class="filter-manager__applied ui field">
     <nx-bridge-filter-manager-item
-      *ngFor="let filterItem of filterItems; let i = index;"
-      [message]="filterItem.msg"
+      *ngFor="let filterItem of filterItems | keyvalue; let i = index;"
+      [filterItem]="filterItem.value"
+      [filterItemName]="filterItem.key"
       [indexOfItem]="i"
       (deletion)="onFilterItemDeletion($event)"
     ></nx-bridge-filter-manager-item>

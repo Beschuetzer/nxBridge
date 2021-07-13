@@ -22,8 +22,13 @@ export interface Filters {
   [key: string]: any;
 }
 export interface FilterItem {
-  msg: string;
-  name: string;
+  message: string;
+  error: string;
+  date?: Date;
+  isDateInvalid?: boolean;
+}
+export interface FilterItems {
+  [key: string]: FilterItem;
 }
 export interface Game {
   deals: ObjectId[];

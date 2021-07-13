@@ -11,6 +11,7 @@ import {
   getDateAndTimeString,
   maxCardValue,
   minCardValue,
+  NOT_AVAILABLE_STRING,
   resetPlayerHasCardDeals,
 } from '@nx-bridge/constants';
 import {
@@ -28,12 +29,14 @@ import {
   DateType,
   FetchedDeals,
   FilterItem,
+  FilterItems,
   PlayerHasCard,
   ReducerNames,
 } from '@nx-bridge/interfaces-and-types';
 import { SearchService } from '../../services/search.service';
 import { FiltermanagerService } from '../../services/filtermanager.service';
 import { take } from 'rxjs/operators';
+import { debug } from 'node:console';
 
 @Component({
   selector: 'nx-bridge-filter-manager',
@@ -56,7 +59,6 @@ export class FilterManagerComponent implements OnInit {
     return true;
   }
 
-  private errorClassnames = ['color-red-light'];
   private inputErrorClassnames = ['ng-touched', 'ng-dirty', 'ng-invalid'];
 
   private beforeDateElement: HTMLElement = this.getNewElement('div');
@@ -94,7 +96,7 @@ export class FilterManagerComponent implements OnInit {
   public FILTER_MANANGER_CLASSNAME = FILTER_MANAGER_CLASSNAME;
   public playerNames = ['Pick a username'];
   public cardsAsNumbers = ['Pick a Card', ...Array(52).keys()];
-  public filterItems: FilterItem[] = [];
+  public filterItems: FilterItems = {};
 
   get joinedInputErrorClassnames() {
     return this.inputErrorClassnames.join(' ');
@@ -120,9 +122,8 @@ export class FilterManagerComponent implements OnInit {
     let shouldDispatchChange = false;
     const input = (e.currentTarget || e.target) as HTMLInputElement;
     const {
-      isDateInValid,
+      isDateInvalid,
       dateObj,
-      isSingle,
       filterMsgError,
     } = this.validateDate(
       input.value,
@@ -135,15 +136,21 @@ export class FilterManagerComponent implements OnInit {
       dateType
     );
 
+    filterName.date = isDateInvalid ? null : dateObj;
+    const message = getDateAndTimeString(filterName, filterMsg);
+    debugger
+    const filterToSend: FilterItem = {
+      message,
+      error: message !== NOT_AVAILABLE_STRING ? '' : filterMsgError,
+      date: dateObj,
+      isDateInvalid,
+    }
+
+    if (dateType === DateType.before) this.filterItems[this.filterManagerService.filters.beforeDate.string] = filterToSend;
+    else this.filterItems[this.filterManagerService.filters.afterDate.string] = filterToSend;
+
     let shouldRemoveInputErrorClassnames = false;
-    if (isDateInValid) {
-      filterName.date = null;
-      filterNameElement.innerHTML = filterMsgError;
-      this.changeErrorClasses(filterNameElement, false);
-    } else {
-      this.changeErrorClasses(filterNameElement, true);
-      filterName.date = dateObj;
-      filterNameElement.innerHTML = getDateAndTimeString(filterName, filterMsg);
+    if (!isDateInvalid) {
       shouldRemoveInputErrorClassnames = true;
       shouldDispatchChange = true;
     }
@@ -291,15 +298,6 @@ export class FilterManagerComponent implements OnInit {
     this.renderer.appendChild(appliedDiv, this.beforeDateElement);
   }
 
-  private changeErrorClasses(element: HTMLElement, shouldRemove = false) {
-    if (!element) return;
-
-    this.errorClassnames.forEach((classname) => {
-      if (shouldRemove) this.renderer.removeClass(element, classname);
-      else this.renderer.addClass(element, classname);
-    });
-  }
-
   private dispatchChanges(
     filterName: DateObj,
     shouldDispatchChange: boolean,
@@ -374,7 +372,7 @@ export class FilterManagerComponent implements OnInit {
     beforeDate: DateObj,
     afterDate: DateObj
   ) {
-    let isDateInValid = false;
+    let isDateInvalid = false;
     let isSingle = true;
 
     const dateObj = new Date(date);
@@ -387,20 +385,20 @@ export class FilterManagerComponent implements OnInit {
 
     if (proposedTime >= currentTime && dateType === DateType.after) {
       exactErrorString = 'afterNow';
-      isDateInValid = true;
+      isDateInvalid = true;
       if (beforeDate?.date) isSingle = false;
     } else if (beforeDate?.date && dateType === DateType.after) {
-      isDateInValid = beforeDate.date.getTime() <= proposedTime;
+      isDateInvalid = beforeDate.date.getTime() <= proposedTime;
       isSingle = false;
     } else if (afterDate?.date && dateType === DateType.before) {
-      isDateInValid = afterDate.date.getTime() >= proposedTime;
+      isDateInvalid = afterDate.date.getTime() >= proposedTime;
       isSingle = false;
-    } else isDateInValid = !date;
+    } else isDateInvalid = !date;
 
     const filterMsgError = (this.filtersMsgs.date[
       beforeOrAfterString as any
     ] as any).invalid[exactErrorString];
 
-    return { isDateInValid, dateObj, isSingle, filterMsgError };
+    return { isDateInvalid, dateObj, filterMsgError };
   }
 }

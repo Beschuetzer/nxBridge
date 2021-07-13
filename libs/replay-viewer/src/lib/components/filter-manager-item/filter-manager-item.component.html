@@ -1,4 +1,8 @@
 <div class="filter-manager__item">
-  <span>{{message}}</span>
-  <button (click)="onDelete($event)">{{closeButtonHtmlEntity}}</button>
+  <span
+    [innerHtml]="messageToShow"
+  ></span>
+  <button (click)="onDelete()"
+    [innerHtml]="closeButtonHtmlEntity"
+  ></button>
 </div>

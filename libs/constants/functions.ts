@@ -2,6 +2,7 @@ import { DateObj, Deal, Game, SortOptions } from '@nx-bridge/interfaces-and-type
 import * as mongoose from 'mongoose';
 import { getIsBidPlayable } from './playing/functions';
 import { MATCHED_DEAL_CLASSNAME } from '@nx-bridge/constants';
+import { NOT_AVAILABLE_STRING } from './constants';
 
 export function capitalize(str: string) {
   return str
@@ -173,7 +174,7 @@ export function getNewBatchNumber(
 }
 
 export function getDateAndTimeString(filterName: DateObj, filterMsg: string) {
-  if (!filterName?.date) return 'N/A';
+  if (!filterName?.date) return NOT_AVAILABLE_STRING;
   const date = filterName.date.toLocaleDateString();
   const shortDate =
     date.substr(0, date.length - 4) +

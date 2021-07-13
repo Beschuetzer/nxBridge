@@ -24,6 +24,7 @@ import {
   gameDetailSummaryHeightPercentageCssPropName,
   getNewBatchNumber,
   getNewTotalNumberOfPages,
+  NOT_AVAILABLE_STRING,
   playerLabelsDisplayTypeCssPropName,
   playerNamesDisplayTypeCssPropName,
   RESULTS_PER_PAGE_OPTIONS,
@@ -51,6 +52,7 @@ export class GamesListViewComponent implements OnInit {
   }
   private DEFAULT_RESULTS_PER_PAGE = 100;
   public currentlyViewingUser: LocalStorageUserWithGames = {} as LocalStorageUserWithGames;
+  public NOT_AVAILABLE_STRING = NOT_AVAILABLE_STRING;
   public sizeOptions = SIZE_OPTIONS;
   public sortOptions = SORT_OPTIONS;
   public resultsPerPageOptions = RESULTS_PER_PAGE_OPTIONS;

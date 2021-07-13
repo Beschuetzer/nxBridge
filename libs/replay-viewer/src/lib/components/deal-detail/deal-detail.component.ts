@@ -39,6 +39,7 @@ import {
   toggleClassOnList,
   toggleInnerHTML,
   tricksInABook,
+  NOT_AVAILABLE_STRING,
 } from '@nx-bridge/constants';
 import { Store } from '@ngrx/store';
 import {
@@ -229,7 +230,7 @@ export class DealDetailComponent implements OnInit {
   }
 
   setDeclarer() {
-    const declarer = 'N/A';
+    const declarer = NOT_AVAILABLE_STRING;
 
     if (this.deal) {
       for (let i = this.deal?.bids.length - 1; i >= 0; i--) {
