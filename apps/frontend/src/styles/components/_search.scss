@@ -30,7 +30,7 @@
     border-bottom: $deal-player-border-thin;
   }
 
-  & *:not(select, option, input, .button, .color-red-light, .color-green-light) {
+  & *:not(select, option, input, .button, .color-red-light, .color-green-light, .color-red-light, .color-white) {
     color: var(--color-primary-4) !important;
     margin-bottom: 0 !important;
   }

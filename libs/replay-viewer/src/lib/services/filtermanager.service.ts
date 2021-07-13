@@ -50,6 +50,7 @@ export class FiltermanagerService {
       this.filtersInitial?.playerHasCard
     ),
   };
+  public inputErrorClassnames = ['ng-touched', 'ng-dirty', 'ng-invalid'];
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor(private store: Store<AppState>) {}
@@ -103,6 +104,16 @@ export class FiltermanagerService {
       const element = elements[i]?.nativeElement;
       if (element) element[valueToReset] = defaultValue;
     }
+  }
+
+  setInputErrorClassnames(
+    input: HTMLElement,
+    shouldRemoveInputErrorClassnames: boolean
+  ) {
+    this.inputErrorClassnames.forEach((classname) => {
+      if (shouldRemoveInputErrorClassnames) input.classList.remove(classname);
+      else input.classList.add(classname);
+    });
   }
 
   private applyFilters(games: Game[], filters: Filters) {

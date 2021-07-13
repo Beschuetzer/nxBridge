@@ -1,6 +1,6 @@
 import { DateObj, Deal, Game, SortOptions } from '@nx-bridge/interfaces-and-types';
 import * as mongoose from 'mongoose';
-import { getIsBidPlayable } from './playing/functions';
+import { getCharacterFromCardAsNumber, getHtmlEntityFromSuitOrCardAsNumber, getIsBidPlayable } from './playing/functions';
 import { MATCHED_DEAL_CLASSNAME } from '@nx-bridge/constants';
 import { NOT_AVAILABLE_STRING } from './constants';
 
@@ -191,4 +191,12 @@ export function resetPlayerHasCardDeals() {
     const match = matched[i];
     match.classList.remove(MATCHED_DEAL_CLASSNAME);
   }
+}
+
+export function getHtmlEntityFromCard(card: number | string) {
+  const number = +card;
+  if (isNaN(number)) return `${card}`;
+  const htmlEntity = getHtmlEntityFromSuitOrCardAsNumber(number);
+  const char = getCharacterFromCardAsNumber(number, true);
+  return `${char}${htmlEntity}`;
 }

@@ -26,7 +26,7 @@ export interface FilterItem {
   error: string;
   date?: Date;
   isDateInvalid?: boolean;
-  elementToReset: any;
+  elementsToReset: any[];
 }
 export interface FilterItemDeletion {
   key: string;

@@ -7,8 +7,11 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
+  COLOR_BLACK_CLASSNAME,
+  COLOR_RED_CLASSNAME,
   FILTER_MANAGER_CLASSNAME,
   getDateAndTimeString,
+  getHtmlEntityFromCard,
   maxCardValue,
   minCardValue,
   NOT_AVAILABLE_STRING,
@@ -60,8 +63,6 @@ export class FilterManagerComponent implements OnInit {
     return true;
   }
 
-  private inputErrorClassnames = ['ng-touched', 'ng-dirty', 'ng-invalid'];
-
   private beforeDateElement: HTMLElement = this.getNewElement('div');
   private afterDateElement: HTMLElement = this.getNewElement('div');
   private filtersMsgs: { [key: string]: any } = {
@@ -100,7 +101,7 @@ export class FilterManagerComponent implements OnInit {
   public filterItems: FilterItems = {};
 
   get joinedInputErrorClassnames() {
-    return this.inputErrorClassnames.join(' ');
+    return this.filterManagerService.inputErrorClassnames.join(' ');
   }
 
   constructor(
@@ -122,11 +123,7 @@ export class FilterManagerComponent implements OnInit {
   handleDateChange(e: Event, dateType: DateType) {
     let shouldDispatchChange = false;
     const input = (e.currentTarget || e.target) as HTMLInputElement;
-    const {
-      isDateInvalid,
-      dateObj,
-      filterMsgError,
-    } = this.validateDate(
+    const { isDateInvalid, dateObj, filterMsgError } = this.validateDate(
       input.value,
       dateType,
       this.beforeDate,
@@ -144,11 +141,21 @@ export class FilterManagerComponent implements OnInit {
       error: message !== NOT_AVAILABLE_STRING ? '' : filterMsgError,
       date: dateObj,
       isDateInvalid,
-      elementToReset: dateType === DateType.before ? this.beforeDateFilterElement : this.afterDateFilterElement,
-    }
+      elementsToReset: [
+        dateType === DateType.before
+          ? this.beforeDateFilterElement
+          : this.afterDateFilterElement,
+      ],
+    };
 
-    if (dateType === DateType.before) this.filterItems[this.filterManagerService.filters.beforeDate.string] = filterToSend;
-    else this.filterItems[this.filterManagerService.filters.afterDate.string] = filterToSend;
+    if (dateType === DateType.before)
+      this.filterItems[
+        this.filterManagerService.filters.beforeDate.string
+      ] = filterToSend;
+    else
+      this.filterItems[
+        this.filterManagerService.filters.afterDate.string
+      ] = filterToSend;
 
     let shouldRemoveInputErrorClassnames = false;
     if (!isDateInvalid) {
@@ -156,7 +163,7 @@ export class FilterManagerComponent implements OnInit {
       shouldDispatchChange = true;
     }
 
-    this.setInputErrorClassnames(input, shouldRemoveInputErrorClassnames);
+    this.filterManagerService.setInputErrorClassnames(input, shouldRemoveInputErrorClassnames);
 
     return shouldDispatchChange;
   }
@@ -183,6 +190,7 @@ export class FilterManagerComponent implements OnInit {
   onFilterItemDeletion(toDelete: FilterItemDeletion) {
     this.store.dispatch(toDelete.resetAction);
     delete this.filterItems[toDelete.key];
+    this.store.dispatch(new SetIsFilterSame(false));
     this.searchService.setCurrentlyDisplayingGames();
   }
 
@@ -207,8 +215,8 @@ export class FilterManagerComponent implements OnInit {
     if (!selectedUsername.match(this.playerNames[0]))
       shouldRemoveUsernameErrors = true;
 
-    this.setInputErrorClassnames(cardSelectElement, shouldRemoveCardErrors);
-    this.setInputErrorClassnames(
+    this.filterManagerService.setInputErrorClassnames(cardSelectElement, shouldRemoveCardErrors);
+    this.filterManagerService.setInputErrorClassnames(
       usernameSelectElement,
       shouldRemoveUsernameErrors
     );
@@ -235,6 +243,12 @@ export class FilterManagerComponent implements OnInit {
             );
           this.store.dispatch(new SetIsFilterSame(false));
           this.searchService.setCurrentlyDisplayingGames();
+          this.addItemToFilterItems(
+            cardSelectElement,
+            usernameSelectElement,
+            selectedCard,
+            selectedUsername
+          );
         });
     }
   }
@@ -286,6 +300,30 @@ export class FilterManagerComponent implements OnInit {
     this.dispatchChanges(this.afterDate, true, DateType.after);
     this.store.dispatch(new SetDealsThatMatchPlayerHasCardFilters([]));
     resetPlayerHasCardDeals();
+  }
+
+  private addItemToFilterItems(
+    cardSelectElement: HTMLSelectElement,
+    usernameSelectElement: HTMLSelectElement,
+    selectedCard: number,
+    selectedUsername: string
+  ) {
+
+    const htmlEntity = getHtmlEntityFromCard(selectedCard);
+    let colorToUse = 'color-white';
+    if (htmlEntity.match(/diam|heart/i)) colorToUse = `${COLOR_RED_CLASSNAME}-light`;
+    const htmlEntitySpan = `<span class="${colorToUse}">${htmlEntity}</span>`
+
+    const filterItem: FilterItem = {
+      elementsToReset: [cardSelectElement, usernameSelectElement],
+      message: `'${selectedUsername}' had the ${htmlEntitySpan}`,
+      error: '',
+    };
+
+    const uniqueNumber = Math.round(Math.random() * Math.random() * 1000000000);
+    const uniqueKey = `${this.filterManagerService.filters.playerHasCard.string}${uniqueNumber}`;
+
+    this.filterItems[uniqueKey] = filterItem;
   }
 
   private appendFiltersToAppliedDiv() {
@@ -357,16 +395,6 @@ export class FilterManagerComponent implements OnInit {
     this.playerNames.push(...uniqueNames);
   }
 
-  private setInputErrorClassnames(
-    input: HTMLElement,
-    shouldRemoveInputErrorClassnames: boolean
-  ) {
-    this.inputErrorClassnames.forEach((classname) => {
-      if (shouldRemoveInputErrorClassnames) input.classList.remove(classname);
-      else input.classList.add(classname);
-    });
-  }
-
   private validateDate(
     date: string,
     dateType: DateType,
@@ -382,7 +410,7 @@ export class FilterManagerComponent implements OnInit {
 
     const beforeOrAfterString =
       dateType === DateType.before ? 'before' : 'after';
-    let exactErrorString = isSingle ? 'single' : 'multiple';
+    let exactErrorString = '';
 
     if (proposedTime >= currentTime && dateType === DateType.after) {
       exactErrorString = 'afterNow';
@@ -395,6 +423,8 @@ export class FilterManagerComponent implements OnInit {
       isDateInvalid = afterDate.date.getTime() >= proposedTime;
       isSingle = false;
     } else isDateInvalid = !date;
+
+    if (!exactErrorString) exactErrorString = isSingle ? 'single' : 'multiple';
 
     const filterMsgError = (this.filtersMsgs.date[
       beforeOrAfterString as any

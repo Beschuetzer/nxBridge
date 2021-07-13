@@ -1,7 +1,6 @@
 import { Component, Input, OnInit, Output, EventEmitter, Renderer2, ElementRef } from '@angular/core';
 import { dealsListDealsButtonChoices, FILTER_MANAGER_CLASSNAME } from '@nx-bridge/constants';
-import { FilterItem, FilterItemDeletion, FilterItems } from '@nx-bridge/interfaces-and-types';
-import { debug } from 'node:console';
+import { FilterItem, FilterItemDeletion } from '@nx-bridge/interfaces-and-types';
 import { FiltermanagerService } from '../../services/filtermanager.service';
 
 @Component({
@@ -41,13 +40,11 @@ export class FilterManagerItemComponent implements OnInit {
   
   onDelete() {
     const key = this.getKeyToUse();
-    const resetAction = this.filterManagerService.filterResetActions[key];
-    this.deletion.emit({key, resetAction});
-    this.resetElement(this.filterItem?.elementToReset);
+    const storeResetAction = this.filterManagerService.filterResetActions[key];
+    this.deletion.emit({key, resetAction: storeResetAction});
+    this.resetElement(this.filterItem?.elementsToReset as any);
   }
 
-  //todo: apply error classes
-  // this.changeErrorClasses(filterNameElement, true);
   private changeErrorClasses(element: HTMLElement, shouldRemove = false) {
     if (!element) return;
 
@@ -66,17 +63,19 @@ export class FilterManagerItemComponent implements OnInit {
     return key;
   }
 
-  private resetElement(elementToReset: HTMLElement | ElementRef<any>) {
-    if (!elementToReset) return;
-    //note: elToReset could b
+  private resetElement(elementsToReset: HTMLElement[] | ElementRef<any>[]) {
+    if (!elementsToReset) return;
 
-    //todo: need to reset the element in this.filterItem?.elementToReset
-    let htmlElement = elementToReset
-    if ((elementToReset as any).nativeElement) htmlElement = (elementToReset as any).nativeElement as HTMLElement;
+    for (let i = 0; i < elementsToReset.length; i++) {
+      const elementToReset = elementsToReset[i];
 
-    //todo: two options so far (input and option/select)
-    
-    debugger;
-    
+      let htmlElement = elementToReset as HTMLInputElement;
+      if ((elementToReset as any).nativeElement) htmlElement = (elementToReset as any).nativeElement as HTMLInputElement;
+
+      //note: two options so far (input and option/select)
+      if (htmlElement) htmlElement.value = '';
+      debugger;
+      this.filterManagerService.setInputErrorClassnames(htmlElement, true);
+    }
   }
 }

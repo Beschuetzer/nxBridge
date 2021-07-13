@@ -1,5 +1,6 @@
 reminders -------------------------------------------------
   -any bottlenecks likely come from the deal-handling branch
+  -must call store.dispatch(new SetIsFilterSame(false)) before calling searchService.setCurrentlyDisplayingGames();
 
 known bugs --------------------------
   -Deal 1 trick 6 of yougurt 2/16 7:24pm bug where order of playing is reversed (it seems to be an issue with the deal and how it was saved)
@@ -89,5 +90,6 @@ filtering-----------------------
 filter-manager-------------------------
 
   -do playerHasCard and filter-manager-item
-  -when removing an item, should reset the ui input/option (work on resetElement())
+  -setting an incorrect before date with an after date, then removing the after date, does not validate the before date.
+
 
