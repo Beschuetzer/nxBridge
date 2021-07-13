@@ -43,6 +43,7 @@ export class FilterManagerItemComponent implements OnInit {
     const storeResetAction = this.filterManagerService.filterResetActions[key];
     this.deletion.emit({key, resetAction: storeResetAction});
     this.resetElement(this.filterItem?.elementsToReset as any);
+    this.resetOtherDateIfError(key);
   }
 
   private changeErrorClasses(element: HTMLElement, shouldRemove = false) {
@@ -74,8 +75,16 @@ export class FilterManagerItemComponent implements OnInit {
 
       //note: two options so far (input and option/select)
       if (htmlElement) htmlElement.value = '';
-      debugger;
       this.filterManagerService.setInputErrorClassnames(htmlElement, true);
     }
+  }
+
+  private resetOtherDateIfError(key: string) {
+    //todo: (need to have beforeDate and afterDate set an error code in the store.beforeDate/afterDate, which can be accessed in resetOtherDateIfError())
+    debugger;
+    if (key === this.filterManagerService.filters.afterDate.string) {
+
+    }
+    else if (key === this.filterManagerService.filters.beforeDate.string) {}
   }
 }

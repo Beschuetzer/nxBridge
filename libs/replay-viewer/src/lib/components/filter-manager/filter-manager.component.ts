@@ -243,7 +243,7 @@ export class FilterManagerComponent implements OnInit {
             );
           this.store.dispatch(new SetIsFilterSame(false));
           this.searchService.setCurrentlyDisplayingGames();
-          this.addItemToFilterItems(
+          this.addPlayerHasCardToFilterItems(
             cardSelectElement,
             usernameSelectElement,
             selectedCard,
@@ -302,7 +302,7 @@ export class FilterManagerComponent implements OnInit {
     resetPlayerHasCardDeals();
   }
 
-  private addItemToFilterItems(
+  private addPlayerHasCardToFilterItems(
     cardSelectElement: HTMLSelectElement,
     usernameSelectElement: HTMLSelectElement,
     selectedCard: number,
