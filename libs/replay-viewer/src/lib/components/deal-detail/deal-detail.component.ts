@@ -5,6 +5,7 @@ import {
   Input,
   OnInit,
   Renderer2,
+  ViewChild,
 } from '@angular/core';
 import {
   Bid,
@@ -13,6 +14,7 @@ import {
   Contract,
   Deal,
   HandsForConsumption,
+  ReducerNames,
   Seating,
   Suit,
 } from '@nx-bridge/interfaces-and-types';
@@ -21,8 +23,8 @@ import {
   COLOR_BLACK_CLASSNAME,
   COLOR_RED_CLASSNAME,
   dealDetailButtonChoices,
-  DEAL_DETAIL_BUTTON_BORDER_BOTTOM_CLASSNAME,
   DEAL_DETAIL_CLASSNAME,
+  MATCHED_DEAL_CLASSNAME,
   DISPLAY_NONE_CLASSNAME,
   GAME_DETAIL_CLASSNAME,
   getCharValueFromCardValueString,
@@ -45,6 +47,7 @@ import {
   SetCurrentlyViewingDeal,
   SetCurrentlyViewingDealContract,
 } from '@nx-bridge/store';
+import { take } from 'rxjs/operators';
 import { ReplayViewerDealService } from '../../services/replay-viewer.deal.service';
 @Component({
   selector: 'nx-bridge-deal-detail',
@@ -67,9 +70,10 @@ export class DealDetailComponent implements OnInit {
   public dealSummaryMessageSuffixNumber = '';
   public dealSummaryMessageSuffixPost = '';
   public contract: Contract = { prefix: '', htmlEntity: '' };
+  public buttonChoices: [string, string] = dealDetailButtonChoices;
   public DEAL_DETAIL_CLASSNAME = DEAL_DETAIL_CLASSNAME;
   public DISPLAY_NONE_CLASSNAME = DISPLAY_NONE_CLASSNAME;
-  public buttonChoices: [string, string] = dealDetailButtonChoices;
+  private MATCHED_DEAL_CLASSNAME = MATCHED_DEAL_CLASSNAME;
 
   constructor(
     private renderer: Renderer2,
@@ -87,6 +91,17 @@ export class DealDetailComponent implements OnInit {
     this.setDealSummarySuffix();
     this.setHandsTable();
     this.setBiddingTable();
+
+    this.store.select(ReducerNames.filters).pipe(take(1)).subscribe(filterState => {
+      const dealId = (this.deal as any)._id;
+      const matchedDeals = filterState.dealsThatMatchPlayerHasCardFilters;
+      
+      if (matchedDeals.includes(dealId)) {
+        const dealDetail = this.elRef.nativeElement;
+        const dealDetailSummary = dealDetail.querySelector(`.${DEAL_DETAIL_CLASSNAME}__summary`);
+        this.renderer.addClass(dealDetailSummary, MATCHED_DEAL_CLASSNAME);
+      }
+    }) 
   }
 
   onDetailClick(e: Event) {

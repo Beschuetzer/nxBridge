@@ -1,6 +1,7 @@
 import { DateObj, Deal, Game, SortOptions } from '@nx-bridge/interfaces-and-types';
 import * as mongoose from 'mongoose';
 import { getIsBidPlayable } from './playing/functions';
+import { MATCHED_DEAL_CLASSNAME } from '@nx-bridge/constants';
 
 export function capitalize(str: string) {
   return str
@@ -181,4 +182,12 @@ export function getDateAndTimeString(filterName: DateObj, filterMsg: string) {
   const shortTime = time.replace(/(:\d{2}) .*$/i, '');
   const amOrPm = time.substr(-2, 2);
   return `${filterMsg}${shortTime}${amOrPm} on ${shortDate}`;
+}
+
+export function resetMatchedDeals() {
+  const matched = document.querySelectorAll(`.${MATCHED_DEAL_CLASSNAME}`);
+  for (let i = 0; i < matched.length; i++) {
+    const match = matched[i];
+    match.classList.remove(MATCHED_DEAL_CLASSNAME);
+  }
 }

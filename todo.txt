@@ -84,5 +84,6 @@ filtering-----------------------
 -display every playerHasCard in ui
 -when clicking search, reset all filters
 -change how filter messages are displayed (add filterItem component that has an x button to remove just that specific filter;  needs input of message and reset action )
--add some visual indication of the deals that satisfy playerHasCard (would need to a store array and then check each deal on deals-list load)
--makes sure to have the player had card filter be an array (for possible future expansion to multiples of this type)
+
+deals 4 and 7 of the paulaDass 5/8 game always hightlighted?
+-when resetting filters, have to reset dealsThatMatchPlayerHasCardFilters
