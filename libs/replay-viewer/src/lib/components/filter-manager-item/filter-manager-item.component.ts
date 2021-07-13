@@ -43,6 +43,7 @@ export class FilterManagerItemComponent implements OnInit {
     const key = this.getKeyToUse();
     const resetAction = this.filterManagerService.filterResetActions[key];
     this.deletion.emit({key, resetAction});
+    this.resetElement(this.filterItem?.elementToReset);
   }
 
   //todo: apply error classes
@@ -63,5 +64,19 @@ export class FilterManagerItemComponent implements OnInit {
     if (key.match(/playerHasCard/i)) key = this.filterManagerService.filters.playerHasCard.string;
 
     return key;
+  }
+
+  private resetElement(elementToReset: HTMLElement | ElementRef<any>) {
+    if (!elementToReset) return;
+    //note: elToReset could b
+
+    //todo: need to reset the element in this.filterItem?.elementToReset
+    let htmlElement = elementToReset
+    if ((elementToReset as any).nativeElement) htmlElement = (elementToReset as any).nativeElement as HTMLElement;
+
+    //todo: two options so far (input and option/select)
+    
+    debugger;
+    
   }
 }

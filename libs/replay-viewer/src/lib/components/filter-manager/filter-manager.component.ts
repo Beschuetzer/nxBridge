@@ -144,6 +144,7 @@ export class FilterManagerComponent implements OnInit {
       error: message !== NOT_AVAILABLE_STRING ? '' : filterMsgError,
       date: dateObj,
       isDateInvalid,
+      elementToReset: dateType === DateType.before ? this.beforeDateFilterElement : this.afterDateFilterElement,
     }
 
     if (dateType === DateType.before) this.filterItems[this.filterManagerService.filters.beforeDate.string] = filterToSend;

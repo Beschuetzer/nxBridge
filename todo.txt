@@ -89,4 +89,5 @@ filtering-----------------------
 filter-manager-------------------------
 
   -do playerHasCard and filter-manager-item
-  -when removing an item, should reset the ui input/option
+  -when removing an item, should reset the ui input/option (work on resetElement())
+
