@@ -1,7 +1,8 @@
 import { Component, Input, OnInit, Output, EventEmitter, Renderer2, ElementRef } from '@angular/core';
-import { dealsListDealsButtonChoices } from '@nx-bridge/constants';
-import { FilterItem, FilterItems } from '@nx-bridge/interfaces-and-types';
+import { dealsListDealsButtonChoices, FILTER_MANAGER_CLASSNAME } from '@nx-bridge/constants';
+import { FilterItem, FilterItemDeletion, FilterItems } from '@nx-bridge/interfaces-and-types';
 import { debug } from 'node:console';
+import { FiltermanagerService } from '../../services/filtermanager.service';
 
 @Component({
   selector: 'nx-bridge-filter-manager-item',
@@ -10,9 +11,10 @@ import { debug } from 'node:console';
 })
 export class FilterManagerItemComponent implements OnInit {
   @Input() filterItem: FilterItem | null = null;
-  @Input() filterItemName = '';
+  @Input() filterItemKey = '';
   @Input() indexOfItem = -1;
-  @Output() deletion = new EventEmitter<number>();
+  @Output() deletion = new EventEmitter<FilterItemDeletion>();
+  public FILTER_MANAGER_CLASSNAME = FILTER_MANAGER_CLASSNAME;
   public messageToShow = '';
   public closeButtonHtmlEntity = dealsListDealsButtonChoices[1];
   private errorClassnames = ['color-red-light'];
@@ -21,30 +23,26 @@ export class FilterManagerItemComponent implements OnInit {
   constructor(
     private renderer: Renderer2,
     private elRef: ElementRef,
+    private filterManagerService: FiltermanagerService,
   ) { }
 
-  // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   ngOnInit(): void 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   {
-    debugger;
-
-    console.log('filterItem =', this.filterItem);
+    const textElement = this.elRef.nativeElement?.querySelector(`.${FILTER_MANAGER_CLASSNAME}__text`);
     if (this.filterItem?.error) {
-      console.log('error------------------------------------------------');
-      this.changeErrorClasses(this.elRef.nativeElement, false);
+      this.changeErrorClasses(textElement, false);
       this.messageToShow = this.filterItem.error;
     }
     else {
-      console.log('no error------------------------------------------------');
-      this.changeErrorClasses(this.elRef.nativeElement, false);
+      this.changeErrorClasses(textElement, true);
       this.messageToShow = this.filterItem?.message ? this.filterItem?.message : '';
     }
   }
-
   
   onDelete() {
-    this.deletion.emit(this.indexOfItem);
+    const key = this.getKeyToUse();
+    const resetAction = this.filterManagerService.filterResetActions[key];
+    this.deletion.emit({key, resetAction});
   }
 
   //todo: apply error classes
@@ -56,5 +54,14 @@ export class FilterManagerItemComponent implements OnInit {
       if (shouldRemove) this.renderer.removeClass(element, classname);
       else this.renderer.addClass(element, classname);
     });
+  }
+
+  private getKeyToUse() {
+    //note: if the filter is a singleton don't have to do anything here, otherwise need to make sure that the correct value is returned here
+    let key = this.filterItemKey;
+    
+    if (key.match(/playerHasCard/i)) key = this.filterManagerService.filters.playerHasCard.string;
+
+    return key;
   }
 }

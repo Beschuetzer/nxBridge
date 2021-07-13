@@ -93,7 +93,7 @@
       // max-width: $default-font-size * 8 !important;
     }
 
-    &:nth-of-type(1):not(.filter-manager__reset) {
+    &:nth-of-type(1):not(.filter-manager__reset, .filter-manager__button) {
       margin-bottom: $default-font-size * 0.5 !important;
 
       @include respond($layout-breakpoint) {

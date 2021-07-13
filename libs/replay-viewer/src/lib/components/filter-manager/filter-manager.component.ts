@@ -29,6 +29,7 @@ import {
   DateType,
   FetchedDeals,
   FilterItem,
+  FilterItemDeletion,
   FilterItems,
   PlayerHasCard,
   ReducerNames,
@@ -49,7 +50,7 @@ export class FilterManagerComponent implements OnInit {
   @ViewChild('date') dateCheckbox: ElementRef | null = null;
   @ViewChild('player') playerCheckbox: ElementRef | null = null;
 
-  //NOTE: new filters need to be added to filterManagerService's filter objects and applyFilters();  remember: to set store action 'SetIsFilterSame' to false before calling searchService.setCurrentlyDisplayingGames() to make sure filters are checked
+  //NOTE: new filters need to be added to filterManagerService's filter objects and applyFilters();  remember: to set store action 'SetIsFilterSame' to false before calling searchService.setCurrentlyDisplayingGames() to make sure filters are checked; also need to make sure that key returned in FilterManagerItem's getKeyToUse is correct
   @ViewChild('beforeDate') beforeDateFilterElement: ElementRef | null = null;
   @ViewChild('afterDate') afterDateFilterElement: ElementRef | null = null;
   @ViewChild('players') playersFilterElement: ElementRef | null = null;
@@ -138,7 +139,6 @@ export class FilterManagerComponent implements OnInit {
 
     filterName.date = isDateInvalid ? null : dateObj;
     const message = getDateAndTimeString(filterName, filterMsg);
-    debugger
     const filterToSend: FilterItem = {
       message,
       error: message !== NOT_AVAILABLE_STRING ? '' : filterMsgError,
@@ -179,10 +179,10 @@ export class FilterManagerComponent implements OnInit {
     this.dispatchChanges(this.afterDate, shouldDispatchChange, DateType.after);
   }
 
-  onFilterItemDeletion(itemToDelete: number) {
-    console.log('itemToDelete =', itemToDelete);
-
-    debugger;
+  onFilterItemDeletion(toDelete: FilterItemDeletion) {
+    this.store.dispatch(toDelete.resetAction);
+    delete this.filterItems[toDelete.key];
+    this.searchService.setCurrentlyDisplayingGames();
   }
 
   //NOTE: need this to trigger *ngIf properly

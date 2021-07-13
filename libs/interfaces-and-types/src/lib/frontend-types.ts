@@ -27,6 +27,10 @@ export interface FilterItem {
   date?: Date;
   isDateInvalid?: boolean;
 }
+export interface FilterItemDeletion {
+  key: string;
+  resetAction: any; 
+}
 export interface FilterItems {
   [key: string]: FilterItem;
 }

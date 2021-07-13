@@ -19,14 +19,14 @@
 
 
   &__applied {
-    padding: 0 $default-font-size * .25;
+    padding: $default-font-size * .5 $default-font-size * .25;
   }
   
   &__options {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: $semantic-ui-text-default-font-size * .5 !important;
+    // margin-top: $semantic-ui-text-default-font-size * .5 !important;
 
     @include respond($layout-breakpoint) {
       justify-content: space-evenly;
@@ -81,9 +81,23 @@
   &__item {
     display: flex;
     justify-content: space-between;
+    align-items: center;
 
     & button {
       color: var(--color-red);
+    }
+  }
+
+  &__button {
+    margin: 0 !important;
+    line-height: 0 !important;
+    padding: $default-font-size * .5 $default-font-size * .25 !important;
+    background-color: rgba(var(--color-black-rgb), 1) !important;
+    color: rgba(var(--color-red-light-rgb), 1) !important;
+
+    &:hover {
+      background-color: rgba(var(--color-red-rgb), 1) !important;
+      // color: rgba(var(--color-white-rgb), 1);
     }
   }
 }

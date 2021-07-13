@@ -15,7 +15,7 @@
     <nx-bridge-filter-manager-item
       *ngFor="let filterItem of filterItems | keyvalue; let i = index;"
       [filterItem]="filterItem.value"
-      [filterItemName]="filterItem.key"
+      [filterItemKey]="filterItem.key"
       [indexOfItem]="i"
       (deletion)="onFilterItemDeletion($event)"
     ></nx-bridge-filter-manager-item>

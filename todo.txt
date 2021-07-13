@@ -85,5 +85,8 @@ filtering-----------------------
 -when clicking search, reset all filters
 -change how filter messages are displayed (add filterItem component that has an x button to remove just that specific filter;  needs input of message and reset action )
 
--do playerHasCard and filter-manager-item
--finish styling for filter-manager-item;
+
+filter-manager-------------------------
+
+  -do playerHasCard and filter-manager-item
+  -when removing an item, should reset the ui input/option
