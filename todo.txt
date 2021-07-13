@@ -85,4 +85,3 @@ filtering-----------------------
 -when clicking search, reset all filters
 -change how filter messages are displayed (add filterItem component that has an x button to remove just that specific filter;  needs input of message and reset action )
 
--need to populate playerHasCard usernames by going through the deals of each game rather than using userIds (otherwise it won't work right ['midge' and 'schaef30' is an example])

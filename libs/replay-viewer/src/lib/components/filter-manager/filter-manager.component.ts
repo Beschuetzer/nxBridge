@@ -12,7 +12,7 @@ import {
   AppState, SetAfterDate, SetBeforeDate, SetDealsThatMatchPlayerHasCardFilters, SetIsFilterSame, SetPlayerHasCard,
 } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
-import { DateObj, DateType, PlayerHasCard, ReducerNames, UserIds } from '@nx-bridge/interfaces-and-types';
+import { DateObj, DateType, Deal, FetchedDeals, Game, PlayerHasCard, ReducerNames, UserIds } from '@nx-bridge/interfaces-and-types';
 import { SearchService } from '../../services/search.service';
 import { FiltermanagerService } from '../../services/filtermanager.service';
 import { take } from 'rxjs/operators';
@@ -91,8 +91,8 @@ export class FilterManagerComponent implements OnInit {
 
   ngOnInit(): void {
     this.appendFiltersToAppliedDiv();
-    this.store.select(ReducerNames.users).subscribe(userState => {
-      if (userState.userIds && this.playerNames.length === 1) this.populatePlayerNames(userState.userIds);
+    this.store.select(ReducerNames.deals).subscribe(dealState => {
+      if (dealState.fetchedDeals) this.populatePlayerNames(dealState.fetchedDeals);
     })
   }
 
@@ -272,11 +272,25 @@ export class FilterManagerComponent implements OnInit {
     return this.renderer.createElement(elementType);
   }
 
-  private populatePlayerNames(userIds: UserIds) {
-    if (!userIds) return;
-    const usernames = Object.values(userIds);
-    if (usernames.length <= 0) return;
-    this.playerNames.push(...usernames);
+  private populatePlayerNames(deals: FetchedDeals) {
+    if (!deals) return;
+    
+    const uniqueNames: string[] = [];
+
+    debugger;
+    for (const dealId in deals) {
+      if (Object.prototype.hasOwnProperty.call(deals, dealId)) {
+        const deal = deals[dealId];
+        const usernames = Object.keys(deal.hands);
+        for (let j = 0; j < usernames.length; j++) {
+          const username = usernames[j];
+          const index = uniqueNames.findIndex(name => name === username);
+          if (index === -1) uniqueNames.push(username);
+        }
+      }
+    }
+    
+    this.playerNames.push(...uniqueNames);
   }
 
   private setInputErrorClassnames(
