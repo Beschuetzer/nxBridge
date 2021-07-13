@@ -75,14 +75,14 @@ export class FilterManagerComponent implements OnInit {
         valid: 'Before: &nbsp;',
         invalid: {
           single: 'Invalid before date.',
-          multiple: 'Before date <= after date.',
+          multiple: 'Before date &leq; after date.',
         },
       },
       after: {
         valid: 'After: &nbsp;',
         invalid: {
           single: 'Invalid after date.',
-          multiple: 'After date >= before date.',
+          multiple: 'After date &geq; before date.',
           afterNow: 'After date is after now.',
         },
       },

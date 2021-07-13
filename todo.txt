@@ -92,4 +92,5 @@ filter-manager-------------------------
   -do playerHasCard and filter-manager-item
   -setting an incorrect before date with an after date, then removing the after date, does not validate the before date.
 
+-add a little message in games list that says: "Showing x of y games" where x is resultsPerPage and y is totalGames
 
