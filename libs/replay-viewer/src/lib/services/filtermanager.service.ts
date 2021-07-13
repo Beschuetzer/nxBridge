@@ -162,6 +162,7 @@ export class FiltermanagerService {
           if (Object.prototype.hasOwnProperty.call(playerHasCards, username)) {
             const cardToCheckFor = playerHasCards[username];
             const handToCheck = deal.hands[username];
+            if (!handToCheck || handToCheck.length <= 0 ) break;
             const flatHand = flatten(handToCheck);
             if (flatHand.includes(cardToCheckFor)) {
               canSkipToNextGame = true;

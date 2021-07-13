@@ -84,4 +84,3 @@ filtering-----------------------
 -display every playerHasCard in ui
 -when clicking search, reset all filters
 -makes sure to have the player had card filter be an array (for possible future expansion to multiples of this type)
-*added click reset in deal-player resets the canvas too*

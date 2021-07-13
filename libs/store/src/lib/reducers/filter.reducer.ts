@@ -39,13 +39,15 @@ export function filterReducer(
       };
     case fromFilterActions.ADD_PLAYER_HAS_CARD:
       debugger;      
-      const newPlayerHasCard = action.payload;
-      const usernameKey: string = Object.keys(action.payload)[0];
-      const existingPlayerHasCardValues: number[] = state.playerHasCard[usernameKey];
-      if (existingPlayerHasCardValues) {
+      const newPlayerHasCard = {...action.payload};
+      const usernameKey: string = Object.keys(newPlayerHasCard)[0];
+      const usernameValues = state.playerHasCard[usernameKey];
+      
+      if (usernameValues) {
+        const usernameValuesCopy = [...usernameValues];
         const valueToAdd = newPlayerHasCard[usernameKey];
-        existingPlayerHasCardValues.push(...valueToAdd);
-        newPlayerHasCard[usernameKey] = existingPlayerHasCardValues;
+        usernameValuesCopy.push(...valueToAdd);
+        newPlayerHasCard[usernameKey] = [...usernameValuesCopy];
       }
 
       return {
