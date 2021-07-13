@@ -6,7 +6,7 @@ import {
   Renderer2,
   ViewChild,
 } from '@angular/core';
-import { FILTER_MANAGER_CLASSNAME, getDateAndTimeString, MATCHED_DEAL_CLASSNAME, maxCardValue, minCardValue, resetMatchedDeals } from '@nx-bridge/constants';
+import { FILTER_MANAGER_CLASSNAME, getDateAndTimeString, MATCHED_DEAL_CLASSNAME, maxCardValue, minCardValue, resetPlayerHasCardDeals } from '@nx-bridge/constants';
 import {
   AddPlayerHasCard,
   AppState, SetAfterDate, SetBeforeDate, SetDealsThatMatchPlayerHasCardFilters, SetIsFilterSame, SetPlayerHasCard,
@@ -211,7 +211,7 @@ export class FilterManagerComponent implements OnInit {
     //NOTE: this could be any filter as long as it gets called (in order to show all un-filtered games)
     this.dispatchChanges(this.afterDate, true, DateType.after);
     this.store.dispatch(new SetDealsThatMatchPlayerHasCardFilters([]));
-    resetMatchedDeals();
+    resetPlayerHasCardDeals();
   }
 
   private appendFiltersToAppliedDiv() {

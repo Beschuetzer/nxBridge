@@ -47,7 +47,7 @@ import {
   SetCurrentlyViewingDeal,
   SetCurrentlyViewingDealContract,
 } from '@nx-bridge/store';
-import { take } from 'rxjs/operators';
+import { exhaustMap, switchMap, take } from 'rxjs/operators';
 import { ReplayViewerDealService } from '../../services/replay-viewer.deal.service';
 @Component({
   selector: 'nx-bridge-deal-detail',
@@ -79,7 +79,7 @@ export class DealDetailComponent implements OnInit {
     private renderer: Renderer2,
     private elRef: ElementRef,
     private store: Store<AppState>,
-    private replayViewDealService: ReplayViewerDealService,
+    private replayViewDealService: ReplayViewerDealService
   ) {}
 
   ngOnInit(): void {
@@ -92,27 +92,39 @@ export class DealDetailComponent implements OnInit {
     this.setHandsTable();
     this.setBiddingTable();
 
-    this.store.select(ReducerNames.filters).pipe(take(1)).subscribe(filterState => {
-      const dealId = (this.deal as any)._id;
-      const matchedDeals = filterState.dealsThatMatchPlayerHasCardFilters;
-      
-      if (matchedDeals.includes(dealId)) {
-        const dealDetail = this.elRef.nativeElement;
-        const dealDetailSummary = dealDetail.querySelector(`.${DEAL_DETAIL_CLASSNAME}__summary`);
-        this.renderer.addClass(dealDetailSummary, MATCHED_DEAL_CLASSNAME);
-      }
-    }) 
+    let matchedDeals: string[] = [];
+    this.store
+      .select(ReducerNames.filters)
+      .pipe(
+        switchMap((filterState) => {
+          matchedDeals = filterState.dealsThatMatchPlayerHasCardFilters;
+          return this.store.select(ReducerNames.games)
+        })
+      )
+      .subscribe((gameState) => {
+        const dealId = (this.deal as any)._id;
+        if (matchedDeals.includes(dealId)) {
+          const dealDetail = this.elRef.nativeElement;
+          const dealDetailSummary = dealDetail.querySelector(
+            `.${DEAL_DETAIL_CLASSNAME}__summary`
+          );
+          this.renderer.addClass(dealDetailSummary, MATCHED_DEAL_CLASSNAME);
+        }
+      });
   }
 
   onDetailClick(e: Event) {
     const button = (e.currentTarget || e.target) as HTMLElement;
     const buttonSibling = button.nextElementSibling as HTMLElement;
-    this.replayViewDealService.toggleButtonBottomBorder([button, buttonSibling]);
+    this.replayViewDealService.toggleButtonBottomBorder([
+      button,
+      buttonSibling,
+    ]);
 
     const item = this.elRef.nativeElement.querySelector(
       `.${DEAL_DETAIL_CLASSNAME}__tables`
     );
-  
+
     toggleClassOnList([item], DISPLAY_NONE_CLASSNAME);
     toggleInnerHTML(button, this.buttonChoices);
 
@@ -122,7 +134,9 @@ export class DealDetailComponent implements OnInit {
         `.${GAME_DETAIL_CLASSNAME}__summary`
       );
       const gameDetailSummaryClientRect = gameDetailSummary?.getBoundingClientRect();
-      const gameDetailSummaryBottom = gameDetailSummaryClientRect?.bottom as number + window.innerHeight / 6;
+      const gameDetailSummaryBottom =
+        (gameDetailSummaryClientRect?.bottom as number) +
+        window.innerHeight / 6;
       const scrollAmount = scrollToSection(
         button,
         gameDetailSummaryBottom ? gameDetailSummaryBottom : 0,
@@ -482,6 +496,5 @@ export class DealDetailComponent implements OnInit {
     return this.renderer.createElement(elementType);
   }
 
-  
   //#endregion
 }

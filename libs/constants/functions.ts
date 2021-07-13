@@ -184,7 +184,7 @@ export function getDateAndTimeString(filterName: DateObj, filterMsg: string) {
   return `${filterMsg}${shortTime}${amOrPm} on ${shortDate}`;
 }
 
-export function resetMatchedDeals() {
+export function resetPlayerHasCardDeals() {
   const matched = document.querySelectorAll(`.${MATCHED_DEAL_CLASSNAME}`);
   for (let i = 0; i < matched.length; i++) {
     const match = matched[i];

@@ -85,5 +85,4 @@ filtering-----------------------
 -when clicking search, reset all filters
 -change how filter messages are displayed (add filterItem component that has an x button to remove just that specific filter;  needs input of message and reset action )
 
-deals 4 and 7 of the paulaDass 5/8 game always hightlighted?
--when resetting filters, have to reset dealsThatMatchPlayerHasCardFilters
+-need to populate playerHasCard usernames by going through the deals of each game rather than using userIds (otherwise it won't work right ['midge' and 'schaef30' is an example])

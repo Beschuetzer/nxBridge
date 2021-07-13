@@ -16,7 +16,7 @@ import {
   SetDealsThatMatchPlayerHasCardFilters,
 } from '@nx-bridge/store';
 import { switchMap, take } from 'rxjs/operators';
-import { flatten } from '@nx-bridge/constants';
+import { flatten, resetPlayerHasCardDeals } from '@nx-bridge/constants';
 
 @Injectable({
   providedIn: 'root',
@@ -142,6 +142,7 @@ export class FiltermanagerService {
 
   private getPlayerHasCard(games: Game[], playerHasCards: PlayerHasCard) {
     if (!playerHasCards || playerHasCards['initial']) return games;
+    resetPlayerHasCardDeals();
 
     let fetchedDeals = [] as any;
     this.store
