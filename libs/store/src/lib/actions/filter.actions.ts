@@ -6,6 +6,7 @@ export const SET_AFTER_DATE = '[Filter] SET_AFTER_DATE';
 export const SET_PLAYER_HAS_CARD = '[Filter] SET_PLAYER_HAS_CARD';
 export const ADD_PLAYER_HAS_CARD = '[Filter] ADD_PLAYER_HAS_CARD';
 export const REMOVE_PLAYER_HAS_CARD = '[Filter] REMOVE_PLAYER_HAS_CARD';
+export const SET_CONTRACT_FILTER = '[Filter] SET_CONTRACT_FILTER';
 export const SET_IS_FILTER_SAME = '[Filter] SET_IS_FILTER_SAME';
 export const SET_DEALS_THAT_MATCH_PLAYER_HAS_CARD_FILTERS =
   '[Filter] SET_DEALS_THAT_MATCH_PLAYER_HAS_CARD_FILTERS';
@@ -39,6 +40,11 @@ export class RemovePlayerHasCard implements Action {
   constructor(public payload: { username: string; card: number }) {}
 }
 
+export class SetContractFilter implements Action {
+  readonly type = SET_CONTRACT_FILTER;
+  constructor(public payload: string) {}
+}
+
 export class SetIsFilterSame implements Action {
   readonly type = SET_IS_FILTER_SAME;
   constructor(public payload: boolean) {}
@@ -51,4 +57,5 @@ export type FilterActions =
   | SetPlayerHasCard
   | AddPlayerHasCard
   | RemovePlayerHasCard
+  | SetContractFilter
   | SetDealsThatMatchPlayerHasCardFilters;

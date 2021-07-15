@@ -127,7 +127,7 @@
       <select
         (click)="onContractChange()"
         class="{{ joinedInputErrorClassnames }}"
-        #cards
+        #contractsSelect
         class=""
       >
         <option
@@ -138,7 +138,7 @@
         ></option>
       </select>
       <button
-        (click)="onAddContract($event)"
+        (click)="onAddContract()"
         class="ui button filter-manager__add-button"
       >
         Add

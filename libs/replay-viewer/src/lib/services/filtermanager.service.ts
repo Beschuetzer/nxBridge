@@ -14,9 +14,10 @@ import {
   SetFilteredGames,
   SetIsFilterSame,
   SetDealsThatMatchPlayerHasCardFilters,
+  SetContractFilter,
 } from '@nx-bridge/store';
 import { switchMap, take } from 'rxjs/operators';
-import { flatten, resetPlayerHasCardDeals, contracts } from '@nx-bridge/constants';
+import { flatten, resetPlayerHasCardDeals } from '@nx-bridge/constants';
 
 @Injectable({
   providedIn: 'root',
@@ -36,6 +37,9 @@ export class FiltermanagerService {
     },
     dealsThatMatchPlayerHasCardFilters: {
       string: 'dealsThatMatchPlayerHasCardFilters',
+    },
+    contract: {
+      string: 'contract',
     }
   };
   public filtersInitial: Filters = {
@@ -43,6 +47,7 @@ export class FiltermanagerService {
     [this.filters.afterDate.string]: 0,
     [this.filters.playerHasCard.string]: { initial: [-1] },
     [this.filters.dealsThatMatchPlayerHasCardFilters.string]: ['-1'],
+    [this.filters.contract.string]: '',
   };
   public filterResetActions = {
     [this.filters.beforeDate.string]: new SetBeforeDate(
@@ -56,6 +61,9 @@ export class FiltermanagerService {
     ),
     [this.filters.dealsThatMatchPlayerHasCardFilters.string]: new SetDealsThatMatchPlayerHasCardFilters(
       this.filtersInitial?.dealsThatMatchPlayerHasCardFilters
+    ),
+    [this.filters.contract.string]: new SetContractFilter(
+      this.filtersInitial?.contract
     ),
   };
   public filterMsgs: { [key: string]: any } = {
@@ -171,14 +179,15 @@ export class FiltermanagerService {
     let filteredGames: Game[] = games;
 
     //NOTE: add new filtering function here; arrange in order of least to most cpu intensive to minimize cpu load
-    filteredGames = this.getBeforeDate(filteredGames, filters.beforeDate);
-    filteredGames = this.getAfterDate(filteredGames, filters.afterDate);
-    filteredGames = this.getPlayerHasCard(filteredGames, filters.playerHasCard);
+    filteredGames = this.getBeforeDateMatches(filteredGames, filters.beforeDate);
+    filteredGames = this.getAfterDateMatches(filteredGames, filters.afterDate);
+    filteredGames = this.getPlayerHasCardMatches(filteredGames, filters.playerHasCard);
+    filteredGames = this.getContractMatches(filteredGames, filters.contract);
 
     return filteredGames;
   }
 
-  private getAfterDate(games: Game[], afterDate: number) {
+  private getAfterDateMatches(games: Game[], afterDate: number) {
     if (!afterDate) return games;
 
     const toReturn: Game[] = [];
@@ -190,7 +199,7 @@ export class FiltermanagerService {
     return toReturn;
   }
 
-  private getBeforeDate(games: Game[], beforeDate: number) {
+  private getBeforeDateMatches(games: Game[], beforeDate: number) {
     if (!beforeDate) return games;
 
     const toReturn: Game[] = [];
@@ -202,7 +211,13 @@ export class FiltermanagerService {
     return toReturn;
   }
 
-  private getPlayerHasCard(games: Game[], playerHasCards: PlayerHasCard) {
+  private getContractMatches(games: Game[], contractToMatch: string) {
+    debugger;
+    if (!contractToMatch) return games;
+    return games;
+  }
+
+  private getPlayerHasCardMatches(games: Game[], playerHasCards: PlayerHasCard) {
     if (!playerHasCards || playerHasCards['initial'] || Object.keys(playerHasCards).length === 0) return games;
     resetPlayerHasCardDeals();
 

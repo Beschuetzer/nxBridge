@@ -1,9 +1,24 @@
-import { CardValuesAsString, DateObj, Deal, Game, SortOptions } from '@nx-bridge/interfaces-and-types';
+import {
+  CardValuesAsString,
+  DateObj,
+  Deal,
+  Game,
+  SortOptions,
+} from '@nx-bridge/interfaces-and-types';
 import * as mongoose from 'mongoose';
-import { getCharacterFromCardAsNumber, getCharValueFromCardValueString, getHtmlEntityFromSuitOrCardAsNumber, getHtmlEntitySpan, getIsBidPlayable } from './playing/functions';
+import {
+  getCharacterFromCardAsNumber,
+  getCharValueFromCardValueString,
+  getHtmlEntityFromSuitOrCardAsNumber,
+  getHtmlEntitySpan,
+  getIsBidPlayable,
+} from './playing/functions';
 import { MATCHED_DEAL_CLASSNAME } from '@nx-bridge/constants';
 import { NOT_AVAILABLE_STRING } from './constants';
-import { suitsAsCapitalizedStrings, suitsHtmlEntities } from './playing/constants';
+import {
+  suitsAsCapitalizedStrings,
+  suitsHtmlEntities,
+} from './playing/constants';
 
 export function capitalize(str: string) {
   return str
@@ -157,29 +172,28 @@ export function getNewBatchNumber(
 
   if (newResultsPerPage === currentResultsPerPage) return currentBatchNumber;
   // if (newResultsPerPage > currentResultsPerPage) {
-    //when going up in resultsPerPage
-    for (let i = 0; i < maxNumberOfIterations; i++) {
-      const newMinResult =  i * newResultsPerPage;
-      const newMaxResult = newMinResult + (newResultsPerPage - 1);
-      
-      if (currentMinResult >= newMinResult && currentMinResult <= newMaxResult) {
-        return i;
-      } 
+  //when going up in resultsPerPage
+  for (let i = 0; i < maxNumberOfIterations; i++) {
+    const newMinResult = i * newResultsPerPage;
+    const newMaxResult = newMinResult + (newResultsPerPage - 1);
+
+    if (currentMinResult >= newMinResult && currentMinResult <= newMaxResult) {
+      return i;
     }
+  }
 
-    return 0;
+  return 0;
   // } else if (newResultsPerPage < currentResultsPerPage) {
-    //when going down in resultsPerPage
+  //when going down in resultsPerPage
 
-  // } 
+  // }
 }
 
 export function getDateAndTimeString(filterName: DateObj, filterMsg: string) {
   if (!filterName?.date) return NOT_AVAILABLE_STRING;
   const date = filterName.date.toLocaleDateString();
   const shortDate =
-    date.substr(0, date.length - 4) +
-    date.substr(date.length - 2, date.length);
+    date.substr(0, date.length - 4) + date.substr(date.length - 2, date.length);
   const time = filterName.date.toLocaleTimeString();
   const shortTime = time.replace(/(:\d{2}) .*$/i, '');
   const amOrPm = time.substr(-2, 2);
@@ -203,26 +217,39 @@ export function getHtmlEntityFromCard(card: number | string) {
 }
 
 export function getHtmlEntityFromContract(contract: string) {
-  const clubString = suitsAsCapitalizedStrings[0].substr(0, suitsAsCapitalizedStrings[0].length - 1);
-  const diamondString = suitsAsCapitalizedStrings[1].substr(0, suitsAsCapitalizedStrings[1].length - 1);
-  const heartString = suitsAsCapitalizedStrings[2].substr(0, suitsAsCapitalizedStrings[2].length - 1);
-  const spadeString = suitsAsCapitalizedStrings[3].substr(0, suitsAsCapitalizedStrings[3].length - 1);
+  const clubString = suitsAsCapitalizedStrings[0].substr(
+    0,
+    suitsAsCapitalizedStrings[0].length - 1
+  );
+  const diamondString = suitsAsCapitalizedStrings[1].substr(
+    0,
+    suitsAsCapitalizedStrings[1].length - 1
+  );
+  const heartString = suitsAsCapitalizedStrings[2].substr(
+    0,
+    suitsAsCapitalizedStrings[2].length - 1
+  );
+  const spadeString = suitsAsCapitalizedStrings[3].substr(
+    0,
+    suitsAsCapitalizedStrings[3].length - 1
+  );
 
   if (contract.match(new RegExp(clubString, 'i'))) return suitsHtmlEntities[0];
 
-  if (contract.match(new RegExp(diamondString, 'i'))) return suitsHtmlEntities[1];
-  
+  if (contract.match(new RegExp(diamondString, 'i')))
+    return suitsHtmlEntities[1];
+
   if (contract.match(new RegExp(heartString, 'i'))) return suitsHtmlEntities[2];
 
   if (contract.match(new RegExp(spadeString, 'i'))) return suitsHtmlEntities[3];
-
-  else return "NT";
-  
+  else return 'NT';
 }
 
 export function getContractAsHtmlEntityString(contract: string) {
   const split = contract.split(' ');
-  const number = +getCharValueFromCardValueString(split[0] as CardValuesAsString);
+  const number = +getCharValueFromCardValueString(
+    split[0] as CardValuesAsString
+  );
   const htmlEntitySpan = getHtmlEntitySpan(split[1], true);
   return `${number}${htmlEntitySpan}`;
 }

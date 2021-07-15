@@ -25,6 +25,7 @@ import {
   RemovePlayerHasCard,
   SetAfterDate,
   SetBeforeDate,
+  SetContractFilter,
   SetIsFilterSame,
   SetPlayerHasCard,
 } from '@nx-bridge/store';
@@ -62,6 +63,7 @@ export class FilterManagerComponent implements OnInit {
   @ViewChild('afterDate') afterDateFilterElement: ElementRef | null = null;
   @ViewChild('players') playersFilterElement: ElementRef | null = null;
   @ViewChild('cards') cardsFilterElement: ElementRef | null = null;
+  @ViewChild('contractsSelect') contractsFilterElement: ElementRef | null = null;
 
   @HostBinding('class.filter-manager') get classname() {
     return true;
@@ -99,8 +101,15 @@ export class FilterManagerComponent implements OnInit {
     });
   }
 
-  onAddContract(e: Event) {
+  onAddContract() {
+    const contractsSelectElement = this.contractsFilterElement?.nativeElement as HTMLSelectElement;
+    const selectedContract = contracts[+contractsSelectElement.value];
+    if (!selectedContract) return;
 
+    console.log('selectedContract =', selectedContract);
+    this.store.dispatch(new SetContractFilter(selectedContract));
+    this.store.dispatch(new SetIsFilterSame(false));
+    this.searchService.setCurrentlyDisplayingGames();
   }
 
   onAddDeclarer(e: Event) {

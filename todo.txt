@@ -81,5 +81,5 @@ filtering-----------------------
 
 
 deal-filters-------------------------
-  -finish contract filter
   -finish declarer filter
+  -finish getContractMatches() and figure out how to change dealsThatMatchPlayerHasCardFilters in relation to contract filter (right now getPlayerHasCardMatches() calls SetDealsThatMatchPlayerHasCardFilters)
