@@ -21,7 +21,6 @@ import {
   RemovePlayerHasCard,
   SetAfterDate,
   SetBeforeDate,
-  SetDealsThatMatchPlayerHasCardFilters,
   SetIsFilterSame,
   SetPlayerHasCard,
 } from '@nx-bridge/store';
@@ -49,7 +48,8 @@ export class FilterManagerComponent implements OnInit {
   //NOTE: new checkboxes need to be added to resetFilterCheckboxes() in reset()
   @ViewChild('game') gameCheckbox: ElementRef | null = null;
   @ViewChild('date') dateCheckbox: ElementRef | null = null;
-  @ViewChild('player') playerCheckbox: ElementRef | null = null;
+  @ViewChild('deal') dealCheckbox: ElementRef | null = null;
+  @ViewChild('playerHasCard') playerHasCardCheckbox: ElementRef | null = null;
 
   //NOTE: new filters need to be added to filterManagerService's filter objects and applyFilters();  remember: to set store action 'SetIsFilterSame' to false before calling searchService.setCurrentlyDisplayingGames() to make sure filters are checked; also need to make sure that key returned in FilterManagerItem's getKeyToUse is correct
   @ViewChild('beforeDate') beforeDateFilterElement: ElementRef | null = null;
@@ -92,114 +92,7 @@ export class FilterManagerComponent implements OnInit {
     });
   }
 
-  handleDateChange(e: Event, dateType: DateType) {
-    let shouldDispatchChange = false;
-    const input = (e.currentTarget || e.target) as HTMLInputElement;
-    const { isDateInvalid, dateObj, filterMsgError } = this.validateDate(
-      input.value,
-      dateType,
-      this.beforeDate,
-      this.afterDate
-    );
-
-    const { filterMsg, filterName, filterNameElement } = this.getCorrectFilter(
-      dateType
-    );
-
-    filterName.date = isDateInvalid ? null : dateObj;
-    const message = getDateAndTimeString(filterName, filterMsg);
-    const filterToSend: FilterItem = {
-      message,
-      error: message !== NOT_AVAILABLE_STRING ? '' : filterMsgError,
-      date: dateObj,
-      isDateInvalid,
-      elementsToReset: [
-        dateType === DateType.before
-          ? this.beforeDateFilterElement
-          : this.afterDateFilterElement,
-      ],
-    };
-
-    if (dateType === DateType.before)
-      this.filterItems[
-        this.filterManagerService.filters.beforeDate.string
-      ] = filterToSend;
-    else
-      this.filterItems[
-        this.filterManagerService.filters.afterDate.string
-      ] = filterToSend;
-
-    let shouldRemoveInputErrorClassnames = false;
-    if (!isDateInvalid) {
-      shouldRemoveInputErrorClassnames = true;
-      shouldDispatchChange = true;
-    }
-
-    this.filterManagerService.setInputErrorClassnames(
-      input,
-      shouldRemoveInputErrorClassnames
-    );
-
-    return shouldDispatchChange;
-  }
-
-  //NOTE: need this to trigger *ngIf properly
-  onDateClick(e: Event) {
-    return;
-  }
-
-  onDateBeforeChange(e: Event) {
-    const shouldDispatchChange = this.handleDateChange(e, DateType.before);
-    this.dispatchChanges(
-      this.beforeDate,
-      shouldDispatchChange,
-      DateType.before
-    );
-  }
-
-  onDateAfterChange(e: Event) {
-    const shouldDispatchChange = this.handleDateChange(e, DateType.after);
-    this.dispatchChanges(this.afterDate, shouldDispatchChange, DateType.after);
-  }
-
-  onFilterItemDeletion(toDelete: FilterItemDeletion) {
-    delete this.filterItems[toDelete.key];
-
-    if (!toDelete.key) throw new Error('No toDelete.key...');
-
-    const shouldResetStore = !toDelete.key.match(
-      this.filterManagerService.filters.playerHasCard.errorKey
-    );
-    const shouldDeletePlayerHasCardError = toDelete.key.match(
-      this.filterManagerService.filters.playerHasCard.string
-    );
-
-    if (shouldResetStore) {
-      this.resetStore(toDelete);
-      this.store.dispatch(new SetIsFilterSame(false));
-      this.searchService.setCurrentlyDisplayingGames();
-      this.removeBothDatesIfOneHasError(toDelete);
-    }
-
-    if (shouldDeletePlayerHasCardError) {
-      delete this.filterItems[
-        this.filterManagerService.filters.playerHasCard.errorKey
-      ];
-    }
-
-    if (!this.getIsPlayerHasCardFilterStillPresent()) this.store.dispatch(this.filterManagerService.filterResetActions.dealsThatMatchPlayerHasCardFilters)
-  }
-
-  //NOTE: need this to trigger *ngIf properly
-  onGameClick(e: Event) {
-    return;
-  }
-
-  onPlayerHasCardChange() {
-    this.hasPlayerHasCardChanged = true;
-  }
-
-  onPlayerHasCardClick(e: Event) {
+  onAddPlayerHasCard(e: Event) {
     const cardSelectElement = this.cardsFilterElement
       ?.nativeElement as HTMLSelectElement;
     const usernameSelectElement = this.playersFilterElement
@@ -274,7 +167,76 @@ export class FilterManagerComponent implements OnInit {
   }
 
   //NOTE: need this to trigger *ngIf properly
-  onPlayerClick(e: Event) {
+  onDateClick(e: Event) {
+    return;
+  }
+
+  onDateBeforeChange(e: Event) {
+    const shouldDispatchChange = this.handleDateChange(e, DateType.before);
+    this.dispatchChanges(
+      this.beforeDate,
+      shouldDispatchChange,
+      DateType.before
+    );
+  }
+
+  onContractClick() {
+
+  }
+
+  onDateAfterChange(e: Event) {
+    const shouldDispatchChange = this.handleDateChange(e, DateType.after);
+    this.dispatchChanges(this.afterDate, shouldDispatchChange, DateType.after);
+  }
+
+  onDeclarerClick() {
+
+  }
+
+  onFilterItemDeletion(toDelete: FilterItemDeletion) {
+    delete this.filterItems[toDelete.key];
+
+    if (!toDelete.key) throw new Error('No toDelete.key...');
+
+    const shouldResetStore = !toDelete.key.match(
+      this.filterManagerService.filters.playerHasCard.errorKey
+    );
+    const shouldDeletePlayerHasCardError = toDelete.key.match(
+      this.filterManagerService.filters.playerHasCard.string
+    );
+
+    if (shouldResetStore) {
+      this.resetStore(toDelete);
+      this.store.dispatch(new SetIsFilterSame(false));
+      this.searchService.setCurrentlyDisplayingGames();
+      this.removeBothDatesIfOneHasError(toDelete);
+    }
+
+    if (shouldDeletePlayerHasCardError) {
+      delete this.filterItems[
+        this.filterManagerService.filters.playerHasCard.errorKey
+      ];
+    }
+
+    if (!this.getIsPlayerHasCardFilterStillPresent()) this.store.dispatch(this.filterManagerService.filterResetActions.dealsThatMatchPlayerHasCardFilters)
+  }
+
+  //NOTE: need this to trigger *ngIf properly
+  onGameClick(e: Event) {
+    return;
+  }
+
+  onPlayerHasCardChange() {
+    this.hasPlayerHasCardChanged = true;
+  }
+
+  onPlayerHasCardClick() {
+
+  }
+
+  //NOTE: need this to trigger *ngIf properly
+  onDealClick(e: Event) {
+
     return;
   }
 
@@ -282,7 +244,7 @@ export class FilterManagerComponent implements OnInit {
     const filterCheckboxElements = [
       this.gameCheckbox,
       this.dateCheckbox,
-      this.playerCheckbox,
+      this.dealCheckbox,
     ];
     const filterElements = [
       this.beforeDateFilterElement,
@@ -389,7 +351,7 @@ export class FilterManagerComponent implements OnInit {
   }
 
   private getIsPlayerHasCardFilterStillPresent() {
-    debugger;
+    if (!this.filterItems) return false;
     for (const filterKey in this.filterItems) {
       if (Object.prototype.hasOwnProperty.call(this.filterItems, filterKey)) {
         if (filterKey.match(this.filterManagerService.filters.playerHasCard.string) && !filterKey.match(this.filterManagerService.filters.playerHasCard.errorKey)) return true;
@@ -439,6 +401,57 @@ export class FilterManagerComponent implements OnInit {
 
   private getNewElement(elementType: string) {
     return this.renderer.createElement(elementType);
+  }
+
+  private handleDateChange(e: Event, dateType: DateType) {
+    let shouldDispatchChange = false;
+    const input = (e.currentTarget || e.target) as HTMLInputElement;
+    const { isDateInvalid, dateObj, filterMsgError } = this.validateDate(
+      input.value,
+      dateType,
+      this.beforeDate,
+      this.afterDate
+    );
+
+    const { filterMsg, filterName } = this.getCorrectFilter(
+      dateType
+    );
+
+    filterName.date = isDateInvalid ? null : dateObj;
+    const message = getDateAndTimeString(filterName, filterMsg);
+    const filterToSend: FilterItem = {
+      message,
+      error: message !== NOT_AVAILABLE_STRING ? '' : filterMsgError,
+      date: dateObj,
+      isDateInvalid,
+      elementsToReset: [
+        dateType === DateType.before
+          ? this.beforeDateFilterElement
+          : this.afterDateFilterElement,
+      ],
+    };
+
+    if (dateType === DateType.before)
+      this.filterItems[
+        this.filterManagerService.filters.beforeDate.string
+      ] = filterToSend;
+    else
+      this.filterItems[
+        this.filterManagerService.filters.afterDate.string
+      ] = filterToSend;
+
+    let shouldRemoveInputErrorClassnames = false;
+    if (!isDateInvalid) {
+      shouldRemoveInputErrorClassnames = true;
+      shouldDispatchChange = true;
+    }
+
+    this.filterManagerService.setInputErrorClassnames(
+      input,
+      shouldRemoveInputErrorClassnames
+    );
+
+    return shouldDispatchChange;
   }
 
   private resetStore(toDelete: FilterItemDeletion) {

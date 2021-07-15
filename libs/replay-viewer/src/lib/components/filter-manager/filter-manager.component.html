@@ -26,8 +26,8 @@
       Date
     </label>
     <label>
-      <input #player (click)="onPlayerClick($event)" type="checkbox" />
-      Player
+      <input #deal (click)="onDealClick($event)" type="checkbox" />
+      Deal
     </label>
     <label>
       <input #game (click)="onGameClick($event)" type="checkbox" />
@@ -57,8 +57,24 @@
       </label>
     </div>
 
+    <div *ngIf="deal.checked">
+      <label>
+        <input #playerHasCard (click)="onPlayerHasCardClick()" type="checkbox" />
+        Player had a specific card
+      </label>
+      <label>
+        <input #contract (click)="onContractClick()" type="checkbox" />
+        Contract was ...
+      </label>
+      <label>
+        <input #declarer (click)="onDeclarerClick()" type="checkbox" />
+        Declarer was ...
+      </label>
+    </div>
+
+
     <div
-      *ngIf="player.checked === true"
+      *ngIf="playerHasCardCheckbox?.nativeElement.checked"
       class="{{ FILTER_MANANGER_CLASSNAME }}__player"
     >
       <span>Username:</span>
@@ -90,7 +106,7 @@
         ></option>
       </select>
       <button
-        (click)="onPlayerHasCardClick($event)"
+        (click)="onAddPlayerHasCard($event)"
         class="ui button filter-manager__player-has-card-button"
       >
         Add

@@ -81,5 +81,4 @@ filtering-----------------------
 -need change checkbox 'Player' to 'Deal' and then show the checkboxes for Deal filters (playerHasCard, contract is, and declarer is);  have the div's for the actual filter interfaces just have d-none and clicking the respective checkbox shows ui
 
 filter-manager-------------------------
-  -add 'and y deals' to the 'games found matching...' msg in gameslist-view, if dealsThatMatchPlayerHasCardFilters is not default of [-1] (need to change default);
   
