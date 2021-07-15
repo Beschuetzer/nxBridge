@@ -80,7 +80,7 @@
     </div>
 
     <div
-      *ngIf="playerHasCardCheckbox?.nativeElement.checked"
+      *ngIf="deal.checked && playerHasCardCheckbox?.nativeElement.checked === true"
       class="{{ FILTER_MANANGER_CLASSNAME }}__player-has-card"
     >
       <span>Username:</span>
@@ -120,7 +120,7 @@
     </div>
 
     <div
-      *ngIf="contractCheckbox?.nativeElement.checked"
+      *ngIf="deal.checked && contractCheckbox?.nativeElement.checked"
       class="{{ FILTER_MANANGER_CLASSNAME }}__contract"
     >
       <span>Contract was :</span>
@@ -131,13 +131,9 @@
         class=""
       >
         <option
-          *ngFor="let cardAsNumber of cardsAsNumbers; let i = index"
-          innerHTML="{{ cardAsNumber | cardAsNumberToCardHtmlEntityString }}"
-          [ngClass]="{
-            'color-red': i >= 14 && i <= 39,
-            'color-black': i < 14 || i > 39,
-            'filter-manager__player-options': true
-          }"
+          *ngFor="let contract of contracts; let i = index"
+          innerHTML="{{ contract | cardAsNumberToCardHtmlEntityString }}"
+          [class]="(i - 1) % 5 === 1 || (i - 1) % 5 === 2 ? 'color-red' : 'color-black'"
           [value]="i - 1"
         ></option>
       </select>
@@ -150,7 +146,7 @@
     </div>
 
     <div
-      *ngIf="declarerCheckbox?.nativeElement.checked"
+      *ngIf="deal.checked && declarerCheckbox?.nativeElement.checked"
       class="{{ FILTER_MANANGER_CLASSNAME }}__declarer"
     >
       <span>Declarer was:</span>

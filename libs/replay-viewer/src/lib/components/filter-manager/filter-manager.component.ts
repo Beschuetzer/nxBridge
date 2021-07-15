@@ -14,6 +14,7 @@ import {
   minCardValue,
   NOT_AVAILABLE_STRING,
   resetPlayerHasCardDeals,
+  contracts
 } from '@nx-bridge/constants';
 import {
   AddPlayerHasCard,
@@ -72,6 +73,7 @@ export class FilterManagerComponent implements OnInit {
   public FILTER_MANANGER_CLASSNAME = FILTER_MANAGER_CLASSNAME;
   public playerNames = ['Pick a username'];
   public cardsAsNumbers = ['Pick a Card', ...Array(52).keys()];
+  public contracts = ['Pick a Contract', ...contracts];
   public filterItems: FilterItems = {};
 
   get joinedInputErrorClassnames() {
