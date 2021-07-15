@@ -92,6 +92,5 @@ filter-manager-------------------------
 
   -do playerHasCard and filter-manager-item
   }
-  -setting an incorrect before date with an after date, then removing the after date, does not validate the before date (need to have beforeDate and afterDate set and error code for store.beforeDate/afterDate, which can be accessed in resetOtherDateIfError())
 
 

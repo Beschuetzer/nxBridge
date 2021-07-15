@@ -1,7 +1,10 @@
 import { Component, Input, OnInit, Output, EventEmitter, Renderer2, ElementRef } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { dealsListDealsButtonChoices, FILTER_MANAGER_CLASSNAME } from '@nx-bridge/constants';
-import { FilterItem, FilterItemDeletion } from '@nx-bridge/interfaces-and-types';
+import { FilterItem, FilterItemDeletion, ReducerNames } from '@nx-bridge/interfaces-and-types';
+import { AppState, SetAfterDate, SetBeforeDate } from '@nx-bridge/store';
 import { FiltermanagerService } from '../../services/filtermanager.service';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'nx-bridge-filter-manager-item',
@@ -23,6 +26,7 @@ export class FilterManagerItemComponent implements OnInit {
     private renderer: Renderer2,
     private elRef: ElementRef,
     private filterManagerService: FiltermanagerService,
+    private store: Store<AppState>,
   ) { }
 
   ngOnInit(): void 
@@ -43,7 +47,7 @@ export class FilterManagerItemComponent implements OnInit {
     const storeResetAction = this.filterManagerService.filterResetActions[key];
     this.deletion.emit({key, resetAction: storeResetAction});
     this.resetElement(this.filterItem?.elementsToReset as any);
-    this.resetOtherDateIfError(key);
+    this.resetBothDatesIfOneWithoutErrorBeingDeleted(key);
   }
 
   private changeErrorClasses(element: HTMLElement, shouldRemove = false) {
@@ -79,12 +83,20 @@ export class FilterManagerItemComponent implements OnInit {
     }
   }
 
-  private resetOtherDateIfError(key: string) {
-    //todo: (need to have beforeDate and afterDate set an error code in the store.beforeDate/afterDate, which can be accessed in resetOtherDateIfError())
-    debugger;
-    if (key === this.filterManagerService.filters.afterDate.string) {
+  private resetBothDatesIfOneWithoutErrorBeingDeleted(key: string) {
 
+    const {beforeDate, beforeDateElement, afterDate, afterDateElement} = this.filterManagerService.getBeforeAndAfterDateInfo();
+
+    debugger;
+    if (key === this.filterManagerService.filters.afterDate.string && beforeDate === -1 || key ===this.filterManagerService.filters.beforeDate.string && afterDate === -1) {
+      beforeDateElement.value = '';
+      afterDateElement.value = '';
+
+      this.store.dispatch(new SetBeforeDate(this.filterManagerService.filtersInitial.beforeDate));
+      this.store.dispatch(new SetAfterDate(this.filterManagerService.filtersInitial.afterDate));
+      
+      this.filterManagerService.setInputErrorClassnames(beforeDateElement, true);
+      this.filterManagerService.setInputErrorClassnames(afterDateElement, true);
     }
-    else if (key === this.filterManagerService.filters.beforeDate.string) {}
   }
 }

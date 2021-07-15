@@ -192,6 +192,12 @@ export class FilterManagerComponent implements OnInit {
     delete this.filterItems[toDelete.key];
     this.store.dispatch(new SetIsFilterSame(false));
     this.searchService.setCurrentlyDisplayingGames();
+
+    const {beforeDate, afterDate} = this.filterManagerService.getBeforeAndAfterDateInfo();
+    if (toDelete.key === this.filterManagerService.filters.afterDate.string && beforeDate === -1 || toDelete.key === this.filterManagerService.filters.beforeDate.string && afterDate === -1) {
+      delete this.filterItems[this.filterManagerService.filters.beforeDate.string];
+      delete this.filterItems[this.filterManagerService.filters.afterDate.string];
+    }
   }
 
   //NOTE: need this to trigger *ngIf properly
@@ -345,7 +351,7 @@ export class FilterManagerComponent implements OnInit {
     let dateToDispatch = filterName.date?.getTime();
 
     if (!shouldDispatchChange) {
-      dateToDispatch = 0;
+      dateToDispatch = -1;
     } else {
       this.store.dispatch(new SetIsFilterSame(false));
     }

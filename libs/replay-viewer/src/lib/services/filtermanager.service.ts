@@ -55,6 +55,20 @@ export class FiltermanagerService {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor(private store: Store<AppState>) {}
 
+  getBeforeAndAfterDateInfo() { 
+    let beforeDate = -2;
+    let afterDate = -2;
+    const beforeDateElement = document.querySelector(`#${this.filters.beforeDate.string}`) as HTMLInputElement;
+    const afterDateElement = document.querySelector(`#${this.filters.afterDate.string}`) as HTMLInputElement;
+
+    this.store.select(ReducerNames.filters).pipe(take(1)).subscribe(filterState => {
+      beforeDate = filterState.beforeDate;
+      afterDate = filterState.afterDate;
+    })
+
+    return {beforeDate, afterDate, beforeDateElement, afterDateElement}
+  }
+
   filterGames(games: Game[]) {
     if (!games) return games;
     let isFilterSame = true;
