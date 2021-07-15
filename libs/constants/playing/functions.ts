@@ -18,6 +18,7 @@ import {
   suitsHtmlEntities,
   getHtmlEntityFromCard,
 } from '@nx-bridge/constants';
+import { getHtmlEntityFromContract } from '../functions';
 
 export function getCardStringFromNumber(cardAsNumber: number) {
   if (cardAsNumber === undefined || cardAsNumber === null) return '';
@@ -138,11 +139,16 @@ export function getHtmlEntityFromSuitOrCardAsNumber(
   return index !== -1 ? suitsHtmlEntities[index] : 'NT';
 }
 
-export function getHtmlEntitySpan(card: number) {
-  const htmlEntity = getHtmlEntityFromCard(card);
+export function getHtmlEntitySpan(numberOrContract: number | string, isContract = false) {
   let colorToUse = 'color-white';
+  let htmlEntity = '';
+  
+  if (isContract) htmlEntity = getHtmlEntityFromContract(numberOrContract as string);
+  else htmlEntity = getHtmlEntityFromCard(numberOrContract);
+
   if (htmlEntity.match(/diam|heart/i))
     colorToUse = `${COLOR_RED_CLASSNAME}-light`;
+  
   return `<span class="${colorToUse}">${htmlEntity}</span>`;
 }
 

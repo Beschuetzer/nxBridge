@@ -1,8 +1,9 @@
-import { DateObj, Deal, Game, SortOptions } from '@nx-bridge/interfaces-and-types';
+import { CardValuesAsString, DateObj, Deal, Game, SortOptions } from '@nx-bridge/interfaces-and-types';
 import * as mongoose from 'mongoose';
-import { getCharacterFromCardAsNumber, getHtmlEntityFromSuitOrCardAsNumber, getIsBidPlayable } from './playing/functions';
+import { getCharacterFromCardAsNumber, getCharValueFromCardValueString, getHtmlEntityFromSuitOrCardAsNumber, getHtmlEntitySpan, getIsBidPlayable } from './playing/functions';
 import { MATCHED_DEAL_CLASSNAME } from '@nx-bridge/constants';
 import { NOT_AVAILABLE_STRING } from './constants';
+import { suitsAsCapitalizedStrings, suitsHtmlEntities } from './playing/constants';
 
 export function capitalize(str: string) {
   return str
@@ -199,4 +200,29 @@ export function getHtmlEntityFromCard(card: number | string) {
   const htmlEntity = getHtmlEntityFromSuitOrCardAsNumber(number);
   const char = getCharacterFromCardAsNumber(number, true);
   return `${char}${htmlEntity}`;
+}
+
+export function getHtmlEntityFromContract(contract: string) {
+  const clubString = suitsAsCapitalizedStrings[0].substr(0, suitsAsCapitalizedStrings[0].length - 1);
+  const diamondString = suitsAsCapitalizedStrings[1].substr(0, suitsAsCapitalizedStrings[1].length - 1);
+  const heartString = suitsAsCapitalizedStrings[2].substr(0, suitsAsCapitalizedStrings[2].length - 1);
+  const spadeString = suitsAsCapitalizedStrings[3].substr(0, suitsAsCapitalizedStrings[3].length - 1);
+
+  if (contract.match(new RegExp(clubString, 'i'))) return suitsHtmlEntities[0];
+
+  if (contract.match(new RegExp(diamondString, 'i'))) return suitsHtmlEntities[1];
+  
+  if (contract.match(new RegExp(heartString, 'i'))) return suitsHtmlEntities[2];
+
+  if (contract.match(new RegExp(spadeString, 'i'))) return suitsHtmlEntities[3];
+
+  else return "NT";
+  
+}
+
+export function getContractAsHtmlEntityString(contract: string) {
+  const split = contract.split(' ');
+  const number = +getCharValueFromCardValueString(split[0] as CardValuesAsString);
+  const htmlEntitySpan = getHtmlEntitySpan(split[1], true);
+  return `${number}${htmlEntitySpan}`;
 }

@@ -6,6 +6,7 @@ import { GetHtmlEntityFromSuitPipe } from './get-html-entity-from-suit.pipe';
 import { SafeHtmlPipe } from './safe-html.pipe';
 import { ReplacePipe } from './replace.pipe';
 import { CardAsNumberToCardHtmlEntityStringPipe } from './card-as-number-to-card-html-entity-string.pipe';
+import { GetContractAsHtmlEntityStringPipe } from './get-contract-as-html-entity-string.pipe'
 
 @NgModule({
   imports: [CommonModule],
@@ -15,7 +16,8 @@ import { CardAsNumberToCardHtmlEntityStringPipe } from './card-as-number-to-card
     GetHtmlEntityFromSuitPipe,
     SafeHtmlPipe,
     ReplacePipe,
-    CardAsNumberToCardHtmlEntityStringPipe
+    CardAsNumberToCardHtmlEntityStringPipe,
+    GetContractAsHtmlEntityStringPipe
   ],
   exports: [
     JoinNamesPipe,
@@ -24,6 +26,7 @@ import { CardAsNumberToCardHtmlEntityStringPipe } from './card-as-number-to-card
     SafeHtmlPipe,
     ReplacePipe,
     CardAsNumberToCardHtmlEntityStringPipe,
+    GetContractAsHtmlEntityStringPipe,
   ]
 })
 export class PipesModule {}

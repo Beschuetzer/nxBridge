@@ -14,6 +14,9 @@ import {
   minCardValue,
   NOT_AVAILABLE_STRING,
   resetPlayerHasCardDeals,
+  filterManagerContracts,
+  filterManagerCardsAsNumbers,
+  filterManagerPlayerNames,
   contracts
 } from '@nx-bridge/constants';
 import {
@@ -71,10 +74,10 @@ export class FilterManagerComponent implements OnInit {
   public beforeDate: DateObj = { date: null };
   public afterDate: DateObj = { date: null };
   public FILTER_MANANGER_CLASSNAME = FILTER_MANAGER_CLASSNAME;
-  public playerNames = ['Pick a username'];
-  public cardsAsNumbers = ['Pick a Card', ...Array(52).keys()];
-  public contracts = ['Pick a Contract', ...contracts];
   public filterItems: FilterItems = {};
+  public contracts =  [...filterManagerContracts, ...contracts];
+  public cardsAsNumbers =  filterManagerCardsAsNumbers;
+  public playerNames =  filterManagerPlayerNames;
 
   get joinedInputErrorClassnames() {
     return this.filterManagerService.inputErrorClassnames.join(' ');

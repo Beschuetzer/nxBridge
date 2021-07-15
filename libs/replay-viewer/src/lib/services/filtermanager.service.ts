@@ -16,7 +16,7 @@ import {
   SetDealsThatMatchPlayerHasCardFilters,
 } from '@nx-bridge/store';
 import { switchMap, take } from 'rxjs/operators';
-import { flatten, resetPlayerHasCardDeals } from '@nx-bridge/constants';
+import { flatten, resetPlayerHasCardDeals, contracts } from '@nx-bridge/constants';
 
 @Injectable({
   providedIn: 'root',
@@ -86,6 +86,8 @@ export class FiltermanagerService {
     },
   };
   public inputErrorClassnames = ['ng-touched', 'ng-dirty', 'ng-invalid'];
+  
+
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor(private store: Store<AppState>) {}

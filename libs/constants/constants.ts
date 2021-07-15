@@ -1,4 +1,5 @@
 import { GameDetailSizes, SortOptions } from '@nx-bridge/interfaces-and-types';
+import { contracts } from '@nx-bridge/constants';
 
 export const GET_DEALS_CONTROLLER_STRING = 'getDeals';
 export const GET_GAMES_CONTROLLER_STRING = 'getGames';
@@ -84,3 +85,7 @@ export const SORT_OPTIONS = {
 };
 export const RESULTS_PER_PAGE_OPTIONS = [1, 2, 5, 10, 25, 50, 100];
 export const NOT_AVAILABLE_STRING = 'N/A';
+
+export const filterManagerContracts = ['Pick a Contract'];
+export const filterManagerCardsAsNumbers = ['Pick a Card', ...Array(52).keys()];
+export const filterManagerPlayerNames = ['Pick a username'];

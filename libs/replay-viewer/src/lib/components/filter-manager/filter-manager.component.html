@@ -132,7 +132,7 @@
       >
         <option
           *ngFor="let contract of contracts; let i = index"
-          innerHTML="{{ contract | cardAsNumberToCardHtmlEntityString }}"
+          innerHTML="{{ contract | getContractAsHtmlEntityString }}"
           [class]="(i - 1) % 5 === 1 || (i - 1) % 5 === 2 ? 'color-red' : 'color-black'"
           [value]="i - 1"
         ></option>
