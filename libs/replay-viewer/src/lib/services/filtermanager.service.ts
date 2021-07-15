@@ -37,7 +37,7 @@ export class FiltermanagerService {
   public filtersInitial: Filters = {
     [this.filters.beforeDate.string]: 0,
     [this.filters.afterDate.string]: 0,
-    [this.filters.playerHasCard.string]: { initial: [1] },
+    [this.filters.playerHasCard.string]: { initial: [-1] },
   };
   public filterResetActions = {
     [this.filters.beforeDate.string]: new SetBeforeDate(

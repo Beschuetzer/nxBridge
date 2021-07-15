@@ -144,6 +144,15 @@
 	color: var(--color-black);
 	line-break: anywhere;
 }
+
+@mixin filter-manager-button-colors {
+	background-color: rgba(var(--color-black-rgb), 1) !important;
+	color: rgba(var(--color-red-light-rgb), 1) !important;
+
+	&:hover {
+		background-color: rgba(var(--color-red-rgb), 1) !important;
+	}
+}
 /* ------------------------------------------------------------------------------------------------- */
 //Media Query Manager
 @mixin respond($breakpoint) {

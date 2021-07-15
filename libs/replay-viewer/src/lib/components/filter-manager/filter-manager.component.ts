@@ -38,7 +38,6 @@ import {
 import { SearchService } from '../../services/search.service';
 import { FiltermanagerService } from '../../services/filtermanager.service';
 import { take } from 'rxjs/operators';
-import { debug } from 'node:console';
 
 @Component({
   selector: 'nx-bridge-filter-manager',
@@ -188,7 +187,6 @@ export class FilterManagerComponent implements OnInit {
     const isSelectedCardUsedAlready = this.getIsSelectedCardUsedAlready(selectedCard);
     if (isSelectedCardUsedAlready) {
        this.getPlayerHasCardErrorMessage(isSelectedCardUsedAlready as any, selectedCard);
-
        return;
     }
     delete this.filterItems[this.filterManagerService.filterMsgs.playerHasCard.errrorItem.key];
@@ -206,7 +204,6 @@ export class FilterManagerComponent implements OnInit {
       usernameSelectElement,
       shouldRemoveUsernameErrors
     );
-
 
     if (shouldRemoveCardErrors && shouldRemoveUsernameErrors) {
       let playerHasCard: PlayerHasCard = {};

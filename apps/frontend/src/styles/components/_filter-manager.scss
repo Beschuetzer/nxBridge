@@ -93,12 +93,12 @@
     margin: 0 !important;
     line-height: 0 !important;
     padding: $default-font-size * .5 $default-font-size * .25 !important;
-    background-color: rgba(var(--color-black-rgb), 1) !important;
-    color: rgba(var(--color-red-light-rgb), 1) !important;
+    @include filter-manager-button-colors;
+  }
 
-    &:hover {
-      background-color: rgba(var(--color-red-rgb), 1) !important;
-      // color: rgba(var(--color-white-rgb), 1);
-    }
+  &__player-has-card-button {
+    @include filter-manager-button-colors;
+    width: 100%;
+    margin: $default-font-size * .5 0 $default-font-size * .25 0 !important;
   }
 }

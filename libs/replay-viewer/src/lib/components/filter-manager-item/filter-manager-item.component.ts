@@ -43,11 +43,11 @@ export class FilterManagerItemComponent implements OnInit {
   }
   
   onDelete() {
-    const key = this.getKeyToUse();
-    const storeResetAction = this.filterManagerService.filterResetActions[key];
-    this.deletion.emit({key, resetAction: storeResetAction});
+    const storeActionKey = this.getStoreActionKey();
+    const storeResetAction = this.filterManagerService.filterResetActions[storeActionKey];
+    this.deletion.emit({key: this.filterItemKey, resetAction: storeResetAction});
     this.resetElement(this.filterItem?.elementsToReset as any);
-    this.resetBothDatesIfOneWithoutErrorBeingDeleted(key);
+    this.resetBothDatesIfOneWithoutErrorBeingDeleted(this.filterItemKey);
   }
 
   private changeErrorClasses(element: HTMLElement, shouldRemove = false) {
@@ -59,7 +59,7 @@ export class FilterManagerItemComponent implements OnInit {
     });
   }
 
-  private getKeyToUse() {
+  private getStoreActionKey() {
     //note: if the filter is a singleton don't have to do anything here, otherwise need to make sure that the correct value is returned here
     let key = this.filterItemKey;
     
@@ -78,7 +78,7 @@ export class FilterManagerItemComponent implements OnInit {
       if ((elementToReset as any).nativeElement) htmlElement = (elementToReset as any).nativeElement as HTMLInputElement;
 
       //note: two options so far (input and option/select)
-      if (htmlElement) htmlElement.value = '';
+      if (htmlElement.localName !== 'select') htmlElement.value = '';
       this.filterManagerService.setInputErrorClassnames(htmlElement, true);
     }
   }

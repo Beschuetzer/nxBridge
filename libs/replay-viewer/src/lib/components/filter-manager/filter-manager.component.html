@@ -64,7 +64,6 @@
       <span>Username:</span>
       <select
         #players
-        (click)="onPlayerHasCardClick($event)"
         class="{{ joinedInputErrorClassnames }}"
       >
         <option *ngFor="let playerName of playerNames; let i = index">
@@ -74,7 +73,6 @@
       <span>&nbsp;had the&nbsp;</span>
       <select
         class="{{ joinedInputErrorClassnames }}"
-        (click)="onPlayerHasCardClick($event)"
         #cards
         class=""
       >
@@ -89,6 +87,9 @@
           [value]="i - 1"
         ></option>
       </select>
+      <button
+        (click)="onPlayerHasCardClick($event)"
+        class="ui button filter-manager__player-has-card-button">Add</button>
     </div>
     <div *ngIf="game.checked === true">Game details</div>
   </div>

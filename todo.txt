@@ -86,6 +86,5 @@ filtering-----------------------
 
 
 filter-manager-------------------------
-  -figure out how to prevent adding the same card for playerHasCard (also add meaningful error msg)
-
+  -when removing one, it sets the whole thing back to default (need to add an action called RemovePlayerHasCard)
 
