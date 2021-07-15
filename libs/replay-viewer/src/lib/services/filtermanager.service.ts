@@ -192,26 +192,8 @@ export class FiltermanagerService {
       filters.beforeDate
     );
     filteredGames = this.getAfterDateMatches(filteredGames, filters.afterDate);
+
     filteredGames = this.runFiltersThatModifyDealsThatMatch(filteredGames, filters);
-
-    return filteredGames;
-  }
-
-  private runFiltersThatModifyDealsThatMatch(games: Game[], filters: Filters) {
-    //note: these filters modify dealsThatMatch and follow a different pattern
-    this.dealsThatMatch = [];
-    let filteredGames = games;
-
-    //note: arrange in order of least cpu to most cpu intensive
-    filteredGames = this.getContractMatches(filteredGames, filters.contract);
-    filteredGames = this.getPlayerHasCardMatches(
-      filteredGames,
-      filters.playerHasCard
-    );
-
-    this.store.dispatch(
-      new SetDealsThatMatchPlayerHasCardFilters(this.dealsThatMatch)
-    );
 
     return filteredGames;
   }
@@ -240,14 +222,11 @@ export class FiltermanagerService {
     return toReturn;
   }
 
-  private getContractMatches(games: Game[], contractToMatch: string) {
-    // debugger;
-    if (!contractToMatch) return games;
-    return games;
+  private getCanSkipContract(contract: string) {
+    return contract === this.filtersInitial.contract;
   }
 
-  private getPlayerHasCardMatches(
-    games: Game[],
+  private getCanSkipPlayerHasCard(
     playerHasCards: PlayerHasCard
   ) {
     if (
@@ -255,45 +234,55 @@ export class FiltermanagerService {
       playerHasCards['initial'] ||
       Object.keys(playerHasCards).length === 0
     )
-      return games;
-
-    function filterToRun(deal: Deal, dealId: string) {
-      resetMatchedDeals();
-
-      let canSkipToNextDeal = false;
-      let shouldAddDeal = true;
-      for (const username in playerHasCards) {
-        if (Object.prototype.hasOwnProperty.call(playerHasCards, username)) {
-          const cardsToCheckFor = playerHasCards[username];
-          const handToCheck = deal.hands[username];
-          if (!handToCheck || handToCheck.length <= 0) {
-            shouldAddDeal = false;
-            break;
-          }
-
-          const flatHand = flatten(handToCheck);
-          for (let k = 0; k < cardsToCheckFor.length; k++) {
-            const cardToCheckFor = cardsToCheckFor[k];
-            if (!flatHand.includes(cardToCheckFor)) {
-              shouldAddDeal = false;
-              canSkipToNextDeal = true;
-              break;
-            }
-          }
-          if (canSkipToNextDeal) break;
-        }
-      }
-      return shouldAddDeal;
-    }
-
-    const toReturn = this.getGamesToReturn(games, filterToRun);
-    return toReturn;
+      return true;
+    return false;
   }
 
-  private getGamesToReturn(
+  private getPassesContractFilter(contractToMatch: string, deal: Deal) {
+    if (deal.contract === contractToMatch) return true;
+    return false;
+  }
+
+  private getPassesPlayerHasCardFilter(playerHasCards: PlayerHasCard, deal: Deal) {
+    let canSkipToNextDeal = false;
+    let shouldAddDeal = true;
+    for (const username in playerHasCards) {
+      if (Object.prototype.hasOwnProperty.call(playerHasCards, username)) {
+        const cardsToCheckFor = playerHasCards[username];
+        const handToCheck = deal.hands[username];
+        if (!handToCheck || handToCheck.length <= 0) {
+          shouldAddDeal = false;
+          break;
+        }
+
+        const flatHand = flatten(handToCheck);
+        for (let k = 0; k < cardsToCheckFor.length; k++) {
+          const cardToCheckFor = cardsToCheckFor[k];
+          if (!flatHand.includes(cardToCheckFor)) {
+            shouldAddDeal = false;
+            canSkipToNextDeal = true;
+            break;
+          }
+        }
+        if (canSkipToNextDeal) break;
+      }
+    }
+    return shouldAddDeal;
+  }
+
+  private runFiltersThatModifyDealsThatMatch(
     games: Game[],
-    filterToRun: (deal: Deal, dealId: string) => boolean
+    filters: Filters,
   ) {
+    resetMatchedDeals();
+    this.dealsThatMatch = [];
+
+    //note: add skipping logic in here
+    const canSkipPlayerHasCardFilter = this.getCanSkipPlayerHasCard(filters.playerHasCard);
+    const canSkipContractFilter = this.getCanSkipContract(filters.contract);
+    const canSkip = canSkipContractFilter && canSkipPlayerHasCardFilter;
+    if (canSkip) return games;
+
     let fetchedDeals = [] as any;
     this.store
       .select(ReducerNames.deals)
@@ -302,8 +291,8 @@ export class FiltermanagerService {
         fetchedDeals = dealState.fetchedDeals;
       });
 
+      debugger;
     const toReturn = [];
-
     for (let i = 0; i < games.length; i++) {
       const game = games[i];
 
@@ -312,7 +301,12 @@ export class FiltermanagerService {
         const dealId = game.deals[j];
         const deal = fetchedDeals[dealId];
 
-        const shouldAddDeal = filterToRun(deal, dealId);
+        //note: add filter logic here
+        let shouldAddDeal = false;
+        
+        if (!canSkipPlayerHasCardFilter) shouldAddDeal = this.getPassesPlayerHasCardFilter(filters.playerHasCard, deal);
+
+        if (!canSkipContractFilter) shouldAddDeal = this.getPassesContractFilter(filters.contract, deal);
 
         if (shouldAddDeal) {
           if (!hasGameBeenAdded) {
@@ -323,6 +317,11 @@ export class FiltermanagerService {
         }
       }
     }
+
+    this.store.dispatch(
+      new SetDealsThatMatchPlayerHasCardFilters(this.dealsThatMatch)
+    );
+
     return toReturn;
   }
 }
