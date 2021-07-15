@@ -17,7 +17,8 @@ import {
   filterManagerContracts,
   filterManagerCardsAsNumbers,
   filterManagerPlayerNames,
-  contracts
+  contracts,
+  getContractAsHtmlEntityString
 } from '@nx-bridge/constants';
 import {
   AddPlayerHasCard,
@@ -106,10 +107,19 @@ export class FilterManagerComponent implements OnInit {
     const selectedContract = contracts[+contractsSelectElement.value];
     if (!selectedContract) return;
 
-    console.log('selectedContract =', selectedContract);
     this.store.dispatch(new SetContractFilter(selectedContract));
     this.store.dispatch(new SetIsFilterSame(false));
     this.searchService.setCurrentlyDisplayingGames();
+
+    this.filterManagerService.setInputErrorClassnames(contractsSelectElement, true);
+    
+    const filterItem: FilterItem = {
+      message: `${this.filterManagerService.filterMsgs.contract.valid} ${getContractAsHtmlEntityString(selectedContract)}.`,
+      error: '',
+      elementsToReset: [contractsSelectElement],
+    }
+
+    this.filterItems[this.filterManagerService.filters.contract.string] = filterItem;
   }
 
   onAddDeclarer(e: Event) {

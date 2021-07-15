@@ -41,6 +41,7 @@ export class FiltermanagerService {
     },
     contract: {
       string: 'contract',
+      
     },
   };
   public filtersInitial: Filters = {
@@ -94,6 +95,9 @@ export class FiltermanagerService {
       valid: '',
       invalid: 'already set to',
     },
+    contract: {
+      valid: 'Contract was',
+    }
   };
   public inputErrorClassnames = ['ng-touched', 'ng-dirty', 'ng-invalid'];
   public dealsThatMatch: string[] = [];
