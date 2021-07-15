@@ -67,11 +67,15 @@ export function filterReducer(
         const index = values.findIndex(c => c === card);
         const newPlayerHasCardFilter = {[username]: [...values]};
         newPlayerHasCardFilter[username].splice(index, 1);
-        // debugger;
-        // if (newPlayerHasCardFilter[username].length === 0) {
-        //   newPlayerHasCardFilter = {};
-          
-        // }
+
+        if (newPlayerHasCardFilter[username].length === 0) {
+          const newState = {...state.playerHasCard};
+          delete newState[username];
+          return {
+            ...state,
+            playerHasCard: newState
+          }
+        }
   
         return {
           ...state,

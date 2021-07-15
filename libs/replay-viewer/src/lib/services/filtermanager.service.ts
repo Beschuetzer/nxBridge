@@ -197,7 +197,7 @@ export class FiltermanagerService {
   }
 
   private getPlayerHasCard(games: Game[], playerHasCards: PlayerHasCard) {
-    if (!playerHasCards || playerHasCards['initial']) return games;
+    if (!playerHasCards || playerHasCards['initial'] || Object.keys(playerHasCards).length === 0) return games;
     resetPlayerHasCardDeals();
 
     let fetchedDeals = [] as any;
