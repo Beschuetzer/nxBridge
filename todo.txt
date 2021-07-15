@@ -82,4 +82,4 @@ filtering-----------------------
 
 filter-manager-------------------------
   -add 'and y deals' to the 'games found matching...' msg in gameslist-view, if dealsThatMatchPlayerHasCardFilters is not default of [-1] (need to change default);
-  -after every deletion of filterItem, need to check if any playerHasCard filters left, if not, call reset dealsThatMatchPlayerHasCardFilters
+  

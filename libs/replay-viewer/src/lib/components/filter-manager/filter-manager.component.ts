@@ -186,6 +186,8 @@ export class FilterManagerComponent implements OnInit {
         this.filterManagerService.filters.playerHasCard.errorKey
       ];
     }
+
+    if (!this.getIsPlayerHasCardFilterStillPresent()) this.store.dispatch(this.filterManagerService.filterResetActions.dealsThatMatchPlayerHasCardFilters)
   }
 
   //NOTE: need this to trigger *ngIf properly
@@ -384,6 +386,16 @@ export class FilterManagerComponent implements OnInit {
     }
 
     return { filterMsg, filterName, filterNameElement };
+  }
+
+  private getIsPlayerHasCardFilterStillPresent() {
+    debugger;
+    for (const filterKey in this.filterItems) {
+      if (Object.prototype.hasOwnProperty.call(this.filterItems, filterKey)) {
+        if (filterKey.match(this.filterManagerService.filters.playerHasCard.string) && !filterKey.match(this.filterManagerService.filters.playerHasCard.errorKey)) return true;
+      }
+    }
+    return false;
   }
 
   private getPlayerHasCardErrorMessage(
