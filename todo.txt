@@ -82,15 +82,10 @@ filtering-----------------------
 -work on player filter:
   1) 'player had card'
 
--when adding multiple playerHasCard values, first check that no other player has that card, if so return and show error.
--display every playerHasCard in ui
 -when clicking search, reset all filters
--change how filter messages are displayed (add filterItem component that has an x button to remove just that specific filter;  needs input of message and reset action )
 
 
 filter-manager-------------------------
-
-  -do playerHasCard and filter-manager-item
-  }
+  -figure out how to prevent adding the same card for playerHasCard (also add meaningful error msg)
 
 

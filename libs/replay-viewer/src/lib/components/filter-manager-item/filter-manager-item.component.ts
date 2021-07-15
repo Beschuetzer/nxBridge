@@ -84,10 +84,8 @@ export class FilterManagerItemComponent implements OnInit {
   }
 
   private resetBothDatesIfOneWithoutErrorBeingDeleted(key: string) {
-
     const {beforeDate, beforeDateElement, afterDate, afterDateElement} = this.filterManagerService.getBeforeAndAfterDateInfo();
 
-    debugger;
     if (key === this.filterManagerService.filters.afterDate.string && beforeDate === -1 || key ===this.filterManagerService.filters.beforeDate.string && afterDate === -1) {
       beforeDateElement.value = '';
       afterDateElement.value = '';

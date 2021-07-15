@@ -6,8 +6,8 @@ import {
   Seating,
   Suit,
 } from '@nx-bridge/interfaces-and-types';
-import { debug } from 'node:console';
 import {
+  COLOR_RED_CLASSNAME,
   cardinalDirections,
   cardsPerSuit,
   cardValuesAsStrings,
@@ -16,7 +16,8 @@ import {
   suits,
   suitsAsCapitalizedStrings,
   suitsHtmlEntities,
-} from './constants';
+  getHtmlEntityFromCard,
+} from '@nx-bridge/constants';
 
 export function getCardStringFromNumber(cardAsNumber: number) {
   if (cardAsNumber === undefined || cardAsNumber === null) return '';
@@ -137,6 +138,14 @@ export function getHtmlEntityFromSuitOrCardAsNumber(
   return index !== -1 ? suitsHtmlEntities[index] : 'NT';
 }
 
+export function getHtmlEntitySpan(card: number) {
+  const htmlEntity = getHtmlEntityFromCard(card);
+  let colorToUse = 'color-white';
+  if (htmlEntity.match(/diam|heart/i))
+    colorToUse = `${COLOR_RED_CLASSNAME}-light`;
+  return `<span class="${colorToUse}">${htmlEntity}</span>`;
+}
+
 export function getIsBidPlayable(bid: string) {
   if (!bid.match(/double/i) && !bid.match(/pass/i)) return true;
   return false;
@@ -227,14 +236,20 @@ export function getUserWhoPlayedCard(hands: Hands, card: number) {
   return '';
 }
 
-export function createHandArrayFromFlatArray(flatArray: number[]){
-  const spades = [], hearts = [], diamonds = [], clubs = [];
+export function createHandArrayFromFlatArray(flatArray: number[]) {
+  const spades = [],
+    hearts = [],
+    diamonds = [],
+    clubs = [];
   for (let i = 0; i < flatArray.length; i++) {
-      const cardAsNumber = flatArray[i];
-      if (cardAsNumber >= 0 && cardAsNumber <= 12) clubs.push(cardAsNumber);
-      else if (cardAsNumber >= 13 && cardAsNumber <= 25) diamonds.push(cardAsNumber);
-      else if (cardAsNumber >= 26 && cardAsNumber <= 38) hearts.push(cardAsNumber);
-      else if (cardAsNumber >= 39 && cardAsNumber <= 51) spades.push(cardAsNumber);
+    const cardAsNumber = flatArray[i];
+    if (cardAsNumber >= 0 && cardAsNumber <= 12) clubs.push(cardAsNumber);
+    else if (cardAsNumber >= 13 && cardAsNumber <= 25)
+      diamonds.push(cardAsNumber);
+    else if (cardAsNumber >= 26 && cardAsNumber <= 38)
+      hearts.push(cardAsNumber);
+    else if (cardAsNumber >= 39 && cardAsNumber <= 51)
+      spades.push(cardAsNumber);
   }
   return [spades, hearts, clubs, diamonds];
 }

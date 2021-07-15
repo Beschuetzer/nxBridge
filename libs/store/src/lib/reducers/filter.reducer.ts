@@ -15,7 +15,7 @@ const INITIAL_STATE: FilterState = {
   beforeDate: 0,
   afterDate: 0,
   isFilterSame: false,
-  playerHasCard: {initial: [1]},
+  playerHasCard: {initial: []},
   dealsThatMatchPlayerHasCardFilters: [],
 };
 

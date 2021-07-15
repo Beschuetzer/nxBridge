@@ -50,6 +50,36 @@ export class FiltermanagerService {
       this.filtersInitial?.playerHasCard
     ),
   };
+  public filterMsgs: { [key: string]: any } = {
+    none: 'No Filters applied',
+    game: {
+      player: '',
+    },
+    date: {
+      before: {
+        valid: 'Before: &nbsp;',
+        invalid: {
+          single: 'Invalid before date.',
+          multiple: 'Before date &leq; after date.',
+        },
+      },
+      after: {
+        valid: 'After: &nbsp;',
+        invalid: {
+          single: 'Invalid after date.',
+          multiple: 'After date &geq; before date.',
+          afterNow: 'After date is after now.',
+        },
+      },
+    },
+    playerHasCard: {
+      valid: '',
+      invalid: 'already has the',
+      errrorItem: {
+        key: 'playerHasCardError',
+      }
+    },
+  };
   public inputErrorClassnames = ['ng-touched', 'ng-dirty', 'ng-invalid'];
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function

@@ -7,11 +7,9 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
-  COLOR_BLACK_CLASSNAME,
-  COLOR_RED_CLASSNAME,
   FILTER_MANAGER_CLASSNAME,
   getDateAndTimeString,
-  getHtmlEntityFromCard,
+  getHtmlEntitySpan,
   maxCardValue,
   minCardValue,
   NOT_AVAILABLE_STRING,
@@ -65,33 +63,6 @@ export class FilterManagerComponent implements OnInit {
 
   private beforeDateElement: HTMLElement = this.getNewElement('div');
   private afterDateElement: HTMLElement = this.getNewElement('div');
-  private filtersMsgs: { [key: string]: any } = {
-    none: 'No Filters applied',
-    game: {
-      player: '',
-    },
-    date: {
-      before: {
-        valid: 'Before: &nbsp;',
-        invalid: {
-          single: 'Invalid before date.',
-          multiple: 'Before date &leq; after date.',
-        },
-      },
-      after: {
-        valid: 'After: &nbsp;',
-        invalid: {
-          single: 'Invalid after date.',
-          multiple: 'After date &geq; before date.',
-          afterNow: 'After date is after now.',
-        },
-      },
-    },
-    playerHasCard: {
-      valid: '',
-      invalid: '',
-    },
-  };
 
   public beforeDate: DateObj = { date: null };
   public afterDate: DateObj = { date: null };
@@ -214,6 +185,15 @@ export class FilterManagerComponent implements OnInit {
     const selectedCard = +cardSelectElement?.value;
     const selectedUsername = usernameSelectElement?.value;
 
+    const isSelectedCardUsedAlready = this.getIsSelectedCardUsedAlready(selectedCard);
+    if (isSelectedCardUsedAlready) {
+       this.getPlayerHasCardErrorMessage(isSelectedCardUsedAlready as any, selectedCard);
+
+       return;
+    }
+    delete this.filterItems[this.filterManagerService.filterMsgs.playerHasCard.errrorItem.key];
+
+
     let shouldRemoveCardErrors = false;
     let shouldRemoveUsernameErrors = false;
     if (selectedCard >= minCardValue && selectedCard <= maxCardValue)
@@ -226,6 +206,7 @@ export class FilterManagerComponent implements OnInit {
       usernameSelectElement,
       shouldRemoveUsernameErrors
     );
+
 
     if (shouldRemoveCardErrors && shouldRemoveUsernameErrors) {
       let playerHasCard: PlayerHasCard = {};
@@ -315,11 +296,7 @@ export class FilterManagerComponent implements OnInit {
     selectedUsername: string
   ) {
 
-    const htmlEntity = getHtmlEntityFromCard(selectedCard);
-    let colorToUse = 'color-white';
-    if (htmlEntity.match(/diam|heart/i)) colorToUse = `${COLOR_RED_CLASSNAME}-light`;
-    const htmlEntitySpan = `<span class="${colorToUse}">${htmlEntity}</span>`
-
+    const htmlEntitySpan = getHtmlEntitySpan(selectedCard);
     const filterItem: FilterItem = {
       elementsToReset: [cardSelectElement, usernameSelectElement],
       message: `'${selectedUsername}' had the ${htmlEntitySpan}`,
@@ -366,15 +343,47 @@ export class FilterManagerComponent implements OnInit {
   private getCorrectFilter(dateType: DateType) {
     let filterName = this.beforeDate;
     let filterNameElement = this.beforeDateElement;
-    let filterMsg = this.filtersMsgs.date.before.valid;
+    let filterMsg = this.filterManagerService.filterMsgs.date.before.valid;
 
     if (dateType === DateType.after) {
       filterName = this.afterDate;
       filterNameElement = this.afterDateElement;
-      filterMsg = this.filtersMsgs.date.after.valid;
+      filterMsg = this.filterManagerService.filterMsgs.date.after.valid;
     }
 
     return { filterMsg, filterName, filterNameElement };
+  }
+
+  private getPlayerHasCardErrorMessage(usernameWhoHasCard: string, selectedCard: number) {
+    const htmlEntitySpan = getHtmlEntitySpan(selectedCard);    
+    const toAdd: FilterItem = {
+      message: NOT_AVAILABLE_STRING,
+      error: `${usernameWhoHasCard} ${this.filterManagerService.filterMsgs.playerHasCard.invalid} ${htmlEntitySpan}`,
+      elementsToReset: [],
+    }
+
+    this.filterItems[this.filterManagerService.filterMsgs.playerHasCard.errrorItem.key] = toAdd;
+  }
+
+  private getIsSelectedCardUsedAlready(selectedCard: number) {
+    if (selectedCard === -1) return false;
+    let toReturn: string | boolean = false;
+    this.store.select(ReducerNames.filters).pipe(take(1)).subscribe(filterState => {
+
+      const playerHasCardFilters = filterState.playerHasCard;
+      for (const username in playerHasCardFilters) {
+        if (Object.prototype.hasOwnProperty.call(playerHasCardFilters, username)) {
+          const playerHasCardFilter = playerHasCardFilters[username];
+          if (playerHasCardFilter.includes(selectedCard)) {
+            toReturn = username;
+            break
+          }
+
+        }
+      }
+
+    })
+    return toReturn;
   }
 
   private getNewElement(elementType: string) {
@@ -432,7 +441,7 @@ export class FilterManagerComponent implements OnInit {
 
     if (!exactErrorString) exactErrorString = isSingle ? 'single' : 'multiple';
 
-    const filterMsgError = (this.filtersMsgs.date[
+    const filterMsgError = (this.filterManagerService.filterMsgs.date[
       beforeOrAfterString as any
     ] as any).invalid[exactErrorString];
 
