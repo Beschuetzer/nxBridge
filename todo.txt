@@ -78,7 +78,8 @@ filtering-----------------------
   1) 'contract is ...'
   2) 'declarer is ...'
 
--need change checkbox 'Player' to 'Deal' and then show the checkboxes for Deal filters (playerHasCard, contract is, and declarer is);  have the div's for the actual filter interfaces just have d-none and clicking the respective checkbox shows ui
 
-filter-manager-------------------------
-  
+
+deal-filters-------------------------
+  -finish contract filter
+  -finish declarer filter

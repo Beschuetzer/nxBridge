@@ -57,9 +57,16 @@
       </label>
     </div>
 
-    <div *ngIf="deal.checked">
+    <div
+      class="{{ FILTER_MANANGER_CLASSNAME }}__details-deal"
+      *ngIf="deal.checked"
+    >
       <label>
-        <input #playerHasCard (click)="onPlayerHasCardClick()" type="checkbox" />
+        <input
+          #playerHasCard
+          (click)="onPlayerHasCardClick()"
+          type="checkbox"
+        />
         Player had a specific card
       </label>
       <label>
@@ -72,10 +79,9 @@
       </label>
     </div>
 
-
     <div
       *ngIf="playerHasCardCheckbox?.nativeElement.checked"
-      class="{{ FILTER_MANANGER_CLASSNAME }}__player"
+      class="{{ FILTER_MANANGER_CLASSNAME }}__player-has-card"
     >
       <span>Username:</span>
       <select
@@ -107,11 +113,64 @@
       </select>
       <button
         (click)="onAddPlayerHasCard($event)"
-        class="ui button filter-manager__player-has-card-button"
+        class="ui button filter-manager__add-button"
       >
         Add
       </button>
     </div>
+
+    <div
+      *ngIf="contractCheckbox?.nativeElement.checked"
+      class="{{ FILTER_MANANGER_CLASSNAME }}__contract"
+    >
+      <span>Contract was :</span>
+      <select
+        (click)="onContractChange()"
+        class="{{ joinedInputErrorClassnames }}"
+        #cards
+        class=""
+      >
+        <option
+          *ngFor="let cardAsNumber of cardsAsNumbers; let i = index"
+          innerHTML="{{ cardAsNumber | cardAsNumberToCardHtmlEntityString }}"
+          [ngClass]="{
+            'color-red': i >= 14 && i <= 39,
+            'color-black': i < 14 || i > 39,
+            'filter-manager__player-options': true
+          }"
+          [value]="i - 1"
+        ></option>
+      </select>
+      <button
+        (click)="onAddContract($event)"
+        class="ui button filter-manager__add-button"
+      >
+        Add
+      </button>
+    </div>
+
+    <div
+      *ngIf="declarerCheckbox?.nativeElement.checked"
+      class="{{ FILTER_MANANGER_CLASSNAME }}__declarer"
+    >
+      <span>Declarer was:</span>
+      <select
+        #players
+        (click)="onDeclarerChange()"
+        class="{{ joinedInputErrorClassnames }}"
+      >
+        <option *ngFor="let playerName of playerNames; let i = index">
+          {{ playerName }}
+        </option>
+      </select>
+      <button
+        (click)="onAddDeclarer($event)"
+        class="ui button filter-manager__add-button"
+      >
+        Add
+      </button>
+    </div>
+
     <div *ngIf="game.checked === true">Game details</div>
   </div>
 </section>

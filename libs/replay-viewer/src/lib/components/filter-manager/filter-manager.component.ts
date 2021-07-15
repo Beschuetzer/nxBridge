@@ -50,6 +50,8 @@ export class FilterManagerComponent implements OnInit {
   @ViewChild('date') dateCheckbox: ElementRef | null = null;
   @ViewChild('deal') dealCheckbox: ElementRef | null = null;
   @ViewChild('playerHasCard') playerHasCardCheckbox: ElementRef | null = null;
+  @ViewChild('contract') contractCheckbox: ElementRef | null = null;
+  @ViewChild('declarer') declarerCheckbox: ElementRef | null = null;
 
   //NOTE: new filters need to be added to filterManagerService's filter objects and applyFilters();  remember: to set store action 'SetIsFilterSame' to false before calling searchService.setCurrentlyDisplayingGames() to make sure filters are checked; also need to make sure that key returned in FilterManagerItem's getKeyToUse is correct
   @ViewChild('beforeDate') beforeDateFilterElement: ElementRef | null = null;
@@ -90,6 +92,14 @@ export class FilterManagerComponent implements OnInit {
       if (dealState.fetchedDeals)
         this.populatePlayerNames(dealState.fetchedDeals);
     });
+  }
+
+  onAddContract(e: Event) {
+
+  }
+
+  onAddDeclarer(e: Event) {
+
   }
 
   onAddPlayerHasCard(e: Event) {
@@ -166,6 +176,10 @@ export class FilterManagerComponent implements OnInit {
     }
   }
 
+  onContractChange() {
+
+  }
+
   //NOTE: need this to trigger *ngIf properly
   onDateClick(e: Event) {
     return;
@@ -178,6 +192,10 @@ export class FilterManagerComponent implements OnInit {
       shouldDispatchChange,
       DateType.before
     );
+  }
+
+  onDeclarerChange() {
+
   }
 
   onContractClick() {

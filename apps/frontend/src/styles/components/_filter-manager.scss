@@ -34,7 +34,7 @@
   
   &__details {
    
-    & > div {
+    & > div:not(&-deal) {
       border: 1px solid rgba(var(--color-primary-4-rgb), .5);
       border-radius: $default-font-size * .25;
       padding: $semantic-ui-text-default-font-size * 0 $default-font-size * .25 $default-font-size * .25 $default-font-size * .25;
@@ -69,7 +69,7 @@
     }
   }
 
-  &__player {
+  &__player-has-card {
     padding: $default-font-size * .5 0;
 
     &-options {
@@ -94,7 +94,7 @@
     @include filter-manager-button-colors;
   }
 
-  &__player-has-card-button {
+  &__add-button {
     @include filter-manager-button-colors;
     width: 100%;
     margin: $default-font-size * .25 0 0 0 !important;
