@@ -1,6 +1,7 @@
 import { ElementRef, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import {
+  Deal,
   Filters,
   Game,
   PlayerHasCard,
@@ -17,7 +18,7 @@ import {
   SetContractFilter,
 } from '@nx-bridge/store';
 import { switchMap, take } from 'rxjs/operators';
-import { flatten, resetPlayerHasCardDeals } from '@nx-bridge/constants';
+import { flatten, resetMatchedDeals } from '@nx-bridge/constants';
 
 @Injectable({
   providedIn: 'root',
@@ -40,7 +41,7 @@ export class FiltermanagerService {
     },
     contract: {
       string: 'contract',
-    }
+    },
   };
   public filtersInitial: Filters = {
     [this.filters.beforeDate.string]: 0,
@@ -59,7 +60,8 @@ export class FiltermanagerService {
     [this.filters.playerHasCard.string]: new SetPlayerHasCard(
       this.filtersInitial?.playerHasCard
     ),
-    [this.filters.dealsThatMatchPlayerHasCardFilters.string]: new SetDealsThatMatchPlayerHasCardFilters(
+    [this.filters.dealsThatMatchPlayerHasCardFilters
+      .string]: new SetDealsThatMatchPlayerHasCardFilters(
       this.filtersInitial?.dealsThatMatchPlayerHasCardFilters
     ),
     [this.filters.contract.string]: new SetContractFilter(
@@ -94,24 +96,30 @@ export class FiltermanagerService {
     },
   };
   public inputErrorClassnames = ['ng-touched', 'ng-dirty', 'ng-invalid'];
-  
-
+  public dealsThatMatch: string[] = [];
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor(private store: Store<AppState>) {}
 
-  getBeforeAndAfterDateInfo() { 
+  getBeforeAndAfterDateInfo() {
     let beforeDate = -2;
     let afterDate = -2;
-    const beforeDateElement = document.querySelector(`#${this.filters.beforeDate.string}`) as HTMLInputElement;
-    const afterDateElement = document.querySelector(`#${this.filters.afterDate.string}`) as HTMLInputElement;
+    const beforeDateElement = document.querySelector(
+      `#${this.filters.beforeDate.string}`
+    ) as HTMLInputElement;
+    const afterDateElement = document.querySelector(
+      `#${this.filters.afterDate.string}`
+    ) as HTMLInputElement;
 
-    this.store.select(ReducerNames.filters).pipe(take(1)).subscribe(filterState => {
-      beforeDate = filterState.beforeDate;
-      afterDate = filterState.afterDate;
-    })
+    this.store
+      .select(ReducerNames.filters)
+      .pipe(take(1))
+      .subscribe((filterState) => {
+        beforeDate = filterState.beforeDate;
+        afterDate = filterState.afterDate;
+      });
 
-    return {beforeDate, afterDate, beforeDateElement, afterDateElement}
+    return { beforeDate, afterDate, beforeDateElement, afterDateElement };
   }
 
   filterGames(games: Game[]) {
@@ -176,13 +184,27 @@ export class FiltermanagerService {
   }
 
   private applyFilters(games: Game[], filters: Filters) {
+    this.dealsThatMatch = [];
+    
     let filteredGames: Game[] = games;
 
     //NOTE: add new filtering function here; arrange in order of least to most cpu intensive to minimize cpu load
-    filteredGames = this.getBeforeDateMatches(filteredGames, filters.beforeDate);
+    filteredGames = this.getBeforeDateMatches(
+      filteredGames,
+      filters.beforeDate
+    );
     filteredGames = this.getAfterDateMatches(filteredGames, filters.afterDate);
-    filteredGames = this.getPlayerHasCardMatches(filteredGames, filters.playerHasCard);
+
+    //note: these filters modify dealsThatMatch and follow a different pattern
+    filteredGames = this.getPlayerHasCardMatches(
+      filteredGames,
+      filters.playerHasCard
+    );
     filteredGames = this.getContractMatches(filteredGames, filters.contract);
+
+    this.store.dispatch(
+      new SetDealsThatMatchPlayerHasCardFilters(this.dealsThatMatch)
+    );
 
     return filteredGames;
   }
@@ -212,15 +234,59 @@ export class FiltermanagerService {
   }
 
   private getContractMatches(games: Game[], contractToMatch: string) {
-    debugger;
+    // debugger;
     if (!contractToMatch) return games;
     return games;
   }
 
-  private getPlayerHasCardMatches(games: Game[], playerHasCards: PlayerHasCard) {
-    if (!playerHasCards || playerHasCards['initial'] || Object.keys(playerHasCards).length === 0) return games;
-    resetPlayerHasCardDeals();
+  private getPlayerHasCardMatches(
+    games: Game[],
+    playerHasCards: PlayerHasCard
+  ) {
+    if (
+      !playerHasCards ||
+      playerHasCards['initial'] ||
+      Object.keys(playerHasCards).length === 0
+    )
+      return games;
 
+    function filterToRun(deal: Deal, dealId: string) {
+      resetMatchedDeals();
+
+      let canSkipToNextDeal = false;
+      let shouldAddDeal = true;
+      for (const username in playerHasCards) {
+        if (Object.prototype.hasOwnProperty.call(playerHasCards, username)) {
+          const cardsToCheckFor = playerHasCards[username];
+          const handToCheck = deal.hands[username];
+          if (!handToCheck || handToCheck.length <= 0) {
+            shouldAddDeal = false;
+            break;
+          }
+
+          const flatHand = flatten(handToCheck);
+          for (let k = 0; k < cardsToCheckFor.length; k++) {
+            const cardToCheckFor = cardsToCheckFor[k];
+            if (!flatHand.includes(cardToCheckFor)) {
+              shouldAddDeal = false;
+              canSkipToNextDeal = true;
+              break;
+            }
+          }
+          if (canSkipToNextDeal) break;
+        }
+      }
+      return shouldAddDeal;
+    }
+
+    const toReturn = this.getGamesToReturn(games, filterToRun);
+    return toReturn;
+  }
+
+  private getGamesToReturn(
+    games: Game[],
+    filterToRun: (deal: Deal, dealId: string) => boolean
+  ) {
     let fetchedDeals = [] as any;
     this.store
       .select(ReducerNames.deals)
@@ -230,51 +296,26 @@ export class FiltermanagerService {
       });
 
     const toReturn = [];
-    const dealsThatMatch: string[] = [];
+
     for (let i = 0; i < games.length; i++) {
       const game = games[i];
-      
+
       let hasGameBeenAdded = false;
       for (let j = 0; j < game.deals.length; j++) {
         const dealId = game.deals[j];
         const deal = fetchedDeals[dealId];
 
-        let canSkipToNextDeal = false;
-        let shouldAddDeal = true;
-        for (const username in playerHasCards) {
-          if (Object.prototype.hasOwnProperty.call(playerHasCards, username)) {
-            const cardsToCheckFor = playerHasCards[username];
-            const handToCheck = deal.hands[username];
-            if (!handToCheck || handToCheck.length <= 0) {
-              shouldAddDeal = false;
-              break;
-            }
+        const shouldAddDeal = filterToRun(deal, dealId);
 
-            const flatHand = flatten(handToCheck);
-            for (let k = 0; k < cardsToCheckFor.length; k++) {
-              const cardToCheckFor = cardsToCheckFor[k];
-              if (!flatHand.includes(cardToCheckFor)) {
-                shouldAddDeal = false;
-                canSkipToNextDeal = true;
-                break;
-              }
-            }
-            if (canSkipToNextDeal) break;
-          }
-        }
-        
         if (shouldAddDeal) {
           if (!hasGameBeenAdded) {
             hasGameBeenAdded = true;
             toReturn.push(game);
           }
-          dealsThatMatch.push(dealId);
+          this.dealsThatMatch = [...this.dealsThatMatch, dealId];
         }
       }
     }
-
-    this.store.dispatch(new SetDealsThatMatchPlayerHasCardFilters(dealsThatMatch));
-
     return toReturn;
   }
 }

@@ -13,7 +13,7 @@ import {
   maxCardValue,
   minCardValue,
   NOT_AVAILABLE_STRING,
-  resetPlayerHasCardDeals,
+  resetMatchedDeals,
   filterManagerContracts,
   filterManagerCardsAsNumbers,
   filterManagerPlayerNames,
@@ -313,7 +313,7 @@ export class FilterManagerComponent implements OnInit {
 
     //NOTE: this could be any filter as long as it gets called (in order to show all un-filtered games)
     this.dispatchChanges(this.afterDate, true, DateType.after);
-    resetPlayerHasCardDeals();
+    resetMatchedDeals();
   }
 
   private addPlayerHasCardToFilterItems(
