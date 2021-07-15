@@ -18,6 +18,7 @@ import {
 import {
   AddPlayerHasCard,
   AppState,
+  RemovePlayerHasCard,
   SetAfterDate,
   SetBeforeDate,
   SetDealsThatMatchPlayerHasCardFilters,
@@ -158,7 +159,7 @@ export class FilterManagerComponent implements OnInit {
   }
 
   onFilterItemDeletion(toDelete: FilterItemDeletion) {
-    this.store.dispatch(toDelete.resetAction);
+    this.resetStore(toDelete);
     delete this.filterItems[toDelete.key];
     this.store.dispatch(new SetIsFilterSame(false));
     this.searchService.setCurrentlyDisplayingGames();
@@ -255,6 +256,7 @@ export class FilterManagerComponent implements OnInit {
 
     this.beforeDate.date = null;
     this.afterDate.date = null;
+    this.filterItems = {};
 
     this.filterManagerService.resetElements(
       filterCheckboxElements as ElementRef[],
@@ -298,6 +300,8 @@ export class FilterManagerComponent implements OnInit {
       elementsToReset: [cardSelectElement, usernameSelectElement],
       message: `'${selectedUsername}' had the ${htmlEntitySpan}`,
       error: '',
+      username: selectedUsername,
+      card: selectedCard,
     };
 
     const uniqueNumber = Math.round(Math.random() * Math.random() * 1000000000);
@@ -385,6 +389,12 @@ export class FilterManagerComponent implements OnInit {
 
   private getNewElement(elementType: string) {
     return this.renderer.createElement(elementType);
+  }
+
+  private resetStore(toDelete: FilterItemDeletion) {
+    if (toDelete.key.match(/playerHasCard\d+/i)) return this.store.dispatch(new RemovePlayerHasCard({username: toDelete.username ? toDelete.username : '', card: toDelete.card !== undefined ? toDelete.card : -2}));
+    
+    return this.store.dispatch(toDelete.resetAction);
   }
 
   private populatePlayerNames(deals: FetchedDeals) {

@@ -24,13 +24,17 @@ export interface Filters {
 export interface FilterItem {
   message: string;
   error: string;
+  elementsToReset: any[];
   date?: Date;
   isDateInvalid?: boolean;
-  elementsToReset: any[];
+  username?: string,
+  card?: number,
 }
 export interface FilterItemDeletion {
   key: string;
   resetAction: any; 
+  username?: string;
+  card?: number;
 }
 export interface FilterItems {
   [key: string]: FilterItem;

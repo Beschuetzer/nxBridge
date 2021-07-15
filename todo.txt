@@ -86,5 +86,5 @@ filtering-----------------------
 
 
 filter-manager-------------------------
-  -when removing one, it sets the whole thing back to default (need to add an action called RemovePlayerHasCard)
+  -need to remove empty arrays in filter reducer for RemovePlayerHasCard action as it ends up finding all games with that user
 

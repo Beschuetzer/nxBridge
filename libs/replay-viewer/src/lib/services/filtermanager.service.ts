@@ -14,6 +14,7 @@ import {
   SetFilteredGames,
   SetIsFilterSame,
   SetDealsThatMatchPlayerHasCardFilters,
+  RemovePlayerHasCard,
 } from '@nx-bridge/store';
 import { switchMap, take } from 'rxjs/operators';
 import { flatten, resetPlayerHasCardDeals } from '@nx-bridge/constants';

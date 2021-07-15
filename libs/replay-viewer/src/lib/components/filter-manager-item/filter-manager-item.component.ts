@@ -1,10 +1,9 @@
 import { Component, Input, OnInit, Output, EventEmitter, Renderer2, ElementRef } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { dealsListDealsButtonChoices, FILTER_MANAGER_CLASSNAME } from '@nx-bridge/constants';
-import { FilterItem, FilterItemDeletion, ReducerNames } from '@nx-bridge/interfaces-and-types';
+import { FilterItem, FilterItemDeletion } from '@nx-bridge/interfaces-and-types';
 import { AppState, SetAfterDate, SetBeforeDate } from '@nx-bridge/store';
 import { FiltermanagerService } from '../../services/filtermanager.service';
-import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'nx-bridge-filter-manager-item',
@@ -45,7 +44,7 @@ export class FilterManagerItemComponent implements OnInit {
   onDelete() {
     const storeActionKey = this.getStoreActionKey();
     const storeResetAction = this.filterManagerService.filterResetActions[storeActionKey];
-    this.deletion.emit({key: this.filterItemKey, resetAction: storeResetAction});
+    this.deletion.emit({key: this.filterItemKey, resetAction: storeResetAction, username: this.filterItem?.username, card: this.filterItem?.card});
     this.resetElement(this.filterItem?.elementsToReset as any);
     this.resetBothDatesIfOneWithoutErrorBeingDeleted(this.filterItemKey);
   }

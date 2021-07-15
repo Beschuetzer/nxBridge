@@ -46,9 +46,9 @@ export function filterReducer(
       };
       
     case fromFilterActions.ADD_PLAYER_HAS_CARD:
-      const newPlayerHasCard = {...action.payload};
+      let newPlayerHasCard = {...action.payload};
       const usernameKey: string = Object.keys(newPlayerHasCard)[0];
-      const usernameValues = state.playerHasCard[usernameKey];
+      let usernameValues = state.playerHasCard[usernameKey];
       
       if (usernameValues) {
         const usernameValuesCopy = [...usernameValues];
@@ -61,6 +61,22 @@ export function filterReducer(
         ...state,
         playerHasCard: {...state.playerHasCard, ...newPlayerHasCard},
       };
+      case fromFilterActions.REMOVE_PLAYER_HAS_CARD:
+        const {username, card} = action.payload;
+        const values = state.playerHasCard[username];
+        const index = values.findIndex(c => c === card);
+        const newPlayerHasCardFilter = {[username]: [...values]};
+        newPlayerHasCardFilter[username].splice(index, 1);
+        // debugger;
+        // if (newPlayerHasCardFilter[username].length === 0) {
+        //   newPlayerHasCardFilter = {};
+          
+        // }
+  
+        return {
+          ...state,
+          playerHasCard: {...state.playerHasCard, ...newPlayerHasCardFilter},
+        };
     case fromFilterActions.SET_IS_FILTER_SAME:
       return {
         ...state,
