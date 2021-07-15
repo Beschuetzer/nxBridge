@@ -33,6 +33,7 @@ export class FiltermanagerService {
     },
     playerHasCard: {
       string: 'playerHasCard',
+      errorKey: 'playerHasCardError',
     },
   };
   public filtersInitial: Filters = {
@@ -76,9 +77,6 @@ export class FiltermanagerService {
     playerHasCard: {
       valid: '',
       invalid: 'already has the',
-      errrorItem: {
-        key: 'playerHasCardError',
-      }
     },
   };
   public inputErrorClassnames = ['ng-touched', 'ng-dirty', 'ng-invalid'];

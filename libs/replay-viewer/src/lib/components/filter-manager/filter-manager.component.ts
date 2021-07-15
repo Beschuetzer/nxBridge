@@ -61,6 +61,7 @@ export class FilterManagerComponent implements OnInit {
     return true;
   }
 
+  private hasPlayerHasCardChanged = false;
   private beforeDateElement: HTMLElement = this.getNewElement('div');
   private afterDateElement: HTMLElement = this.getNewElement('div');
 
@@ -163,17 +164,17 @@ export class FilterManagerComponent implements OnInit {
     delete this.filterItems[toDelete.key];
     this.store.dispatch(new SetIsFilterSame(false));
     this.searchService.setCurrentlyDisplayingGames();
-
-    const {beforeDate, afterDate} = this.filterManagerService.getBeforeAndAfterDateInfo();
-    if (toDelete.key === this.filterManagerService.filters.afterDate.string && beforeDate === -1 || toDelete.key === this.filterManagerService.filters.beforeDate.string && afterDate === -1) {
-      delete this.filterItems[this.filterManagerService.filters.beforeDate.string];
-      delete this.filterItems[this.filterManagerService.filters.afterDate.string];
-    }
+    this.removeBothDatesIfOneHasError(toDelete);
+    this.removePlayerHasCardError(toDelete);
   }
-
+  
   //NOTE: need this to trigger *ngIf properly
   onGameClick(e: Event) {
     return;
+  }
+
+  onPlayerHasCardChange() {
+    this.hasPlayerHasCardChanged = true;
   }
 
   onPlayerHasCardClick(e: Event) {
@@ -187,10 +188,10 @@ export class FilterManagerComponent implements OnInit {
 
     const isSelectedCardUsedAlready = this.getIsSelectedCardUsedAlready(selectedCard);
     if (isSelectedCardUsedAlready) {
-       this.getPlayerHasCardErrorMessage(isSelectedCardUsedAlready as any, selectedCard);
+       if (this.hasPlayerHasCardChanged) this.getPlayerHasCardErrorMessage(isSelectedCardUsedAlready as any, selectedCard);
        return;
     }
-    delete this.filterItems[this.filterManagerService.filterMsgs.playerHasCard.errrorItem.key];
+    delete this.filterItems[this.filterManagerService.filters.playerHasCard.errorKey];
 
 
     let shouldRemoveCardErrors = false;
@@ -234,6 +235,8 @@ export class FilterManagerComponent implements OnInit {
             selectedCard,
             selectedUsername
           );
+
+          this.hasPlayerHasCardChanged = false;
         });
     }
   }
@@ -363,7 +366,7 @@ export class FilterManagerComponent implements OnInit {
       elementsToReset: [],
     }
 
-    this.filterItems[this.filterManagerService.filterMsgs.playerHasCard.errrorItem.key] = toAdd;
+    this.filterItems[this.filterManagerService.filters.playerHasCard.errorKey] = toAdd;
   }
 
   private getIsSelectedCardUsedAlready(selectedCard: number) {
@@ -395,6 +398,23 @@ export class FilterManagerComponent implements OnInit {
     if (toDelete.key.match(/playerHasCard\d+/i)) return this.store.dispatch(new RemovePlayerHasCard({username: toDelete.username ? toDelete.username : '', card: toDelete.card !== undefined ? toDelete.card : -2}));
     
     return this.store.dispatch(toDelete.resetAction);
+  }
+
+  private removeBothDatesIfOneHasError(toDelete: FilterItemDeletion) {
+    if (!toDelete) return;
+    const {beforeDate, afterDate} = this.filterManagerService.getBeforeAndAfterDateInfo();
+    if (toDelete.key === this.filterManagerService.filters.afterDate.string && beforeDate === -1 || toDelete.key === this.filterManagerService.filters.beforeDate.string && afterDate === -1) {
+      delete this.filterItems[this.filterManagerService.filters.beforeDate.string];
+      delete this.filterItems[this.filterManagerService.filters.afterDate.string];
+    }
+  }
+
+  private removePlayerHasCardError(toDelete: FilterItemDeletion) {
+    if (!toDelete) return;
+    if (toDelete.key.match(this.filterManagerService.filters.playerHasCard.string)) {
+      delete this.filterItems[this.filterManagerService.filters.playerHasCard.errorKey];
+    }
+
   }
 
   private populatePlayerNames(deals: FetchedDeals) {

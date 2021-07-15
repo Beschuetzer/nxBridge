@@ -46,9 +46,9 @@ export function filterReducer(
       };
       
     case fromFilterActions.ADD_PLAYER_HAS_CARD:
-      let newPlayerHasCard = {...action.payload};
+      const newPlayerHasCard = {...action.payload};
       const usernameKey: string = Object.keys(newPlayerHasCard)[0];
-      let usernameValues = state.playerHasCard[usernameKey];
+      const usernameValues = state.playerHasCard[usernameKey];
       
       if (usernameValues) {
         const usernameValuesCopy = [...usernameValues];

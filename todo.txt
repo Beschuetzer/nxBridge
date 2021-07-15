@@ -86,4 +86,4 @@ filtering-----------------------
 
 
 filter-manager-------------------------
-
+  -removing playerHasCardError needs to just delete the error without resetting store and re-running setCurrentlyDisplayingGames
