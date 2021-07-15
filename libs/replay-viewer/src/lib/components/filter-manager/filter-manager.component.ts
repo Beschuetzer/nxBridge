@@ -135,7 +135,10 @@ export class FilterManagerComponent implements OnInit {
       shouldDispatchChange = true;
     }
 
-    this.filterManagerService.setInputErrorClassnames(input, shouldRemoveInputErrorClassnames);
+    this.filterManagerService.setInputErrorClassnames(
+      input,
+      shouldRemoveInputErrorClassnames
+    );
 
     return shouldDispatchChange;
   }
@@ -160,14 +163,31 @@ export class FilterManagerComponent implements OnInit {
   }
 
   onFilterItemDeletion(toDelete: FilterItemDeletion) {
-    this.resetStore(toDelete);
     delete this.filterItems[toDelete.key];
-    this.store.dispatch(new SetIsFilterSame(false));
-    this.searchService.setCurrentlyDisplayingGames();
-    this.removeBothDatesIfOneHasError(toDelete);
-    this.removePlayerHasCardError(toDelete);
+
+    if (!toDelete.key) throw new Error('No toDelete.key...');
+
+    const shouldResetStore = !toDelete.key.match(
+      this.filterManagerService.filters.playerHasCard.errorKey
+    );
+    const shouldDeletePlayerHasCardError = toDelete.key.match(
+      this.filterManagerService.filters.playerHasCard.string
+    );
+
+    if (shouldResetStore) {
+      this.resetStore(toDelete);
+      this.store.dispatch(new SetIsFilterSame(false));
+      this.searchService.setCurrentlyDisplayingGames();
+      this.removeBothDatesIfOneHasError(toDelete);
+    }
+
+    if (shouldDeletePlayerHasCardError) {
+      delete this.filterItems[
+        this.filterManagerService.filters.playerHasCard.errorKey
+      ];
+    }
   }
-  
+
   //NOTE: need this to trigger *ngIf properly
   onGameClick(e: Event) {
     return;
@@ -186,13 +206,20 @@ export class FilterManagerComponent implements OnInit {
     const selectedCard = +cardSelectElement?.value;
     const selectedUsername = usernameSelectElement?.value;
 
-    const isSelectedCardUsedAlready = this.getIsSelectedCardUsedAlready(selectedCard);
+    const isSelectedCardUsedAlready = this.getIsSelectedCardUsedAlready(
+      selectedCard
+    );
     if (isSelectedCardUsedAlready) {
-       if (this.hasPlayerHasCardChanged) this.getPlayerHasCardErrorMessage(isSelectedCardUsedAlready as any, selectedCard);
-       return;
+      if (this.hasPlayerHasCardChanged)
+        this.getPlayerHasCardErrorMessage(
+          isSelectedCardUsedAlready as any,
+          selectedCard
+        );
+      return;
     }
-    delete this.filterItems[this.filterManagerService.filters.playerHasCard.errorKey];
-
+    delete this.filterItems[
+      this.filterManagerService.filters.playerHasCard.errorKey
+    ];
 
     let shouldRemoveCardErrors = false;
     let shouldRemoveUsernameErrors = false;
@@ -201,7 +228,10 @@ export class FilterManagerComponent implements OnInit {
     if (!selectedUsername.match(this.playerNames[0]))
       shouldRemoveUsernameErrors = true;
 
-    this.filterManagerService.setInputErrorClassnames(cardSelectElement, shouldRemoveCardErrors);
+    this.filterManagerService.setInputErrorClassnames(
+      cardSelectElement,
+      shouldRemoveCardErrors
+    );
     this.filterManagerService.setInputErrorClassnames(
       usernameSelectElement,
       shouldRemoveUsernameErrors
@@ -297,7 +327,6 @@ export class FilterManagerComponent implements OnInit {
     selectedCard: number,
     selectedUsername: string
   ) {
-
     const htmlEntitySpan = getHtmlEntitySpan(selectedCard);
     const filterItem: FilterItem = {
       elementsToReset: [cardSelectElement, usernameSelectElement],
@@ -358,35 +387,42 @@ export class FilterManagerComponent implements OnInit {
     return { filterMsg, filterName, filterNameElement };
   }
 
-  private getPlayerHasCardErrorMessage(usernameWhoHasCard: string, selectedCard: number) {
-    const htmlEntitySpan = getHtmlEntitySpan(selectedCard);    
+  private getPlayerHasCardErrorMessage(
+    usernameWhoHasCard: string,
+    selectedCard: number
+  ) {
+    const htmlEntitySpan = getHtmlEntitySpan(selectedCard);
     const toAdd: FilterItem = {
       message: NOT_AVAILABLE_STRING,
-      error: `${usernameWhoHasCard} ${this.filterManagerService.filterMsgs.playerHasCard.invalid} ${htmlEntitySpan}`,
+      error: `${htmlEntitySpan} ${this.filterManagerService.filterMsgs.playerHasCard.invalid} '${usernameWhoHasCard}'`,
       elementsToReset: [],
-    }
+    };
 
-    this.filterItems[this.filterManagerService.filters.playerHasCard.errorKey] = toAdd;
+    this.filterItems[
+      this.filterManagerService.filters.playerHasCard.errorKey
+    ] = toAdd;
   }
 
   private getIsSelectedCardUsedAlready(selectedCard: number) {
     if (selectedCard === -1) return false;
     let toReturn: string | boolean = false;
-    this.store.select(ReducerNames.filters).pipe(take(1)).subscribe(filterState => {
-
-      const playerHasCardFilters = filterState.playerHasCard;
-      for (const username in playerHasCardFilters) {
-        if (Object.prototype.hasOwnProperty.call(playerHasCardFilters, username)) {
-          const playerHasCardFilter = playerHasCardFilters[username];
-          if (playerHasCardFilter.includes(selectedCard)) {
-            toReturn = username;
-            break
+    this.store
+      .select(ReducerNames.filters)
+      .pipe(take(1))
+      .subscribe((filterState) => {
+        const playerHasCardFilters = filterState.playerHasCard;
+        for (const username in playerHasCardFilters) {
+          if (
+            Object.prototype.hasOwnProperty.call(playerHasCardFilters, username)
+          ) {
+            const playerHasCardFilter = playerHasCardFilters[username];
+            if (playerHasCardFilter.includes(selectedCard)) {
+              toReturn = username;
+              break;
+            }
           }
-
         }
-      }
-
-    })
+      });
     return toReturn;
   }
 
@@ -395,26 +431,36 @@ export class FilterManagerComponent implements OnInit {
   }
 
   private resetStore(toDelete: FilterItemDeletion) {
-    if (toDelete.key.match(/playerHasCard\d+/i)) return this.store.dispatch(new RemovePlayerHasCard({username: toDelete.username ? toDelete.username : '', card: toDelete.card !== undefined ? toDelete.card : -2}));
-    
+    if (toDelete.key.match(/playerHasCard\d+/i))
+      return this.store.dispatch(
+        new RemovePlayerHasCard({
+          username: toDelete.username ? toDelete.username : '',
+          card: toDelete.card !== undefined ? toDelete.card : -2,
+        })
+      );
+
     return this.store.dispatch(toDelete.resetAction);
   }
 
   private removeBothDatesIfOneHasError(toDelete: FilterItemDeletion) {
     if (!toDelete) return;
-    const {beforeDate, afterDate} = this.filterManagerService.getBeforeAndAfterDateInfo();
-    if (toDelete.key === this.filterManagerService.filters.afterDate.string && beforeDate === -1 || toDelete.key === this.filterManagerService.filters.beforeDate.string && afterDate === -1) {
-      delete this.filterItems[this.filterManagerService.filters.beforeDate.string];
-      delete this.filterItems[this.filterManagerService.filters.afterDate.string];
+    const {
+      beforeDate,
+      afterDate,
+    } = this.filterManagerService.getBeforeAndAfterDateInfo();
+    if (
+      (toDelete.key === this.filterManagerService.filters.afterDate.string &&
+        beforeDate === -1) ||
+      (toDelete.key === this.filterManagerService.filters.beforeDate.string &&
+        afterDate === -1)
+    ) {
+      delete this.filterItems[
+        this.filterManagerService.filters.beforeDate.string
+      ];
+      delete this.filterItems[
+        this.filterManagerService.filters.afterDate.string
+      ];
     }
-  }
-
-  private removePlayerHasCardError(toDelete: FilterItemDeletion) {
-    if (!toDelete) return;
-    if (toDelete.key.match(this.filterManagerService.filters.playerHasCard.string)) {
-      delete this.filterItems[this.filterManagerService.filters.playerHasCard.errorKey];
-    }
-
   }
 
   private populatePlayerNames(deals: FetchedDeals) {

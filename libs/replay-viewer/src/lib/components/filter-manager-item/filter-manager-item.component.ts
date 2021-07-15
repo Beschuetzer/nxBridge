@@ -45,7 +45,7 @@ export class FilterManagerItemComponent implements OnInit {
     const storeActionKey = this.getStoreActionKey();
     const storeResetAction = this.filterManagerService.filterResetActions[storeActionKey];
     this.deletion.emit({key: this.filterItemKey, resetAction: storeResetAction, username: this.filterItem?.username, card: this.filterItem?.card});
-    this.resetElement(this.filterItem?.elementsToReset as any);
+    this.resetValueAndClasses(this.filterItem?.elementsToReset as any);
     this.resetBothDatesIfOneWithoutErrorBeingDeleted(this.filterItemKey);
   }
 
@@ -67,7 +67,7 @@ export class FilterManagerItemComponent implements OnInit {
     return key;
   }
 
-  private resetElement(elementsToReset: HTMLElement[] | ElementRef<any>[]) {
+  private resetValueAndClasses(elementsToReset: HTMLElement[] | ElementRef<any>[]) {
     if (!elementsToReset) return;
 
     for (let i = 0; i < elementsToReset.length; i++) {

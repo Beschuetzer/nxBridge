@@ -39,7 +39,7 @@
     & > div {
       border: 1px solid rgba(var(--color-primary-4-rgb), .5);
       border-radius: $default-font-size * .25;
-      padding: $semantic-ui-text-default-font-size * 0 $semantic-ui-text-default-font-size * .5 $semantic-ui-text-default-font-size * .5 $semantic-ui-text-default-font-size * .5;
+      padding: $semantic-ui-text-default-font-size * 0 $default-font-size * .25 $default-font-size * .25 $default-font-size * .25;
       margin-top: $semantic-ui-text-default-font-size * .5;
     }
   }
@@ -99,6 +99,6 @@
   &__player-has-card-button {
     @include filter-manager-button-colors;
     width: 100%;
-    margin: $default-font-size * .5 0 $default-font-size * .25 0 !important;
+    margin: $default-font-size * .25 0 0 0 !important;
   }
 }

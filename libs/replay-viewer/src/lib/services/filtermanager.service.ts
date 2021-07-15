@@ -14,7 +14,6 @@ import {
   SetFilteredGames,
   SetIsFilterSame,
   SetDealsThatMatchPlayerHasCardFilters,
-  RemovePlayerHasCard,
 } from '@nx-bridge/store';
 import { switchMap, take } from 'rxjs/operators';
 import { flatten, resetPlayerHasCardDeals } from '@nx-bridge/constants';
@@ -76,7 +75,7 @@ export class FiltermanagerService {
     },
     playerHasCard: {
       valid: '',
-      invalid: 'already has the',
+      invalid: 'already set to',
     },
   };
   public inputErrorClassnames = ['ng-touched', 'ng-dirty', 'ng-invalid'];

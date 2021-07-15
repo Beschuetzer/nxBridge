@@ -56,6 +56,9 @@ Testing------------
 
 -consider change "Games played by..." wording and font-size
 -finish sortDescending and sortAscending()?
+-clicking too quickly on a game-detail after initial load causes issues (maybe do after click of some sort that can reset the game-detail?)
+-when clicking search, reset all filters?
+
 
 filtering-----------------------
   -layout:
@@ -75,15 +78,7 @@ filtering-----------------------
   1) 'contract is ...'
   2) 'declarer is ...'
 
-
-
--clicking too quickly on a game-detail after initial load causes issues (maybe do after click of some sort that can reset the game-detail?)
-
--work on player filter:
-  1) 'player had card'
-
--when clicking search, reset all filters
-
+-need change checkbox 'Player' to 'Deal' and then show the checkboxes for Deal filters (playerHasCard, contract is, and declarer is);  have the div's for the actual filter interfaces just have d-none and clicking the respective checkbox shows ui
 
 filter-manager-------------------------
-  -removing playerHasCardError needs to just delete the error without resetting store and re-running setCurrentlyDisplayingGames
+  -add 'and y deals' to the 'games found matching...' msg in gameslist-view, if dealsThatMatchPlayerHasCardFilters is not default of [-1] (need to change default);
