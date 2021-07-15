@@ -48,7 +48,7 @@ export class FiltermanagerService {
     [this.filters.afterDate.string]: 0,
     [this.filters.playerHasCard.string]: { initial: [-1] },
     [this.filters.dealsThatMatchPlayerHasCardFilters.string]: ['-1'],
-    [this.filters.contract.string]: '',
+    [this.filters.contract.string]: '-1',
   };
   public filterResetActions = {
     [this.filters.beforeDate.string]: new SetBeforeDate(
@@ -291,7 +291,6 @@ export class FiltermanagerService {
         fetchedDeals = dealState.fetchedDeals;
       });
 
-      debugger;
     const toReturn = [];
     for (let i = 0; i < games.length; i++) {
       const game = games[i];
@@ -302,11 +301,11 @@ export class FiltermanagerService {
         const deal = fetchedDeals[dealId];
 
         //note: add filter logic here
-        let shouldAddDeal = false;
+        let shouldAddDeal = true;
         
-        if (!canSkipPlayerHasCardFilter) shouldAddDeal = this.getPassesPlayerHasCardFilter(filters.playerHasCard, deal);
-
-        if (!canSkipContractFilter) shouldAddDeal = this.getPassesContractFilter(filters.contract, deal);
+        if (!canSkipContractFilter && shouldAddDeal) shouldAddDeal = this.getPassesContractFilter(filters.contract, deal);
+        
+        if (!canSkipPlayerHasCardFilter && shouldAddDeal) shouldAddDeal = this.getPassesPlayerHasCardFilter(filters.playerHasCard, deal);
 
         if (shouldAddDeal) {
           if (!hasGameBeenAdded) {

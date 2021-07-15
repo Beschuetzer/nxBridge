@@ -17,7 +17,7 @@ const INITIAL_STATE: FilterState = {
   afterDate: 0,
   isFilterSame: false,
   playerHasCard: {initial: []},
-  contract: '',
+  contract: '-1',
   dealsThatMatchPlayerHasCardFilters: ['-1'],
 };
 
