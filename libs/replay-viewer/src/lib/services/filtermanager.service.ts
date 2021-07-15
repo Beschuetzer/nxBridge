@@ -184,23 +184,30 @@ export class FiltermanagerService {
   }
 
   private applyFilters(games: Game[], filters: Filters) {
-    this.dealsThatMatch = [];
-    
     let filteredGames: Game[] = games;
 
-    //NOTE: add new filtering function here; arrange in order of least to most cpu intensive to minimize cpu load
+    //NOTE: add new filters here; arrange in order of least to most cpu intensive to minimize cpu load
     filteredGames = this.getBeforeDateMatches(
       filteredGames,
       filters.beforeDate
     );
     filteredGames = this.getAfterDateMatches(filteredGames, filters.afterDate);
+    filteredGames = this.runFiltersThatModifyDealsThatMatch(filteredGames, filters);
 
+    return filteredGames;
+  }
+
+  private runFiltersThatModifyDealsThatMatch(games: Game[], filters: Filters) {
     //note: these filters modify dealsThatMatch and follow a different pattern
+    this.dealsThatMatch = [];
+    let filteredGames = games;
+
+    //note: arrange in order of least cpu to most cpu intensive
+    filteredGames = this.getContractMatches(filteredGames, filters.contract);
     filteredGames = this.getPlayerHasCardMatches(
       filteredGames,
       filters.playerHasCard
     );
-    filteredGames = this.getContractMatches(filteredGames, filters.contract);
 
     this.store.dispatch(
       new SetDealsThatMatchPlayerHasCardFilters(this.dealsThatMatch)
