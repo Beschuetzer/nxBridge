@@ -34,11 +34,15 @@ export class FiltermanagerService {
       string: 'playerHasCard',
       errorKey: 'playerHasCardError',
     },
+    dealsThatMatchPlayerHasCardFilters: {
+      string: 'dealsThatMatchPlayerHasCardFilters',
+    }
   };
   public filtersInitial: Filters = {
     [this.filters.beforeDate.string]: 0,
     [this.filters.afterDate.string]: 0,
     [this.filters.playerHasCard.string]: { initial: [-1] },
+    [this.filters.dealsThatMatchPlayerHasCardFilters.string]: ['-1'],
   };
   public filterResetActions = {
     [this.filters.beforeDate.string]: new SetBeforeDate(
@@ -49,6 +53,9 @@ export class FiltermanagerService {
     ),
     [this.filters.playerHasCard.string]: new SetPlayerHasCard(
       this.filtersInitial?.playerHasCard
+    ),
+    [this.filters.dealsThatMatchPlayerHasCardFilters.string]: new SetDealsThatMatchPlayerHasCardFilters(
+      this.filtersInitial?.dealsThatMatchPlayerHasCardFilters
     ),
   };
   public filterMsgs: { [key: string]: any } = {

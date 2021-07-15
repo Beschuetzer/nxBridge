@@ -317,7 +317,6 @@ export class FilterManagerComponent implements OnInit {
 
     //NOTE: this could be any filter as long as it gets called (in order to show all un-filtered games)
     this.dispatchChanges(this.afterDate, true, DateType.after);
-    this.store.dispatch(new SetDealsThatMatchPlayerHasCardFilters([]));
     resetPlayerHasCardDeals();
   }
 
