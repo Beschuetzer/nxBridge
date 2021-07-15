@@ -61,6 +61,7 @@ export class GamesListViewComponent implements OnInit {
   public currentBatch = 0;
   public totalGames = -1;
   public preferences: GameDetailDisplayPreferences = {} as GameDetailDisplayPreferences;
+  public numberOfDealsMatchingFilters = -1;
 
   getArrayUpToNumber(number: number) {
     if (!number || number <= 0) return;
@@ -84,6 +85,10 @@ export class GamesListViewComponent implements OnInit {
         this.totalGames / this.resultsPerPage
       );
     })
+
+    this.store.select(ReducerNames.filters).subscribe((filterState) => {
+      if (!filterState.dealsThatMatchPlayerHasCardFilters.includes('-1')) this.numberOfDealsMatchingFilters = filterState.dealsThatMatchPlayerHasCardFilters.length;
+    });
 
     this.setDefaultResultsPerPage();
     this.preferences = this.localStorageManager.getPreferences();

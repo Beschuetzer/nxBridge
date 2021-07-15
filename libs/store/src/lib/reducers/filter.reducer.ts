@@ -16,7 +16,7 @@ const INITIAL_STATE: FilterState = {
   afterDate: 0,
   isFilterSame: false,
   playerHasCard: {initial: []},
-  dealsThatMatchPlayerHasCardFilters: [],
+  dealsThatMatchPlayerHasCardFilters: ['-1'],
 };
 
 export function filterReducer(

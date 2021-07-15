@@ -20,7 +20,7 @@
 
 
   &__applied {
-    padding: $default-font-size * .5  0 $default-font-size * .25 $default-font-size * .25;
+    padding: $default-font-size * .25  0 $default-font-size * .25 $default-font-size * .25;
   }
   
   &__options {
@@ -49,7 +49,7 @@
     justify-content: space-between;
     align-items: center;
     border-top: 1px solid rgba(var(--color-primary-4-rgb), 1);
-    padding-top: $default-font-size * .5;
+    padding-top: $default-font-size * .25;
 
     @include respond($layout-breakpoint) {
       justify-content: space-around;

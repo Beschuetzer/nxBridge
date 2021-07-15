@@ -3,7 +3,13 @@
   <section class="games-view">
     <div class="games-view__title">
       <h2>
-        Games played by&nbsp;<span>'{{ currentlyViewingUser.username ? currentlyViewingUser.username : 'Player' }}':</span>
+        Games played by&nbsp;<span
+          >'{{
+            currentlyViewingUser.username
+              ? currentlyViewingUser.username
+              : 'Player'
+          }}':</span
+        >
       </h2>
       <div>
         <label class="ui field">
@@ -36,35 +42,49 @@
         <label class="ui field">
           Results / page:&nbsp;
           <select #results (change)="onResultsPerPageChange($event)">
-            <option 
-              *ngFor="let resultPerPageOptions of resultsPerPageOptions;"
+            <option
+              *ngFor="let resultPerPageOptions of resultsPerPageOptions"
               [value]="resultPerPageOptions"
             >
-              {{resultPerPageOptions}}
+              {{ resultPerPageOptions }}
             </option>
           </select>
         </label>
-        <label 
-        class="ui field">
+        <label class="ui field">
           Page:&nbsp;
           <select #currentPage (change)="onCurrentPageChange($event)">
             <option
-              *ngFor="let in of getArrayUpToNumber(totalNumberOfPages); let i = index"
+              *ngFor="
+                let in of getArrayUpToNumber(totalNumberOfPages);
+                let i = index
+              "
               [value]="i"
             >
-              {{ i + 1}}
+              {{ i + 1 }}
             </option>
           </select>
-          <span>&nbsp;of {{ totalNumberOfPages ? totalNumberOfPages : NOT_AVAILABLE_STRING }}</span>
+          <span
+            >&nbsp;of
+            {{
+              totalNumberOfPages ? totalNumberOfPages : NOT_AVAILABLE_STRING
+            }}</span
+          >
         </label>
       </div>
     </div>
-    <div
-      *ngIf="totalGames"
-      class="games-view__summary"
-    >
-    <span><b>{{totalGames}}</b>&nbsp;</span>
-    <span>{{totalGames === 1 ? 'game' : 'games'}} found matching criteria:</span>
+    <div *ngIf="totalGames" class="games-view__summary">
+      <span *ngIf="numberOfDealsMatchingFilters !== -1">
+        <span
+          ><b>{{ numberOfDealsMatchingFilters }}</b>
+          {{ numberOfDealsMatchingFilters === 1 ? 'deal' : 'deals' }} in
+        </span>
+      </span>
+
+      <span>
+        &nbsp;<b>{{ totalGames }}</b
+        > {{ totalGames === 1 ? 'game' : 'games' }}
+      </span>
+      <span>&nbsp;found matching criteria:</span>
     </div>
     <nx-bridge-games-list></nx-bridge-games-list>
   </section>
