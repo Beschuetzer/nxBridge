@@ -253,6 +253,7 @@ export type GameDetailDisplayPreferences = {
   resultsPerPage: string;
 };
 export type ObjectId = string;
+export type PlayerInGame = string[];
 export type Points = { [key: string]: Point };
 export type Point = {
   distributionPoints: number[];

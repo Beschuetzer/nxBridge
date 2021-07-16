@@ -5,7 +5,7 @@ import * as fromFilterActions from '../actions/filter.actions';
 export const reducerDefaultValue = -1;
 
 export interface FilterState {
-  [key: string]: any,
+  [key: string]: any;
   beforeDate: number;
   afterDate: number;
   isFilterSame: boolean;
@@ -14,6 +14,7 @@ export interface FilterState {
   declarer: string;
   openingBid: string;
   double: number;
+  playerInGame: string[];
   dealsThatMatchFilters: string[];
 }
 
@@ -21,11 +22,12 @@ const INITIAL_STATE: FilterState = {
   beforeDate: 0,
   afterDate: 0,
   isFilterSame: false,
-  playerHasCard: {initial: []},
+  playerHasCard: { initial: [] },
   contract: `${reducerDefaultValue}`,
   declarer: `${reducerDefaultValue}`,
   openingBid: `${reducerDefaultValue}`,
   double: reducerDefaultValue,
+  playerInGame: [`${reducerDefaultValue}`],
   dealsThatMatchFilters: [`${reducerDefaultValue}`],
 };
 
@@ -74,11 +76,34 @@ export function filterReducer(
         ...state,
         double: action.payload,
       };
+    case fromFilterActions.SET_PLAYER_IN_GAME_FILTER:
+      return {
+        ...state,
+        playerInGame: action.payload,
+      };
+    case fromFilterActions.ADD_PLAYER_IN_GAME_FILTER:
+      const toAdd = [...state.playerInGame];
+      const indexToAdd = toAdd.findIndex(current => current === `${reducerDefaultValue}`);
+      if (indexToAdd !== -1) toAdd.splice(indexToAdd, 1);
+
+      return {
+        ...state,
+        playerInGame: [...toAdd, action.payload],
+      };
+    case fromFilterActions.REMOVE_PLAYER_IN_GAME_FILTER:
+      const newPlayerInGame = [...state.playerInGame];
+      const indexOfPlayerInGame = newPlayerInGame.findIndex(current => action.payload === current);
+      if (indexOfPlayerInGame !== -1) newPlayerInGame.splice(indexOfPlayerInGame, 1);
+
+      return {
+        ...state,
+        playerInGame: newPlayerInGame,
+      };
     case fromFilterActions.ADD_PLAYER_HAS_CARD:
-      const newPlayerHasCard = {...action.payload};
+      const newPlayerHasCard = { ...action.payload };
       const usernameKey: string = Object.keys(newPlayerHasCard)[0];
       const usernameValues = state.playerHasCard[usernameKey];
-      
+
       if (usernameValues) {
         const usernameValuesCopy = [...usernameValues];
         const valueToAdd = newPlayerHasCard[usernameKey];
@@ -88,28 +113,28 @@ export function filterReducer(
 
       return {
         ...state,
-        playerHasCard: {...state.playerHasCard, ...newPlayerHasCard},
+        playerHasCard: { ...state.playerHasCard, ...newPlayerHasCard },
       };
-      case fromFilterActions.REMOVE_PLAYER_HAS_CARD:
-        const {username, card} = action.payload;
-        const values = state.playerHasCard[username];
-        const index = values.findIndex(c => c === card);
-        const newPlayerHasCardFilter = {[username]: [...values]};
-        newPlayerHasCardFilter[username].splice(index, 1);
+    case fromFilterActions.REMOVE_PLAYER_HAS_CARD:
+      const { username, card } = action.payload;
+      const values = state.playerHasCard[username];
+      const index = values.findIndex((c) => c === card);
+      const newPlayerHasCardFilter = { [username]: [...values] };
+      newPlayerHasCardFilter[username].splice(index, 1);
 
-        if (newPlayerHasCardFilter[username].length === 0) {
-          const newState = {...state.playerHasCard};
-          delete newState[username];
-          return {
-            ...state,
-            playerHasCard: newState
-          }
-        }
-  
+      if (newPlayerHasCardFilter[username].length === 0) {
+        const newState = { ...state.playerHasCard };
+        delete newState[username];
         return {
           ...state,
-          playerHasCard: {...state.playerHasCard, ...newPlayerHasCardFilter},
+          playerHasCard: newState,
         };
+      }
+
+      return {
+        ...state,
+        playerHasCard: { ...state.playerHasCard, ...newPlayerHasCardFilter },
+      };
     case fromFilterActions.SET_IS_FILTER_SAME:
       return {
         ...state,

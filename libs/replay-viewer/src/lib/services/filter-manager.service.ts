@@ -21,6 +21,7 @@ import {
   SetDeclarerFilter,
   SetOpeningBidFilter,
   SetDoubleFilter,
+  SetPlayerInGameFilter,
 } from '@nx-bridge/store';
 import { switchMap, take } from 'rxjs/operators';
 import { FILTER_MANAGER_CLASSNAME, flatten, resetMatchedDeals } from '@nx-bridge/constants';
@@ -29,7 +30,7 @@ import { FILTER_MANAGER_CLASSNAME, flatten, resetMatchedDeals } from '@nx-bridge
   providedIn: 'root',
 })
 export class FiltermanagerService {
-  //NOTE: new filters need to be added to all three filter objects below
+  //#region NOTE: new filters need to be added inside this region
   public filters = {
     beforeDate: {
       string: 'beforeDate',
@@ -56,6 +57,9 @@ export class FiltermanagerService {
     double: {
       string: 'double',
     },
+    playerInGame: {
+      string: 'playerInGame',
+    }
   };
   public filtersInitial: Filters = {
     [this.filters.beforeDate.string]: 0,
@@ -66,6 +70,7 @@ export class FiltermanagerService {
     [this.filters.declarer.string]: `${reducerDefaultValue}`,
     [this.filters.openingBid.string]: `${reducerDefaultValue}`,
     [this.filters.double.string]: reducerDefaultValue,
+    [this.filters.playerInGame.string]: [`${reducerDefaultValue}`],
   };
   public filterResetActions = {
     [this.filters.beforeDate.string]: new SetBeforeDate(
@@ -92,6 +97,9 @@ export class FiltermanagerService {
     ),
     [this.filters.double.string]: new SetDoubleFilter(
       this.filtersInitial?.double
+    ),
+    [this.filters.playerInGame.string]: new SetPlayerInGameFilter(
+      this.filtersInitial?.playerInGame
     ),
   };
   public filterMsgs: { [key: string]: any } = {
@@ -132,12 +140,20 @@ export class FiltermanagerService {
     double: {
       valid: 'Deal was doubled',
     },
+    playerInGame: {
+      valid: 'was in the game',
+      invalid: {
+        tooMany: 'Only allowed to have four players in game',
+        alreadyPresent: 'is already present',
+      }
+    },
   };
+  //#endregion
+
   public inputErrorClassnames = ['ng-touched', 'ng-dirty', 'ng-invalid'];
   public dealsThatMatch: string[] = [];
   public users: UserIds | null = null;
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor(private store: Store<AppState>) {
     this.store.select(ReducerNames.users).subscribe(userState => {
       this.users = userState.userIds;

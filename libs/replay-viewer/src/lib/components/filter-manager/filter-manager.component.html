@@ -252,7 +252,7 @@
       *ngIf="game.checked && playerInGameCheckbox?.nativeElement.checked"
       class="{{ FILTER_MANANGER_CLASSNAME }}__player-in-game"
     >
-      <span>Username:</span>
+      <span>Player was in game:</span>
       <select
         #playerInGameSelect
         (click)="onPlayerInGameChange()"
@@ -262,7 +262,6 @@
           {{ playerName }}
         </option>
       </select>
-      <span>&nbsp;was in game</span>
       <button
         (click)="onAddPlayerInGame($event)"
         class="ui button filter-manager__add-button"

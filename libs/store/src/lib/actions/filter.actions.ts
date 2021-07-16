@@ -10,6 +10,9 @@ export const SET_CONTRACT_FILTER = '[Filter] SET_CONTRACT_FILTER';
 export const SET_DECLARER_FILTER = '[Filter] SET_DECLARER_FILTER';
 export const SET_OPENING_BID_FILTER = '[Filter] SET_OPENING_BID_FILTER';
 export const SET_DOUBLE_FILTER = '[Filter] SET_DOUBLE_FILTER';
+export const SET_PLAYER_IN_GAME_FILTER = '[Filter] SET_PLAYER_IN_GAME_FILTER';
+export const ADD_PLAYER_IN_GAME_FILTER = '[Filter] ADD_PLAYER_IN_GAME_FILTER';
+export const REMOVE_PLAYER_IN_GAME_FILTER = '[Filter] REMOVE_PLAYER_IN_GAME_FILTER';
 export const SET_IS_FILTER_SAME = '[Filter] SET_IS_FILTER_SAME';
 export const SET_DEALS_THAT_MATCH_FILTERS =
   '[Filter] SET_DEALS_THAT_MATCH_FILTERS';
@@ -63,6 +66,21 @@ export class SetDoubleFilter implements Action {
   constructor(public payload: number) {}
 }
 
+export class SetPlayerInGameFilter implements Action {
+  readonly type = SET_PLAYER_IN_GAME_FILTER;
+  constructor(public payload: string[]) {}
+}
+
+export class AddPlayerInGameFilter implements Action {
+  readonly type = ADD_PLAYER_IN_GAME_FILTER;
+  constructor(public payload: string) {}
+}
+
+export class RemovePlayerInGameFilter implements Action {
+  readonly type = REMOVE_PLAYER_IN_GAME_FILTER;
+  constructor(public payload: string) {}
+}
+
 export class SetIsFilterSame implements Action {
   readonly type = SET_IS_FILTER_SAME;
   constructor(public payload: boolean) {}
@@ -79,4 +97,7 @@ export type FilterActions =
   | SetDeclarerFilter
   | SetOpeningBidFilter
   | SetDoubleFilter
+  | SetPlayerInGameFilter
+  | AddPlayerInGameFilter
+  | RemovePlayerInGameFilter
   | SetDealsThatMatchFilters;

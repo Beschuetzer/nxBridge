@@ -61,6 +61,7 @@ Testing------------
 -when clicking search, reset all filters?
 
 
+-refactor filter manager to move stuff to service
 
 -game filters:
   1) 'game contains player/username'

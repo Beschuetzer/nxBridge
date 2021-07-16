@@ -25,7 +25,9 @@ import {
 } from '@nx-bridge/constants';
 import {
   AddPlayerHasCard,
+  AddPlayerInGameFilter,
   AppState,
+  reducerDefaultValue,
   RemovePlayerHasCard,
   SetAfterDate,
   SetBeforeDate,
@@ -46,6 +48,7 @@ import {
   DateObj,
   FilterItems,
   FilterItemDeletion,
+  PlayerInGame,
 } from '@nx-bridge/interfaces-and-types';
 import { SearchService } from '../../services/search.service';
 import { FiltermanagerService } from '../../services/filter-manager.service';
@@ -213,8 +216,8 @@ export class FilterManagerComponent implements OnInit {
     if (!selectedBid)  return
 
     this.lastButtonPressed = eventTarget;
-    this.store.dispatch(new SetIsFilterSame(false));
     this.store.dispatch(new SetOpeningBidFilter(selectedBid));
+    this.store.dispatch(new SetIsFilterSame(false));
     this.searchService.setCurrentlyDisplayingGames();
 
     const filterItem: FilterItem = {
@@ -227,6 +230,8 @@ export class FilterManagerComponent implements OnInit {
   }
 
   onAddPlayerHasCard(e: Event) {
+    const eventTarget = (e.currentTarget || e.target);
+
     const cardSelectElement = this.cardsFilterElement
       ?.nativeElement as HTMLSelectElement;
     const usernameSelectElement = this.playersFilterElement
@@ -246,7 +251,8 @@ export class FilterManagerComponent implements OnInit {
         );
       return;
     }
-
+    
+    this.lastButtonPressed = eventTarget;
     delete this.filterItems[
       this.filterManagerService.filters.playerHasCard.errorKey
     ];
@@ -302,7 +308,40 @@ export class FilterManagerComponent implements OnInit {
   }
 
   onAddPlayerInGame(e: Event) {
+    const eventTarget = (e.currentTarget || e.target);
 
+    const playerInGameSelect = this.playerInGameFilterElement?.nativeElement as HTMLSelectElement;
+    const selectedPlayerInGame = playerInGameSelect.value;
+
+    let currentPlayerInGame: PlayerInGame = [];
+    this.store.select(ReducerNames.filters).pipe(take(1)).subscribe(filterState => {
+      currentPlayerInGame = filterState.playerInGame;
+    })
+
+    if (selectedPlayerInGame === filterManagerPlayerNames[0]) return;
+    this.lastButtonPressed = eventTarget;
+
+    const isTooMany = currentPlayerInGame.length >= 4;
+    const isAlreadyPresent = currentPlayerInGame.includes(selectedPlayerInGame);
+    const error = isAlreadyPresent  ? `${selectedPlayerInGame} ${this.filterManagerService.filterMsgs.playerInGame.invalid.alreadyPresent}` : isTooMany ? this.filterManagerService.filterMsgs.playerInGame.invalid.tooMany : '';
+
+    const filterItem: FilterItem = {
+      message: `'${selectedPlayerInGame}' ${this.filterManagerService.filterMsgs.playerInGame.valid}`,
+      error,
+      elementsToReset: [playerInGameSelect],
+    }
+    debugger;
+
+    if (isTooMany || isAlreadyPresent) this.filterItems[`${this.filterManagerService.filters.playerInGame.string}-error`] = filterItem;
+    else { 
+      this.store.dispatch(new AddPlayerInGameFilter(selectedPlayerInGame));
+      this.store.dispatch(new SetIsFilterSame(false));
+      this.searchService.setCurrentlyDisplayingGames();
+
+      const indexToUse = currentPlayerInGame.includes(`${reducerDefaultValue}`) ? '0' : currentPlayerInGame.length;
+      this.filterItems[`${this.filterManagerService.filters.playerInGame.string}-${indexToUse}}`] = filterItem;
+      delete this.filterItems[`${this.filterManagerService.filters.playerInGame.string}-error`];
+    }
   }
 
   onContractChange() {
