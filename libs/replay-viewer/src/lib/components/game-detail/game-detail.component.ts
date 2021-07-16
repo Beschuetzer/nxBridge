@@ -1,7 +1,8 @@
 import { Component, HostBinding, Input, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { GAME_DETAIL_CLASSNAME, teams } from '@nx-bridge/constants';
-import { Game, Seating, Team } from '@nx-bridge/interfaces-and-types';
-
+import { Deal, Game, ReducerNames, Seating, Team } from '@nx-bridge/interfaces-and-types';
+import { AppState, reducerDefaultValue } from '@nx-bridge/store';
 
 @Component({
   selector: 'nx-bridge-game-detail',
@@ -22,9 +23,11 @@ export class GameDetailComponent implements OnInit {
   public teams = teams;
   
   private winner: Team = '';
+  private setScorelWaitDuration = 1000;
+  private setScoreInterval: any;
 
   constructor(
-
+    private store: Store<AppState>,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   ) { }
 
@@ -32,7 +35,12 @@ export class GameDetailComponent implements OnInit {
     this.usernames = this.getUsersnamesFromGame(this.game as Game);
     this.userIds = this.getUserIdsFromGame(this.game as Game);
     this.seating = this.game?.room.seating as Seating;
-    this.setWinnerAndScores();
+
+    const lastDeal = this.game?.deals[this.game.deals.length - 1];
+    this.store.select(ReducerNames.deals).subscribe(dealState => {
+      const deal = dealState.fetchedDeals[lastDeal as string];
+      if (deal) this.setWinnerAndScores(deal);
+    })
   }
 
   private getUserIdsFromGame (game: Game) {
@@ -45,22 +53,22 @@ export class GameDetailComponent implements OnInit {
     return Object.keys(game.points);
   }
 
-  private setWinnerAndScores() {
-    let winner = "NS";
-    this.northSouthScore = this.game?.gameRoundEndingScores?.northSouth.reduce((prev, current) => {
-      return prev + current;
-    }, 0);
-    this.eastWestScore = this.game?.gameRoundEndingScores?.eastWest.reduce((prev, current) => {
-      return prev + current;
-    }, 0);
+  private setWinnerAndScores(deal: Deal) {
+    if(!deal) {
+      this.eastWestScore = reducerDefaultValue;
+      this.northSouthScore = reducerDefaultValue;
+      return;
+    }
+
+   this.northSouthScore = deal.northSouth.aboveTheLine + deal.northSouth.totalBelowTheLineScore;
+   this.eastWestScore = deal.eastWest.aboveTheLine + deal.eastWest.totalBelowTheLineScore;
     
+    let winner = "NS";
     if (this.eastWestScore && this.northSouthScore && this.eastWestScore > this.northSouthScore) winner = "EW";
     this.winner = winner as Team;
 
     if (this.northSouthScore !== undefined && this.eastWestScore !== undefined) {
       this.nsScoreGreater = this.northSouthScore > this.eastWestScore
     }
-
   }
-
 }

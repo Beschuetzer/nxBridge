@@ -66,7 +66,6 @@ Testing------------
 
 -every add button can be spammed (add a flag to track changes in the corresponding change function)
 -add 'Doubled' and 'Re-doubled' string to deal-detail__summary line
--scoring totals are not correct (need to include above the line it seems (checkout the only deal that was 4x doubled))
 -clicking search when a filter is applied, doesn't seem to work (contract and deal was doubled at least)
 
 
