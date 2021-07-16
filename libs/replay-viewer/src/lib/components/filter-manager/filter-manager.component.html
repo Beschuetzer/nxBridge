@@ -123,7 +123,7 @@
         ></option>
       </select>
       <button
-        (click)="onAddPlayerHasCard()"
+        (click)="onAddPlayerHasCard($event)"
         class="ui button filter-manager__add-button"
       >
         Add
@@ -151,7 +151,7 @@
         ></option>
       </select>
       <button
-        (click)="onAddContract()"
+        (click)="onAddContract($event)"
         class="ui button filter-manager__add-button"
       >
         Add
@@ -173,7 +173,7 @@
         </option>
       </select>
       <button
-        (click)="onAddDeclarer()"
+        (click)="onAddDeclarer($event)"
         class="ui button filter-manager__add-button"
       >
         Add
@@ -201,7 +201,7 @@
         ></option>
       </select>
       <button
-        (click)="onAddOpeningBid()"
+        (click)="onAddOpeningBid($event)"
         class="ui button filter-manager__add-button"
       >
         Add
@@ -225,7 +225,7 @@
       >{{doubleOption}}</option>
     </select>
     <button
-      (click)="onAddDouble()"
+      (click)="onAddDouble($event)"
       class="ui button filter-manager__add-button"
     >
       Add

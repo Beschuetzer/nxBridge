@@ -93,7 +93,7 @@ export class FilterManagerComponent implements OnInit {
   }
   
   
-
+  private lastButtonPressed: EventTarget | null = null;
   private hasPlayerHasCardChanged = false;
   private beforeDateElement: HTMLElement = this.getNewElement('div');
   private afterDateElement: HTMLElement = this.getNewElement('div');
@@ -129,10 +129,15 @@ export class FilterManagerComponent implements OnInit {
     });
   }
 
-  onAddContract() {
+  onAddContract(e: Event) {
+    const eventTarget = (e.currentTarget || e.target);
+    if(!this.getCanAdd(e, eventTarget as EventTarget)) return;
+
     const contractsSelectElement = this.contractsFilterElement?.nativeElement as HTMLSelectElement;
     const selectedContract = contracts[+contractsSelectElement.value];
     if (!selectedContract) return;
+
+    this.lastButtonPressed = eventTarget;
 
     this.store.dispatch(new SetContractFilter(selectedContract));
     this.store.dispatch(new SetIsFilterSame(false));
@@ -149,10 +154,14 @@ export class FilterManagerComponent implements OnInit {
     this.filterItems[this.filterManagerService.filters.contract.string] = filterItem;
   }
 
-  onAddDeclarer() {
+  onAddDeclarer(e: Event) {
+    const eventTarget = (e.currentTarget || e.target);
+    if(!this.getCanAdd(e, eventTarget as EventTarget)) return;
+
     const declarerSelectElement = this.declarerFilterElement?.nativeElement as HTMLSelectElement;
     const selectedDeclarer = declarerSelectElement.value;
     if (selectedDeclarer === this.playerNames[0]) return;
+    this.lastButtonPressed = eventTarget;
 
     this.store.dispatch(new SetDeclarerFilter(selectedDeclarer));
     this.store.dispatch(new SetIsFilterSame(false));
@@ -167,11 +176,15 @@ export class FilterManagerComponent implements OnInit {
     this.filterItems[this.filterManagerService.filters.declarer.string] = filterItem;
   }
 
-  onAddDouble() {
+  onAddDouble(e: Event) {
+    const eventTarget = (e.currentTarget || e.target);
+    if(!this.getCanAdd(e, eventTarget as EventTarget)) return;
+
     const doubleSelectOption = this.doubleFilterElement?.nativeElement as HTMLSelectElement;
     const selectedMultiplier = +doubleSelectOption.value;
 
     if (!selectedMultiplier || isNaN(selectedMultiplier)) return;
+    this.lastButtonPressed = eventTarget;
 
     this.store.dispatch(new SetIsFilterSame(false));
     this.store.dispatch(new SetDoubleFilter(selectedMultiplier));
@@ -186,12 +199,16 @@ export class FilterManagerComponent implements OnInit {
     this.filterItems[this.filterManagerService.filters.double.string] = filterItem;
   }
 
-  onAddOpeningBid() {
+  onAddOpeningBid(e: Event) {
+    const eventTarget = (e.currentTarget || e.target);
+    if(!this.getCanAdd(e, eventTarget as EventTarget)) return;
+
     const openingBidSelect = this.openingBidFilterElement?.nativeElement as HTMLSelectElement;
     const selectedBid = contracts[+openingBidSelect.value];
-    if (!selectedBid)  return
-    console.log('selectedBid =', selectedBid);
 
+    if (!selectedBid)  return
+
+    this.lastButtonPressed = eventTarget;
     this.store.dispatch(new SetIsFilterSame(false));
     this.store.dispatch(new SetOpeningBidFilter(selectedBid));
     this.searchService.setCurrentlyDisplayingGames();
@@ -205,7 +222,7 @@ export class FilterManagerComponent implements OnInit {
     this.filterItems[this.filterManagerService.filters.openingBid.string] = filterItem;
   }
 
-  onAddPlayerHasCard() {
+  onAddPlayerHasCard(e: Event) {
     const cardSelectElement = this.cardsFilterElement
       ?.nativeElement as HTMLSelectElement;
     const usernameSelectElement = this.playersFilterElement
@@ -225,6 +242,7 @@ export class FilterManagerComponent implements OnInit {
         );
       return;
     }
+
     delete this.filterItems[
       this.filterManagerService.filters.playerHasCard.errorKey
     ];
@@ -428,6 +446,11 @@ export class FilterManagerComponent implements OnInit {
 
     this.renderer.appendChild(appliedDiv, this.afterDateElement);
     this.renderer.appendChild(appliedDiv, this.beforeDateElement);
+  }
+
+  private getCanAdd(e: Event, eventTarget: EventTarget) {
+    if (this.lastButtonPressed === eventTarget) return false;
+    return true;
   }
 
   private dispatchChanges(

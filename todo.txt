@@ -64,7 +64,6 @@ Testing------------
 -game filters:
   1) 'game contains player/username'
 
--every add button can be spammed (add a flag to track changes in the corresponding change function)
 
 
 
