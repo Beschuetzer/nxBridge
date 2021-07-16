@@ -98,7 +98,7 @@ export class DealDetailComponent implements OnInit {
       .select(ReducerNames.filters)
       .pipe(
         switchMap((filterState) => {
-          matchedDeals = filterState.dealsThatMatchPlayerHasCardFilters;
+          matchedDeals = filterState.dealsThatMatchFilters;
           return this.store.select(ReducerNames.games)
         })
       )

@@ -12,7 +12,7 @@ export interface FilterState {
   playerHasCard: PlayerHasCard;
   contract: string;
   declarer: string;
-  dealsThatMatchPlayerHasCardFilters: string[];
+  dealsThatMatchFilters: string[];
 }
 
 const INITIAL_STATE: FilterState = {
@@ -22,7 +22,7 @@ const INITIAL_STATE: FilterState = {
   playerHasCard: {initial: []},
   contract: `${reducerDefaultValue}`,
   declarer: `${reducerDefaultValue}`,
-  dealsThatMatchPlayerHasCardFilters: [`${reducerDefaultValue}`],
+  dealsThatMatchFilters: [`${reducerDefaultValue}`],
 };
 
 export function filterReducer(
@@ -45,10 +45,10 @@ export function filterReducer(
         ...state,
         playerHasCard: action.payload,
       };
-    case fromFilterActions.SET_DEALS_THAT_MATCH_PLAYER_HAS_CARD_FILTERS:
+    case fromFilterActions.SET_DEALS_THAT_MATCH_FILTERS:
       return {
         ...state,
-        dealsThatMatchPlayerHasCardFilters: action.payload,
+        dealsThatMatchFilters: action.payload,
       };
     case fromFilterActions.SET_CONTRACT_FILTER:
       return {

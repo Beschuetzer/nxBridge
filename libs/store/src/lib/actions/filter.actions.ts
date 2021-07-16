@@ -9,10 +9,10 @@ export const REMOVE_PLAYER_HAS_CARD = '[Filter] REMOVE_PLAYER_HAS_CARD';
 export const SET_CONTRACT_FILTER = '[Filter] SET_CONTRACT_FILTER';
 export const SET_DECLARER_FILTER = '[Filter] SET_DECLARER_FILTER';
 export const SET_IS_FILTER_SAME = '[Filter] SET_IS_FILTER_SAME';
-export const SET_DEALS_THAT_MATCH_PLAYER_HAS_CARD_FILTERS =
-  '[Filter] SET_DEALS_THAT_MATCH_PLAYER_HAS_CARD_FILTERS';
-export class SetDealsThatMatchPlayerHasCardFilters implements Action {
-  readonly type = SET_DEALS_THAT_MATCH_PLAYER_HAS_CARD_FILTERS;
+export const SET_DEALS_THAT_MATCH_FILTERS =
+  '[Filter] SET_DEALS_THAT_MATCH_FILTERS';
+export class SetDealsThatMatchFilters implements Action {
+  readonly type = SET_DEALS_THAT_MATCH_FILTERS;
   constructor(public payload: string[]) {}
 }
 
@@ -65,4 +65,4 @@ export type FilterActions =
   | RemovePlayerHasCard
   | SetContractFilter
   | SetDeclarerFilter
-  | SetDealsThatMatchPlayerHasCardFilters;
+  | SetDealsThatMatchFilters;

@@ -88,7 +88,7 @@ export class GamesListViewComponent implements OnInit {
     })
 
     this.store.select(ReducerNames.filters).subscribe((filterState) => {
-      if (!filterState.dealsThatMatchPlayerHasCardFilters.includes(`${reducerDefaultValue}`)) this.numberOfDealsMatchingFilters = filterState.dealsThatMatchPlayerHasCardFilters.length;
+      if (!filterState.dealsThatMatchFilters.includes(`${reducerDefaultValue}`)) this.numberOfDealsMatchingFilters = filterState.dealsThatMatchFilters.length;
       else this.numberOfDealsMatchingFilters = -1;
     });
 

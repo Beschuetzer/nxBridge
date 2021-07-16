@@ -4,11 +4,9 @@ import {
   Deal,
   Filters,
   Game,
-  LocalStorageUsers,
   PlayerHasCard,
   ReducerNames,
   UserIds,
-  UserObj,
 } from '@nx-bridge/interfaces-and-types';
 import {
   AppState,
@@ -17,15 +15,13 @@ import {
   SetPlayerHasCard,
   SetFilteredGames,
   SetIsFilterSame,
-  SetDealsThatMatchPlayerHasCardFilters,
+  SetDealsThatMatchFilters,
   SetContractFilter,
   reducerDefaultValue,
   SetDeclarerFilter,
-  SetUserIds,
 } from '@nx-bridge/store';
 import { switchMap, take } from 'rxjs/operators';
 import { flatten, resetMatchedDeals } from '@nx-bridge/constants';
-import { LocalStorageManagerService } from './local-storage-manager.service';
 
 @Injectable({
   providedIn: 'root',
@@ -43,8 +39,8 @@ export class FiltermanagerService {
       string: 'playerHasCard',
       errorKey: 'playerHasCardError',
     },
-    dealsThatMatchPlayerHasCardFilters: {
-      string: 'dealsThatMatchPlayerHasCardFilters',
+    dealsThatMatchFilters: {
+      string: 'dealsThatMatchFilters',
     },
     contract: {
       string: 'contract',
@@ -57,7 +53,7 @@ export class FiltermanagerService {
     [this.filters.beforeDate.string]: 0,
     [this.filters.afterDate.string]: 0,
     [this.filters.playerHasCard.string]: { initial: [reducerDefaultValue] },
-    [this.filters.dealsThatMatchPlayerHasCardFilters.string]: [`${reducerDefaultValue}`],
+    [this.filters.dealsThatMatchFilters.string]: [`${reducerDefaultValue}`],
     [this.filters.contract.string]: `${reducerDefaultValue}`,
     [this.filters.declarer.string]: `${reducerDefaultValue}`,
   };
@@ -71,9 +67,9 @@ export class FiltermanagerService {
     [this.filters.playerHasCard.string]: new SetPlayerHasCard(
       this.filtersInitial?.playerHasCard
     ),
-    [this.filters.dealsThatMatchPlayerHasCardFilters
-      .string]: new SetDealsThatMatchPlayerHasCardFilters(
-      this.filtersInitial?.dealsThatMatchPlayerHasCardFilters
+    [this.filters.dealsThatMatchFilters
+      .string]: new SetDealsThatMatchFilters(
+      this.filtersInitial?.dealsThatMatchFilters
     ),
     [this.filters.contract.string]: new SetContractFilter(
       this.filtersInitial?.contract
@@ -354,7 +350,7 @@ export class FiltermanagerService {
     }
 
     this.store.dispatch(
-      new SetDealsThatMatchPlayerHasCardFilters(this.dealsThatMatch)
+      new SetDealsThatMatchFilters(this.dealsThatMatch)
     );
 
     return toReturn;
