@@ -163,7 +163,6 @@ export class FilterManagerComponent implements OnInit {
     this.store.dispatch(new SetDoubleFilter(selectedMultiplier));
     this.searchService.setCurrentlyDisplayingGames();
 
-    debugger;
     const filterItem: FilterItem = {
       message: `${this.filterManagerService.filterMsgs.double.valid} ${selectedMultiplier === 2 ? 'Once' : 'Twice'}`,
       error: '',

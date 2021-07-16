@@ -60,24 +60,14 @@ Testing------------
 -when clicking search, reset all filters?
 
 
-filtering-----------------------
-  -layout:
-    --date ones are mutually exclusive but can have any combination from different types (e.g. date-based and player-based)
-    --have checkboxes called 'date' and 'players' that expand to show relavent fields when checked
-    --label / h4 that shows filters currently applied
-  -options: 
-    1) filter before date and time?
-    2) filter after date and time?
-    3) filter between dates and time?
-    4) filter by players in game
 
 -game filters:
-  1) 'game contains user'
+  1) 'game contains player/username'
 
-
-
--deal was re-doubled
-
+-every add button can be spammed (add a flag to track changes in the corresponding change function)
+-add 'Doubled' and 'Re-doubled' string to deal-detail__summary line
+-scoring totals are not correct (need to include above the line it seems (checkout the only deal that was 4x doubled))
+-clicking search when a filter is applied, doesn't seem to work (contract and deal was doubled at least)
 
 
 

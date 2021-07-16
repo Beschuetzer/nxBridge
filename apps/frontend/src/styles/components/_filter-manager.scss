@@ -22,6 +22,7 @@
   }
   
   &__options {
+    border-bottom: 1px dashed var(--color-primary-4);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -34,11 +35,20 @@
   
   &__details {
    
+    &-deal {
+      border-bottom: 1px dashed var(--color-primary-4);
+
+      & > * {
+        padding-left: $default-font-size * .25;
+
+      }
+    }
+
     & > div:not(&-deal) {
       border: 1px solid rgba(var(--color-primary-4-rgb), .5);
       border-radius: $default-font-size * .25;
       padding: $semantic-ui-text-default-font-size * 0 $default-font-size * .25 $default-font-size * .25 $default-font-size * .25;
-      margin-top: $semantic-ui-text-default-font-size * .5;
+      margin-top: $default-font-size * .25;
     }
   }
 
