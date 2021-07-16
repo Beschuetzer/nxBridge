@@ -217,7 +217,6 @@ export class FiltermanagerService {
       filters.beforeDate
     );
     filteredGames = this.getAfterDateMatches(filteredGames, filters.afterDate);
-
     filteredGames = this.runFiltersThatModifyDealsThatMatch(filteredGames, filters);
 
     return filteredGames;
@@ -308,7 +307,6 @@ export class FiltermanagerService {
     games: Game[],
     filters: Filters,
   ) {
-    resetMatchedDeals();
     this.dealsThatMatch = [];
 
     //note: add skipping logic in here
@@ -317,6 +315,7 @@ export class FiltermanagerService {
     const canSkipDeclarerFilter = this.getCanSkipDeclarer(filters.declarer);
     const canSkip = canSkipContractFilter && canSkipPlayerHasCardFilter && canSkipDeclarerFilter;
     if (canSkip) return games;
+    resetMatchedDeals();
 
     let fetchedDeals = [] as any;
     this.store

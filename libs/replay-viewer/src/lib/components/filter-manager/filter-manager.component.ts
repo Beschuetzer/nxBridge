@@ -43,7 +43,7 @@ import {
   ReducerNames,
 } from '@nx-bridge/interfaces-and-types';
 import { SearchService } from '../../services/search.service';
-import { FiltermanagerService } from '../../services/filtermanager.service';
+import { FiltermanagerService } from '../../services/filter-manager.service';
 import { take } from 'rxjs/operators';
 
 @Component({
@@ -276,7 +276,11 @@ export class FilterManagerComponent implements OnInit {
       ];
     }
 
-    if (!this.getIsPlayerHasCardFilterStillPresent()) this.store.dispatch(this.filterManagerService.filterResetActions.dealsThatMatchPlayerHasCardFilters)
+    //todo: need to refine this to only execute when either no keys remain or only playerHasCardKeys remain?
+    const filterItemKeys = Object.keys(this.filterItems);
+    // if (filterItemKeys.length === 0 || (!this.getIsPlayerHasCardFilterStillPresent())) {
+    //   this.store.dispatch(this.filterManagerService.filterResetActions.dealsThatMatchPlayerHasCardFilters)
+    // }
   }
 
   //NOTE: need this to trigger *ngIf properly

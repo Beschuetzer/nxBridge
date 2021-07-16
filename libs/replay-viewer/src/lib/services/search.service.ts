@@ -13,7 +13,6 @@ import {
   SetIsLoading,
   SetLoadingError,
   SetDealsAsStrings,
-  SetFetchedDeals,
   DealState,
   AddFetchedDeals,
 } from '@nx-bridge/store';
@@ -31,7 +30,7 @@ import { LocalStorageManagerService } from './local-storage-manager.service';
 import { ERROR_APPENDING_GAMES } from '@nx-bridge/api-errors';
 import { switchMap, take } from 'rxjs/operators';
 import {} from '@nx-bridge/store';
-import { FiltermanagerService } from './filtermanager.service';
+import { FiltermanagerService } from './filter-manager.service';
 
 @Injectable({
   providedIn: 'root',

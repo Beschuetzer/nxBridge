@@ -85,5 +85,6 @@ deal-filters-------------------------
 
 
 -deal-summary__text-container declarer is incorrect
-
+-when deleting a filterItem that is contract or declarer,
  
+-end of onFilterItemDeletion() issue with function calling incorrectly

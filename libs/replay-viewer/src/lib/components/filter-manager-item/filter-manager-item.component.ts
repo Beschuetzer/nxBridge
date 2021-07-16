@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { dealsListDealsButtonChoices, FILTER_MANAGER_CLASSNAME } from '@nx-bridge/constants';
 import { FilterItem, FilterItemDeletion } from '@nx-bridge/interfaces-and-types';
 import { AppState, SetAfterDate, SetBeforeDate } from '@nx-bridge/store';
-import { FiltermanagerService } from '../../services/filtermanager.service';
+import { FiltermanagerService } from '../../services/filter-manager.service';
 
 @Component({
   selector: 'nx-bridge-filter-manager-item',
