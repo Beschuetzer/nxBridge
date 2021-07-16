@@ -278,9 +278,9 @@ export class FilterManagerComponent implements OnInit {
 
     //todo: need to refine this to only execute when either no keys remain or only playerHasCardKeys remain?
     const filterItemKeys = Object.keys(this.filterItems);
-    // if (filterItemKeys.length === 0 || (!this.getIsPlayerHasCardFilterStillPresent())) {
-    //   this.store.dispatch(this.filterManagerService.filterResetActions.dealsThatMatchPlayerHasCardFilters)
-    // }
+    if (filterItemKeys.length === 0 || this.canResetDealsThatMatchPlayerAsCardFilters()) {
+      this.store.dispatch(this.filterManagerService.filterResetActions.dealsThatMatchPlayerHasCardFilters)
+    }
   }
 
   //NOTE: need this to trigger *ngIf properly
@@ -412,14 +412,16 @@ export class FilterManagerComponent implements OnInit {
     return { filterMsg, filterName, filterNameElement };
   }
 
-  private getIsPlayerHasCardFilterStillPresent() {
-    if (!this.filterItems) return false;
+  private canResetDealsThatMatchPlayerAsCardFilters() {
+    if (!this.filterItems) return true;
     for (const filterKey in this.filterItems) {
       if (Object.prototype.hasOwnProperty.call(this.filterItems, filterKey)) {
-        if (filterKey.match(this.filterManagerService.filters.playerHasCard.string) && !filterKey.match(this.filterManagerService.filters.playerHasCard.errorKey)) return true;
-      }
+        // if (filterKey.match(this.filterManagerService.filters.playerHasCard.string) && !filterKey.match(this.filterManagerService.filters.playerHasCard.errorKey)) return true;
+
+        if (!filterKey.match(this.filterManagerService.filters.playerHasCard.string)) return false;
+        }
     }
-    return false;
+    return true;
   }
 
   private getPlayerHasCardErrorMessage(
