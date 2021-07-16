@@ -83,4 +83,7 @@ filtering-----------------------
 deal-filters-------------------------
   -finish declarer filter
 
+
+-deal-summary__text-container declarer is incorrect
+
  

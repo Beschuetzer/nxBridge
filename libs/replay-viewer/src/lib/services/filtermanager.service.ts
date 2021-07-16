@@ -4,8 +4,11 @@ import {
   Deal,
   Filters,
   Game,
+  LocalStorageUsers,
   PlayerHasCard,
   ReducerNames,
+  UserIds,
+  UserObj,
 } from '@nx-bridge/interfaces-and-types';
 import {
   AppState,
@@ -17,9 +20,11 @@ import {
   SetDealsThatMatchPlayerHasCardFilters,
   SetContractFilter,
   reducerDefaultValue,
+  SetDeclarerFilter,
 } from '@nx-bridge/store';
 import { switchMap, take } from 'rxjs/operators';
 import { flatten, resetMatchedDeals } from '@nx-bridge/constants';
+import { LocalStorageManagerService } from './local-storage-manager.service';
 
 @Injectable({
   providedIn: 'root',
@@ -42,7 +47,9 @@ export class FiltermanagerService {
     },
     contract: {
       string: 'contract',
-
+    },
+    declarer: {
+      string: 'declarer',
     },
   };
   public filtersInitial: Filters = {
@@ -51,6 +58,7 @@ export class FiltermanagerService {
     [this.filters.playerHasCard.string]: { initial: [reducerDefaultValue] },
     [this.filters.dealsThatMatchPlayerHasCardFilters.string]: [`${reducerDefaultValue}`],
     [this.filters.contract.string]: `${reducerDefaultValue}`,
+    [this.filters.declarer.string]: `${reducerDefaultValue}`,
   };
   public filterResetActions = {
     [this.filters.beforeDate.string]: new SetBeforeDate(
@@ -68,6 +76,9 @@ export class FiltermanagerService {
     ),
     [this.filters.contract.string]: new SetContractFilter(
       this.filtersInitial?.contract
+    ),
+    [this.filters.declarer.string]: new SetDeclarerFilter(
+      this.filtersInitial?.declarer
     ),
   };
   public filterMsgs: { [key: string]: any } = {
@@ -98,13 +109,19 @@ export class FiltermanagerService {
     },
     contract: {
       valid: 'Contract was',
+    },
+    declarer: {
+      valid: 'Declarer was',
     }
   };
   public inputErrorClassnames = ['ng-touched', 'ng-dirty', 'ng-invalid'];
   public dealsThatMatch: string[] = [];
+  public users: UserIds | null = null;
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  constructor(private store: Store<AppState>) {}
+  constructor(private store: Store<AppState>, private localStorageManager: LocalStorageManagerService) {
+    this.users = this.localStorageManager.getUserIdsInLocalStorage();
+  }
 
   getBeforeAndAfterDateInfo() {
     let beforeDate = -2;
@@ -231,6 +248,10 @@ export class FiltermanagerService {
     return contract === this.filtersInitial.contract;
   }
 
+  private getCanSkipDeclarer(declarer: string) {
+    return declarer === this.filtersInitial.declarer;
+  }
+
   private getCanSkipPlayerHasCard(
     playerHasCards: PlayerHasCard
   ) {
@@ -246,6 +267,11 @@ export class FiltermanagerService {
   private getPassesContractFilter(contractToMatch: string, deal: Deal) {
     if (deal.contract === contractToMatch) return true;
     return false;
+  }
+
+  private getPassesDeclarerFilter(declarer: string, deal: Deal) {
+    const declarerFromDeal = this.users ? this.users[deal.declarer] : null;
+    return declarer === declarerFromDeal;
   }
 
   private getPassesPlayerHasCardFilter(playerHasCards: PlayerHasCard, deal: Deal) {
@@ -285,7 +311,8 @@ export class FiltermanagerService {
     //note: add skipping logic in here
     const canSkipPlayerHasCardFilter = this.getCanSkipPlayerHasCard(filters.playerHasCard);
     const canSkipContractFilter = this.getCanSkipContract(filters.contract);
-    const canSkip = canSkipContractFilter && canSkipPlayerHasCardFilter;
+    const canSkipDeclarerFilter = this.getCanSkipDeclarer(filters.declarer);
+    const canSkip = canSkipContractFilter && canSkipPlayerHasCardFilter && canSkipDeclarerFilter;
     if (canSkip) return games;
 
     let fetchedDeals = [] as any;
@@ -309,6 +336,8 @@ export class FiltermanagerService {
         let shouldAddDeal = true;
         
         if (!canSkipContractFilter && shouldAddDeal) shouldAddDeal = this.getPassesContractFilter(filters.contract, deal);
+
+        if (!canSkipDeclarerFilter && shouldAddDeal) shouldAddDeal = this.getPassesDeclarerFilter(filters.declarer, deal);
         
         if (!canSkipPlayerHasCardFilter && shouldAddDeal) shouldAddDeal = this.getPassesPlayerHasCardFilter(filters.playerHasCard, deal);
 
