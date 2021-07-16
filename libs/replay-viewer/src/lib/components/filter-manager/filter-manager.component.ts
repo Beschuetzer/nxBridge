@@ -20,7 +20,8 @@ import {
   contracts,
   getContractAsHtmlEntityString,
   filterManagerBids,
-  filterManagerDoubleOptions
+  filterManagerDoubleOptions,
+  rootRoute
 } from '@nx-bridge/constants';
 import {
   AddPlayerHasCard,
@@ -37,18 +38,19 @@ import {
 } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
 import {
-  DateObj,
   DateType,
-  FetchedDeals,
   FilterItem,
-  FilterItemDeletion,
-  FilterItems,
   PlayerHasCard,
   ReducerNames,
+  FetchedDeals,
+  DateObj,
+  FilterItems,
+  FilterItemDeletion,
 } from '@nx-bridge/interfaces-and-types';
 import { SearchService } from '../../services/search.service';
 import { FiltermanagerService } from '../../services/filter-manager.service';
 import { take } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'nx-bridge-filter-manager',
@@ -80,6 +82,17 @@ export class FilterManagerComponent implements OnInit {
   @HostBinding('class.filter-manager') get classname() {
     return true;
   }
+  @HostBinding('class.hidden') get toggleHidden() {
+    return this.getAreDealsLoaded();
+  }
+  @HostBinding('class.d-none') get toggleDisplayNone() {
+    return this.router.url === `/${rootRoute}`; 
+  }
+  @HostBinding('class.announce-self') get toggleAnnounceSelf() {
+    return !this.getAreDealsLoaded();
+  }
+  
+  
 
   private hasPlayerHasCardChanged = false;
   private beforeDateElement: HTMLElement = this.getNewElement('div');
@@ -104,7 +117,8 @@ export class FilterManagerComponent implements OnInit {
     private elRef: ElementRef,
     private store: Store<AppState>,
     private searchService: SearchService,
-    private filterManagerService: FiltermanagerService
+    private filterManagerService: FiltermanagerService,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -488,6 +502,14 @@ export class FilterManagerComponent implements OnInit {
     this.filterItems[
       this.filterManagerService.filters.playerHasCard.errorKey
     ] = toAdd;
+  }
+
+  private getAreDealsLoaded() {
+    let areLoaded = false;
+    this.store.select(ReducerNames.deals).pipe(take(1)).subscribe(dealState => {
+      areLoaded = Object.keys(dealState.fetchedDeals).length > 0
+    })
+    return !areLoaded;
   }
 
   private getIsSelectedCardUsedAlready(selectedCard: number) {

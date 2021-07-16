@@ -241,3 +241,7 @@
 .matched-deal {
   background-color: rgba(var(--color-primary-3-rgb), 1) !important;
 }
+
+.announce-self {
+  animation: announce-self 1 1s $animation-easing-standard-easeInOutBack-smaller;
+}

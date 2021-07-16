@@ -1,6 +1,6 @@
 import { GameDetailSizes, SortOptions } from '@nx-bridge/interfaces-and-types';
-import { contracts } from '@nx-bridge/constants';
 
+export const rootRoute = 'replays';
 export const GET_DEALS_CONTROLLER_STRING = 'getDeals';
 export const GET_GAMES_CONTROLLER_STRING = 'getGames';
 export const GET_GAME_COUNT_CONTROLLER_STRING = 'getGameCount';

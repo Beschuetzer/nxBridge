@@ -5,6 +5,10 @@
   padding: $default-font-size * 2;
 }
 
+main {
+  overflow: hidden;
+}
+
 .main-grid{
   position: relative;
   width: 100vw;
