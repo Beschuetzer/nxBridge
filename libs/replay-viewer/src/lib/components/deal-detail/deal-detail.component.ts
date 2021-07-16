@@ -73,7 +73,7 @@ export class DealDetailComponent implements OnInit {
   public dealSummaryMessageSuffixPre = '';
   public dealSummaryMessageSuffixNumber = '';
   public dealSummaryMessageSuffixPost = '';
-  public contract: Contract = { prefix: '', htmlEntity: '' };
+  public contract: Contract = { prefix: '', htmlEntity: '', doubleMultiplier: 1 };
   public buttonChoices: [string, string] = dealDetailButtonChoices;
   public DEAL_DETAIL_CLASSNAME = DEAL_DETAIL_CLASSNAME;
   public DISPLAY_NONE_CLASSNAME = DISPLAY_NONE_CLASSNAME;
@@ -193,7 +193,7 @@ export class DealDetailComponent implements OnInit {
 
   setContract() {
     if (!this.deal?.contract)
-      return (this.contract = { prefix: '', htmlEntity: '' });
+      return (this.contract = { prefix: '', htmlEntity: '', doubleMultiplier: 1 });
     const splitContract = this.deal?.contract.split(' ');
     if (!splitContract) return;
     const prefix = getCharValueFromCardValueString(
@@ -204,7 +204,7 @@ export class DealDetailComponent implements OnInit {
     const htmlEntity = getHtmlEntityFromSuitOrCardAsNumber(
       splitContract?.slice(1).join(' ') as Suit
     );
-    return (this.contract = { prefix, htmlEntity });
+    return (this.contract = { prefix, htmlEntity, doubleMultiplier: this.deal.doubleValue });
   }
 
   setDealer() {

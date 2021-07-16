@@ -10,6 +10,10 @@
         <span *ngIf="dealSummaryUsername">
           <span>{{ contract.prefix }}</span>
           <span [innerHtml]="contract.htmlEntity"></span>
+          <span *ngIf="contract.doubleMultiplier !== 1">
+            <!-- <span>&nbsp;</span> -->
+            {{contract.doubleMultiplier === 2 ? 'doubled' : contract.doubleMultiplier === 4 ? 're-doubled' : ''}}
+          </span>
         </span>
         <span *ngIf="dealSummaryUsername">&nbsp;and&nbsp;</span>
         <span>{{ dealSummaryMessageSuffixPre }}</span>

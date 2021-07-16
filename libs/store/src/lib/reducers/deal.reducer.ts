@@ -12,7 +12,7 @@ const INITIAL_STATE: DealState = {
   dealsAsStrings: [],
   fetchedDeals: {},
   currentlyViewingDeal: {} as fromDealActions.CurrentlyViewingDeal,
-  currentlyViewingDealContract: {prefix: '', htmlEntity: ''},
+  currentlyViewingDealContract: {prefix: '', htmlEntity: '', doubleMultiplier: 1},
 };
 
 export function dealReducer(

@@ -214,7 +214,7 @@ export type CardValuesAsString =
   | 'Four'
   | 'Three'
   | 'Two';
-export type Contract = { prefix: string; htmlEntity: string };
+export type Contract = { prefix: string; htmlEntity: string, doubleMultiplier: number };
 type DealCore = {
   cardPlayOrder: number[];
   hands: Hands;

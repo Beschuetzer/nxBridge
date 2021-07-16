@@ -65,7 +65,6 @@ Testing------------
   1) 'game contains player/username'
 
 -every add button can be spammed (add a flag to track changes in the corresponding change function)
--add 'Doubled' and 'Re-doubled' string to deal-detail__summary line
 
 
 
