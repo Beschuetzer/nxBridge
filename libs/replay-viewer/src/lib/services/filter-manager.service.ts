@@ -261,6 +261,10 @@ export class FiltermanagerService {
     return declarer === this.filtersInitial.declarer;
   }
 
+  private getCanSkipOpeningBid(bid: string) {
+    return bid === this.filtersInitial.openingBid;
+  }
+
   private getCanSkipPlayerHasCard(
     playerHasCards: PlayerHasCard
   ) {
@@ -281,6 +285,20 @@ export class FiltermanagerService {
   private getPassesDeclarerFilter(declarer: string, deal: Deal) {
     const declarerFromDeal = this.users ? this.users[deal.declarer] : null;
     return declarer === declarerFromDeal;
+  }
+
+  private getPassesOpeningBidFilter(bid: string, deal: Deal) {
+    let openingBid = '';
+    for (let i = 0; i < deal.bids.length; i++) {
+      const bid = deal.bids[i][1];
+      if (bid.match(/pass/i) || bid.match(/double/i)) continue;
+      else {
+        openingBid = bid;
+        break;
+      }
+    }
+
+    return !!openingBid.match(new RegExp(bid, 'i'));
   }
 
   private getPassesPlayerHasCardFilter(playerHasCards: PlayerHasCard, deal: Deal) {
@@ -320,7 +338,8 @@ export class FiltermanagerService {
     const canSkipPlayerHasCardFilter = this.getCanSkipPlayerHasCard(filters.playerHasCard);
     const canSkipContractFilter = this.getCanSkipContract(filters.contract);
     const canSkipDeclarerFilter = this.getCanSkipDeclarer(filters.declarer);
-    const canSkip = canSkipContractFilter && canSkipPlayerHasCardFilter && canSkipDeclarerFilter;
+    const canSkipOpeningBidFilter = this.getCanSkipOpeningBid(filters.openingBid);
+    const canSkip = canSkipContractFilter && canSkipPlayerHasCardFilter && canSkipDeclarerFilter && canSkipOpeningBidFilter;
     if (canSkip) return games;
     resetMatchedDeals();
 
@@ -347,6 +366,8 @@ export class FiltermanagerService {
         if (!canSkipContractFilter && shouldAddDeal) shouldAddDeal = this.getPassesContractFilter(filters.contract, deal);
 
         if (!canSkipDeclarerFilter && shouldAddDeal) shouldAddDeal = this.getPassesDeclarerFilter(filters.declarer, deal);
+
+        if (!canSkipOpeningBidFilter && shouldAddDeal) shouldAddDeal = this.getPassesOpeningBidFilter(filters.openingBid, deal);
         
         if (!canSkipPlayerHasCardFilter && shouldAddDeal) shouldAddDeal = this.getPassesPlayerHasCardFilter(filters.playerHasCard, deal);
 
