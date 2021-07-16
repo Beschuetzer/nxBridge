@@ -16,6 +16,7 @@ import {
   SetIsFilterSame,
   SetDealsThatMatchPlayerHasCardFilters,
   SetContractFilter,
+  reducerDefaultValue,
 } from '@nx-bridge/store';
 import { switchMap, take } from 'rxjs/operators';
 import { flatten, resetMatchedDeals } from '@nx-bridge/constants';
@@ -41,15 +42,15 @@ export class FiltermanagerService {
     },
     contract: {
       string: 'contract',
-      
+
     },
   };
   public filtersInitial: Filters = {
     [this.filters.beforeDate.string]: 0,
     [this.filters.afterDate.string]: 0,
-    [this.filters.playerHasCard.string]: { initial: [-1] },
-    [this.filters.dealsThatMatchPlayerHasCardFilters.string]: ['-1'],
-    [this.filters.contract.string]: '-1',
+    [this.filters.playerHasCard.string]: { initial: [reducerDefaultValue] },
+    [this.filters.dealsThatMatchPlayerHasCardFilters.string]: [`${reducerDefaultValue}`],
+    [this.filters.contract.string]: `${reducerDefaultValue}`,
   };
   public filterResetActions = {
     [this.filters.beforeDate.string]: new SetBeforeDate(

@@ -2,6 +2,8 @@
 import { PlayerHasCard } from '@nx-bridge/interfaces-and-types';
 import * as fromFilterActions from '../actions/filter.actions';
 
+export const reducerDefaultValue = -1;
+
 export interface FilterState {
   [key: string]: any,
   beforeDate: number;
@@ -9,6 +11,7 @@ export interface FilterState {
   isFilterSame: boolean;
   playerHasCard: PlayerHasCard;
   contract: string;
+  declarer: string;
   dealsThatMatchPlayerHasCardFilters: string[];
 }
 
@@ -17,8 +20,9 @@ const INITIAL_STATE: FilterState = {
   afterDate: 0,
   isFilterSame: false,
   playerHasCard: {initial: []},
-  contract: '-1',
-  dealsThatMatchPlayerHasCardFilters: ['-1'],
+  contract: `${reducerDefaultValue}`,
+  declarer: `${reducerDefaultValue}`,
+  dealsThatMatchPlayerHasCardFilters: [`${reducerDefaultValue}`],
 };
 
 export function filterReducer(
@@ -50,6 +54,11 @@ export function filterReducer(
       return {
         ...state,
         contract: action.payload,
+      };
+    case fromFilterActions.SET_DECLARER_FILTER:
+      return {
+        ...state,
+        declarer: action.payload,
       };
     case fromFilterActions.ADD_PLAYER_HAS_CARD:
       const newPlayerHasCard = {...action.payload};

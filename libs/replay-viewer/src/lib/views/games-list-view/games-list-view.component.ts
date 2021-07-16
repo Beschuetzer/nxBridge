@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import {
   AppState,
+  reducerDefaultValue,
   SetBatchNumber,
   SetResultsPerPagePreference,
   SetSortingPreference,
@@ -87,7 +88,7 @@ export class GamesListViewComponent implements OnInit {
     })
 
     this.store.select(ReducerNames.filters).subscribe((filterState) => {
-      if (!filterState.dealsThatMatchPlayerHasCardFilters.includes('-1')) this.numberOfDealsMatchingFilters = filterState.dealsThatMatchPlayerHasCardFilters.length;
+      if (!filterState.dealsThatMatchPlayerHasCardFilters.includes(`${reducerDefaultValue}`)) this.numberOfDealsMatchingFilters = filterState.dealsThatMatchPlayerHasCardFilters.length;
       else this.numberOfDealsMatchingFilters = -1;
     });
 

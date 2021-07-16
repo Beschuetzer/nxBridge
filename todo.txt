@@ -75,13 +75,12 @@ filtering-----------------------
   1) 'game contains user'
 
 -work on Deal filter:
-  1) 'first actual bid was ...'
+  1) 'Opening bid was ...'
   2) 'declarer was ...'
 
 
 
 deal-filters-------------------------
   -finish declarer filter
-  -finish contract filter ui side
 
  
