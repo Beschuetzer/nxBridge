@@ -77,10 +77,17 @@
         <input #declarer (click)="onDeclarerClick()" type="checkbox" />
         Declarer was ...
       </label>
+      <label>
+        <input #openingBid (click)="onOpeningBidClick()"
+        type="checkbox" /> Opening
+        bid was ...
+      </label>
     </div>
 
     <div
-      *ngIf="deal.checked && playerHasCardCheckbox?.nativeElement.checked === true"
+      *ngIf="
+        deal.checked && playerHasCardCheckbox?.nativeElement.checked === true
+      "
       class="{{ FILTER_MANANGER_CLASSNAME }}__player-has-card"
     >
       <span>Username:</span>
@@ -133,7 +140,9 @@
         <option
           *ngFor="let contract of contracts; let i = index"
           innerHTML="{{ contract | getContractAsHtmlEntityString }}"
-          [class]="(i - 1) % 5 === 1 || (i - 1) % 5 === 2 ? 'color-red' : 'color-black'"
+          [class]="
+            (i - 1) % 5 === 1 || (i - 1) % 5 === 2 ? 'color-red' : 'color-black'
+          "
           [value]="i - 1"
         ></option>
       </select>
@@ -161,6 +170,34 @@
       </select>
       <button
         (click)="onAddDeclarer($event)"
+        class="ui button filter-manager__add-button"
+      >
+        Add
+      </button>
+    </div>
+
+    <div
+      *ngIf="deal.checked && openingBidCheckbox?.nativeElement.checked"
+      class="{{ FILTER_MANANGER_CLASSNAME }}__opening-bid"
+    >
+      <span>Opening bid was :</span>
+      <select
+        (click)="onOpeningBidChange()"
+        class="{{ joinedInputErrorClassnames }}"
+        #openingBidSelect
+        class=""
+      >
+        <option
+          *ngFor="let bid of bids; let i = index"
+          innerHTML="{{ bid | getContractAsHtmlEntityString }}"
+          [class]="
+            (i - 1) % 5 === 1 || (i - 1) % 5 === 2 ? 'color-red' : 'color-black'
+          "
+          [value]="i - 1"
+        ></option>
+      </select>
+      <button
+        (click)="onAddOpeningBid()"
         class="ui button filter-manager__add-button"
       >
         Add

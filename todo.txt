@@ -76,11 +76,10 @@ filtering-----------------------
 
 -work on Deal filter:
   1) 'Opening bid was ...'
-  2) 'declarer was ...'
 
 
 
-deal-filters-------------------------
+opening bid was-------------------------
 
 
 

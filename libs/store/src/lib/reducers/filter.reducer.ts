@@ -12,6 +12,7 @@ export interface FilterState {
   playerHasCard: PlayerHasCard;
   contract: string;
   declarer: string;
+  openingBid: string;
   dealsThatMatchFilters: string[];
 }
 
@@ -22,6 +23,7 @@ const INITIAL_STATE: FilterState = {
   playerHasCard: {initial: []},
   contract: `${reducerDefaultValue}`,
   declarer: `${reducerDefaultValue}`,
+  openingBid: `${reducerDefaultValue}`,
   dealsThatMatchFilters: [`${reducerDefaultValue}`],
 };
 
@@ -59,6 +61,11 @@ export function filterReducer(
       return {
         ...state,
         declarer: action.payload,
+      };
+    case fromFilterActions.SET_OPENING_BID_FILTER:
+      return {
+        ...state,
+        openingBid: action.payload,
       };
     case fromFilterActions.ADD_PLAYER_HAS_CARD:
       const newPlayerHasCard = {...action.payload};

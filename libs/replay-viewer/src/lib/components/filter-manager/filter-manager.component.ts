@@ -18,7 +18,8 @@ import {
   filterManagerCardsAsNumbers,
   filterManagerPlayerNames,
   contracts,
-  getContractAsHtmlEntityString
+  getContractAsHtmlEntityString,
+  filterManagerBids
 } from '@nx-bridge/constants';
 import {
   AddPlayerHasCard,
@@ -29,6 +30,7 @@ import {
   SetContractFilter,
   SetDeclarerFilter,
   SetIsFilterSame,
+  SetOpeningBidFilter,
   SetPlayerHasCard,
 } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
@@ -59,6 +61,7 @@ export class FilterManagerComponent implements OnInit {
   @ViewChild('playerHasCard') playerHasCardCheckbox: ElementRef | null = null;
   @ViewChild('contract') contractCheckbox: ElementRef | null = null;
   @ViewChild('declarer') declarerCheckbox: ElementRef | null = null;
+  @ViewChild('openingBid') openingBidCheckbox: ElementRef | null = null;
 
   //NOTE: new filters need to be added to filterManagerService's filter objects and applyFilters();  remember: to set store action 'SetIsFilterSame' to false before calling searchService.setCurrentlyDisplayingGames() to make sure filters are checked; also need to make sure that key returned in FilterManagerItem's getKeyToUse is correct
   @ViewChild('beforeDate') beforeDateFilterElement: ElementRef | null = null;
@@ -67,6 +70,8 @@ export class FilterManagerComponent implements OnInit {
   @ViewChild('cards') cardsFilterElement: ElementRef | null = null;
   @ViewChild('contractsSelect') contractsFilterElement: ElementRef | null = null;
   @ViewChild('declarerSelect') declarerFilterElement: ElementRef | null = null;
+  @ViewChild('openingBidSelect') openingBidFilterElement: ElementRef | null = null;
+
 
   @HostBinding('class.filter-manager') get classname() {
     return true;
@@ -81,6 +86,7 @@ export class FilterManagerComponent implements OnInit {
   public FILTER_MANANGER_CLASSNAME = FILTER_MANAGER_CLASSNAME;
   public filterItems: FilterItems = {};
   public contracts =  [...filterManagerContracts, ...contracts];
+  public bids = [...filterManagerBids, ...contracts];
   public cardsAsNumbers =  filterManagerCardsAsNumbers;
   public playerNames =  filterManagerPlayerNames;
 
@@ -140,6 +146,25 @@ export class FilterManagerComponent implements OnInit {
     }
 
     this.filterItems[this.filterManagerService.filters.declarer.string] = filterItem;
+  }
+
+  onAddOpeningBid() {
+    const openingBidSelect = this.openingBidFilterElement?.nativeElement as HTMLSelectElement;
+    const selectedBid = contracts[+openingBidSelect.value];
+    if (!selectedBid)  return
+    console.log('selectedBid =', selectedBid);
+
+    this.store.dispatch(new SetIsFilterSame(false));
+    this.store.dispatch(new SetOpeningBidFilter(selectedBid));
+    this.searchService.setCurrentlyDisplayingGames();
+
+    const filterItem: FilterItem = {
+      message: `${this.filterManagerService.filterMsgs.openingBid.valid} ${getContractAsHtmlEntityString(selectedBid)}`,
+      error: '',
+      elementsToReset: [openingBidSelect],
+    }
+
+    this.filterItems[this.filterManagerService.filters.openingBid.string] = filterItem;
   }
 
   onAddPlayerHasCard(e: Event) {
@@ -238,18 +263,14 @@ export class FilterManagerComponent implements OnInit {
 
   }
 
-  onContractClick() {
-
-  }
+  onContractClick() {}
 
   onDateAfterChange(e: Event) {
     const shouldDispatchChange = this.handleDateChange(e, DateType.after);
     this.dispatchChanges(this.afterDate, shouldDispatchChange, DateType.after);
   }
 
-  onDeclarerClick() {
-
-  }
+  onDeclarerClick() {}
 
   onFilterItemDeletion(toDelete: FilterItemDeletion) {
     delete this.filterItems[toDelete.key];
@@ -300,6 +321,10 @@ export class FilterManagerComponent implements OnInit {
 
     return;
   }
+
+  onOpeningBidChange() {}
+
+  onOpeningBidClick() {}
 
   onReset() {
     const filterCheckboxElements = [

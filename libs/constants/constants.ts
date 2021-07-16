@@ -87,5 +87,6 @@ export const RESULTS_PER_PAGE_OPTIONS = [1, 2, 5, 10, 25, 50, 100];
 export const NOT_AVAILABLE_STRING = 'N/A';
 
 export const filterManagerContracts = ['Pick a Contract'];
+export const filterManagerBids = ['Pick a Bid'];
 export const filterManagerCardsAsNumbers = ['Pick a Card', ...Array(52).keys()];
-export const filterManagerPlayerNames = ['Pick a username'];
+export const filterManagerPlayerNames = ['Pick a Username'];
