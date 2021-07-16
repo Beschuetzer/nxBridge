@@ -133,6 +133,7 @@ export class SearchService {
   startRequest(username: string, email: string) {
     const shouldContinue = this.getShouldContinue(username, email);
     if (!shouldContinue) {
+      debugger
       const areGamesLoaded = this.getAreGamesLoaded();
       if (areGamesLoaded && this.router.url !== `${rootRoute}/games`) {
         this.router.navigate([rootRoute , 'games']);
@@ -169,8 +170,8 @@ export class SearchService {
 
   private getAreGamesLoaded() {
     let areGamesLoaded = false;
-    this.store.select(ReducerNames.games).pipe(take(1)).subscribe(gameState => {
-      areGamesLoaded = gameState.currentlyDisplayingGames.length > 0;
+    this.store.select(ReducerNames.deals).pipe(take(1)).subscribe(dealState => {
+      areGamesLoaded = Object.keys(dealState.fetchedDeals).length > 0;
     })
     return areGamesLoaded;
   }
