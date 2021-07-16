@@ -17,6 +17,7 @@ import {
   ReducerNames,
   Seating,
   Suit,
+  UserIds,
 } from '@nx-bridge/interfaces-and-types';
 import {
   capitalize,
@@ -50,6 +51,8 @@ import {
 } from '@nx-bridge/store';
 import { exhaustMap, switchMap, take } from 'rxjs/operators';
 import { ReplayViewerDealService } from '../../services/replay-viewer.deal.service';
+import { rename } from 'node:fs';
+import { threadId } from 'node:worker_threads';
 @Component({
   selector: 'nx-bridge-deal-detail',
   templateUrl: './deal-detail.component.html',
@@ -75,6 +78,7 @@ export class DealDetailComponent implements OnInit {
   public DEAL_DETAIL_CLASSNAME = DEAL_DETAIL_CLASSNAME;
   public DISPLAY_NONE_CLASSNAME = DISPLAY_NONE_CLASSNAME;
   private MATCHED_DEAL_CLASSNAME = MATCHED_DEAL_CLASSNAME;
+  private users: UserIds | null = null;
 
   constructor(
     private renderer: Renderer2,
@@ -84,6 +88,10 @@ export class DealDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.store.select(ReducerNames.users).subscribe(userState => {
+      this.users = userState.userIds;
+    })
+
     this.setHands();
     this.setDealer();
     this.setDeclarer();
@@ -200,8 +208,10 @@ export class DealDetailComponent implements OnInit {
   }
 
   setDealer() {
-    const dealer = this.deal?.bids[0][0];
-    this.dealer = dealer ? dealer : '';
+    const dealer = this.deal?.dealer;
+
+    if (dealer && this.users) this.dealer = this.users[dealer];
+    else this.dealer = NOT_AVAILABLE_STRING;
   }
 
   setDealSummaryPrefix() {
@@ -230,17 +240,10 @@ export class DealDetailComponent implements OnInit {
   }
 
   setDeclarer() {
-    const declarer = NOT_AVAILABLE_STRING;
+    const declarer = this.deal?.declarer;
 
-    if (this.deal) {
-      for (let i = this.deal?.bids.length - 1; i >= 0; i--) {
-        const bid = this.deal?.bids[i][1];
-        if (getIsBidPlayable(bid)) {
-          this.declarer = this.deal?.bids[i][0];
-          break;
-        }
-      }
-    } else this.declarer = declarer;
+    if (declarer && this.users) this.declarer = this.users[declarer];
+    else this.declarer = NOT_AVAILABLE_STRING;
   }
 
   setHands() {
