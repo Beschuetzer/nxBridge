@@ -4,7 +4,7 @@
   width: 100%;
   height:   100%;
   transition:
-    opacity $animation-duration * 3 $animation-easing-standard,
+    opacity $announce-self-animation-duration * .5 $animation-easing-standard,
   ;
 
   @include respond($layout-breakpoint) {

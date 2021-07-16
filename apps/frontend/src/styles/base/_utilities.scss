@@ -243,5 +243,5 @@
 }
 
 .announce-self {
-  animation: announce-self 1 1s $animation-easing-standard-easeInOutBack-smaller;
+  animation: announce-self 1 $announce-self-animation-duration $animation-easing-standard
 }

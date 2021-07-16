@@ -2,13 +2,11 @@
   0%{
     background-color: rgba(var(--color-black-rgb), 1);
     // border-radius: 100%;
-    transform: translateY(100%);
-    width: 150%;
+    transform: translateY(100%) scaleX(1.5);
   }
-  100% {
+  33% {
     background-color: rgba(var(--color-black-rgb), 0);
     // border-radius: 0;
-    transform: translateY(0%);
-    width: 100%;
+    transform: translateY(-40%) scale(.01);
   }
 }
