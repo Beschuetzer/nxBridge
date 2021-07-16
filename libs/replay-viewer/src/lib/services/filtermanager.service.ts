@@ -21,6 +21,7 @@ import {
   SetContractFilter,
   reducerDefaultValue,
   SetDeclarerFilter,
+  SetUserIds,
 } from '@nx-bridge/store';
 import { switchMap, take } from 'rxjs/operators';
 import { flatten, resetMatchedDeals } from '@nx-bridge/constants';
@@ -119,8 +120,10 @@ export class FiltermanagerService {
   public users: UserIds | null = null;
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  constructor(private store: Store<AppState>, private localStorageManager: LocalStorageManagerService) {
-    this.users = this.localStorageManager.getUserIdsInLocalStorage();
+  constructor(private store: Store<AppState>) {
+    this.store.select(ReducerNames.users).subscribe(userState => {
+      this.users = userState.userIds;
+    })
   }
 
   getBeforeAndAfterDateInfo() {
