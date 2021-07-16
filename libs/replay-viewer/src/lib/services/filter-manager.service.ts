@@ -5,6 +5,7 @@ import {
   Filters,
   Game,
   PlayerHasCard,
+  PlayerInGame,
   ReducerNames,
   UserIds,
 } from '@nx-bridge/interfaces-and-types';
@@ -264,6 +265,7 @@ export class FiltermanagerService {
       filters.beforeDate
     );
     filteredGames = this.getAfterDateMatches(filteredGames, filters.afterDate);
+    filteredGames = this.getPlayerInGameMatches(filteredGames, filters.playerInGame);
     filteredGames = this.runFiltersThatModifyDealsThatMatch(filteredGames, filters);
 
     return filteredGames;
@@ -376,6 +378,28 @@ export class FiltermanagerService {
       }
     }
     return shouldAddDeal;
+  }
+
+  private getPlayerInGameMatches(games: Game[], playersInGame: PlayerInGame) {
+    if (playersInGame.includes(`${reducerDefaultValue}`) || !playersInGame) return games;
+
+    const toReturn: Game[] = [];
+    for (let i = 0; i < games.length; i++) {
+      const game = games[i];
+      const seating = game.room.seating;
+
+      let canAdd = true;
+      for (let i = 0; i < playersInGame.length; i++) {
+        const userOfPlayerWhoMustBeInGame = playersInGame[i];
+        const usersNamesInGame = Object.values(seating);
+        if (!usersNamesInGame.includes(userOfPlayerWhoMustBeInGame)) {
+          canAdd = false;
+          break;
+        }
+      }
+      if (canAdd) toReturn.push(game);
+    }
+    return toReturn;
   }
 
   private runFiltersThatModifyDealsThatMatch(

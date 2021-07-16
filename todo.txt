@@ -64,7 +64,7 @@ Testing------------
 -refactor filter manager to move stuff to service
 
 -game filters:
-  -add filter logic in filter-manager service
+  -when adding playerInGame and playerHasCard, then deleting one, it doesn't reset dealsMatching properly in canResetDealsThatMatchFilters()
 
 
 

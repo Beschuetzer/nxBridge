@@ -593,13 +593,14 @@ export class FilterManagerComponent implements OnInit {
   }
 
   private canResetDealsThatMatchFilters() {
+    debugger;
     if (!this.filterItems) return true;
     for (const filterKey in this.filterItems) {
       if (Object.prototype.hasOwnProperty.call(this.filterItems, filterKey)) {
         if (
           !filterKey.match(
             this.filterManagerService.filters.playerHasCard.string
-          )
+          ) 
         )
           return false;
       }

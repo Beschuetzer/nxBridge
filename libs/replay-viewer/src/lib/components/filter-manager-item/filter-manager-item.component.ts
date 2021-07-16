@@ -43,7 +43,6 @@ export class FilterManagerItemComponent implements OnInit {
   }
   
   onDelete() {
-    debugger;
     const storeActionKey = this.getStoreActionKey();
     const storeResetAction = this.filterManagerService.filterResetActions[storeActionKey];
     this.deletion.emit({key: this.filterItemKey, resetAction: storeResetAction, username: this.filterItem?.username, card: this.filterItem?.card});
