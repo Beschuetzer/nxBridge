@@ -13,6 +13,7 @@ export interface FilterState {
   contract: string;
   declarer: string;
   openingBid: string;
+  double: number;
   dealsThatMatchFilters: string[];
 }
 
@@ -24,6 +25,7 @@ const INITIAL_STATE: FilterState = {
   contract: `${reducerDefaultValue}`,
   declarer: `${reducerDefaultValue}`,
   openingBid: `${reducerDefaultValue}`,
+  double: reducerDefaultValue,
   dealsThatMatchFilters: [`${reducerDefaultValue}`],
 };
 
@@ -66,6 +68,11 @@ export function filterReducer(
       return {
         ...state,
         openingBid: action.payload,
+      };
+    case fromFilterActions.SET_DOUBLE_FILTER:
+      return {
+        ...state,
+        double: action.payload,
       };
     case fromFilterActions.ADD_PLAYER_HAS_CARD:
       const newPlayerHasCard = {...action.payload};

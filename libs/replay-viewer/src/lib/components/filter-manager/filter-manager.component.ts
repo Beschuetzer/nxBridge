@@ -19,7 +19,8 @@ import {
   filterManagerPlayerNames,
   contracts,
   getContractAsHtmlEntityString,
-  filterManagerBids
+  filterManagerBids,
+  filterManagerDoubleOptions
 } from '@nx-bridge/constants';
 import {
   AddPlayerHasCard,
@@ -29,6 +30,7 @@ import {
   SetBeforeDate,
   SetContractFilter,
   SetDeclarerFilter,
+  SetDoubleFilter,
   SetIsFilterSame,
   SetOpeningBidFilter,
   SetPlayerHasCard,
@@ -62,6 +64,7 @@ export class FilterManagerComponent implements OnInit {
   @ViewChild('contract') contractCheckbox: ElementRef | null = null;
   @ViewChild('declarer') declarerCheckbox: ElementRef | null = null;
   @ViewChild('openingBid') openingBidCheckbox: ElementRef | null = null;
+  @ViewChild('double') doubleCheckbox: ElementRef | null = null;
 
   //NOTE: new filters need to be added to filterManagerService's filter objects and applyFilters();  remember: to set store action 'SetIsFilterSame' to false before calling searchService.setCurrentlyDisplayingGames() to make sure filters are checked; also need to make sure that key returned in FilterManagerItem's getKeyToUse is correct
   @ViewChild('beforeDate') beforeDateFilterElement: ElementRef | null = null;
@@ -71,6 +74,7 @@ export class FilterManagerComponent implements OnInit {
   @ViewChild('contractsSelect') contractsFilterElement: ElementRef | null = null;
   @ViewChild('declarerSelect') declarerFilterElement: ElementRef | null = null;
   @ViewChild('openingBidSelect') openingBidFilterElement: ElementRef | null = null;
+  @ViewChild('doubleSelect') doubleFilterElement: ElementRef | null = null;
 
 
   @HostBinding('class.filter-manager') get classname() {
@@ -89,6 +93,7 @@ export class FilterManagerComponent implements OnInit {
   public bids = [...filterManagerBids, ...contracts];
   public cardsAsNumbers =  filterManagerCardsAsNumbers;
   public playerNames =  filterManagerPlayerNames;
+  public doubleOptions = filterManagerDoubleOptions;
 
   get joinedInputErrorClassnames() {
     return this.filterManagerService.inputErrorClassnames.join(' ');
@@ -130,7 +135,7 @@ export class FilterManagerComponent implements OnInit {
     this.filterItems[this.filterManagerService.filters.contract.string] = filterItem;
   }
 
-  onAddDeclarer(e: Event) {
+  onAddDeclarer() {
     const declarerSelectElement = this.declarerFilterElement?.nativeElement as HTMLSelectElement;
     const selectedDeclarer = declarerSelectElement.value;
     if (selectedDeclarer === this.playerNames[0]) return;
@@ -146,6 +151,26 @@ export class FilterManagerComponent implements OnInit {
     }
 
     this.filterItems[this.filterManagerService.filters.declarer.string] = filterItem;
+  }
+
+  onAddDouble() {
+    const doubleSelectOption = this.doubleFilterElement?.nativeElement as HTMLSelectElement;
+    const selectedMultiplier = +doubleSelectOption.value;
+
+    if (!selectedMultiplier || isNaN(selectedMultiplier)) return;
+
+    this.store.dispatch(new SetIsFilterSame(false));
+    this.store.dispatch(new SetDoubleFilter(selectedMultiplier));
+    this.searchService.setCurrentlyDisplayingGames();
+
+    debugger;
+    const filterItem: FilterItem = {
+      message: `${this.filterManagerService.filterMsgs.double.valid} ${selectedMultiplier === 2 ? 'Once' : 'Twice'}`,
+      error: '',
+      elementsToReset: [doubleSelectOption],
+    }
+
+    this.filterItems[this.filterManagerService.filters.double.string] = filterItem;
   }
 
   onAddOpeningBid() {
@@ -167,7 +192,7 @@ export class FilterManagerComponent implements OnInit {
     this.filterItems[this.filterManagerService.filters.openingBid.string] = filterItem;
   }
 
-  onAddPlayerHasCard(e: Event) {
+  onAddPlayerHasCard() {
     const cardSelectElement = this.cardsFilterElement
       ?.nativeElement as HTMLSelectElement;
     const usernameSelectElement = this.playersFilterElement
@@ -244,6 +269,7 @@ export class FilterManagerComponent implements OnInit {
   onContractChange() {
 
   }
+  onContractClick() {}
 
   //NOTE: need this to trigger *ngIf properly
   onDateClick(e: Event) {
@@ -263,14 +289,15 @@ export class FilterManagerComponent implements OnInit {
 
   }
 
-  onContractClick() {}
-
   onDateAfterChange(e: Event) {
     const shouldDispatchChange = this.handleDateChange(e, DateType.after);
     this.dispatchChanges(this.afterDate, shouldDispatchChange, DateType.after);
   }
 
   onDeclarerClick() {}
+
+  onDoubleClick() {}
+  onDoubleChange() {}
 
   onFilterItemDeletion(toDelete: FilterItemDeletion) {
     delete this.filterItems[toDelete.key];

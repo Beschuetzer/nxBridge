@@ -9,6 +9,7 @@ export const REMOVE_PLAYER_HAS_CARD = '[Filter] REMOVE_PLAYER_HAS_CARD';
 export const SET_CONTRACT_FILTER = '[Filter] SET_CONTRACT_FILTER';
 export const SET_DECLARER_FILTER = '[Filter] SET_DECLARER_FILTER';
 export const SET_OPENING_BID_FILTER = '[Filter] SET_OPENING_BID_FILTER';
+export const SET_DOUBLE_FILTER = '[Filter] SET_DOUBLE_FILTER';
 export const SET_IS_FILTER_SAME = '[Filter] SET_IS_FILTER_SAME';
 export const SET_DEALS_THAT_MATCH_FILTERS =
   '[Filter] SET_DEALS_THAT_MATCH_FILTERS';
@@ -57,6 +58,11 @@ export class SetOpeningBidFilter implements Action {
   constructor(public payload: string) {}
 }
 
+export class SetDoubleFilter implements Action {
+  readonly type = SET_DOUBLE_FILTER;
+  constructor(public payload: number) {}
+}
+
 export class SetIsFilterSame implements Action {
   readonly type = SET_IS_FILTER_SAME;
   constructor(public payload: boolean) {}
@@ -72,4 +78,5 @@ export type FilterActions =
   | SetContractFilter
   | SetDeclarerFilter
   | SetOpeningBidFilter
+  | SetDoubleFilter
   | SetDealsThatMatchFilters;

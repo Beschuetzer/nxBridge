@@ -90,3 +90,4 @@ export const filterManagerContracts = ['Pick a Contract'];
 export const filterManagerBids = ['Pick a Bid'];
 export const filterManagerCardsAsNumbers = ['Pick a Card', ...Array(52).keys()];
 export const filterManagerPlayerNames = ['Pick a Username'];
+export const filterManagerDoubleOptions = ['Pick a Multiplier', 'Once', 'Twice'];

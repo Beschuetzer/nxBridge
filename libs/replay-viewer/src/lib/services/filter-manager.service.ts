@@ -20,6 +20,7 @@ import {
   reducerDefaultValue,
   SetDeclarerFilter,
   SetOpeningBidFilter,
+  SetDoubleFilter,
 } from '@nx-bridge/store';
 import { switchMap, take } from 'rxjs/operators';
 import { flatten, resetMatchedDeals } from '@nx-bridge/constants';
@@ -52,6 +53,9 @@ export class FiltermanagerService {
     openingBid: {
       string: 'openingBid',
     },
+    double: {
+      string: 'double',
+    },
   };
   public filtersInitial: Filters = {
     [this.filters.beforeDate.string]: 0,
@@ -61,6 +65,7 @@ export class FiltermanagerService {
     [this.filters.contract.string]: `${reducerDefaultValue}`,
     [this.filters.declarer.string]: `${reducerDefaultValue}`,
     [this.filters.openingBid.string]: `${reducerDefaultValue}`,
+    [this.filters.double.string]: reducerDefaultValue,
   };
   public filterResetActions = {
     [this.filters.beforeDate.string]: new SetBeforeDate(
@@ -84,6 +89,9 @@ export class FiltermanagerService {
     ),
     [this.filters.openingBid.string]: new SetOpeningBidFilter(
       this.filtersInitial?.openingBid
+    ),
+    [this.filters.double.string]: new SetDoubleFilter(
+      this.filtersInitial?.double
     ),
   };
   public filterMsgs: { [key: string]: any } = {
@@ -120,6 +128,9 @@ export class FiltermanagerService {
     },
     openingBid: {
       valid: 'Opening bid was',
+    },
+    double: {
+      valid: 'Deal was doubled',
     },
   };
   public inputErrorClassnames = ['ng-touched', 'ng-dirty', 'ng-invalid'];

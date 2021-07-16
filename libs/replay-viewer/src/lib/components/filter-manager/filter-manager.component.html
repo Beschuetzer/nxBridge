@@ -82,6 +82,10 @@
         type="checkbox" /> Opening
         bid was ...
       </label>
+      <label>
+        <input #double (click)="onDoubleClick()"
+        type="checkbox" /> Deal was doubled ...
+      </label>
     </div>
 
     <div
@@ -119,7 +123,7 @@
         ></option>
       </select>
       <button
-        (click)="onAddPlayerHasCard($event)"
+        (click)="onAddPlayerHasCard()"
         class="ui button filter-manager__add-button"
       >
         Add
@@ -169,7 +173,7 @@
         </option>
       </select>
       <button
-        (click)="onAddDeclarer($event)"
+        (click)="onAddDeclarer()"
         class="ui button filter-manager__add-button"
       >
         Add
@@ -203,6 +207,31 @@
         Add
       </button>
     </div>
+
+    <div
+    *ngIf="deal.checked && doubleCheckbox?.nativeElement.checked"
+    class="{{ FILTER_MANANGER_CLASSNAME }}__double"
+  >
+    <span>Deal was doubled:</span>
+    <select
+      (click)="onDoubleChange()"
+      class="{{ joinedInputErrorClassnames }}"
+      #doubleSelect
+      class=""
+    >
+      <option
+        *ngFor="let doubleOption of doubleOptions; let i = index"
+        [value]="i * 2"
+      >{{doubleOption}}</option>
+    </select>
+    <button
+      (click)="onAddDouble()"
+      class="ui button filter-manager__add-button"
+    >
+      Add
+    </button>
+  </div>
+
 
     <div *ngIf="game.checked === true">Game details</div>
   </div>
