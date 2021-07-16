@@ -3,6 +3,7 @@ import { Store } from '@ngrx/store';
 import { dealsListDealsButtonChoices, FILTER_MANAGER_CLASSNAME } from '@nx-bridge/constants';
 import { FilterItem, FilterItemDeletion } from '@nx-bridge/interfaces-and-types';
 import { AppState, SetAfterDate, SetBeforeDate } from '@nx-bridge/store';
+import { debug } from 'node:console';
 import { FiltermanagerService } from '../../services/filter-manager.service';
 
 @Component({
@@ -42,6 +43,7 @@ export class FilterManagerItemComponent implements OnInit {
   }
   
   onDelete() {
+    debugger;
     const storeActionKey = this.getStoreActionKey();
     const storeResetAction = this.filterManagerService.filterResetActions[storeActionKey];
     this.deletion.emit({key: this.filterItemKey, resetAction: storeResetAction, username: this.filterItem?.username, card: this.filterItem?.card});
@@ -63,6 +65,7 @@ export class FilterManagerItemComponent implements OnInit {
     let key = this.filterItemKey;
     
     if (key.match(/playerHasCard/i)) key = this.filterManagerService.filters.playerHasCard.string;
+    else if (key.match(/playerInGame/i) && !key.match(/error/i)) key = this.filterManagerService.filters.playerInGame.string;
 
     return key;
   }

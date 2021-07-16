@@ -59,6 +59,7 @@ export class FiltermanagerService {
     },
     playerInGame: {
       string: 'playerInGame',
+      errorKey:'playerInGame-error',
     }
   };
   public filtersInitial: Filters = {

@@ -21,7 +21,7 @@ import {
   getContractAsHtmlEntityString,
   filterManagerBids,
   filterManagerDoubleOptions,
-  rootRoute
+  rootRoute,
 } from '@nx-bridge/constants';
 import {
   AddPlayerHasCard,
@@ -29,6 +29,7 @@ import {
   AppState,
   reducerDefaultValue,
   RemovePlayerHasCard,
+  RemovePlayerInGameFilter,
   SetAfterDate,
   SetBeforeDate,
   SetContractFilter,
@@ -74,17 +75,19 @@ export class FilterManagerComponent implements OnInit {
   @ViewChild('openingBid') openingBidCheckbox: ElementRef | null = null;
   @ViewChild('double') doubleCheckbox: ElementRef | null = null;
 
-  //NOTE: new filters need to be added to filterManagerService's filter objects and applyFilters();  remember: to set store action 'SetIsFilterSame' to false before calling searchService.setCurrentlyDisplayingGames() to make sure filters are checked; also need to make sure that key returned in FilterManagerItem's getKeyToUse is correct
+  //NOTE: new filters need to be added to filterManagerService's filter objects and applyFilters();  remember: to set store action 'SetIsFilterSame' to false before calling searchService.setCurrentlyDisplayingGames() to make sure filters are checked; also need to make sure that key returned in FilterManagerItem's getKeyToUse is correct; add another deleteError call in private deleteErrors() if filter has an error state; make sure that dispatchCorrectResetAction() dispatches correct action for item deletion
   @ViewChild('beforeDate') beforeDateFilterElement: ElementRef | null = null;
   @ViewChild('afterDate') afterDateFilterElement: ElementRef | null = null;
   @ViewChild('players') playersFilterElement: ElementRef | null = null;
   @ViewChild('cards') cardsFilterElement: ElementRef | null = null;
-  @ViewChild('contractsSelect') contractsFilterElement: ElementRef | null = null;
+  @ViewChild('contractsSelect')
+  contractsFilterElement: ElementRef | null = null;
   @ViewChild('declarerSelect') declarerFilterElement: ElementRef | null = null;
-  @ViewChild('openingBidSelect') openingBidFilterElement: ElementRef | null = null;
+  @ViewChild('openingBidSelect')
+  openingBidFilterElement: ElementRef | null = null;
   @ViewChild('doubleSelect') doubleFilterElement: ElementRef | null = null;
-  @ViewChild('playerInGameSelect') playerInGameFilterElement: ElementRef | null = null;
-
+  @ViewChild('playerInGameSelect')
+  playerInGameFilterElement: ElementRef | null = null;
 
   @HostBinding('class.filter-manager') get classname() {
     return true;
@@ -93,13 +96,12 @@ export class FilterManagerComponent implements OnInit {
     return this.getAreDealsLoaded();
   }
   @HostBinding('class.d-none') get toggleDisplayNone() {
-    return this.router.url === `/${rootRoute}`; 
+    return this.router.url === `/${rootRoute}`;
   }
   @HostBinding('class.announce-self') get toggleAnnounceSelf() {
     return !this.getAreDealsLoaded();
   }
-  
-  
+
   private lastButtonPressed: EventTarget | null = null;
   private hasPlayerHasCardChanged = false;
   private beforeDateElement: HTMLElement = this.getNewElement('div');
@@ -109,10 +111,10 @@ export class FilterManagerComponent implements OnInit {
   public afterDate: DateObj = { date: null };
   public FILTER_MANANGER_CLASSNAME = FILTER_MANAGER_CLASSNAME;
   public filterItems: FilterItems = {};
-  public contracts =  [...filterManagerContracts, ...contracts];
+  public contracts = [...filterManagerContracts, ...contracts];
   public bids = [...filterManagerBids, ...contracts];
-  public cardsAsNumbers =  filterManagerCardsAsNumbers;
-  public playerNames =  filterManagerPlayerNames;
+  public cardsAsNumbers = filterManagerCardsAsNumbers;
+  public playerNames = filterManagerPlayerNames;
   public doubleOptions = filterManagerDoubleOptions;
 
   get joinedInputErrorClassnames() {
@@ -125,7 +127,7 @@ export class FilterManagerComponent implements OnInit {
     private store: Store<AppState>,
     private searchService: SearchService,
     private filterManagerService: FiltermanagerService,
-    private router: Router,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -137,10 +139,11 @@ export class FilterManagerComponent implements OnInit {
   }
 
   onAddContract(e: Event) {
-    const eventTarget = (e.currentTarget || e.target);
-    if(!this.getCanAdd(e, eventTarget as EventTarget)) return;
+    const eventTarget = e.currentTarget || e.target;
+    if (!this.getCanAdd(e, eventTarget as EventTarget)) return;
 
-    const contractsSelectElement = this.contractsFilterElement?.nativeElement as HTMLSelectElement;
+    const contractsSelectElement = this.contractsFilterElement
+      ?.nativeElement as HTMLSelectElement;
     const selectedContract = contracts[+contractsSelectElement.value];
     if (!selectedContract) return;
 
@@ -150,22 +153,30 @@ export class FilterManagerComponent implements OnInit {
     this.store.dispatch(new SetIsFilterSame(false));
     this.searchService.setCurrentlyDisplayingGames();
 
-    this.filterManagerService.setInputErrorClassnames(contractsSelectElement, true);
-    
+    this.filterManagerService.setInputErrorClassnames(
+      contractsSelectElement,
+      true
+    );
+
     const filterItem: FilterItem = {
-      message: `${this.filterManagerService.filterMsgs.contract.valid} ${getContractAsHtmlEntityString(selectedContract)}.`,
+      message: `${
+        this.filterManagerService.filterMsgs.contract.valid
+      } ${getContractAsHtmlEntityString(selectedContract)}.`,
       error: '',
       elementsToReset: [contractsSelectElement],
-    }
+    };
 
-    this.filterItems[this.filterManagerService.filters.contract.string] = filterItem;
+    this.filterItems[
+      this.filterManagerService.filters.contract.string
+    ] = filterItem;
   }
 
   onAddDeclarer(e: Event) {
-    const eventTarget = (e.currentTarget || e.target);
-    if(!this.getCanAdd(e, eventTarget as EventTarget)) return;
+    const eventTarget = e.currentTarget || e.target;
+    if (!this.getCanAdd(e, eventTarget as EventTarget)) return;
 
-    const declarerSelectElement = this.declarerFilterElement?.nativeElement as HTMLSelectElement;
+    const declarerSelectElement = this.declarerFilterElement
+      ?.nativeElement as HTMLSelectElement;
     const selectedDeclarer = declarerSelectElement.value;
     if (selectedDeclarer === this.playerNames[0]) return;
     this.lastButtonPressed = eventTarget;
@@ -178,16 +189,19 @@ export class FilterManagerComponent implements OnInit {
       message: `${this.filterManagerService.filterMsgs.declarer.valid} ${selectedDeclarer}.`,
       error: '',
       elementsToReset: [declarerSelectElement],
-    }
+    };
 
-    this.filterItems[this.filterManagerService.filters.declarer.string] = filterItem;
+    this.filterItems[
+      this.filterManagerService.filters.declarer.string
+    ] = filterItem;
   }
 
   onAddDouble(e: Event) {
-    const eventTarget = (e.currentTarget || e.target);
-    if(!this.getCanAdd(e, eventTarget as EventTarget)) return;
+    const eventTarget = e.currentTarget || e.target;
+    if (!this.getCanAdd(e, eventTarget as EventTarget)) return;
 
-    const doubleSelectOption = this.doubleFilterElement?.nativeElement as HTMLSelectElement;
+    const doubleSelectOption = this.doubleFilterElement
+      ?.nativeElement as HTMLSelectElement;
     const selectedMultiplier = +doubleSelectOption.value;
 
     if (!selectedMultiplier || isNaN(selectedMultiplier)) return;
@@ -198,22 +212,27 @@ export class FilterManagerComponent implements OnInit {
     this.searchService.setCurrentlyDisplayingGames();
 
     const filterItem: FilterItem = {
-      message: `${this.filterManagerService.filterMsgs.double.valid} ${selectedMultiplier === 2 ? 'Once' : 'Twice'}`,
+      message: `${this.filterManagerService.filterMsgs.double.valid} ${
+        selectedMultiplier === 2 ? 'Once' : 'Twice'
+      }`,
       error: '',
       elementsToReset: [doubleSelectOption],
-    }
+    };
 
-    this.filterItems[this.filterManagerService.filters.double.string] = filterItem;
+    this.filterItems[
+      this.filterManagerService.filters.double.string
+    ] = filterItem;
   }
 
   onAddOpeningBid(e: Event) {
-    const eventTarget = (e.currentTarget || e.target);
-    if(!this.getCanAdd(e, eventTarget as EventTarget)) return;
+    const eventTarget = e.currentTarget || e.target;
+    if (!this.getCanAdd(e, eventTarget as EventTarget)) return;
 
-    const openingBidSelect = this.openingBidFilterElement?.nativeElement as HTMLSelectElement;
+    const openingBidSelect = this.openingBidFilterElement
+      ?.nativeElement as HTMLSelectElement;
     const selectedBid = contracts[+openingBidSelect.value];
 
-    if (!selectedBid)  return
+    if (!selectedBid) return;
 
     this.lastButtonPressed = eventTarget;
     this.store.dispatch(new SetOpeningBidFilter(selectedBid));
@@ -221,16 +240,20 @@ export class FilterManagerComponent implements OnInit {
     this.searchService.setCurrentlyDisplayingGames();
 
     const filterItem: FilterItem = {
-      message: `${this.filterManagerService.filterMsgs.openingBid.valid} ${getContractAsHtmlEntityString(selectedBid)}`,
+      message: `${
+        this.filterManagerService.filterMsgs.openingBid.valid
+      } ${getContractAsHtmlEntityString(selectedBid)}`,
       error: '',
       elementsToReset: [openingBidSelect],
-    }
+    };
 
-    this.filterItems[this.filterManagerService.filters.openingBid.string] = filterItem;
+    this.filterItems[
+      this.filterManagerService.filters.openingBid.string
+    ] = filterItem;
   }
 
   onAddPlayerHasCard(e: Event) {
-    const eventTarget = (e.currentTarget || e.target);
+    const eventTarget = e.currentTarget || e.target;
 
     const cardSelectElement = this.cardsFilterElement
       ?.nativeElement as HTMLSelectElement;
@@ -251,7 +274,7 @@ export class FilterManagerComponent implements OnInit {
         );
       return;
     }
-    
+
     this.lastButtonPressed = eventTarget;
     delete this.filterItems[
       this.filterManagerService.filters.playerHasCard.errorKey
@@ -308,45 +331,60 @@ export class FilterManagerComponent implements OnInit {
   }
 
   onAddPlayerInGame(e: Event) {
-    const eventTarget = (e.currentTarget || e.target);
+    const eventTarget = e.currentTarget || e.target;
 
-    const playerInGameSelect = this.playerInGameFilterElement?.nativeElement as HTMLSelectElement;
+    const playerInGameSelect = this.playerInGameFilterElement
+      ?.nativeElement as HTMLSelectElement;
     const selectedPlayerInGame = playerInGameSelect.value;
 
     let currentPlayerInGame: PlayerInGame = [];
-    this.store.select(ReducerNames.filters).pipe(take(1)).subscribe(filterState => {
-      currentPlayerInGame = filterState.playerInGame;
-    })
+    this.store
+      .select(ReducerNames.filters)
+      .pipe(take(1))
+      .subscribe((filterState) => {
+        currentPlayerInGame = filterState.playerInGame;
+      });
 
     if (selectedPlayerInGame === filterManagerPlayerNames[0]) return;
     this.lastButtonPressed = eventTarget;
 
     const isTooMany = currentPlayerInGame.length >= 4;
     const isAlreadyPresent = currentPlayerInGame.includes(selectedPlayerInGame);
-    const error = isAlreadyPresent  ? `${selectedPlayerInGame} ${this.filterManagerService.filterMsgs.playerInGame.invalid.alreadyPresent}` : isTooMany ? this.filterManagerService.filterMsgs.playerInGame.invalid.tooMany : '';
+    const error = isAlreadyPresent
+      ? `${selectedPlayerInGame} ${this.filterManagerService.filterMsgs.playerInGame.invalid.alreadyPresent}`
+      : isTooMany
+      ? this.filterManagerService.filterMsgs.playerInGame.invalid.tooMany
+      : '';
 
     const filterItem: FilterItem = {
       message: `'${selectedPlayerInGame}' ${this.filterManagerService.filterMsgs.playerInGame.valid}`,
       error,
       elementsToReset: [playerInGameSelect],
-    }
-    debugger;
+      username: selectedPlayerInGame,
+    };
 
-    if (isTooMany || isAlreadyPresent) this.filterItems[`${this.filterManagerService.filters.playerInGame.string}-error`] = filterItem;
-    else { 
+    if (isTooMany || isAlreadyPresent)
+      this.filterItems[
+        `${this.filterManagerService.filters.playerInGame.string}-error`
+      ] = filterItem;
+    else {
       this.store.dispatch(new AddPlayerInGameFilter(selectedPlayerInGame));
       this.store.dispatch(new SetIsFilterSame(false));
       this.searchService.setCurrentlyDisplayingGames();
 
-      const indexToUse = currentPlayerInGame.includes(`${reducerDefaultValue}`) ? '0' : currentPlayerInGame.length;
-      this.filterItems[`${this.filterManagerService.filters.playerInGame.string}-${indexToUse}}`] = filterItem;
-      delete this.filterItems[`${this.filterManagerService.filters.playerInGame.string}-error`];
+      const indexToUse = currentPlayerInGame.includes(`${reducerDefaultValue}`)
+        ? '0'
+        : currentPlayerInGame.length;
+      this.filterItems[
+        `${this.filterManagerService.filters.playerInGame.string}-${indexToUse}`
+      ] = filterItem;
+      delete this.filterItems[
+        `${this.filterManagerService.filters.playerInGame.string}-error`
+      ];
     }
   }
 
-  onContractChange() {
-
-  }
+  onContractChange() {}
   onContractClick() {}
 
   //NOTE: need this to trigger *ngIf properly
@@ -363,9 +401,7 @@ export class FilterManagerComponent implements OnInit {
     );
   }
 
-  onDeclarerChange() {
-
-  }
+  onDeclarerChange() {}
 
   onDateAfterChange(e: Event) {
     const shouldDispatchChange = this.handleDateChange(e, DateType.after);
@@ -378,33 +414,26 @@ export class FilterManagerComponent implements OnInit {
   onDoubleChange() {}
 
   onFilterItemDeletion(toDelete: FilterItemDeletion) {
+    if (!toDelete.key) throw new Error('No toDelete.key...');
     delete this.filterItems[toDelete.key];
 
-    if (!toDelete.key) throw new Error('No toDelete.key...');
-
-    const shouldResetStore = !toDelete.key.match(
-      this.filterManagerService.filters.playerHasCard.errorKey
-    );
-    const shouldDeletePlayerHasCardError = toDelete.key.match(
-      this.filterManagerService.filters.playerHasCard.string
-    );
-
+    const shouldResetStore = this.getShouldResetStoreOnDeletion(toDelete);
     if (shouldResetStore) {
-      this.resetStore(toDelete);
+      //note: need to verify correct action is being dispatched when adding new filter
+      this.dispatchCorrectResetAction(toDelete);
       this.store.dispatch(new SetIsFilterSame(false));
       this.searchService.setCurrentlyDisplayingGames();
       this.removeBothDatesIfOneHasError(toDelete);
     }
 
-    if (shouldDeletePlayerHasCardError) {
-      delete this.filterItems[
-        this.filterManagerService.filters.playerHasCard.errorKey
-      ];
-    }
+    //note: this is here to remove errors when valid filter is deleted
+    //add another deleteError call inside deleteErrors when adding a new filter
+    this.deleteErrors(toDelete);
 
-    //todo: need to refine this to only execute when either no keys remain or only playerHasCardKeys remain?
     if (this.canResetDealsThatMatchFilters()) {
-      this.store.dispatch(this.filterManagerService.filterResetActions.dealsThatMatchFilters)
+      this.store.dispatch(
+        this.filterManagerService.filterResetActions.dealsThatMatchFilters
+      );
     }
   }
 
@@ -413,20 +442,17 @@ export class FilterManagerComponent implements OnInit {
     return;
   }
 
-  onPlayerInGameChange(){}
-  onPlayerInGameClick(){}
+  onPlayerInGameChange() {}
+  onPlayerInGameClick() {}
 
   onPlayerHasCardChange() {
     this.hasPlayerHasCardChanged = true;
   }
 
-  onPlayerHasCardClick() {
-
-  }
+  onPlayerHasCardClick() {}
 
   //NOTE: need this to trigger *ngIf properly
   onDealClick(e: Event) {
-
     return;
   }
 
@@ -503,6 +529,19 @@ export class FilterManagerComponent implements OnInit {
     return true;
   }
 
+  private deleteError(toDelete: FilterItemDeletion, key: string, errorKey: string) {
+    const shouldDelete = toDelete.key.match(key);
+    if (shouldDelete) {
+      delete this.filterItems[errorKey];
+    }
+  }
+
+  private deleteErrors(toDelete: FilterItemDeletion) {
+    //note: this assumes error keys and valid keys start with the same string (e.g. 'playerInGame-1' and 'playerInGame-error');
+    this.deleteError(toDelete, this.filterManagerService.filters.playerHasCard.string, this.filterManagerService.filters.playerHasCard.errorKey);
+    this.deleteError(toDelete, this.filterManagerService.filters.playerInGame.string, this.filterManagerService.filters.playerInGame.errorKey);
+  }
+
   private dispatchChanges(
     filterName: DateObj,
     shouldDispatchChange: boolean,
@@ -523,6 +562,22 @@ export class FilterManagerComponent implements OnInit {
     this.searchService.setCurrentlyDisplayingGames();
   }
 
+  private dispatchCorrectResetAction(toDelete: FilterItemDeletion) {
+    if (toDelete.key.match(/playerHasCard\d+/i))
+      return this.store.dispatch(
+        new RemovePlayerHasCard({
+          username: toDelete.username ? toDelete.username : '',
+          card: toDelete.card !== undefined ? toDelete.card : -2,
+        })
+      );
+    else if (toDelete.key.match(/playerInGame-\d+/i))
+      return this.store.dispatch(
+        new RemovePlayerInGameFilter(toDelete.username ? toDelete.username : '')
+      );
+
+    return this.store.dispatch(toDelete.resetAction);
+  }
+
   private getCorrectFilter(dateType: DateType) {
     let filterName = this.beforeDate;
     let filterNameElement = this.beforeDateElement;
@@ -541,8 +596,13 @@ export class FilterManagerComponent implements OnInit {
     if (!this.filterItems) return true;
     for (const filterKey in this.filterItems) {
       if (Object.prototype.hasOwnProperty.call(this.filterItems, filterKey)) {
-        if (!filterKey.match(this.filterManagerService.filters.playerHasCard.string)) return false;
-        }
+        if (
+          !filterKey.match(
+            this.filterManagerService.filters.playerHasCard.string
+          )
+        )
+          return false;
+      }
     }
 
     const filterItemKeys = Object.keys(this.filterItems);
@@ -567,9 +627,12 @@ export class FilterManagerComponent implements OnInit {
 
   private getAreDealsLoaded() {
     let areLoaded = false;
-    this.store.select(ReducerNames.deals).pipe(take(1)).subscribe(dealState => {
-      areLoaded = Object.keys(dealState.fetchedDeals).length > 0
-    })
+    this.store
+      .select(ReducerNames.deals)
+      .pipe(take(1))
+      .subscribe((dealState) => {
+        areLoaded = Object.keys(dealState.fetchedDeals).length > 0;
+      });
     return !areLoaded;
   }
 
@@ -600,6 +663,18 @@ export class FilterManagerComponent implements OnInit {
     return this.renderer.createElement(elementType);
   }
 
+  private getShouldResetStoreOnDeletion(toDelete: FilterItemDeletion) {
+    const isPlayerHasCardError = toDelete.key.match(
+      this.filterManagerService.filters.playerHasCard.errorKey
+    );
+
+    const isPlayerInGameError = toDelete.key.match(
+      this.filterManagerService.filters.playerInGame.errorKey
+    );
+
+    return !isPlayerHasCardError && !isPlayerInGameError;
+  }
+
   private handleDateChange(e: Event, dateType: DateType) {
     let shouldDispatchChange = false;
     const input = (e.currentTarget || e.target) as HTMLInputElement;
@@ -610,9 +685,7 @@ export class FilterManagerComponent implements OnInit {
       this.afterDate
     );
 
-    const { filterMsg, filterName } = this.getCorrectFilter(
-      dateType
-    );
+    const { filterMsg, filterName } = this.getCorrectFilter(dateType);
 
     filterName.date = isDateInvalid ? null : dateObj;
     const message = getDateAndTimeString(filterName, filterMsg);
@@ -649,18 +722,6 @@ export class FilterManagerComponent implements OnInit {
     );
 
     return shouldDispatchChange;
-  }
-
-  private resetStore(toDelete: FilterItemDeletion) {
-    if (toDelete.key.match(/playerHasCard\d+/i))
-      return this.store.dispatch(
-        new RemovePlayerHasCard({
-          username: toDelete.username ? toDelete.username : '',
-          card: toDelete.card !== undefined ? toDelete.card : -2,
-        })
-      );
-
-    return this.store.dispatch(toDelete.resetAction);
   }
 
   private removeBothDatesIfOneHasError(toDelete: FilterItemDeletion) {

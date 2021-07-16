@@ -64,7 +64,7 @@ Testing------------
 -refactor filter manager to move stuff to service
 
 -game filters:
-  1) 'game contains player/username'
+  -add filter logic in filter-manager service
 
 
 
