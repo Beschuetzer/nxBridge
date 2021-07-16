@@ -60,7 +60,10 @@ import { Router } from '@angular/router';
 export class FilterManagerComponent implements OnInit {
   //NOTE: new checkboxes need to be added to resetFilterCheckboxes() in reset()
   @ViewChild('game') gameCheckbox: ElementRef | null = null;
+  @ViewChild('playerInGame') playerInGameCheckbox: ElementRef | null = null;
+
   @ViewChild('date') dateCheckbox: ElementRef | null = null;
+
   @ViewChild('deal') dealCheckbox: ElementRef | null = null;
   @ViewChild('playerHasCard') playerHasCardCheckbox: ElementRef | null = null;
   @ViewChild('contract') contractCheckbox: ElementRef | null = null;
@@ -77,6 +80,7 @@ export class FilterManagerComponent implements OnInit {
   @ViewChild('declarerSelect') declarerFilterElement: ElementRef | null = null;
   @ViewChild('openingBidSelect') openingBidFilterElement: ElementRef | null = null;
   @ViewChild('doubleSelect') doubleFilterElement: ElementRef | null = null;
+  @ViewChild('playerInGameSelect') playerInGameFilterElement: ElementRef | null = null;
 
 
   @HostBinding('class.filter-manager') get classname() {
@@ -297,6 +301,10 @@ export class FilterManagerComponent implements OnInit {
     }
   }
 
+  onAddPlayerInGame(e: Event) {
+
+  }
+
   onContractChange() {
 
   }
@@ -365,6 +373,9 @@ export class FilterManagerComponent implements OnInit {
   onGameClick(e: Event) {
     return;
   }
+
+  onPlayerInGameChange(){}
+  onPlayerInGameClick(){}
 
   onPlayerHasCardChange() {
     this.hasPlayerHasCardChanged = true;

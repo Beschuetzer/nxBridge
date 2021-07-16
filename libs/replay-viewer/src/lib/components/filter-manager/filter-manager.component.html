@@ -20,6 +20,8 @@
       (deletion)="onFilterItemDeletion($event)"
     ></nx-bridge-filter-manager-item>
   </div>
+
+  <!-- main checkboxes -->
   <div class="{{ FILTER_MANANGER_CLASSNAME }}__options field">
     <label>
       <input #date (click)="onDateClick($event)" type="checkbox" />
@@ -36,27 +38,7 @@
   </div>
 
   <div class="{{ FILTER_MANANGER_CLASSNAME }}__details">
-    <div *ngIf="date.checked" class="{{ FILTER_MANANGER_CLASSNAME }}__date">
-      <label>
-        Completed after:
-        <input
-          #afterDate
-          id="afterDate"
-          (change)="onDateAfterChange($event)"
-          type="datetime-local"
-        />
-      </label>
-      <label>
-        Completed before:
-        <input
-          #beforeDate
-          id="beforeDate"
-          (change)="onDateBeforeChange($event)"
-          type="datetime-local"
-        />
-      </label>
-    </div>
-
+    <!-- sub-checkboxes -->
     <div
       class="{{ FILTER_MANANGER_CLASSNAME }}__details-deal"
       *ngIf="deal.checked"
@@ -78,16 +60,47 @@
         Declarer was ...
       </label>
       <label>
-        <input #openingBid (click)="onOpeningBidClick()"
-        type="checkbox" /> Opening
-        bid was ...
+        <input #openingBid (click)="onOpeningBidClick()" type="checkbox" />
+        Opening bid was ...
       </label>
       <label>
-        <input #double (click)="onDoubleClick()"
-        type="checkbox" /> Deal was doubled ...
+        <input #double (click)="onDoubleClick()" type="checkbox" /> Deal was
+        doubled ...
+      </label>
+    </div>
+    <div
+      class="{{ FILTER_MANANGER_CLASSNAME }}__details-game"
+      *ngIf="game.checked"
+    >
+      <label>
+        <input #playerInGame (click)="onPlayerInGameClick()" type="checkbox" />
+        Player was in game
       </label>
     </div>
 
+    <!-- Date-related filters -->
+    <div *ngIf="date.checked" class="{{ FILTER_MANANGER_CLASSNAME }}__date">
+      <label>
+        Completed after:
+        <input
+          #afterDate
+          id="afterDate"
+          (change)="onDateAfterChange($event)"
+          type="datetime-local"
+        />
+      </label>
+      <label>
+        Completed before:
+        <input
+          #beforeDate
+          id="beforeDate"
+          (change)="onDateBeforeChange($event)"
+          type="datetime-local"
+        />
+      </label>
+    </div>
+
+    <!-- Deal-related filters -->
     <div
       *ngIf="
         deal.checked && playerHasCardCheckbox?.nativeElement.checked === true
@@ -209,30 +222,53 @@
     </div>
 
     <div
-    *ngIf="deal.checked && doubleCheckbox?.nativeElement.checked"
-    class="{{ FILTER_MANANGER_CLASSNAME }}__double"
-  >
-    <span>Deal was doubled:</span>
-    <select
-      (click)="onDoubleChange()"
-      class="{{ joinedInputErrorClassnames }}"
-      #doubleSelect
-      class=""
+      *ngIf="deal.checked && doubleCheckbox?.nativeElement.checked"
+      class="{{ FILTER_MANANGER_CLASSNAME }}__double"
     >
-      <option
-        *ngFor="let doubleOption of doubleOptions; let i = index"
-        [value]="i * 2"
-      >{{doubleOption}}</option>
-    </select>
-    <button
-      (click)="onAddDouble($event)"
-      class="ui button filter-manager__add-button"
+      <span>Deal was doubled:</span>
+      <select
+        (click)="onDoubleChange()"
+        class="{{ joinedInputErrorClassnames }}"
+        #doubleSelect
+        class=""
+      >
+        <option
+          *ngFor="let doubleOption of doubleOptions; let i = index"
+          [value]="i * 2"
+        >
+          {{ doubleOption }}
+        </option>
+      </select>
+      <button
+        (click)="onAddDouble($event)"
+        class="ui button filter-manager__add-button"
+      >
+        Add
+      </button>
+    </div>
+
+    <!-- Game-related filters -->
+    <div
+      *ngIf="game.checked && playerInGameCheckbox?.nativeElement.checked"
+      class="{{ FILTER_MANANGER_CLASSNAME }}__player-in-game"
     >
-      Add
-    </button>
-  </div>
-
-
-    <div *ngIf="game.checked === true">Game details</div>
+      <span>Username:</span>
+      <select
+        #playerInGameSelect
+        (click)="onPlayerInGameChange()"
+        class="{{ joinedInputErrorClassnames }}"
+      >
+        <option *ngFor="let playerName of playerNames; let i = index">
+          {{ playerName }}
+        </option>
+      </select>
+      <span>&nbsp;was in game</span>
+      <button
+        (click)="onAddPlayerInGame($event)"
+        class="ui button filter-manager__add-button"
+      >
+        Add
+      </button>
+    </div>
   </div>
 </section>
