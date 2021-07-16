@@ -384,7 +384,7 @@ export class FilterManagerComponent implements OnInit {
     }
   }
 
-  onContractChange() {}
+  onContractChange() {this.lastButtonPressed = null}
   onContractClick() {}
 
   //NOTE: need this to trigger *ngIf properly
@@ -393,6 +393,7 @@ export class FilterManagerComponent implements OnInit {
   }
 
   onDateBeforeChange(e: Event) {
+    this.lastButtonPressed = null;
     const shouldDispatchChange = this.handleDateChange(e, DateType.before);
     this.dispatchChanges(
       this.beforeDate,
@@ -401,9 +402,10 @@ export class FilterManagerComponent implements OnInit {
     );
   }
 
-  onDeclarerChange() {}
+  onDeclarerChange() {this.lastButtonPressed = null}
 
   onDateAfterChange(e: Event) {
+    this.lastButtonPressed = null
     const shouldDispatchChange = this.handleDateChange(e, DateType.after);
     this.dispatchChanges(this.afterDate, shouldDispatchChange, DateType.after);
   }
@@ -411,7 +413,7 @@ export class FilterManagerComponent implements OnInit {
   onDeclarerClick() {}
 
   onDoubleClick() {}
-  onDoubleChange() {}
+  onDoubleChange() {this.lastButtonPressed = null}
 
   onFilterItemDeletion(toDelete: FilterItemDeletion) {
     if (!toDelete.key) throw new Error('No toDelete.key...');
@@ -442,10 +444,11 @@ export class FilterManagerComponent implements OnInit {
     return;
   }
 
-  onPlayerInGameChange() {}
+  onPlayerInGameChange() {this.lastButtonPressed = null}
   onPlayerInGameClick() {}
 
   onPlayerHasCardChange() {
+    this.lastButtonPressed = null
     this.hasPlayerHasCardChanged = true;
   }
 
@@ -456,7 +459,7 @@ export class FilterManagerComponent implements OnInit {
     return;
   }
 
-  onOpeningBidChange() {}
+  onOpeningBidChange() {this.lastButtonPressed = null}
 
   onOpeningBidClick() {}
 
@@ -525,8 +528,7 @@ export class FilterManagerComponent implements OnInit {
   }
 
   private getCanAdd(e: Event, eventTarget: EventTarget) {
-    if (this.lastButtonPressed === eventTarget) return false;
-    return true;
+    return this.lastButtonPressed !== eventTarget;
   }
 
   private deleteError(toDelete: FilterItemDeletion, key: string, errorKey: string) {
