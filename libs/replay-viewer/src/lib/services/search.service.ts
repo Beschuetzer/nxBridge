@@ -24,13 +24,14 @@ import {
   LocalStorageUserWithGames,
   ReducerNames,
 } from '@nx-bridge/interfaces-and-types';
-import { paginateGames } from '@nx-bridge/constants';
+import { paginateGames, rootRoute } from '@nx-bridge/constants';
 import { Game } from '@nx-bridge/interfaces-and-types';
 import { LocalStorageManagerService } from './local-storage-manager.service';
 import { ERROR_APPENDING_GAMES } from '@nx-bridge/api-errors';
 import { switchMap, take } from 'rxjs/operators';
 import {} from '@nx-bridge/store';
 import { FiltermanagerService } from './filter-manager.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -49,7 +50,9 @@ export class SearchService {
     private localStorageManager: LocalStorageManagerService,
     private helpersService: HelpersService,
     private filterManagerService: FiltermanagerService,
-    private store: Store<AppState>
+    private store: Store<AppState>,
+    private router: Router,
+    private route: ActivatedRoute,
   ) {}
 
   static noEmpty = (formControl: AbstractControl) => {
@@ -129,8 +132,16 @@ export class SearchService {
 
   startRequest(username: string, email: string) {
     const shouldContinue = this.getShouldContinue(username, email);
-    if (!shouldContinue)
-      return `Already viewing games by <b>'${username}'</b>.&nbsp;&nbsp;Try resetting filters, if you see no games.`;
+    if (!shouldContinue) {
+      const areGamesLoaded = this.getAreGamesLoaded();
+      if (areGamesLoaded && this.router.url !== `${rootRoute}/games`) {
+        this.router.navigate([rootRoute , 'games']);
+        this.filterManagerService.reset();
+        this.setCurrentlyDisplayingGames();
+        return;
+      } 
+      else return `Already viewing games by <b>'${username}'</b>.&nbsp;&nbsp;Try resetting filters, if you see no games.`;
+    }
 
     this.needToCreateLocalStorageUser = false;
     this.username = username;
@@ -154,6 +165,14 @@ export class SearchService {
       toReturn[deal._id] = deal;
     }
     return toReturn;
+  }
+
+  private getAreGamesLoaded() {
+    let areGamesLoaded = false;
+    this.store.select(ReducerNames.games).pipe(take(1)).subscribe(gameState => {
+      areGamesLoaded = gameState.currentlyDisplayingGames.length > 0;
+    })
+    return areGamesLoaded;
   }
 
   private getDealsToLoad(neededDealsAsStrings: string[], alreadyFetchedDeals: FetchedDeals): string[] {

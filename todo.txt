@@ -68,7 +68,6 @@ Testing------------
 -add 'Doubled' and 'Re-doubled' string to deal-detail__summary line
 -clicking search when a filter is applied, doesn't seem to work (contract and deal was doubled at least)
 
--loading games then clicking back and loading games again for same person, gives error rather than just redirecting to '/replays/games'
 
 
 

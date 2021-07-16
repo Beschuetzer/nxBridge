@@ -13,7 +13,7 @@
   & *:not(.non-existant-class, button) {
     color: var(--color-primary-1) !important;
 
-    &:not(label, form, .login-card__buttons) {
+    &:not(label, form, .login-card__buttons, .login-card__email, .search) {
       margin-bottom: $default-font-size * .5 !important;
     }
   }

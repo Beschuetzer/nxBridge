@@ -23,7 +23,7 @@ import {
   SetDoubleFilter,
 } from '@nx-bridge/store';
 import { switchMap, take } from 'rxjs/operators';
-import { flatten, resetMatchedDeals } from '@nx-bridge/constants';
+import { FILTER_MANAGER_CLASSNAME, flatten, resetMatchedDeals } from '@nx-bridge/constants';
 
 @Injectable({
   providedIn: 'root',
@@ -201,6 +201,18 @@ export class FiltermanagerService {
       ) {
         const filterResetAction = this.filterResetActions[filter];
         this.store.dispatch(filterResetAction);
+      }
+    }
+
+    const filterManagerApplied = document.querySelector(
+      `.${FILTER_MANAGER_CLASSNAME}__applied`
+    );
+    const children = filterManagerApplied?.children;
+
+    if (children) {
+      for (let i = 0; i < children.length; i++) {
+        const child = children[i];
+        child.innerHTML = '';
       }
     }
   }

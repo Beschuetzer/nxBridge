@@ -393,18 +393,6 @@ export class FilterManagerComponent implements OnInit {
     );
     this.filterManagerService.reset();
 
-    const filterManagerApplied = document.querySelector(
-      `.${FILTER_MANAGER_CLASSNAME}__applied`
-    );
-    const children = filterManagerApplied?.children;
-
-    if (children) {
-      for (let i = 0; i < children.length; i++) {
-        const child = children[i];
-        child.innerHTML = '';
-      }
-    }
-
     //NOTE: this could be any filter as long as it gets called (in order to show all un-filtered games)
     this.dispatchChanges(this.afterDate, true, DateType.after);
     resetMatchedDeals();
