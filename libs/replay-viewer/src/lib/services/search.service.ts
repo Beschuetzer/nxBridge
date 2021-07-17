@@ -18,7 +18,6 @@ import {
 } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
 import {
-  DealRelevant,
   DealRequest,
   FetchedDeals,
   GameRelevant,
@@ -157,15 +156,6 @@ export class SearchService {
         });
     } else this.getGameCount();
     return '';
-  }
-
-  private convertDealsToFetchedDeals(deals: DealRelevant[]): FetchedDeals {
-    const toReturn: FetchedDeals = {};
-    for (let i = 0; i < deals.length; i++) {
-      const deal = deals[i];
-      toReturn[deal._id] = deal;
-    }
-    return toReturn;
   }
 
   private getAreGamesLoaded() {
@@ -356,9 +346,9 @@ export class SearchService {
         switchMap((dealState: DealState) => {
           return this.helpersService.getDeals(dealsToGet);
         })
-      ).subscribe((deals: DealRelevant[]) => {
-        const fetchedDeals = this.convertDealsToFetchedDeals(deals);
-        const combinedDeals = {...localStorageDeals, ...fetchedDeals};
+      ).subscribe((deals: FetchedDeals) => {
+        // const fetchedDeals = this.convertDealsToFetchedDeals(deals);
+        const combinedDeals = {...localStorageDeals, ...deals};
         this.localStorageManager.saveDeals(combinedDeals);
 
         const relevantDeals = this.getRelevantDeals(combinedDeals, neededDealsAsStrings);

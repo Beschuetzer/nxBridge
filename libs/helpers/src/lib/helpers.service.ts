@@ -1,7 +1,7 @@
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { DealRelevant, DealRequest, GameRelevant, GetUserResponse, UserIds } from '@nx-bridge/interfaces-and-types';
+import { DealRequest, GameRelevant, GetUserResponse, UserIds, FetchedDeals } from '@nx-bridge/interfaces-and-types';
 import * as ngrxStore from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
 import {
@@ -26,7 +26,7 @@ export class HelpersService {
   ) {}
 
   getDeals(deals: DealRequest) {
-    return this.http.post<DealRelevant[]>(`${GET_DEALS_URL}`, {deals});
+    return this.http.post<FetchedDeals>(`${GET_DEALS_URL}`, {deals});
   }
 
   getGameCount(userId: string) {

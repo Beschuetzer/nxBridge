@@ -26,7 +26,6 @@ import {
   getDeclarerFromDeal,
   ANIMATION_DURATION,
   GAME_DETAIL_BORDER_BOTTOM_CLASSNAME,
-  NOT_AVAILABLE_STRING,
 } from '@nx-bridge/constants';
 import {
   CardinalDirection,

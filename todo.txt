@@ -65,6 +65,5 @@ filters------------
   -won by more than...
 
 -add loading spinner while deals are loading
--add parameter to getDealsRequest in each deal that specifies which deals to return the northSouth, eastWest on (only last deal of each game); use tuple [dealId, true/false (whether need to add)]
 
--need to change the DealRequest[] to DealRequest {[id]: true/false}
+deals-list__deal-count is incorrect for PUtnam patt 4/21/21 7:52pm
