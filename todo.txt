@@ -63,9 +63,6 @@ Testing------------
 
 -refactor filter manager to move stuff to service
 
--game filters:
-  -when adding playerInGame and playerHasCard, then deleting one, it doesn't reset dealsMatching properly in canResetDealsThatMatchFilters()
-  -issue with the spam prevention
 
 
 

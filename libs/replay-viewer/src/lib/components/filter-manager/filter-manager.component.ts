@@ -75,7 +75,7 @@ export class FilterManagerComponent implements OnInit {
   @ViewChild('openingBid') openingBidCheckbox: ElementRef | null = null;
   @ViewChild('double') doubleCheckbox: ElementRef | null = null;
 
-  //NOTE: new filters need to be added to filterManagerService's filter objects and applyFilters();  remember: to set store action 'SetIsFilterSame' to false before calling searchService.setCurrentlyDisplayingGames() to make sure filters are checked; also need to make sure that key returned in FilterManagerItem's getKeyToUse is correct; add another deleteError call in private deleteErrors() if filter has an error state; make sure that dispatchCorrectResetAction() dispatches correct action for item deletion
+  //NOTE: new filters need to be added to filterManagerService's filter objects and applyFilters();  remember: to set store action 'SetIsFilterSame' to false before calling searchService.setCurrentlyDisplayingGames() to make sure filters are checked; also need to make sure that key returned in FilterManagerItem's getKeyToUse is correct; add another deleteError call in private deleteErrors() if filter has an error state; make sure that dispatchCorrectResetAction() dispatches correct action for item deletion;  if filter does not work on the deal level (e.g. contract was...) then add key name in canResetDealsThatMatchFilters();
   @ViewChild('beforeDate') beforeDateFilterElement: ElementRef | null = null;
   @ViewChild('afterDate') afterDateFilterElement: ElementRef | null = null;
   @ViewChild('players') playersFilterElement: ElementRef | null = null;
@@ -595,21 +595,25 @@ export class FilterManagerComponent implements OnInit {
   }
 
   private canResetDealsThatMatchFilters() {
-    debugger;
     if (!this.filterItems) return true;
-    for (const filterKey in this.filterItems) {
-      if (Object.prototype.hasOwnProperty.call(this.filterItems, filterKey)) {
-        if (
-          !filterKey.match(
-            this.filterManagerService.filters.playerHasCard.string
-          ) 
-        )
-          return false;
-      }
+    
+    //note: add keys of filters that DO NOT work on the deal level below
+    const keysToCheckAgainst = [
+      this.filterManagerService.filters.afterDate.string,
+      this.filterManagerService.filters.beforeDate.string,
+      `${this.filterManagerService.filters.playerInGame.string}-0`,
+      `${this.filterManagerService.filters.playerInGame.string}-1`,
+      `${this.filterManagerService.filters.playerInGame.string}-2`,
+      `${this.filterManagerService.filters.playerInGame.string}-3`,
+    ]
+    
+    const filterKeys = Object.keys(this.filterItems);
+    for (let i = 0; i < filterKeys.length; i++) {
+      const filterKey = filterKeys[i];
+      if (!keysToCheckAgainst.includes(filterKey)) return false;
     }
 
-    const filterItemKeys = Object.keys(this.filterItems);
-    return filterItemKeys.length === 0;
+    return true;
   }
 
   private getPlayerHasCardErrorMessage(
