@@ -25,7 +25,7 @@ export class HelpersService {
     private router: Router,
   ) {}
 
-  getDeals(deals: DealRequest[]) {
+  getDeals(deals: DealRequest) {
     return this.http.post<DealRelevant[]>(`${GET_DEALS_URL}`, {deals});
   }
 
@@ -53,9 +53,11 @@ export class HelpersService {
     });
   }
 
-  getDealsAsStrings(games: GameRelevant[]): DealRequest[] {
-    const deals: DealRequest[] = [];
-    if (!games) return deals;
+  getNeededDeals(games: GameRelevant[]): [DealRequest, string[]] {
+    const deals: DealRequest = {};
+    const dealsAsStrings: string[] = [];
+
+    if (!games) return [deals, dealsAsStrings];
     for (let i = 0; i < games.length; i++) {
       let shouldAdd = false;
       const game = games[i];
@@ -63,9 +65,10 @@ export class HelpersService {
       for (let j = 0; j < game.deals.length; j++) {
         const dealId = game.deals[j];
         if (j === game.deals.length - 1) shouldAdd = true;
-        deals.push([dealId, shouldAdd]);
+        deals[dealId] = shouldAdd;
+        dealsAsStrings.push(dealId);
       }
     }
-    return deals;
+    return [deals, dealsAsStrings];
   }
 }

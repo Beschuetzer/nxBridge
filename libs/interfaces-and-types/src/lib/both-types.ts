@@ -4,6 +4,11 @@ import { Seating, Game, DealCore } from './frontend-types';
 export interface DealRelevant extends DealCore {
   _id: string,
 }
+export interface DealRequest {
+  //dealId as key and true/false represents whether to return scoring
+  [key: string]: boolean,
+};
+
 export interface GameRelevant {
   deals: string[];
   players: string[];
@@ -46,7 +51,6 @@ export interface RoomRelevant {
   seating: Seating,
 }
 
-export type DealRequest = [string, boolean];
 export type EmptyLocalStorageDealsReturn = null;
 export type EmptyLocalStorageUsersReturn = null;
 export type EmptyLocalStorageGamesReturn = {[key:string]: Game[]};
