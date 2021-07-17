@@ -14,7 +14,7 @@ import {
   suitsAsCapitalizedStrings,
 } from '@nx-bridge/constants';
 import {
-  Deal,
+  DealRelevant,
   Hand,
   Hands,
   ReducerNames,
@@ -33,7 +33,7 @@ export class DealPlayerService {
   public seating: Seating | null = null;
   public playInterval: any;
   public keepCardsCentered = false;
-  public deal: Deal | null = null;
+  public deal: DealRelevant | null = null;
   public cardsPlayed: number[] = [];
   public playCount = 0;
   public scope: paper.PaperScope | null = null;

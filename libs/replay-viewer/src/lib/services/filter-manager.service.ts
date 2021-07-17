@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import {
   DateObj,
   DateType,
-  Deal,
+  DealRelevant,
   FetchedDeals,
   FilterItem,
   FilterItemDeletion,
@@ -153,7 +153,7 @@ export class FiltermanagerService {
       valid: 'Opening bid was',
     },
     double: {
-      valid: 'Deal was doubled',
+      valid: 'DealRelevant was doubled',
     },
     playerInGame: {
       valid: 'was in the game',
@@ -515,23 +515,23 @@ export class FiltermanagerService {
     return false;
   }
 
-  private getPassesContractFilter(contractToMatch: string, deal: Deal) {
+  private getPassesContractFilter(contractToMatch: string, deal: DealRelevant) {
     if (deal.contract === contractToMatch) return true;
     return false;
   }
 
-  private getPassesDeclarerFilter(declarer: string, deal: Deal) {
+  private getPassesDeclarerFilter(declarer: string, deal: DealRelevant) {
     const declarerFromDeal = this.users ? this.users[deal.declarer] : null;
     return declarer === declarerFromDeal;
   }
 
-  private getPassesDoubleFilter(multiplier: number, deal: Deal) {
+  private getPassesDoubleFilter(multiplier: number, deal: DealRelevant) {
     const doubleValue = deal?.doubleValue;
     if (!doubleValue) return false;
     return deal.doubleValue === multiplier;
   }
 
-  private getPassesOpeningBidFilter(bid: string, deal: Deal) {
+  private getPassesOpeningBidFilter(bid: string, deal: DealRelevant) {
     let openingBid = '';
     for (let i = 0; i < deal.bids.length; i++) {
       const bid = deal.bids[i][1];
@@ -547,7 +547,7 @@ export class FiltermanagerService {
 
   private getPassesPlayerHasCardFilter(
     playerHasCards: PlayerHasCard,
-    deal: Deal
+    deal: DealRelevant
   ) {
     let canSkipToNextDeal = false;
     let shouldAddDeal = true;

@@ -30,7 +30,7 @@ import {
 import {
   CardinalDirection,
   CardValuesAsString,
-  Deal,
+  DealRelevant,
   FetchedDeals,
   ReducerNames,
   Seating,
@@ -61,11 +61,11 @@ export class DealsListComponent implements OnInit {
   public DEALS_LIST_CLASSNAME = DEALS_LIST_CLASSNAME;
   public DISPLAY_NONE_CLASSNAME = DISPLAY_NONE_CLASSNAME;
   public DEAL_DETAIL_CLASSNAME = DEAL_DETAIL_CLASSNAME;
-  public deals: Deal[] = [];
+  public deals: DealRelevant[] = [];
   public dealResults: { [key: string]: Team } = {};
   public dealsListItems: NodeList | null | undefined = null;
   public isLoading = false;
-  public dealCountMessage = 'Deal Count Here';
+  public dealCountMessage = 'DealRelevant Count Here';
   public buttonChoicesDeals: [string, string] = dealsListDealsButtonChoices;
   public buttonChoicesDetails: [string, string] = dealsListDetailsButtonChoices;
   public northSouthPlayers: [string, string] | [] = [];
@@ -133,7 +133,7 @@ export class DealsListComponent implements OnInit {
     if (!this.dealsAsStrings) return [];
 
     let fetchedDeals: FetchedDeals = {};
-    const dealsToReturn: Deal[] = [];
+    const dealsToReturn: DealRelevant[] = [];
     
     this.store.select(ReducerNames.deals).pipe(take(1)).subscribe(dealState => {
       fetchedDeals = dealState.fetchedDeals;
@@ -243,8 +243,8 @@ export class DealsListComponent implements OnInit {
   }
 
   private getDealWinnerFromScoreDifference(
-    deal: Deal,
-    dealAfterDeal: Deal,
+    deal: DealRelevant,
+    dealAfterDeal: DealRelevant,
     nthDeal?: number
   ): Team {
 
@@ -290,7 +290,7 @@ export class DealsListComponent implements OnInit {
     return this.getDealWinnerFromPureCalculation(deal);
   }
 
-  private getDealWinnerFromPureCalculation(deal: Deal): Team {
+  private getDealWinnerFromPureCalculation(deal: DealRelevant): Team {
     const declarer = getDeclarerFromDeal(deal);
     const declarersDirection = getDirectionFromSeating(
       this.seating as Seating,

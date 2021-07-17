@@ -18,7 +18,7 @@ import {
 } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
 import {
-  Deal,
+  DealRelevant,
   FetchedDeals,
   GameRelevant,
   GetUserResponse,
@@ -158,7 +158,7 @@ export class SearchService {
     return '';
   }
 
-  private convertDealsToFetchedDeals(deals: Deal[]): FetchedDeals {
+  private convertDealsToFetchedDeals(deals: DealRelevant[]): FetchedDeals {
     const toReturn: FetchedDeals = {};
     for (let i = 0; i < deals.length; i++) {
       const deal = deals[i];
@@ -352,7 +352,7 @@ export class SearchService {
         switchMap((dealState: DealState) => {
           return this.helpersService.getDeals(dealsToGet);
         })
-      ).subscribe((deals: Deal[]) => {
+      ).subscribe((deals: DealRelevant[]) => {
         const fetchedDeals = this.convertDealsToFetchedDeals(deals);
         const combinedDeals = {...localStorageDeals, ...fetchedDeals};
         this.localStorageManager.saveDeals(combinedDeals);

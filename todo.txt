@@ -64,7 +64,7 @@ Testing------------
 filters------------
   -won by more than...
 
-
-
--send back relevant deal info (bids, cardPlayerOrder,contract,dealer,declarer,doubleValue,hands, roundWinners, _d) can remove dealSummary, players, and redealCount
+-add loading spinner while deals are loading
+-add parameter to getDealsRequest in each deal that specifies which deals to return the northSouth, eastWest on (only last deal of each game); use tuple [dealId, true/false (whether need to add)]
+-all instances of deal interface need to be replaced with DealRelevant
 

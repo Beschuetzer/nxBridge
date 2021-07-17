@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { InjectModel } from '@nestjs/mongoose';
 import { DealModel } from '@nx-bridge/api-mongoose-models';
 import { Model } from 'mongoose';
-import { ControllerResponse, Deal, DealCore, DealRelevant, ErrorMessage } from '@nx-bridge/interfaces-and-types';
+import { ControllerResponse, Deal, DealRelevant, ErrorMessage } from '@nx-bridge/interfaces-and-types';
 import { getMongooseObjsFromStrings } from '@nx-bridge/constants';
 
 @Injectable({ providedIn: 'root'})
@@ -11,7 +11,7 @@ export class GetDealsService {
     @InjectModel('Deal') private DealsModel: Model<DealModel>,
   ) {}
 
-  async getDeals(userId: string): ControllerResponse<DealCore> {
+  async getDeals(userId: string): ControllerResponse<DealRelevant> {
     if (!userId) {
       return new Promise((res, rej) => {
         res({message: "Invalid user id given in getDeals", status: 400} as ErrorMessage);
@@ -22,7 +22,7 @@ export class GetDealsService {
     }
   }
 
-  async getDeal(dealId: string): ControllerResponse<DealCore> {
+  async getDeal(dealId: string): ControllerResponse<DealRelevant> {
     if (!dealId) {
       return new Promise((res, rej) => {
         res({message: "Invalid deal id given in getDeal", status: 400} as ErrorMessage);
@@ -33,7 +33,7 @@ export class GetDealsService {
     }
   }
 
-  async getDealsInfo(deals: string[]): ControllerResponse<DealCore> {
+  async getDealsInfo(deals: string[]): ControllerResponse<DealRelevant> {
     try {
       if (!deals || deals.length <= 0) return this.getErrorResponse();
       const mongooseObjs = getMongooseObjsFromStrings(deals);
@@ -51,9 +51,6 @@ export class GetDealsService {
   }
 
   private getNewDeal(deal: DealModel | Deal) {
-    console.log('deal =', deal);
-// -send back relevant deal info (bids, cardPlayerOrder,contract,dealer,declarer,doubleValue,hands, roundWinners, _d) can remove dealSummary, players, and redealCount
-
     const newDeal: DealRelevant = {
       bids: deal.bids,
       contract: deal.contract,
@@ -68,7 +65,6 @@ export class GetDealsService {
       _id: deal._id,
     }
 
-    console.log('newDeal =', newDeal);
     return newDeal;
   }
 

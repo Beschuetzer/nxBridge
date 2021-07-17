@@ -1,3 +1,4 @@
+import { DealRelevant } from "./both-types";
 
 //#region Interfaces
 export interface DateObj {
@@ -30,7 +31,7 @@ export interface ErrorMessage {
   status: number;
 }
 export interface FetchedDeals {
-  [key: string]: Deal;
+  [key: string]: DealRelevant;
 }
 export interface Filters {
   [key: string]: any;

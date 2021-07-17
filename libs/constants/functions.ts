@@ -1,7 +1,7 @@
 import {
   CardValuesAsString,
   DateObj,
-  Deal,
+  DealRelevant,
   GameRelevant,
   SortOptions,
 } from '@nx-bridge/interfaces-and-types';
@@ -68,7 +68,7 @@ export function toggleInnerHTML(
   else element.innerHTML = choices[0];
 }
 
-export function getDeclarerFromDeal(deal: Deal) {
+export function getDeclarerFromDeal(deal: DealRelevant) {
   for (let i = deal?.bids.length - 1; i >= 0; i--) {
     const bid = deal?.bids[i][1];
     if (getIsBidPlayable(bid)) {

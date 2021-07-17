@@ -1,7 +1,7 @@
 import { Component, HostBinding, Input, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { GAME_DETAIL_CLASSNAME, teams } from '@nx-bridge/constants';
-import { Deal, GameRelevant, ReducerNames, Seating, Team } from '@nx-bridge/interfaces-and-types';
+import { DealRelevant, GameRelevant, ReducerNames, Seating, Team } from '@nx-bridge/interfaces-and-types';
 import { AppState, reducerDefaultValue } from '@nx-bridge/store';
 
 @Component({
@@ -53,7 +53,7 @@ export class GameDetailComponent implements OnInit {
     return Object.values(game.room.seating);
   }
 
-  private setWinnerAndScores(deal: Deal) {
+  private setWinnerAndScores(deal: DealRelevant) {
     if(!deal) {
       this.eastWestScore = reducerDefaultValue;
       this.northSouthScore = reducerDefaultValue;

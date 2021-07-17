@@ -1,5 +1,5 @@
 import { Action as fromFilterActions } from '@ngrx/store';
-import { Contract, Deal, FetchedDeals } from '@nx-bridge/interfaces-and-types';
+import { Contract, DealRelevant, FetchedDeals } from '@nx-bridge/interfaces-and-types';
 
 export const SET_DEALS_AS_STRING = '[Deals] SET_DEALS_AS_STRINGS';
 export const SET_FETCHED_DEALS = '[Deals] SET_FETCHED_DEALS';
@@ -8,7 +8,7 @@ export const SET_CURRENTLY_VIEWING_DEAL = '[Deals] SET_CURRENTLY_VIEWING_DEAL';
 export const SET_CURRENTLY_VIEWING_DEAL_CONTRACT =
   '[Deals] SET_CURRENTLY_VIEWING_DEAL_CONTRACT';
 
-export interface CurrentlyViewingDeal extends Deal {
+export interface CurrentlyViewingDeal extends DealRelevant {
   dealNumber: number | string;
   declarer: string;
   biddingTable: string;

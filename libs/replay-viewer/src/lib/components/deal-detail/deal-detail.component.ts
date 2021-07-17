@@ -12,7 +12,7 @@ import {
   CardinalDirection,
   CardValuesAsString,
   Contract,
-  Deal,
+  DealRelevant,
   HandsForConsumption,
   ReducerNames,
   Seating,
@@ -62,7 +62,7 @@ export class DealDetailComponent implements OnInit {
   @HostBinding('class.deal-detail') get classname() {
     return true;
   }
-  @Input() deal: Deal | null = null;
+  @Input() deal: DealRelevant | null = null;
   @Input() dealIndex: number | null = null;
   @Input() seating: Seating | null = null;
   public hands: HandsForConsumption = null;
