@@ -1,5 +1,9 @@
-import { Seating, Game } from './frontend-types';
+import { Seating, Game, DealCore } from './frontend-types';
 
+
+export interface DealRelevant extends DealCore {
+  _id: string,
+}
 export interface GameRelevant {
   deals: string[];
   players: string[];

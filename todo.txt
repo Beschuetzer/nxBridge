@@ -66,8 +66,5 @@ filters------------
 
 
 
--only send back relevant info on each game (deals,players, completionDate, room.name, room.seating, _id)
 -send back relevant deal info (bids, cardPlayerOrder,contract,dealer,declarer,doubleValue,hands, roundWinners, _d) can remove dealSummary, players, and redealCount
--all instances of Game interface need to be replaced with GameRelevant
--all instances of Room interface need to be replaced with RoomRelevant
 

@@ -1,3 +1,4 @@
+
 //#region Interfaces
 export interface DateObj {
   date: Date | null;
@@ -5,8 +6,21 @@ export interface DateObj {
 export interface Deal extends DealCore {
   [key: string]: any;
   players: ObjectId[];
-  // _id: string;
+  redealCount: number;
+  dealSummary: DealSummary;
 }
+export interface DealCore {
+  cardPlayOrder: number[];
+  hands: Hands;
+  roundWinners: string[][];
+  declarer: ObjectId;
+  dealer: ObjectId;
+  bids: Bid[];
+  contract: string;
+  northSouth: DealScoring;
+  eastWest: DealScoring;
+  doubleValue: number;
+};
 export interface DealGameIncomplete extends DealCore {
   agreeWithClaim: AgreeWithClaim;
   acceptedClaims: AcceptedClaim[];
@@ -215,20 +229,6 @@ export type CardValuesAsString =
   | 'Three'
   | 'Two';
 export type Contract = { prefix: string; htmlEntity: string, doubleMultiplier: number };
-type DealCore = {
-  cardPlayOrder: number[];
-  hands: Hands;
-  roundWinners: string[][];
-  declarer: ObjectId;
-  dealer: ObjectId;
-  bids: Bid[];
-  contract: string;
-  northSouth: DealScoring;
-  eastWest: DealScoring;
-  redealCount: number;
-  dealSummary: DealSummary;
-  doubleValue: number;
-};
 export type DealScoring = {
   [key: string]: any;
   aboveTheLine: number;

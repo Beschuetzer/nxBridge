@@ -43,22 +43,6 @@ export class GetGamesService {
     });
   }
 
-  private removeUnnecessaryDataFromGames(games: Game[]) {
-    console.log('games =', games);
-    const toReturn: GameRelevant[] = [];
-    // -only send back relevant info on each game (deals,players, completionDate, room.name, room.seating, _id)
-
-    for (let i = 0; i < games.length; i++) {
-      const game = games[i];
-      console.log('game =', game);
-      const newGame = this.getNewGame(game);
-      toReturn.push(newGame);
-    }
-
-    return toReturn;
-    
-  }
-
   private getNewGame(game: GameModel | Game) {
     const newRoom: RoomRelevant = {
       name: game.room.name,
@@ -76,4 +60,16 @@ export class GetGamesService {
     return newGame;
   }
 
+  private removeUnnecessaryDataFromGames(games: Game[]) {
+    const toReturn: GameRelevant[] = [];
+    // -only send back relevant info on each game (deals,players, completionDate, room.name, room.seating, _id)
+
+    for (let i = 0; i < games.length; i++) {
+      const game = games[i];
+      const newGame = this.getNewGame(game);
+      toReturn.push(newGame);
+    }
+
+    return toReturn;
+  }
 }
