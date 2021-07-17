@@ -253,6 +253,8 @@ export class DealsListComponent implements OnInit {
     const dealEastWest = deal[teamsFull[1]];
     const dealAfterDealEastWest = dealAfterDeal[teamsFull[1]];
 
+    debugger;
+
     if (
       dealNorthSouth?.aboveTheLine !== dealAfterDealNorthSouth?.aboveTheLine &&
       dealEastWest?.aboveTheLine !== dealAfterDealEastWest?.aboveTheLine

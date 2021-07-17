@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { InjectModel } from '@nestjs/mongoose';
 import { DealModel } from '@nx-bridge/api-mongoose-models';
 import { Model } from 'mongoose';
-import { ControllerResponse, Deal, DealRelevant, DealRequest, ErrorMessage } from '@nx-bridge/interfaces-and-types';
+import { ControllerResponse, Deal, DealRelevant, DealRequest, ErrorMessage, FetchedDeals } from '@nx-bridge/interfaces-and-types';
 import { getMongooseObjsFromRequestedDeals } from '@nx-bridge/constants';
 
 @Injectable({ providedIn: 'root'})
@@ -13,7 +13,7 @@ export class GetDealsService {
     @InjectModel('Deal') private DealsModel: Model<DealModel>,
   ) {}
 
-  async getDeals(userId: string): ControllerResponse<DealRelevant> {
+  async getDeals(userId: string): ControllerResponse<FetchedDeals> {
     if (!userId) {
       return new Promise((res, rej) => {
         res({message: "Invalid user id given in getDeals", status: 400} as ErrorMessage);
@@ -35,7 +35,7 @@ export class GetDealsService {
     }
   }
 
-  async getDealsInfo(requestedDeals: DealRequest): ControllerResponse<DealRelevant> {
+  async getDealsInfo(requestedDeals: DealRequest): ControllerResponse<FetchedDeals> {
     try {
       console.log('requestedDeals =', requestedDeals);
       if (!requestedDeals) return this.getErrorResponse();
@@ -68,7 +68,6 @@ export class GetDealsService {
       _id: deal._id,
     }
 
-    console.log('shouldAddScoring inside=', shouldAddScoring);
     if (shouldAddScoring) {
       newDeal['northSouth'] = deal.northSouth;
       newDeal['eastWest'] = deal.eastWest;
@@ -78,7 +77,7 @@ export class GetDealsService {
   }
 
   private removeUnnecessaryDataFromDeals(deals: Deal[], requestedDeals: DealRequest | null) {
-    const toReturn: DealRelevant = {} as DealRelevant;
+    const toReturn: FetchedDeals = {} as FetchedDeals;
 
     for (let i = 0; i < deals.length; i++) {
       const deal = deals[i];

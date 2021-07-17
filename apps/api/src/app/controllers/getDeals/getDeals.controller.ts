@@ -1,7 +1,7 @@
 import { Query, Get, Param, Post, Body } from '@nestjs/common';
 import { Controller } from '@nestjs/common';
 import { GET_DEALS_CONTROLLER_STRING, USER_ID_STRING, DEALS_STRING } from '@nx-bridge/constants';
-import { ControllerResponse, DealRequest, FetchedDeals } from '@nx-bridge/interfaces-and-types';
+import { ControllerResponse, DealRelevant, DealRequest, FetchedDeals } from '@nx-bridge/interfaces-and-types';
 import { GetDealsService } from './getDeals.service';
 
 @Controller(GET_DEALS_CONTROLLER_STRING)
@@ -18,7 +18,7 @@ export class GetDealsController {
   @Get(':dealId')
   async getDeal(
     @Param('dealId') dealId: string
-  ): ControllerResponse<FetchedDeals> {
+  ): ControllerResponse<DealRelevant> {
     return await this.getDealsService.getDeal(dealId);
   }
 
