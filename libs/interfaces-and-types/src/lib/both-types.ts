@@ -1,9 +1,18 @@
-import { Game} from '@nx-bridge/interfaces-and-types';
+import { Seating, Game } from './frontend-types';
+
+export interface GameRelevant {
+  deals: string[];
+  players: string[];
+  completionDate: number;
+  room: RoomRelevant,
+  _id: string,
+}
 
 export interface GetUserResponse {
   username: string,
   id: string,
 }
+
 
 export interface LocalStorageUserCore {
   [key: string]: string | number | Game[] | string[];
@@ -27,6 +36,10 @@ export interface LocalStorageUsers {
 
 export interface LocalStorageGames {
   [key: string]: Game[];
+}
+export interface RoomRelevant {
+  name: string,
+  seating: Seating,
 }
 
 export type EmptyLocalStorageDealsReturn = null;

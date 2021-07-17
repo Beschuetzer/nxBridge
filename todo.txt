@@ -61,10 +61,6 @@ Testing------------
 
 
 
-
-
-
-
 filters------------
   -won by more than...
 
@@ -72,42 +68,6 @@ filters------------
 
 -only send back relevant info on each game (deals,players, completionDate, room.name, room.seating, _id)
 -send back relevant deal info (bids, cardPlayerOrder,contract,dealer,declarer,doubleValue,hands, roundWinners, _d)
-   
-  
+-all instances of Game interface need to be replaced with GameRelevant
+-all instances of Room interface need to be replaced with RoomRelevant
 
-Issue with not saving all points to db-----------------------------------------------------------
-  1) Game: 602c9d254a35530017982d11: {gameRoundEndingScores: {northSouth: [0, 90], eastWest: [100, 120]},…}
-        deals: ["602c9d234a35530017982d0a", "602c9d244a35530017982d0b", "602c9d244a35530017982d0c",…]
-          0: "602c9d234a35530017982d0a"
-          1: "602c9d244a35530017982d0b"
-          2: "602c9d244a35530017982d0c"
-          3: "602c9d244a35530017982d0d"  <----not saved
-          4: "602c9d244a35530017982d0e"
-          5: "602c9d254a35530017982d0f"
-          6: "602c9d254a35530017982d10"
-          Adam: {distributionPoints: [0, 3, 0, 3, 5, 2], highCardPoints: [9, 9, 9, 13.75, 6.25, 13.5]}
-  
-  2) Game: 602a09f30fc7a50017b7688e:
-        deals: ["602a09ee0fc7a50017b76882", "602a09ee0fc7a50017b76883", "602a09ef0fc7a50017b76884",…]
-          0: "602a09ee0fc7a50017b76882"
-          1: "602a09ee0fc7a50017b76883"
-          2: "602a09ef0fc7a50017b76884"
-          3: "602a09ef0fc7a50017b76885"
-          4: "602a09f00fc7a50017b76886"
-          5: "602a09f00fc7a50017b76887"
-          6: "602a09f10fc7a50017b76888"
-          7: "602a09f10fc7a50017b76889"   <--- not saved
-          8: "602a09f10fc7a50017b7688a"
-          9: "602a09f20fc7a50017b7688b"
-          10: "602a09f20fc7a50017b7688c"
-          11: "602a09f20fc7a50017b7688d"
-          Adam: distributionPoints: [3, 3, 6, 5, 3, 7, 5, 0, 7, 4, 5], highCardPoints: [7.75, 12.75, 6.75, 5.25, 4.75, 17.5, 4.75, 1.5, 14.25, 8.25, 9]
-  
-  3) Game: 602ded9c42e6d700173a2d31:
-        deals: ["602ded9b42e6d700173a2d2c", "602ded9b42e6d700173a2d2d", "602ded9b42e6d700173a2d2e",…]
-          0: "602ded9b42e6d700173a2d2c"
-          1: "602ded9b42e6d700173a2d2d"
-          2: "602ded9b42e6d700173a2d2e"
-          3: "602ded9c42e6d700173a2d2f"
-          4: "602ded9c42e6d700173a2d30"  <--- not saved (dist points = 1)
-          Adam: {distributionPoints: [1, 2, 2, 4], highCardPoints: [12, 3, 4.5, 14.25]}
