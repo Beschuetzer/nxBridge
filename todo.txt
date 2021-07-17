@@ -69,7 +69,6 @@ filters------------
   -won by more than...
 
 
--deleting localStorage then -clicking too quickly on a game-detail after initial load causes issues (maybe do after click of some sort that can reset the game-detail?) 
-  -two options to fix: 
-    1) make games unclickable/invisible until ready to view (all deals done downloading)
-    2) add some sort of error handling logic that reloads if deal-detail's this.deal is invalid (harder but more appealing way)
+
+   
+  

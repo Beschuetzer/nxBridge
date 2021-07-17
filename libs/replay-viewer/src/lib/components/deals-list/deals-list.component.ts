@@ -213,7 +213,7 @@ export class DealsListComponent implements OnInit {
     }
 
     if (nsDealsWon === ewDealsWon) {
-      //todo: what to display in case of tie
+      this.dealCountMessage = `No winners here just players (tied)!`
     } else {
       if (nsDealsWon > ewDealsWon) winningTeam = teams[0];
       else winningTeam = teams[1];

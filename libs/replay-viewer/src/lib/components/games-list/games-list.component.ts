@@ -6,6 +6,7 @@ import { ANIMATION_DURATION, dealsListDealsButtonChoices, DEALS_LIST_CLASSNAME, 
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { DealPlayerService } from 'libs/deal-player/src/lib/deal-player.service';
 import { ReplayViewerDealService } from '../../services/replay-viewer.deal.service';
+import { FiltermanagerService } from '../../services/filter-manager.service';
 
 @Component({
   selector: 'nx-bridge-games-list',
@@ -16,15 +17,22 @@ export class GamesListComponent implements OnInit {
   @HostBinding('class.games-list') get classname() {
     return true;
   }
+
+  @HostBinding('class.hidden') get toggleHidden() {
+    return !this.isLoaded;
+  }
+
   public games: Game[] = [];
   public maxDisplayedPerPage = 25;
   public displayedMultiple = 0;  //means displaying games with index maxDisplayedPerPage * displayedMultiple up to but not including maxDisplayedPerPage * (displayedMultiple + 1)
+  private isLoaded = false;
 
   constructor(
     private dealPlayerService: DealPlayerService,
     private store: Store<AppState>,
     private renderer: Renderer2,
     private replayViewerDealService: ReplayViewerDealService,
+    private filterManagerService: FiltermanagerService,
   ) {}
 
   ngOnInit(): void {
@@ -32,6 +40,10 @@ export class GamesListComponent implements OnInit {
       if (gameState.currentlyDisplayingGames) this.games = gameState.currentlyDisplayingGames;
       else this.games = [];
     });
+
+    this.store.select(ReducerNames.deals).subscribe(dealState => {
+      this.isLoaded = Object.keys(dealState.fetchedDeals).length > 0;
+    })
   }
 
   onClick(e: Event) {
