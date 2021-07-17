@@ -1,7 +1,13 @@
 import { ElementRef, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import {
+  DateObj,
+  DateType,
   Deal,
+  FetchedDeals,
+  FilterItem,
+  FilterItemDeletion,
+  FilterItems,
   Filters,
   Game,
   PlayerHasCard,
@@ -23,9 +29,17 @@ import {
   SetOpeningBidFilter,
   SetDoubleFilter,
   SetPlayerInGameFilter,
+  RemovePlayerHasCard,
+  RemovePlayerInGameFilter,
 } from '@nx-bridge/store';
 import { switchMap, take } from 'rxjs/operators';
-import { FILTER_MANAGER_CLASSNAME, flatten, resetMatchedDeals } from '@nx-bridge/constants';
+import {
+  FILTER_MANAGER_CLASSNAME,
+  flatten,
+  getHtmlEntitySpan,
+  NOT_AVAILABLE_STRING,
+  resetMatchedDeals,
+} from '@nx-bridge/constants';
 
 @Injectable({
   providedIn: 'root',
@@ -60,8 +74,8 @@ export class FiltermanagerService {
     },
     playerInGame: {
       string: 'playerInGame',
-      errorKey:'playerInGame-error',
-    }
+      errorKey: 'playerInGame-error',
+    },
   };
   public filtersInitial: Filters = {
     [this.filters.beforeDate.string]: 0,
@@ -84,8 +98,7 @@ export class FiltermanagerService {
     [this.filters.playerHasCard.string]: new SetPlayerHasCard(
       this.filtersInitial?.playerHasCard
     ),
-    [this.filters.dealsThatMatchFilters
-      .string]: new SetDealsThatMatchFilters(
+    [this.filters.dealsThatMatchFilters.string]: new SetDealsThatMatchFilters(
       this.filtersInitial?.dealsThatMatchFilters
     ),
     [this.filters.contract.string]: new SetContractFilter(
@@ -147,7 +160,7 @@ export class FiltermanagerService {
       invalid: {
         tooMany: 'Only allowed to have four players in game',
         alreadyPresent: 'is already present',
-      }
+      },
     },
   };
   //#endregion
@@ -157,30 +170,45 @@ export class FiltermanagerService {
   public users: UserIds | null = null;
 
   constructor(private store: Store<AppState>) {
-    this.store.select(ReducerNames.users).subscribe(userState => {
+    this.store.select(ReducerNames.users).subscribe((userState) => {
       this.users = userState.userIds;
-    })
+    });
   }
 
-  getBeforeAndAfterDateInfo() {
-    let beforeDate = -2;
-    let afterDate = -2;
-    const beforeDateElement = document.querySelector(
-      `#${this.filters.beforeDate.string}`
-    ) as HTMLInputElement;
-    const afterDateElement = document.querySelector(
-      `#${this.filters.afterDate.string}`
-    ) as HTMLInputElement;
+  canResetDealsThatMatchFilters(filterItems: FilterItems) {
+    //note: add keys of filters that DO NOT work on the deal level below
+    const keysToCheckAgainst = [
+      this.filters.afterDate.string,
+      this.filters.beforeDate.string,
+      `${this.filters.playerInGame.string}-0`,
+      `${this.filters.playerInGame.string}-1`,
+      `${this.filters.playerInGame.string}-2`,
+      `${this.filters.playerInGame.string}-3`,
+    ];
 
-    this.store
-      .select(ReducerNames.filters)
-      .pipe(take(1))
-      .subscribe((filterState) => {
-        beforeDate = filterState.beforeDate;
-        afterDate = filterState.afterDate;
-      });
+    const filterKeys = Object.keys(filterItems);
+    for (let i = 0; i < filterKeys.length; i++) {
+      const filterKey = filterKeys[i];
+      if (!keysToCheckAgainst.includes(filterKey)) return false;
+    }
 
-    return { beforeDate, afterDate, beforeDateElement, afterDateElement };
+    return true;
+  }
+
+  dispatchCorrectResetAction(toDelete: FilterItemDeletion) {
+    if (toDelete.key.match(/playerHasCard\d+/i))
+      return this.store.dispatch(
+        new RemovePlayerHasCard({
+          username: toDelete.username ? toDelete.username : '',
+          card: toDelete.card !== undefined ? toDelete.card : -2,
+        })
+      );
+    else if (toDelete.key.match(/playerInGame-\d+/i))
+      return this.store.dispatch(
+        new RemovePlayerInGameFilter(toDelete.username ? toDelete.username : '')
+      );
+
+    return this.store.dispatch(toDelete.resetAction);
   }
 
   filterGames(games: Game[]) {
@@ -210,6 +238,128 @@ export class FiltermanagerService {
     this.store.dispatch(new SetFilteredGames(filteredGames));
     this.store.dispatch(new SetIsFilterSame(true));
     return filteredGames;
+  }
+
+  getAreDealsLoaded() {
+    let areLoaded = false;
+    this.store
+      .select(ReducerNames.deals)
+      .pipe(take(1))
+      .subscribe((dealState) => {
+        areLoaded = Object.keys(dealState.fetchedDeals).length > 0;
+      });
+    return !areLoaded;
+  }
+
+  getBeforeAndAfterDateInfo() {
+    let beforeDate = -2;
+    let afterDate = -2;
+    const beforeDateElement = document.querySelector(
+      `#${this.filters.beforeDate.string}`
+    ) as HTMLInputElement;
+    const afterDateElement = document.querySelector(
+      `#${this.filters.afterDate.string}`
+    ) as HTMLInputElement;
+
+    this.store
+      .select(ReducerNames.filters)
+      .pipe(take(1))
+      .subscribe((filterState) => {
+        beforeDate = filterState.beforeDate;
+        afterDate = filterState.afterDate;
+      });
+
+    return { beforeDate, afterDate, beforeDateElement, afterDateElement };
+  }
+
+  getIsSelectedCardUsedAlready(selectedCard: number) {
+    if (selectedCard === -1) return false;
+    let toReturn: string | boolean = false;
+    this.store
+      .select(ReducerNames.filters)
+      .pipe(take(1))
+      .subscribe((filterState) => {
+        const playerHasCardFilters = filterState.playerHasCard;
+        for (const username in playerHasCardFilters) {
+          if (
+            Object.prototype.hasOwnProperty.call(playerHasCardFilters, username)
+          ) {
+            const playerHasCardFilter = playerHasCardFilters[username];
+            if (playerHasCardFilter.includes(selectedCard)) {
+              toReturn = username;
+              break;
+            }
+          }
+        }
+      });
+    return toReturn;
+  }
+
+  getPlayerHasCardFilterItem(
+    cardSelectElement: HTMLSelectElement,
+    usernameSelectElement: HTMLSelectElement,
+    selectedCard: number,
+    selectedUsername: string
+  ): [string, FilterItem] {
+    const htmlEntitySpan = getHtmlEntitySpan(selectedCard);
+    const filterItem: FilterItem = {
+      elementsToReset: [cardSelectElement, usernameSelectElement],
+      message: `'${selectedUsername}' had the ${htmlEntitySpan}`,
+      error: '',
+      username: selectedUsername,
+      card: selectedCard,
+    };
+
+    const uniqueNumber = Math.round(Math.random() * Math.random() * 1000000000);
+    const uniqueKey = `${this.filters.playerHasCard.string}${uniqueNumber}`;
+
+    return [uniqueKey, filterItem];
+  }
+
+  getPlayerHasCardErrorMessage(
+    usernameWhoHasCard: string,
+    selectedCard: number
+  ) {
+    const htmlEntitySpan = getHtmlEntitySpan(selectedCard);
+    const toAdd: FilterItem = {
+      message: NOT_AVAILABLE_STRING,
+      error: `${htmlEntitySpan} ${this.filterMsgs.playerHasCard.invalid} '${usernameWhoHasCard}'`,
+      elementsToReset: [],
+    };
+
+    return toAdd;
+  }
+
+  getShouldResetStoreOnDeletion(toDelete: FilterItemDeletion) {
+    const isPlayerHasCardError = toDelete.key.match(
+      this.filters.playerHasCard.errorKey
+    );
+
+    const isPlayerInGameError = toDelete.key.match(
+      this.filters.playerInGame.errorKey
+    );
+
+    return !isPlayerHasCardError && !isPlayerInGameError;
+  }
+
+  getUniquePlayerNames(deals: FetchedDeals) {
+    if (!deals) return;
+
+    const uniqueNames: string[] = [];
+
+    for (const dealId in deals) {
+      if (Object.prototype.hasOwnProperty.call(deals, dealId)) {
+        const deal = deals[dealId];
+        const usernames = Object.keys(deal.hands);
+        for (let j = 0; j < usernames.length; j++) {
+          const username = usernames[j];
+          const index = uniqueNames.findIndex((name) => name === username);
+          if (index === -1) uniqueNames.push(username);
+        }
+      }
+    }
+
+    return uniqueNames;
   }
 
   reset() {
@@ -256,6 +406,44 @@ export class FiltermanagerService {
     });
   }
 
+  validateDate(
+    date: string,
+    dateType: DateType,
+    beforeDate: DateObj,
+    afterDate: DateObj
+  ) {
+    let isDateInvalid = false;
+    let isSingle = true;
+
+    const dateObj = new Date(date);
+    const proposedTime = dateObj.getTime();
+    const currentTime = Date.now() - 60001;
+
+    const beforeOrAfterString =
+      dateType === DateType.before ? 'before' : 'after';
+    let exactErrorString = '';
+
+    if (proposedTime >= currentTime && dateType === DateType.after) {
+      exactErrorString = 'afterNow';
+      isDateInvalid = true;
+      if (beforeDate?.date) isSingle = false;
+    } else if (beforeDate?.date && dateType === DateType.after) {
+      isDateInvalid = beforeDate.date.getTime() <= proposedTime;
+      isSingle = false;
+    } else if (afterDate?.date && dateType === DateType.before) {
+      isDateInvalid = afterDate.date.getTime() >= proposedTime;
+      isSingle = false;
+    } else isDateInvalid = !date;
+
+    if (!exactErrorString) exactErrorString = isSingle ? 'single' : 'multiple';
+
+    const filterMsgError = (this.filterMsgs.date[
+      beforeOrAfterString as any
+    ] as any).invalid[exactErrorString];
+
+    return { isDateInvalid, dateObj, filterMsgError };
+  }
+
   private applyFilters(games: Game[], filters: Filters) {
     let filteredGames: Game[] = games;
 
@@ -265,8 +453,14 @@ export class FiltermanagerService {
       filters.beforeDate
     );
     filteredGames = this.getAfterDateMatches(filteredGames, filters.afterDate);
-    filteredGames = this.getPlayerInGameMatches(filteredGames, filters.playerInGame);
-    filteredGames = this.runFiltersThatModifyDealsThatMatch(filteredGames, filters);
+    filteredGames = this.getPlayerInGameMatches(
+      filteredGames,
+      filters.playerInGame
+    );
+    filteredGames = this.runFiltersThatModifyDealsThatMatch(
+      filteredGames,
+      filters
+    );
 
     return filteredGames;
   }
@@ -311,9 +505,7 @@ export class FiltermanagerService {
     return bid === this.filtersInitial.openingBid;
   }
 
-  private getCanSkipPlayerHasCard(
-    playerHasCards: PlayerHasCard
-  ) {
+  private getCanSkipPlayerHasCard(playerHasCards: PlayerHasCard) {
     if (
       !playerHasCards ||
       playerHasCards['initial'] ||
@@ -353,7 +545,10 @@ export class FiltermanagerService {
     return !!openingBid.match(new RegExp(bid, 'i'));
   }
 
-  private getPassesPlayerHasCardFilter(playerHasCards: PlayerHasCard, deal: Deal) {
+  private getPassesPlayerHasCardFilter(
+    playerHasCards: PlayerHasCard,
+    deal: Deal
+  ) {
     let canSkipToNextDeal = false;
     let shouldAddDeal = true;
     for (const username in playerHasCards) {
@@ -381,7 +576,8 @@ export class FiltermanagerService {
   }
 
   private getPlayerInGameMatches(games: Game[], playersInGame: PlayerInGame) {
-    if (playersInGame.includes(`${reducerDefaultValue}`) || !playersInGame) return games;
+    if (playersInGame.includes(`${reducerDefaultValue}`) || !playersInGame)
+      return games;
 
     const toReturn: Game[] = [];
     for (let i = 0; i < games.length; i++) {
@@ -402,19 +598,25 @@ export class FiltermanagerService {
     return toReturn;
   }
 
-  private runFiltersThatModifyDealsThatMatch(
-    games: Game[],
-    filters: Filters,
-  ) {
+  private runFiltersThatModifyDealsThatMatch(games: Game[], filters: Filters) {
     this.dealsThatMatch = [];
 
     //note: add skipping logic in here
-    const canSkipPlayerHasCardFilter = this.getCanSkipPlayerHasCard(filters.playerHasCard);
+    const canSkipPlayerHasCardFilter = this.getCanSkipPlayerHasCard(
+      filters.playerHasCard
+    );
     const canSkipContractFilter = this.getCanSkipContract(filters.contract);
     const canSkipDeclarerFilter = this.getCanSkipDeclarer(filters.declarer);
     const canSkipDoubleFilter = this.getCanSkipDouble(filters.double);
-    const canSkipOpeningBidFilter = this.getCanSkipOpeningBid(filters.openingBid);
-    const canSkip = canSkipContractFilter && canSkipPlayerHasCardFilter && canSkipDeclarerFilter && canSkipOpeningBidFilter && canSkipDoubleFilter;
+    const canSkipOpeningBidFilter = this.getCanSkipOpeningBid(
+      filters.openingBid
+    );
+    const canSkip =
+      canSkipContractFilter &&
+      canSkipPlayerHasCardFilter &&
+      canSkipDeclarerFilter &&
+      canSkipOpeningBidFilter &&
+      canSkipDoubleFilter;
     if (canSkip) return games;
 
     resetMatchedDeals();
@@ -438,16 +640,27 @@ export class FiltermanagerService {
 
         //note: add filter logic here
         let shouldAddDeal = true;
-        
-        if (!canSkipContractFilter && shouldAddDeal) shouldAddDeal = this.getPassesContractFilter(filters.contract, deal);
 
-        if (!canSkipDeclarerFilter && shouldAddDeal) shouldAddDeal = this.getPassesDeclarerFilter(filters.declarer, deal);
+        if (!canSkipContractFilter && shouldAddDeal)
+          shouldAddDeal = this.getPassesContractFilter(filters.contract, deal);
 
-        if (!canSkipOpeningBidFilter && shouldAddDeal) shouldAddDeal = this.getPassesOpeningBidFilter(filters.openingBid, deal);
+        if (!canSkipDeclarerFilter && shouldAddDeal)
+          shouldAddDeal = this.getPassesDeclarerFilter(filters.declarer, deal);
 
-        if (!canSkipDoubleFilter && shouldAddDeal) shouldAddDeal = this.getPassesDoubleFilter(filters.double, deal);
-        
-        if (!canSkipPlayerHasCardFilter && shouldAddDeal) shouldAddDeal = this.getPassesPlayerHasCardFilter(filters.playerHasCard, deal);
+        if (!canSkipOpeningBidFilter && shouldAddDeal)
+          shouldAddDeal = this.getPassesOpeningBidFilter(
+            filters.openingBid,
+            deal
+          );
+
+        if (!canSkipDoubleFilter && shouldAddDeal)
+          shouldAddDeal = this.getPassesDoubleFilter(filters.double, deal);
+
+        if (!canSkipPlayerHasCardFilter && shouldAddDeal)
+          shouldAddDeal = this.getPassesPlayerHasCardFilter(
+            filters.playerHasCard,
+            deal
+          );
 
         if (shouldAddDeal) {
           if (!hasGameBeenAdded) {
@@ -459,9 +672,7 @@ export class FiltermanagerService {
       }
     }
 
-    this.store.dispatch(
-      new SetDealsThatMatchFilters(this.dealsThatMatch)
-    );
+    this.store.dispatch(new SetDealsThatMatchFilters(this.dealsThatMatch));
 
     return toReturn;
   }
