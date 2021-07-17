@@ -9,7 +9,7 @@ import {
   FilterItemDeletion,
   FilterItems,
   Filters,
-  Game,
+  GameRelevant,
   PlayerHasCard,
   PlayerInGame,
   ReducerNames,
@@ -211,7 +211,7 @@ export class FiltermanagerService {
     return this.store.dispatch(toDelete.resetAction);
   }
 
-  filterGames(games: Game[]) {
+  filterGames(games: GameRelevant[]) {
     if (!games) return games;
     let isFilterSame = true;
     let filteredGames = games;
@@ -444,8 +444,8 @@ export class FiltermanagerService {
     return { isDateInvalid, dateObj, filterMsgError };
   }
 
-  private applyFilters(games: Game[], filters: Filters) {
-    let filteredGames: Game[] = games;
+  private applyFilters(games: GameRelevant[], filters: Filters) {
+    let filteredGames: GameRelevant[] = games;
 
     //NOTE: add new filters here; arrange in order of least to most cpu intensive to minimize cpu load
     filteredGames = this.getBeforeDateMatches(
@@ -465,10 +465,10 @@ export class FiltermanagerService {
     return filteredGames;
   }
 
-  private getAfterDateMatches(games: Game[], afterDate: number) {
+  private getAfterDateMatches(games: GameRelevant[], afterDate: number) {
     if (!afterDate) return games;
 
-    const toReturn: Game[] = [];
+    const toReturn: GameRelevant[] = [];
     for (let i = 0; i < games.length; i++) {
       const game = games[i];
       if (game.completionDate >= afterDate) toReturn.push(game);
@@ -477,10 +477,10 @@ export class FiltermanagerService {
     return toReturn;
   }
 
-  private getBeforeDateMatches(games: Game[], beforeDate: number) {
+  private getBeforeDateMatches(games: GameRelevant[], beforeDate: number) {
     if (!beforeDate) return games;
 
-    const toReturn: Game[] = [];
+    const toReturn: GameRelevant[] = [];
     for (let i = 0; i < games.length; i++) {
       const game = games[i];
       if (game.completionDate <= beforeDate) toReturn.push(game);
@@ -575,11 +575,11 @@ export class FiltermanagerService {
     return shouldAddDeal;
   }
 
-  private getPlayerInGameMatches(games: Game[], playersInGame: PlayerInGame) {
+  private getPlayerInGameMatches(games: GameRelevant[], playersInGame: PlayerInGame) {
     if (playersInGame.includes(`${reducerDefaultValue}`) || !playersInGame)
       return games;
 
-    const toReturn: Game[] = [];
+    const toReturn: GameRelevant[] = [];
     for (let i = 0; i < games.length; i++) {
       const game = games[i];
       const seating = game.room.seating;
@@ -598,7 +598,7 @@ export class FiltermanagerService {
     return toReturn;
   }
 
-  private runFiltersThatModifyDealsThatMatch(games: Game[], filters: Filters) {
+  private runFiltersThatModifyDealsThatMatch(games: GameRelevant[], filters: Filters) {
     this.dealsThatMatch = [];
 
     //note: add skipping logic in here

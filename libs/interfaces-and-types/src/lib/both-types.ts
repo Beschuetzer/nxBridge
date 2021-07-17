@@ -15,7 +15,7 @@ export interface GetUserResponse {
 
 
 export interface LocalStorageUserCore {
-  [key: string]: string | number | Game[] | string[];
+  [key: string]: string | number | GameRelevant[] | string[];
   lastSearchDate: number;
   username: string;
   lastGameCount: number;
@@ -27,7 +27,7 @@ export interface LocalStorageUser extends LocalStorageUserCore {
 }
 
 export interface LocalStorageUserWithGames extends LocalStorageUserCore {
-  games: Game[];
+  games: GameRelevant[];
 }
 
 export interface LocalStorageUsers {
@@ -35,7 +35,7 @@ export interface LocalStorageUsers {
 }
 
 export interface LocalStorageGames {
-  [key: string]: Game[];
+  [key: string]: GameRelevant[];
 }
 export interface RoomRelevant {
   name: string,

@@ -1,18 +1,18 @@
-import { Game } from '@nx-bridge/interfaces-and-types';
+import { GameRelevant } from '@nx-bridge/interfaces-and-types';
 import * as fromGameActions from '../actions/game.actions';
 
 export interface GameState {
-  games: Game[];
-  currentlyDisplayingGames: Game[];
-  filteredGames: Game[];
+  games: GameRelevant[];
+  currentlyDisplayingGames: GameRelevant[];
+  filteredGames: GameRelevant[];
   currentlyViewingGame: fromGameActions.CurrentlyViewingGame;
   isViewingGame: boolean;
 }
 
 const INITIAL_STATE: GameState = {
   games: [],
-  currentlyDisplayingGames: [] as Game[],
-  filteredGames: [] as Game[],
+  currentlyDisplayingGames: [] as GameRelevant[],
+  filteredGames: [] as GameRelevant[],
   currentlyViewingGame: {} as fromGameActions.CurrentlyViewingGame,
   isViewingGame: false,
 };

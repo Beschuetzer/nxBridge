@@ -2,7 +2,7 @@ import {
   CardValuesAsString,
   DateObj,
   Deal,
-  Game,
+  GameRelevant,
   SortOptions,
 } from '@nx-bridge/interfaces-and-types';
 import * as mongoose from 'mongoose';
@@ -121,18 +121,18 @@ export const scrollToSection = (
   });
 };
 
-export function sortDescending(games: Game[]) {
+export function sortDescending(games: GameRelevant[]) {
   //todo: look up which sorting algorithm to use
   games.reverse();
 }
 
-export function sortAscending(games: Game[]) {
+export function sortAscending(games: GameRelevant[]) {
   //todo: look up which sorting algorithm to use
   // games.reverse();
 }
 
 export function paginateGames(
-  games: Game[],
+  games: GameRelevant[],
   sortPreference: string,
   batchNumber: number,
   numberPerBatch: number
@@ -141,7 +141,7 @@ export function paginateGames(
   if (!games || games.length <= 0) return [];
   const batchStart = numberPerBatch * batchNumber;
   const batchEnd = batchStart + numberPerBatch;
-  let toReturnGames: Game[] = [];
+  let toReturnGames: GameRelevant[] = [];
   if (sortPreference === SortOptions.descending)
     toReturnGames = games.slice(batchStart, batchEnd);
   else {

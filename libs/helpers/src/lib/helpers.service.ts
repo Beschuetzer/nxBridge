@@ -1,7 +1,7 @@
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Deal, Game, GetUserResponse, UserIds } from '@nx-bridge/interfaces-and-types';
+import { Deal, GameRelevant, GetUserResponse, UserIds } from '@nx-bridge/interfaces-and-types';
 import * as ngrxStore from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
 import {
@@ -14,7 +14,6 @@ import {
   USERS_STRING,
   GET_GAME_COUNT_URL,
   GET_GAMES_LAST_STRING,
-  DEALS_STRING,
   GET_DEALS_URL,
 } from '@nx-bridge/constants';
 
@@ -37,7 +36,7 @@ export class HelpersService {
 
   getGames(userId: string, numberOfGamesToGet?: number) {
     const queryStringToUse = `${USER_ID_STRING}=${userId}&${GET_GAMES_LAST_STRING}=${numberOfGamesToGet}`;
-    return this.http.get<Game[]>(`${GET_GAMES_URL}?${queryStringToUse}`);
+    return this.http.get<GameRelevant[]>(`${GET_GAMES_URL}?${queryStringToUse}`);
   }
 
   getUser(usernameValue: string, emailValue: string) {
@@ -54,7 +53,7 @@ export class HelpersService {
     });
   }
 
-  getDealsAsStrings(games: Game[]) {
+  getDealsAsStrings(games: GameRelevant[]) {
     const deals: string[] = [];
     if (!games) return deals;
     for (let i = 0; i < games.length; i++) {

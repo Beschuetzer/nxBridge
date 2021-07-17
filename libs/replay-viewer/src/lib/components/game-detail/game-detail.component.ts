@@ -1,7 +1,7 @@
 import { Component, HostBinding, Input, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { GAME_DETAIL_CLASSNAME, teams } from '@nx-bridge/constants';
-import { Deal, Game, ReducerNames, Seating, Team } from '@nx-bridge/interfaces-and-types';
+import { Deal, GameRelevant, ReducerNames, Seating, Team } from '@nx-bridge/interfaces-and-types';
 import { AppState, reducerDefaultValue } from '@nx-bridge/store';
 
 @Component({
@@ -11,7 +11,7 @@ import { AppState, reducerDefaultValue } from '@nx-bridge/store';
 })
 export class GameDetailComponent implements OnInit {
   @HostBinding('class.game-detail') get className() { return true};
-  @Input() game: Game | null = null;
+  @Input() game: GameRelevant | null = null;
   public usernames: string[] | null = null;
   public userIds: string[] | null = null;
   public GAME_DETAIL_CLASSNAME = GAME_DETAIL_CLASSNAME;
@@ -32,8 +32,8 @@ export class GameDetailComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.usernames = this.getUsersnamesFromGame(this.game as Game);
-    this.userIds = this.getUserIdsFromGame(this.game as Game);
+    this.usernames = this.getUsersnamesFromGame(this.game as GameRelevant);
+    this.userIds = this.getUserIdsFromGame(this.game as GameRelevant);
     this.seating = this.game?.room.seating as Seating;
 
     const lastDeal = this.game?.deals[this.game.deals.length - 1];
@@ -43,14 +43,14 @@ export class GameDetailComponent implements OnInit {
     })
   }
 
-  private getUserIdsFromGame (game: Game) {
+  private getUserIdsFromGame (game: GameRelevant) {
     if (!game) return null;
     return game.players;
   }
 
-  private getUsersnamesFromGame(game: Game) {
+  private getUsersnamesFromGame(game: GameRelevant) {
     if (!game) return [];
-    return Object.keys(game.points);
+    return Object.values(game.room.seating);
   }
 
   private setWinnerAndScores(deal: Deal) {

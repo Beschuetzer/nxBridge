@@ -14,19 +14,18 @@ import {
   SetLoadingError,
   SetDealsAsStrings,
   DealState,
-  AddFetchedDeals,
   SetFetchedDeals,
 } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
 import {
   Deal,
   FetchedDeals,
+  GameRelevant,
   GetUserResponse,
   LocalStorageUserWithGames,
   ReducerNames,
 } from '@nx-bridge/interfaces-and-types';
 import { paginateGames, rootRoute } from '@nx-bridge/constants';
-import { Game } from '@nx-bridge/interfaces-and-types';
 import { LocalStorageManagerService } from './local-storage-manager.service';
 import { ERROR_APPENDING_GAMES } from '@nx-bridge/api-errors';
 import { switchMap, take } from 'rxjs/operators';
@@ -93,7 +92,7 @@ export class SearchService {
     let sortPreference: string;
     let resultsPerPage: string;
     let batchNumber: number;
-    let games: Game[];
+    let games: GameRelevant[];
 
     this.store
       .select(ReducerNames.general)
@@ -210,7 +209,6 @@ export class SearchService {
 
     const localStorageGames = this.localStorageManager.getLocalStorageGames();
     
-    debugger;
     if (this.localGameCount > Object.keys(localStorageGames).length) {
       this.localGameCount = 0;
     }
@@ -223,7 +221,7 @@ export class SearchService {
       });
   }
 
-  private getLocalStorageUserWithGames(games: Game[]) {
+  private getLocalStorageUserWithGames(games: GameRelevant[]) {
     if (this.needToCreateLocalStorageUser)
       this.localStorageManager.createLocalStorageUser(
         this.userId,
@@ -294,7 +292,7 @@ export class SearchService {
       });
   }
 
-  private handleGetGamesResponse(games: Game[]) {
+  private handleGetGamesResponse(games: GameRelevant[]) {
     console.log('games =', games);
 
     const localStorageUserWithGames = this.getLocalStorageUserWithGames(games);
@@ -340,7 +338,7 @@ export class SearchService {
 
   private loadDeals(localStorageUserWithGames: LocalStorageUserWithGames) {
     const neededDealsAsStrings = this.helpersService.getDealsAsStrings(
-      localStorageUserWithGames?.games as Game[]
+      localStorageUserWithGames?.games as GameRelevant[]
     );
     if (neededDealsAsStrings.length <= 0) return;
     this.store.dispatch(new SetDealsAsStrings(neededDealsAsStrings));

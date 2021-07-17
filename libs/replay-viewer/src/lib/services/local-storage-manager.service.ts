@@ -11,8 +11,8 @@ import {
   EmptyLocalStorageGamesReturn,
   EmptyLocalStorageUsersReturn,
   FetchedDeals,
-  Game,
   GameDetailDisplayPreferences,
+  GameRelevant,
   LocalStorageGames,
   LocalStorageUser,
   LocalStorageUsers,
@@ -48,7 +48,7 @@ export class LocalStorageManagerService {
     private store: Store<AppState>
   ) {}
 
-  appendGamesToLocalStorageUser(userId: string, games: Game[]) {
+  appendGamesToLocalStorageUser(userId: string, games: GameRelevant[]) {
     const localStorageUser = this.getLocalStorageUser(userId);
 
     if (!localStorageUser) return false;
@@ -76,7 +76,7 @@ export class LocalStorageManagerService {
     userId: string,
     username: string,
     email: string,
-    games: Game[],
+    games: GameRelevant[],
     gameCount: number
   ) {
     if (!userId) return null;
@@ -127,7 +127,7 @@ export class LocalStorageManagerService {
     const localStorageUser = this.getLocalStorageUser(userId);
     if (!localStorageUser) return [];
 
-    const games: Game[] = [];
+    const games: GameRelevant[] = [];
 
     for (let i = 0; i < localStorageUser?.gameIds?.length; i++) {
       const localGameId = localStorageUser?.gameIds[i];
@@ -206,12 +206,12 @@ export class LocalStorageManagerService {
     const localStorageUser = this.getLocalStorageUser(userId) as any;
     if (!localStorageUser) return this.EMPTY_LOCAL_STORAGE_USERS_RETURNS;
 
-    const games: Game[] = [];
+    const games: GameRelevant[] = [];
     const userIdsInGames: string[] = [];
 
     for (let i = 0; i < localStorageUser.gameIds.length; i++) {
       const gameId = localStorageUser.gameIds[i];
-      const game = this.getGameFromGameId(gameId) as Game;
+      const game = this.getGameFromGameId(gameId) as GameRelevant;
       if (game) {
         if (
           games.length === 0 ||
@@ -379,7 +379,7 @@ export class LocalStorageManagerService {
     this.saveLocalStorageUser(userId, localStorageUser);
   }
 
-  private getGameIds(games: Game[]) {
+  private getGameIds(games: GameRelevant[]) {
     return games.map((game) => (game as any)._id);
   }
 
@@ -389,7 +389,7 @@ export class LocalStorageManagerService {
     return toReturn;
   }
 
-  public getIndexToAddGameIntoGames(games: Game[], game: Game) {
+  public getIndexToAddGameIntoGames(games: GameRelevant[], game: GameRelevant) {
     //assumes games is in descending order already
     //assumes completionDates are unique (they are date ints)
     //find index at which game.completionDate >= games[index].completionDate and <= game[index + 1].completionDate then return that index + 1;
@@ -436,8 +436,8 @@ export class LocalStorageManagerService {
       let currentIndex = Math.floor(games.length / 2);
       let maxIndex = DEFAULT_RETURN_VALUE;
       let minIndex = 0;
-      let afterCurrentGame: Game;
-      let currentGame: Game;
+      let afterCurrentGame: GameRelevant;
+      let currentGame: GameRelevant;
 
       const lastGame = games[DEFAULT_RETURN_VALUE];
       const firstGame = games[minIndex];
@@ -524,7 +524,7 @@ export class LocalStorageManagerService {
     } else this.store.dispatch(new SetUserIds(userIdObjs));
   }
 
-  private saveGameIds(games: Game[]) {
+  private saveGameIds(games: GameRelevant[]) {
     const localStorageGames = this.getLocalStorageGames() as any;
 
     for (let i = 0; i < games.length; i++) {
