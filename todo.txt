@@ -58,7 +58,6 @@ Testing------------
 -consider change "Games played by..." wording and font-size
 -finish sortDescending and sortAscending()?
 -clicking too quickly on a game-detail after initial load causes issues (maybe do after click of some sort that can reset the game-detail?)
--when clicking search, reset all filters?
 
 
 
@@ -66,6 +65,7 @@ Testing------------
 
 
 
-
+filters------------
+  -won by more than...
 
 

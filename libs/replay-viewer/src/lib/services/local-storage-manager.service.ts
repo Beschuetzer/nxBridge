@@ -7,8 +7,10 @@ import {
 } from '@nx-bridge/constants';
 import { HelpersService } from '@nx-bridge/helpers';
 import {
+  EmptyLocalStorageDealsReturn,
   EmptyLocalStorageGamesReturn,
   EmptyLocalStorageUsersReturn,
+  FetchedDeals,
   Game,
   GameDetailDisplayPreferences,
   LocalStorageGames,
@@ -25,6 +27,7 @@ import { AppState, SetUserIds } from '@nx-bridge/store';
 export class LocalStorageManagerService {
   public usersInLocalStorage = 'users';
   public gamesInLocalStorage = 'games';
+  public dealsInLocalStorage = 'deals';
   public sortPreferenceInLocalStorage = 'sort';
   public sizePreferenceInLocalStorage = 'size';
   public resultsPerPagePreferenceInLocalStorage = 'resultsPerPage';
@@ -101,6 +104,24 @@ export class LocalStorageManagerService {
     return localStorageUsers;
   }
 
+  getFreeSpace() {
+    let _lsTotal = 0;
+    let _xLen;
+    let _x;
+    for (_x in localStorage) {
+        // eslint-disable-next-line no-prototype-builtins
+        if (!localStorage.hasOwnProperty(_x)) {
+            continue;
+        }
+        _xLen = ((localStorage[_x].length + _x.length) * 2);
+        _lsTotal += _xLen;
+        console.log(_x.substr(0, 50) + " = " + (_xLen / 1024).toFixed(2) + " KB")
+    };
+    const total = (_lsTotal / 1024).toFixed(2);
+    console.log("Total = " + total + " KB");
+    return +total;
+  }
+
   getGames(userId: string) {
     const localStorageGames = this.getLocalStorageGames();
     const localStorageUser = this.getLocalStorageUser(userId);
@@ -143,6 +164,13 @@ export class LocalStorageManagerService {
     if (!localStorageUsers || !localStorageUsers[userId]) return 0;
 
     return localStorageUsers[userId].lastGameCount;
+  }
+
+  getLocalStorageDeals(): FetchedDeals | EmptyLocalStorageDealsReturn
+  {
+    const localStorageDeals = localStorage.getItem(this.dealsInLocalStorage);
+    if (localStorageDeals) return JSON.parse(localStorageDeals);
+    return null;
   }
 
   getLocalStorageGames(): LocalStorageGames | EmptyLocalStorageGamesReturn {
@@ -272,6 +300,12 @@ export class LocalStorageManagerService {
       }
       return parsed;
     } else return null;
+  }
+
+  saveDeals(fetchedDeals: FetchedDeals) {
+    debugger;
+    const localStorageDeals = this.getLocalStorageDeals();
+    localStorage.setItem(this.dealsInLocalStorage, JSON.stringify({...localStorageDeals, ...fetchedDeals}));
   }
 
   saveResultsPerPagePreference(resultsPerPagePreference: string) {

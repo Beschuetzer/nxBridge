@@ -334,7 +334,6 @@ export class SearchService {
     if (neededDealsAsStrings.length <= 0) return;
     this.store.dispatch(new SetDealsAsStrings(neededDealsAsStrings));
 
-
     this.store.select(ReducerNames.deals).pipe(
       take(1),
       switchMap((dealState: DealState) => {
@@ -343,6 +342,7 @@ export class SearchService {
       })
     ).subscribe((deals: Deal[]) => {
       const fetchedDeals = this.convertDealsToFetchedDeals(deals);
+      this.localStorageManager.saveDeals(fetchedDeals);
       this.store.dispatch(new AddFetchedDeals(fetchedDeals));
     })
   }

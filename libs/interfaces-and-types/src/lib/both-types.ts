@@ -29,5 +29,6 @@ export interface LocalStorageGames {
   [key: string]: Game[];
 }
 
+export type EmptyLocalStorageDealsReturn = null;
 export type EmptyLocalStorageUsersReturn = null;
 export type EmptyLocalStorageGamesReturn = {[key:string]: Game[]};
