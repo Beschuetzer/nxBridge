@@ -66,4 +66,3 @@ filters------------
 
 -add loading spinner while deals are loading
 
-deals-list__deal-count is incorrect for PUtnam patt 4/21/21 7:52pm

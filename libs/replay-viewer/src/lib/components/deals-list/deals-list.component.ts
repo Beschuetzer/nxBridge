@@ -76,7 +76,7 @@ export class DealsListComponent implements OnInit {
     private elRef: ElementRef,
     private http: HttpClient,
     private store: Store<AppState>,
-    private replayViewerDealService: ReplayViewerDealService,
+    private replayViewerDealService: ReplayViewerDealService
   ) {}
 
   // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
@@ -134,10 +134,13 @@ export class DealsListComponent implements OnInit {
 
     let fetchedDeals: FetchedDeals = {};
     const dealsToReturn: DealRelevant[] = [];
-    
-    this.store.select(ReducerNames.deals).pipe(take(1)).subscribe(dealState => {
-      fetchedDeals = dealState.fetchedDeals;
-    })
+
+    this.store
+      .select(ReducerNames.deals)
+      .pipe(take(1))
+      .subscribe((dealState) => {
+        fetchedDeals = dealState.fetchedDeals;
+      });
 
     for (let i = 0; i < this.dealsAsStrings.length; i++) {
       const dealAsString = this.dealsAsStrings[i];
@@ -213,7 +216,7 @@ export class DealsListComponent implements OnInit {
     }
 
     if (nsDealsWon === ewDealsWon) {
-      this.dealCountMessage = `No winners here just players (tied)!`
+      this.dealCountMessage = `No winners here just players (tied)!`;
     } else {
       if (nsDealsWon > ewDealsWon) winningTeam = teams[0];
       else winningTeam = teams[1];
@@ -247,17 +250,19 @@ export class DealsListComponent implements OnInit {
     dealAfterDeal: DealRelevant,
     nthDeal?: number
   ): Team {
-
+    
     const dealNorthSouth = deal[teamsFull[0]];
     const dealAfterDealNorthSouth = dealAfterDeal[teamsFull[0]];
     const dealEastWest = deal[teamsFull[1]];
     const dealAfterDealEastWest = dealAfterDeal[teamsFull[1]];
 
-    debugger;
-
     if (
-      dealNorthSouth?.aboveTheLine !== dealAfterDealNorthSouth?.aboveTheLine &&
-      dealEastWest?.aboveTheLine !== dealAfterDealEastWest?.aboveTheLine
+      dealNorthSouth === undefined ||
+      dealAfterDealNorthSouth === undefined ||
+      dealEastWest === undefined ||
+      dealAfterDealEastWest === undefined ||
+      (dealNorthSouth?.aboveTheLine !== dealAfterDealNorthSouth?.aboveTheLine &&
+      dealEastWest?.aboveTheLine !== dealAfterDealEastWest?.aboveTheLine)
     ) {
       return this.getDealWinnerFromPureCalculation(deal);
     }
@@ -268,7 +273,13 @@ export class DealsListComponent implements OnInit {
       'totalBelowTheLineScore',
     ];
     for (const key of keysToCompare) {
-      if (!dealNorthSouth || !dealAfterDealNorthSouth || !dealEastWest || !dealAfterDealEastWest) return '';
+      if (
+        !dealNorthSouth ||
+        !dealAfterDealNorthSouth ||
+        !dealEastWest ||
+        !dealAfterDealEastWest
+      )
+        return '';
       const nsValue = dealNorthSouth[key];
       const nsAfterValue = dealAfterDealNorthSouth[key];
       const ewValue = dealEastWest[key];
@@ -371,10 +382,21 @@ export class DealsListComponent implements OnInit {
   private toggleDealButtonsBorderBottoms(e: Event) {
     const button = (e.currentTarget || e.target) as HTMLElement;
     const isOpening = !button.innerHTML.match(/show/i);
-    const gameDetail = (this.elRef.nativeElement as HTMLElement)?.closest(`.${GAME_DETAIL_CLASSNAME}`);
-    const dealDetailViewButtons = gameDetail?.querySelectorAll(`.${DEAL_DETAIL_CLASSNAME}__view-button`);
-    const dealWatchDetailButtons = gameDetail?.querySelectorAll(`.${DEAL_DETAIL_CLASSNAME}__watch-button`);
-    this.replayViewerDealService.toggleButtonBottomBorder([...dealDetailViewButtons as any, ...dealWatchDetailButtons as any], isOpening ? ToggleDealDetailButtonBehaviour.open : ToggleDealDetailButtonBehaviour.close);
+    const gameDetail = (this.elRef.nativeElement as HTMLElement)?.closest(
+      `.${GAME_DETAIL_CLASSNAME}`
+    );
+    const dealDetailViewButtons = gameDetail?.querySelectorAll(
+      `.${DEAL_DETAIL_CLASSNAME}__view-button`
+    );
+    const dealWatchDetailButtons = gameDetail?.querySelectorAll(
+      `.${DEAL_DETAIL_CLASSNAME}__watch-button`
+    );
+    this.replayViewerDealService.toggleButtonBottomBorder(
+      [...(dealDetailViewButtons as any), ...(dealWatchDetailButtons as any)],
+      isOpening
+        ? ToggleDealDetailButtonBehaviour.open
+        : ToggleDealDetailButtonBehaviour.close
+    );
   }
 
   private toggleDealItems(e: Event) {
