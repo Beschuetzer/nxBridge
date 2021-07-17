@@ -207,6 +207,14 @@ export class SearchService {
     this.localGameCount = this.localStorageManager.getLastGameCount(
       this.userId as string
     );
+
+    const localStorageGames = this.localStorageManager.getLocalStorageGames();
+    
+    debugger;
+    if (this.localGameCount > Object.keys(localStorageGames).length) {
+      this.localGameCount = 0;
+    }
+
     this.helpersService
       .getGameCount(this.userId as string)
       .subscribe((gameCount) => {
