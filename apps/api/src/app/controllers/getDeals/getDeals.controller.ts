@@ -25,7 +25,7 @@ export class GetDealsController {
 
   @Post()
   async getDealsInfo(
-    @Body(DEALS_STRING) requestedDeals: DealRequest[]
+    @Body(DEALS_STRING) requestedDeals: DealRequest
   ): ControllerResponse<DealRelevant> {
     console.log('deals------------------------------------------------');
     return await this.getDealsService.getDealsInfo(requestedDeals);

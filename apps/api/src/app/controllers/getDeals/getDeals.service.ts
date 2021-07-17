@@ -35,10 +35,13 @@ export class GetDealsService {
     }
   }
 
-  async getDealsInfo(requestedDeals: DealRequest[]): ControllerResponse<DealRelevant> {
+  async getDealsInfo(requestedDeals: DealRequest): ControllerResponse<DealRelevant> {
     try {
-      if (!requestedDeals || requestedDeals.length <= 0) return this.getErrorResponse();
-      const mongooseObjs = getMongooseObjsFromRequestedDeals(requestedDeals.map(requestedDeal => requestedDeal[0]));
+      console.log('requestedDeals =', requestedDeals);
+      if (!requestedDeals) return this.getErrorResponse();
+      const dealsAsStrings = Object.keys(requestedDeals);
+      const mongooseObjs = getMongooseObjsFromRequestedDeals(dealsAsStrings);
+      console.log('mongooseObjs =', mongooseObjs);
       const dealsToReturn = await this.DealsModel.find({_id: {$in: mongooseObjs}});
       return this.removeUnnecessaryDataFromDeals(dealsToReturn, requestedDeals);
     } catch (err) {
@@ -52,7 +55,7 @@ export class GetDealsService {
     }) 
   }
 
-  private getNewDeal(deal: DealModel | Deal, shouldAddScoring = false) {
+  private getNewDeal(deal: DealModel | Deal, shouldAddScoring = this.shouldReturnScoringDefault) {
     const newDeal: DealRelevant = {
       bids: deal.bids,
       contract: deal.contract,
@@ -65,6 +68,7 @@ export class GetDealsService {
       _id: deal._id,
     }
 
+    console.log('shouldAddScoring inside=', shouldAddScoring);
     if (shouldAddScoring) {
       newDeal['northSouth'] = deal.northSouth;
       newDeal['eastWest'] = deal.eastWest;
@@ -73,13 +77,14 @@ export class GetDealsService {
     return newDeal;
   }
 
-  private removeUnnecessaryDataFromDeals(deals: Deal[], requestedDeals: DealRequest[] | null) {
-    const toReturn: DealRelevant[] = [];
+  private removeUnnecessaryDataFromDeals(deals: Deal[], requestedDeals: DealRequest | null) {
+    const toReturn: DealRelevant = {} as DealRelevant;
 
     for (let i = 0; i < deals.length; i++) {
       const deal = deals[i];
-      const newDeal = this.getNewDeal(deal, requestedDeals ? requestedDeals[i][1] : this.shouldReturnScoringDefault);
-      toReturn.push(newDeal);
+      const shouldAddScoring = requestedDeals[deal._id];
+      const newDeal = this.getNewDeal(deal, shouldAddScoring);
+      toReturn[deal._id] = newDeal;
     }
 
     return toReturn;

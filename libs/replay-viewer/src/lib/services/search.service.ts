@@ -340,8 +340,6 @@ export class SearchService {
   }
 
   private loadDeals(localStorageUserWithGames: LocalStorageUserWithGames) {
-    debugger;
-
     const [neededDeals, neededDealsAsStrings] = this.helpersService.getNeededDeals(
       localStorageUserWithGames?.games as GameRelevant[]
     );
