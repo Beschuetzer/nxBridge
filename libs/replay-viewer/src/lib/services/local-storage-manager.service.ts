@@ -303,7 +303,7 @@ export class LocalStorageManagerService {
   }
 
   saveDeals(fetchedDeals: FetchedDeals) {
-    debugger;
+    if (!fetchedDeals || Object.keys(fetchedDeals).length === 0) return;
     const localStorageDeals = this.getLocalStorageDeals();
     localStorage.setItem(this.dealsInLocalStorage, JSON.stringify({...localStorageDeals, ...fetchedDeals}));
   }
@@ -529,6 +529,7 @@ export class LocalStorageManagerService {
 
     for (let i = 0; i < games.length; i++) {
       const game = games[i];
+      if (!game) continue;
 
       let shouldAdd = true;
       for (const gameId in localStorageGames) {

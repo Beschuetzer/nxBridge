@@ -15,6 +15,7 @@ import {
   SetDealsAsStrings,
   DealState,
   AddFetchedDeals,
+  SetFetchedDeals,
 } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
 import {
@@ -133,7 +134,6 @@ export class SearchService {
   startRequest(username: string, email: string) {
     const shouldContinue = this.getShouldContinue(username, email);
     if (!shouldContinue) {
-      debugger
       const areGamesLoaded = this.getAreGamesLoaded();
       if (areGamesLoaded && this.router.url !== `${rootRoute}/games`) {
         this.router.navigate([rootRoute , 'games']);
@@ -176,12 +176,15 @@ export class SearchService {
     return areGamesLoaded;
   }
 
-  private getDealsToLoad(neededDealsAsStrings: string[], alreadyFetchedDeals: FetchedDeals): string[] {
+  private getDealsToLoad(neededDealsAsStrings: string[], localStorageDeals: FetchedDeals): string[] {
     const dealsToLoad: string[] = [];
+    
+    let dealsAvailable: FetchedDeals = {};
+    if(localStorageDeals) dealsAvailable = localStorageDeals;
 
     for (let i = 0; i < neededDealsAsStrings.length; i++) {
       const neededDealAsString = neededDealsAsStrings[i];
-      if (!alreadyFetchedDeals[neededDealAsString]) dealsToLoad.push(neededDealAsString);
+      if (!dealsAvailable[neededDealAsString]) dealsToLoad.push(neededDealAsString);
     }
 
     return dealsToLoad;
@@ -333,17 +336,37 @@ export class SearchService {
     );
     if (neededDealsAsStrings.length <= 0) return;
     this.store.dispatch(new SetDealsAsStrings(neededDealsAsStrings));
+   
+    const localStorageDeals = this.localStorageManager.getLocalStorageDeals();
+    const dealsToGet = this.getDealsToLoad(neededDealsAsStrings, localStorageDeals ? localStorageDeals : {})
 
-    this.store.select(ReducerNames.deals).pipe(
-      take(1),
-      switchMap((dealState: DealState) => {
-        const dealsToGet = this.getDealsToLoad(neededDealsAsStrings, dealState.fetchedDeals)
-        return this.helpersService.getDeals(dealsToGet);
+    if (Object.keys(dealsToGet).length > 0) {
+      this.store.select(ReducerNames.deals).pipe(
+        take(1),
+        switchMap((dealState: DealState) => {
+          return this.helpersService.getDeals(dealsToGet);
+        })
+      ).subscribe((deals: Deal[]) => {
+        const fetchedDeals = this.convertDealsToFetchedDeals(deals);
+        const combinedDeals = {...localStorageDeals, ...fetchedDeals};
+        this.localStorageManager.saveDeals(combinedDeals);
+
+        const relevantDeals = this.getRelevantDeals(combinedDeals, neededDealsAsStrings);
+        this.store.dispatch(new SetFetchedDeals(relevantDeals));
       })
-    ).subscribe((deals: Deal[]) => {
-      const fetchedDeals = this.convertDealsToFetchedDeals(deals);
-      this.localStorageManager.saveDeals(fetchedDeals);
-      this.store.dispatch(new AddFetchedDeals(fetchedDeals));
-    })
+    } else {
+      this.store.dispatch(new SetFetchedDeals(localStorageDeals ? localStorageDeals : {}));
+    }
+  }
+
+  private getRelevantDeals(combinedDeals: FetchedDeals, neededDealsAsStrings: string[]) {
+    const relevantDeals: FetchedDeals = {};
+
+    for (let i = 0; i < neededDealsAsStrings.length; i++) {
+      const neededDealsAsString = neededDealsAsStrings[i];
+      relevantDeals[neededDealsAsString] = combinedDeals[neededDealsAsString];
+    }
+
+    return relevantDeals
   }
 }

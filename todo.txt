@@ -4,7 +4,7 @@ reminders -------------------------------------------------
 
 known bugs --------------------------
   -Deal 1 trick 6 of yougurt 2/16 7:24pm bug where order of playing is reversed (it seems to be an issue with the deal and how it was saved)
-  -sluggish resize and no card reset when opening one deal in a game, then resize, then open another (doesn't seems to be from deal-player.service migration)
+  -deleting games in localStorage will break the app if users isn't also deleted
 
 Known Quirks-----------------
   -since users can change username and email, the user has to know the current username or email in order to get results (would have to keep track user username changes on A# maj bridge to remedy )
