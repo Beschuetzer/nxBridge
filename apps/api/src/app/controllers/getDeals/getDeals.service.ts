@@ -2,11 +2,13 @@ import { Injectable } from '@angular/core';
 import { InjectModel } from '@nestjs/mongoose';
 import { DealModel } from '@nx-bridge/api-mongoose-models';
 import { Model } from 'mongoose';
-import { ControllerResponse, Deal, DealRelevant, ErrorMessage } from '@nx-bridge/interfaces-and-types';
-import { getMongooseObjsFromStrings } from '@nx-bridge/constants';
+import { ControllerResponse, Deal, DealRelevant, DealRequest, ErrorMessage } from '@nx-bridge/interfaces-and-types';
+import { getMongooseObjsFromRequestedDeals } from '@nx-bridge/constants';
 
 @Injectable({ providedIn: 'root'})
 export class GetDealsService {
+  private shouldReturnScoringDefault = true;
+
   constructor(
     @InjectModel('Deal') private DealsModel: Model<DealModel>,
   ) {}
@@ -18,27 +20,27 @@ export class GetDealsService {
       }) 
     } else {
       const deals = await this.DealsModel.find({players: userId});
-      return this.removeUnnecessaryDataFromDeals(deals);
+      return this.removeUnnecessaryDataFromDeals(deals, null);
     }
   }
 
-  async getDeal(dealId: string): ControllerResponse<DealRelevant> {
-    if (!dealId) {
+  async getDeal(requestedDeal: string): ControllerResponse<DealRelevant> {
+    if (!requestedDeal) {
       return new Promise((res, rej) => {
         res({message: "Invalid deal id given in getDeal", status: 400} as ErrorMessage);
       }) 
     } else {
-      const deal = await this.DealsModel.findOne({_id: dealId});
+      const deal = await this.DealsModel.findOne({_id: requestedDeal});
       return this.getNewDeal(deal);
     }
   }
 
-  async getDealsInfo(deals: string[]): ControllerResponse<DealRelevant> {
+  async getDealsInfo(requestedDeals: DealRequest[]): ControllerResponse<DealRelevant> {
     try {
-      if (!deals || deals.length <= 0) return this.getErrorResponse();
-      const mongooseObjs = getMongooseObjsFromStrings(deals);
+      if (!requestedDeals || requestedDeals.length <= 0) return this.getErrorResponse();
+      const mongooseObjs = getMongooseObjsFromRequestedDeals(requestedDeals.map(requestedDeal => requestedDeal[0]));
       const dealsToReturn = await this.DealsModel.find({_id: {$in: mongooseObjs}});
-      return this.removeUnnecessaryDataFromDeals(dealsToReturn);
+      return this.removeUnnecessaryDataFromDeals(dealsToReturn, requestedDeals);
     } catch (err) {
       return this.getErrorResponse();
     }
@@ -50,7 +52,7 @@ export class GetDealsService {
     }) 
   }
 
-  private getNewDeal(deal: DealModel | Deal) {
+  private getNewDeal(deal: DealModel | Deal, shouldAddScoring = false) {
     const newDeal: DealRelevant = {
       bids: deal.bids,
       contract: deal.contract,
@@ -60,20 +62,23 @@ export class GetDealsService {
       doubleValue: deal.doubleValue,
       hands: deal.hands,
       roundWinners: deal.roundWinners,
-      northSouth: deal.northSouth,
-      eastWest: deal.eastWest,
       _id: deal._id,
+    }
+
+    if (shouldAddScoring) {
+      newDeal['northSouth'] = deal.northSouth;
+      newDeal['eastWest'] = deal.eastWest;
     }
 
     return newDeal;
   }
 
-  private removeUnnecessaryDataFromDeals(deals: Deal[]) {
+  private removeUnnecessaryDataFromDeals(deals: Deal[], requestedDeals: DealRequest[] | null) {
     const toReturn: DealRelevant[] = [];
 
     for (let i = 0; i < deals.length; i++) {
       const deal = deals[i];
-      const newDeal = this.getNewDeal(deal);
+      const newDeal = this.getNewDeal(deal, requestedDeals ? requestedDeals[i][1] : this.shouldReturnScoringDefault);
       toReturn.push(newDeal);
     }
 

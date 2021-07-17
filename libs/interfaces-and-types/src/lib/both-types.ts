@@ -46,6 +46,7 @@ export interface RoomRelevant {
   seating: Seating,
 }
 
+export type DealRequest = [string, boolean];
 export type EmptyLocalStorageDealsReturn = null;
 export type EmptyLocalStorageUsersReturn = null;
 export type EmptyLocalStorageGamesReturn = {[key:string]: Game[]};

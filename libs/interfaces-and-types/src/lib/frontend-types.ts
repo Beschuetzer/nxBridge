@@ -18,9 +18,9 @@ export interface DealCore {
   dealer: ObjectId;
   bids: Bid[];
   contract: string;
-  northSouth: DealScoring;
-  eastWest: DealScoring;
   doubleValue: number;
+  northSouth?: DealScoring;
+  eastWest?: DealScoring;
 };
 export interface DealGameIncomplete extends DealCore {
   agreeWithClaim: AgreeWithClaim;

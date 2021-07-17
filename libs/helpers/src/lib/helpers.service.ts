@@ -1,7 +1,7 @@
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { DealRelevant, GameRelevant, GetUserResponse, UserIds } from '@nx-bridge/interfaces-and-types';
+import { DealRelevant, DealRequest, GameRelevant, GetUserResponse, UserIds } from '@nx-bridge/interfaces-and-types';
 import * as ngrxStore from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
 import {
@@ -25,7 +25,7 @@ export class HelpersService {
     private router: Router,
   ) {}
 
-  getDeals(deals: string[]) {
+  getDeals(deals: DealRequest[]) {
     return this.http.post<DealRelevant[]>(`${GET_DEALS_URL}`, {deals});
   }
 
@@ -53,15 +53,17 @@ export class HelpersService {
     });
   }
 
-  getDealsAsStrings(games: GameRelevant[]) {
-    const deals: string[] = [];
+  getDealsAsStrings(games: GameRelevant[]): DealRequest[] {
+    const deals: DealRequest[] = [];
     if (!games) return deals;
     for (let i = 0; i < games.length; i++) {
+      let shouldAdd = false;
       const game = games[i];
       if (!game || !game.deals) continue;
       for (let j = 0; j < game.deals.length; j++) {
-        const deal = game.deals[j];
-        deals.push(deal);
+        const dealId = game.deals[j];
+        if (j === game.deals.length - 1) shouldAdd = true;
+        deals.push([dealId, shouldAdd]);
       }
     }
     return deals;

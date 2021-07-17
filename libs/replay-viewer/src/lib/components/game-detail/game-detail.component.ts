@@ -60,8 +60,11 @@ export class GameDetailComponent implements OnInit {
       return;
     }
 
-   this.northSouthScore = deal.northSouth.aboveTheLine + deal.northSouth.totalBelowTheLineScore;
-   this.eastWestScore = deal.eastWest.aboveTheLine + deal.eastWest.totalBelowTheLineScore;
+    if (deal.northSouth && deal.eastWest) {
+      this.northSouthScore = deal.northSouth.aboveTheLine + deal.northSouth.totalBelowTheLineScore;
+      this.eastWestScore = deal.eastWest.aboveTheLine + deal.eastWest.totalBelowTheLineScore;
+    }
+
     
     let winner = "NS";
     if (this.eastWestScore && this.northSouthScore && this.eastWestScore > this.northSouthScore) winner = "EW";

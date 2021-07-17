@@ -66,5 +66,4 @@ filters------------
 
 -add loading spinner while deals are loading
 -add parameter to getDealsRequest in each deal that specifies which deals to return the northSouth, eastWest on (only last deal of each game); use tuple [dealId, true/false (whether need to add)]
--all instances of deal interface need to be replaced with DealRelevant
 

@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { INVALID_USERS_ARRAY } from '@nx-bridge/api-errors';
 import { ControllerResponse, ErrorMessage, User } from '@nx-bridge/interfaces-and-types';
 import { Model } from 'mongoose';
-import {getMongooseObjsFromStrings} from '@nx-bridge/constants';
+import {getMongooseObjsFromRequestedDeals} from '@nx-bridge/constants';
 
 @Injectable({ providedIn: 'root'})
 export class GetUsersService {
@@ -33,7 +33,7 @@ export class GetUsersService {
   }
 
   private async queryDB(users: string[]): ControllerResponse<User | {[key:string]: string}> {
-    const mongooseObjs = getMongooseObjsFromStrings(users);
+    const mongooseObjs = getMongooseObjsFromRequestedDeals(users);
     const response = await this.userModel.find({_id: {$in: mongooseObjs}});
     // const newResponse = response.map(userObj => {return {...(userObj as any)._doc, salt: null, hash: null, email: null, resetPasswordToken: null} as User})
     return response.map(userObj =>  { 

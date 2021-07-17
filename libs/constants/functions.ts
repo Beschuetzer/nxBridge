@@ -27,12 +27,11 @@ export function capitalize(str: string) {
     .join(' ');
 }
 
-export function getMongooseObjsFromStrings(items: string[]) {
+export function getMongooseObjsFromRequestedDeals(requestedDeals: string[]) {
   const mongooseObjs = [];
 
-  for (let i = 0; i < items.length; i++) {
-    const deal = items[i];
-    console.log('deal =', deal);
+  for (let i = 0; i < requestedDeals.length; i++) {
+    const deal = requestedDeals[i];
     mongooseObjs.push(mongoose.Types.ObjectId(deal));
   }
 

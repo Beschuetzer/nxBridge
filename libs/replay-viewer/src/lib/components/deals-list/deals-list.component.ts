@@ -26,6 +26,7 @@ import {
   getDeclarerFromDeal,
   ANIMATION_DURATION,
   GAME_DETAIL_BORDER_BOTTOM_CLASSNAME,
+  NOT_AVAILABLE_STRING,
 } from '@nx-bridge/constants';
 import {
   CardinalDirection,
@@ -254,8 +255,8 @@ export class DealsListComponent implements OnInit {
     const dealAfterDealEastWest = dealAfterDeal[teamsFull[1]];
 
     if (
-      dealNorthSouth.aboveTheLine !== dealAfterDealNorthSouth.aboveTheLine &&
-      dealEastWest.aboveTheLine !== dealAfterDealEastWest.aboveTheLine
+      dealNorthSouth?.aboveTheLine !== dealAfterDealNorthSouth?.aboveTheLine &&
+      dealEastWest?.aboveTheLine !== dealAfterDealEastWest?.aboveTheLine
     ) {
       return this.getDealWinnerFromPureCalculation(deal);
     }
@@ -266,6 +267,7 @@ export class DealsListComponent implements OnInit {
       'totalBelowTheLineScore',
     ];
     for (const key of keysToCompare) {
+      if (!dealNorthSouth || !dealAfterDealNorthSouth || !dealEastWest || !dealAfterDealEastWest) return '';
       const nsValue = dealNorthSouth[key];
       const nsAfterValue = dealAfterDealNorthSouth[key];
       const ewValue = dealEastWest[key];

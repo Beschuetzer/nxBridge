@@ -19,6 +19,7 @@ import {
 import { Store } from '@ngrx/store';
 import {
   DealRelevant,
+  DealRequest,
   FetchedDeals,
   GameRelevant,
   GetUserResponse,
@@ -175,15 +176,15 @@ export class SearchService {
     return areGamesLoaded;
   }
 
-  private getDealsToLoad(neededDealsAsStrings: string[], localStorageDeals: FetchedDeals): string[] {
-    const dealsToLoad: string[] = [];
+  private getDealsToLoad(neededDeals: DealRequest[], localStorageDeals: FetchedDeals) {
+    const dealsToLoad: DealRequest[] = [];
     
     let dealsAvailable: FetchedDeals = {};
     if(localStorageDeals) dealsAvailable = localStorageDeals;
 
-    for (let i = 0; i < neededDealsAsStrings.length; i++) {
-      const neededDealAsString = neededDealsAsStrings[i];
-      if (!dealsAvailable[neededDealAsString]) dealsToLoad.push(neededDealAsString);
+    for (let i = 0; i < neededDeals.length; i++) {
+      const neededDealAsString = neededDeals[i][0];
+      if (!dealsAvailable[neededDealAsString]) dealsToLoad.push(neededDeals[i]);
     }
 
     return dealsToLoad;
@@ -337,14 +338,17 @@ export class SearchService {
   }
 
   private loadDeals(localStorageUserWithGames: LocalStorageUserWithGames) {
-    const neededDealsAsStrings = this.helpersService.getDealsAsStrings(
+    debugger;
+
+    const neededDeals = this.helpersService.getDealsAsStrings(
       localStorageUserWithGames?.games as GameRelevant[]
     );
-    if (neededDealsAsStrings.length <= 0) return;
-    this.store.dispatch(new SetDealsAsStrings(neededDealsAsStrings));
+    const neededDealsAsString = neededDeals.map(deal => deal[0]);
+    if (neededDeals.length <= 0) return;
+    this.store.dispatch(new SetDealsAsStrings(neededDealsAsString));
    
     const localStorageDeals = this.localStorageManager.getLocalStorageDeals();
-    const dealsToGet = this.getDealsToLoad(neededDealsAsStrings, localStorageDeals ? localStorageDeals : {})
+    const dealsToGet = this.getDealsToLoad(neededDeals, localStorageDeals ? localStorageDeals : {})
 
     if (Object.keys(dealsToGet).length > 0) {
       this.store.select(ReducerNames.deals).pipe(
@@ -357,7 +361,7 @@ export class SearchService {
         const combinedDeals = {...localStorageDeals, ...fetchedDeals};
         this.localStorageManager.saveDeals(combinedDeals);
 
-        const relevantDeals = this.getRelevantDeals(combinedDeals, neededDealsAsStrings);
+        const relevantDeals = this.getRelevantDeals(combinedDeals, neededDealsAsString);
         this.store.dispatch(new SetFetchedDeals(relevantDeals));
       })
     } else {
