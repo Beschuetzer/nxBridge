@@ -199,6 +199,7 @@ export class DealsListComponent implements OnInit {
 
     for (let i = 0; i < this.deals.length; i++) {
       const deal = this.deals[i];
+      if (!deal) continue;
       let nextDeal = null;
       if (i !== this.deals.length - 1) {
         nextDeal = this.deals[i + 1];
@@ -246,6 +247,7 @@ export class DealsListComponent implements OnInit {
     dealAfterDeal: Deal,
     nthDeal?: number
   ): Team {
+
     const dealNorthSouth = deal[teamsFull[0]];
     const dealAfterDealNorthSouth = dealAfterDeal[teamsFull[0]];
     const dealEastWest = deal[teamsFull[1]];

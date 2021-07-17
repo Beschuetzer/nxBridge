@@ -266,7 +266,7 @@ export class DealDetailComponent implements OnInit {
     const target = this.elRef.nativeElement.querySelector(
       `.${DEAL_DETAIL_CLASSNAME}__hands`
     );
-    if (target) this.renderer.appendChild(target, flatTable);
+    if (target && flatTable) this.renderer.appendChild(target, flatTable);
   }
 
   private setDealSummaryPreOnly(str: string) {
