@@ -6,6 +6,13 @@ import * as THREE from 'three';
   styleUrls: ['./nebula.component.scss'],
 })
 export class NebulaComponent implements OnInit {
+  //#region Pathes
+  private canvasElement: HTMLCanvasElement | null | undefined = null;
+  private insertionElementSelector = '#nebula';
+  private smokeImagePath = 'assets/replay-viewer/smoke.png';
+  //#endregion
+
+  //#region Palette Colors
   private colorPrimary1 = 0x28537b;
   private colorPrimary1Light = 0x999999;
   private colorPrimary2 = 0x8ac6d0;
@@ -15,13 +22,14 @@ export class NebulaComponent implements OnInit {
   private colorRedLight = 0xff9494;
   private colorGreen = 0x537b28;
   private colorGreenLight = 0x89c549;
-  
-  private canvasElement: HTMLCanvasElement | null | undefined = null;
-  private insertionElementSelector = '#nebula';
+  //#endregion
 
+  //#region Setup
   private renderer = new THREE.WebGLRenderer();
   private scene = new THREE.Scene();
+  //#endregion
 
+  //#region Camera
   private camera = new THREE.PerspectiveCamera(
     60,
     window.innerWidth / window.innerHeight,
@@ -32,7 +40,9 @@ export class NebulaComponent implements OnInit {
   private cameraXRotationStart = 1.16;
   private cameraYRotationStart = -0.12;
   private cameraZRotationStart = 0.27;
+  //#endregion
 
+  //#region Cloud and Fog
   private cloudOpacity = 0.85;
   private cloudWidth = 500;
   private numberOfCloudParticles = 50;
@@ -40,18 +50,70 @@ export class NebulaComponent implements OnInit {
     THREE.PlaneGeometry,
     THREE.MeshLambertMaterial
   >[] = [];
- 
+
   private cloudXRotationStart = 1.16;
   private cloudYRotationStart = -0.12;
   private cloudZRotationStart = Math.random() * 2 * Math.PI;
   private cloudZRotationAmount = 0.001;
-
-  private fogColor = 0x03544e;
   private fogDensity = 0.001;
-  private smokeImagePath = 'assets/replay-viewer/smoke.png';
+  //#endregion
 
-  private ambient = new THREE.AmbientLight(this.colorPrimary2);
-  // private directionalLight = new THREE.DirectionalLight(0xff8c19);
+  //#region colors
+  private ambientLightColor = 0x555555;
+  private directionalLightColor = 0xff8c19;
+  private orangeLightColor = 0xcc6600;
+  private redLightColor = 0xd8547e;
+  private blueLightColor = 0x3677ac;
+  private fogColor = 0x03544e;
+  //#endregion
+
+  //#region Light Settings
+  private orangeLightIntensity = 60;
+  private orangeLightDistance = 450;
+  private orangeLightDecay = 1.7;
+  private redLightIntensity = 60;
+  private redLightDistance = 450;
+  private redLightDecay = 1.7;
+  private blueLightIntensity = 60;
+  private blueLightDistance = 450;
+  private blueLightDecay = 1.7;
+
+  private orangeLightXPosition = 200;
+  private orangeLightYPosition = 300;
+  private orangeLightZPosition = 100;
+  private redLightXPosition = 100;
+  private redLightYPosition = 300;
+  private redLightZPosition = 100;
+  private blueLightXPosition = 300;
+  private blueLightYPosition = 300;
+  private blueLightZPosition = 200;
+  //#endregion
+
+  //#region Lights
+  private ambient = new THREE.AmbientLight(this.ambientLightColor);
+  private directionalLight = new THREE.DirectionalLight(
+    this.directionalLightColor
+  );
+  private orangeLight = new THREE.PointLight(
+    this.orangeLightColor,
+    this.orangeLightIntensity,
+    this.orangeLightDistance,
+    this.orangeLightDecay
+  );
+  private redLight = new THREE.PointLight(
+    this.redLightColor,
+    this.redLightIntensity,
+    this.redLightDistance,
+    this.redLightDecay
+  );
+  private blueLight = new THREE.PointLight(
+    this.blueLightColor,
+    this.blueLightIntensity,
+    this.blueLightDistance,
+    this.blueLightDecay
+  );
+
+  //#endregion
 
   constructor(private elRef: ElementRef) {}
 
@@ -60,6 +122,7 @@ export class NebulaComponent implements OnInit {
     this.addEverythingToScene();
     this.loadCloudParticles();
     this.setCamera();
+    this.setLights();
 
     this.startAnimation();
   }
@@ -73,7 +136,10 @@ export class NebulaComponent implements OnInit {
 
   private addEverythingToScene() {
     this.scene.add(this.ambient);
-
+    this.scene.add(this.directionalLight);
+    this.scene.add(this.orangeLight);
+    this.scene.add(this.redLight);
+    this.scene.add(this.blueLight);
     this.setRenderer();
   }
 
@@ -119,6 +185,25 @@ export class NebulaComponent implements OnInit {
     this.camera.rotation.x = this.cameraXRotationStart;
     this.camera.rotation.y = this.cameraYRotationStart;
     this.camera.rotation.z = this.cameraZRotationStart;
+  }
+
+  private setLights() {
+    this.directionalLight.position.set(0, 0, 1);
+    this.orangeLight.position.set(
+      this.orangeLightXPosition,
+      this.orangeLightYPosition,
+      this.orangeLightZPosition
+    );
+    this.redLight.position.set(
+      this.redLightXPosition,
+      this.redLightYPosition,
+      this.redLightZPosition
+    );
+    this.blueLight.position.set(
+      this.blueLightXPosition,
+      this.blueLightYPosition,
+      this.blueLightZPosition
+    );
   }
 
   private setRenderer() {
