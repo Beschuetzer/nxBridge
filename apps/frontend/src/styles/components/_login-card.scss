@@ -9,9 +9,10 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  overflow: hidden;
 
   & *:not(.non-existant-class, button) {
-    color: var(--color-primary-1) !important;
+    color: var(--color-primary-4) !important;
 
     &:not(label, form, .login-card__buttons, .login-card__email, .search) {
       margin-bottom: $default-font-size * .5 !important;
@@ -20,7 +21,7 @@
 
   &__title {
     margin-bottom: $default-font-size * 1.2 !important;
-    border-bottom: 1px solid rgba(var(--color-primary-1-rgb), .5) !important;
+    border-bottom: 1px solid rgba(var(--color-primary-3-rgb), .5) !important;
     text-align: center;
     letter-spacing: 0.094rem;
   }
@@ -42,9 +43,13 @@
   } 
 
   & .search {
+    background-image: radial-gradient(
+      rgba(var(--color-black-rgb), 1), 
+      rgba(var(--color-black-rgb), .001)
+    );
     background-image: linear-gradient(
-      to bottom right,
-      rgba(var(--color-primary-3-rgb), 1),
+      to bottom,
+      rgba(var(--color-black-rgb), 1),
       rgba(var(--color-primary-1-rgb), .1)
     );
     padding: $default-font-size;
