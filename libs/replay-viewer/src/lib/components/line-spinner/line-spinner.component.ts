@@ -8,9 +8,8 @@ import { SearchService } from '../../services/search.service';
 })
 export class LineSpinnerComponent implements OnInit {
   @HostBinding ('class.hidden') get getAreDealsLoaded() {
-    const areDealsLoaded = this.searchService.getAreDealsLoaded();
     const isLoading = this.searchService.getIsLoading();
-    return areDealsLoaded || !isLoading;
+    return !isLoading;
   }
 
   constructor(

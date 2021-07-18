@@ -325,7 +325,6 @@ export class SearchService {
       )
     );
     this.setCurrentlyDisplayingGames();
-    this.store.dispatch(new SetIsLoading(false));
   }
 
   private handleGetUserResponse(getUserResponse: GetUserResponse) {
@@ -376,10 +375,12 @@ export class SearchService {
 
         const relevantDeals = this.getRelevantDeals(combinedDeals, neededDealsAsStrings);
         this.store.dispatch(new SetFetchedDeals(relevantDeals));
+        this.store.dispatch(new SetIsLoading(false));
       })
     } else {
       const relevantDeals = this.getRelevantDeals(localStorageDeals ? localStorageDeals : {}, neededDealsAsStrings);
       this.store.dispatch(new SetFetchedDeals(relevantDeals));
+      this.store.dispatch(new SetIsLoading(false));
     }
   }
 
