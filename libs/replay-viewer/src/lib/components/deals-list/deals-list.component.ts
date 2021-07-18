@@ -129,7 +129,6 @@ export class DealsListComponent implements OnInit {
   }
 
   private getDealsToGet() {
-    //todo: this can be optimized later to only get Deals not in localStorage already
     if (!this.dealsAsStrings) return [];
 
     let fetchedDeals: FetchedDeals = {};
@@ -198,7 +197,7 @@ export class DealsListComponent implements OnInit {
     const betweenPlayed = ' deals to ';
     let nsDealsWon = 0;
     let ewDealsWon = 0;
-    let winner: Team;
+    let winner: Team | null;
 
     for (let i = 0; i < this.deals.length; i++) {
       const deal = this.deals[i];
@@ -212,7 +211,7 @@ export class DealsListComponent implements OnInit {
       }
 
       if (winner === teams[0]) nsDealsWon++;
-      else ewDealsWon++;
+      else if (winner === teams[1]) ewDealsWon++;
     }
 
     if (nsDealsWon === ewDealsWon) {
@@ -249,8 +248,10 @@ export class DealsListComponent implements OnInit {
     deal: DealRelevant,
     dealAfterDeal: DealRelevant,
     nthDeal?: number
-  ): Team {
-    
+  ): Team | null {
+
+    if (!deal.declarer) return null;
+
     const dealNorthSouth = deal[teamsFull[0]];
     const dealAfterDealNorthSouth = dealAfterDeal[teamsFull[0]];
     const dealEastWest = deal[teamsFull[1]];

@@ -13,6 +13,7 @@ export const DEALS_STRING = 'deals';
 export const USERNAME_STRING = 'username';
 export const EMAIL_STRING = 'email';
 export const USERS_STRING = 'users';
+export const DEAL_PASSED_OUT_MESSAGE ='Deal Passed out';
 
 export const GET_DEALS_URL = `/api/${GET_DEALS_CONTROLLER_STRING}`;
 export const GET_GAMES_URL = `/api/${GET_GAMES_CONTROLLER_STRING}`;

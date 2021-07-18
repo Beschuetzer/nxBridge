@@ -214,7 +214,8 @@ export type CardinalDirection =
   | 'north'
   | 'south'
   | 'east'
-  | 'west';
+  | 'west'
+  | 'N/A';
 export type CardValuesAsString =
   | 'Ace'
   | 'King'

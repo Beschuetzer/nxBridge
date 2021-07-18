@@ -19,6 +19,7 @@ import {
   getHtmlEntityFromCard,
 } from '@nx-bridge/constants';
 import { getHtmlEntityFromContract } from '../functions';
+import { NOT_AVAILABLE_STRING } from '../constants';
 
 export function getCardStringFromNumber(cardAsNumber: number) {
   if (cardAsNumber === undefined || cardAsNumber === null) return '';
@@ -158,6 +159,7 @@ export function getIsBidPlayable(bid: string) {
 }
 
 export function getDirectionFromSeating(seating: Seating, username: string) {
+  if (username === NOT_AVAILABLE_STRING) return NOT_AVAILABLE_STRING;
   for (const direction in seating) {
     if (Object.prototype.hasOwnProperty.call(seating, direction)) {
       const usernameInSeating = seating[direction];
@@ -171,6 +173,8 @@ export function getPartnerFromDirection(
   seating: Seating,
   direction: CardinalDirection
 ) {
+  if (direction === NOT_AVAILABLE_STRING) return NOT_AVAILABLE_STRING;
+
   if (direction.toLowerCase() === cardinalDirections[0].toLowerCase())
     return seating.south;
   else if (direction.toLowerCase() === cardinalDirections[1].toLowerCase())

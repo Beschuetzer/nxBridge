@@ -40,6 +40,7 @@ import {
   toggleInnerHTML,
   tricksInABook,
   NOT_AVAILABLE_STRING,
+  DEAL_PASSED_OUT_MESSAGE,
 } from '@nx-bridge/constants';
 import { Store } from '@ngrx/store';
 import {
@@ -48,10 +49,8 @@ import {
   SetCurrentlyViewingDeal,
   SetCurrentlyViewingDealContract,
 } from '@nx-bridge/store';
-import { exhaustMap, switchMap, take } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { ReplayViewerDealService } from '../../services/replay-viewer.deal.service';
-import { rename } from 'node:fs';
-import { threadId } from 'node:worker_threads';
 @Component({
   selector: 'nx-bridge-deal-detail',
   templateUrl: './deal-detail.component.html',
@@ -78,6 +77,7 @@ export class DealDetailComponent implements OnInit {
   public DISPLAY_NONE_CLASSNAME = DISPLAY_NONE_CLASSNAME;
   private MATCHED_DEAL_CLASSNAME = MATCHED_DEAL_CLASSNAME;
   private users: UserIds | null = null;
+  private DEAL_PASSED_OUT_MESSAGE = DEAL_PASSED_OUT_MESSAGE;
 
   constructor(
     private renderer: Renderer2,
@@ -221,6 +221,14 @@ export class DealDetailComponent implements OnInit {
 
   setDealSummarySuffix() {
     const [entireString, difference] = this.getMadeAmountString();
+    if (entireString === NOT_AVAILABLE_STRING) {
+      this.dealSummaryMessageSuffixPre = this.DEAL_PASSED_OUT_MESSAGE;
+      this.dealSummaryMessageContract = '';
+      this.dealSummaryMessageSuffixNumber = '';
+      this.dealSummaryMessageSuffixPost = '';
+      this.dealSummaryUsername = '';
+      return 
+    }
 
     if (difference > 0) {
       const differenceAsString = `${difference}`;
@@ -276,7 +284,7 @@ export class DealDetailComponent implements OnInit {
 
   private getMadeAmountString(): [string, number] {
     const playingPlayers: [string, string] = this.getPlayingPlayers();
-    if (!playingPlayers[0]) return ['Deal passed out', -1];
+    if (!playingPlayers[0]) return [NOT_AVAILABLE_STRING, -1];
 
     const amountNeeded = +this.contract.prefix + tricksInABook;
     const amountMade = this.deal?.roundWinners.reduce((count, roundWinner) => {
@@ -284,7 +292,7 @@ export class DealDetailComponent implements OnInit {
       return count;
     }, 0);
 
-    if (!amountMade) throw new Error('Error in getMadeAmountString()');
+    if (!amountMade) return [NOT_AVAILABLE_STRING, 0];
     const difference = Math.abs(amountMade - amountNeeded);
 
     let result = this.getMadeItString();

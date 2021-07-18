@@ -65,4 +65,3 @@ filters------------
   -won by more than...
 
 -add loading spinner while deals are loading
-

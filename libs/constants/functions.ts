@@ -68,6 +68,7 @@ export function toggleInnerHTML(
 }
 
 export function getDeclarerFromDeal(deal: DealRelevant) {
+  if (!deal.declarer) return NOT_AVAILABLE_STRING;
   for (let i = deal?.bids.length - 1; i >= 0; i--) {
     const bid = deal?.bids[i][1];
     if (getIsBidPlayable(bid)) {

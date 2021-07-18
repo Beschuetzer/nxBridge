@@ -173,7 +173,7 @@ export class SearchService {
     if(localStorageDeals) dealsAvailable = localStorageDeals;
 
     for (let i = 0; i < neededDealsAsStrings.length; i++) {
-      const neededDealAsString = neededDealsAsStrings[i][0];
+      const neededDealAsString = neededDealsAsStrings[i];
       if (dealsAvailable[neededDealAsString]) {
         delete dealsToLoad[neededDealAsString];
       }
@@ -338,6 +338,7 @@ export class SearchService {
     this.store.dispatch(new SetDealsAsStrings(neededDealsAsStrings));
    
     const localStorageDeals = this.localStorageManager.getLocalStorageDeals();
+
     const dealsToGet = this.getDealsToLoad(neededDeals, neededDealsAsStrings, localStorageDeals ? localStorageDeals : {})
 
     if (Object.keys(dealsToGet).length > 0) {
