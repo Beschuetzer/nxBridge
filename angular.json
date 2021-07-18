@@ -191,6 +191,11 @@
                 "input": "libs/deal-player/src/assets",
                 "glob": "**/*",
                 "output": "assets/deal-player"
+              },
+              {
+                "input": "libs/replay-viewer/src/assets",
+                "glob": "**/*",
+                "output": "assets/replay-viewer"
               }
             ],
             "styles": [
