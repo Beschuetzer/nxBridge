@@ -352,11 +352,13 @@ export class SearchService {
         const combinedDeals = {...localStorageDeals, ...deals};
         this.localStorageManager.saveDeals(combinedDeals);
 
+        debugger;
         const relevantDeals = this.getRelevantDeals(combinedDeals, neededDealsAsStrings);
         this.store.dispatch(new SetFetchedDeals(relevantDeals));
       })
     } else {
-      this.store.dispatch(new SetFetchedDeals(localStorageDeals ? localStorageDeals : {}));
+      const relevantDeals = this.getRelevantDeals(localStorageDeals ? localStorageDeals : {}, neededDealsAsStrings);
+      this.store.dispatch(new SetFetchedDeals(relevantDeals));
     }
   }
 
