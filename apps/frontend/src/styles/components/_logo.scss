@@ -9,6 +9,7 @@
   background-position: bottom;
   background-size: cover;
   opacity: $logo-opacity-normal;
+  background-blend-mode: luminosity;
   transition: opacity $animation-duration * 1 $animation-easing-standard;
   // &:hover {
   //   opacity: .5;

@@ -2,7 +2,7 @@
   width: 97.5%;
   max-width: $default-font-size * 20;
   padding: $default-font-size * 1;
-  border: $default-font-size * .1 solid rgba(var(--color-primary-1-rgb), .5);
+  border: $default-font-size * .1 solid rgba(var(--color-primary-4-rgb), 1);
   border-radius: $login-card-border-radius;
   box-shadow: $login-card-box-shadow;
   position: absolute;
@@ -42,9 +42,13 @@
   } 
 
   & .search {
-    background-image: none ;
+    background-image: linear-gradient(
+      to bottom right,
+      rgba(var(--color-primary-3-rgb), 1),
+      rgba(var(--color-primary-1-rgb), .1)
+    );
     padding: $default-font-size;
-    background-color: rgba(var(--color-primary-1-rgb), .125);
+    // background-color: rgba(var(--color-primary-4-rgb), .75);
     border-radius: $login-card-border-radius;
     box-shadow: 0 0rem 3.2rem 1rem rgba(var(--color-primary-1-rgb), 0.25);
 

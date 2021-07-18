@@ -1,15 +1,19 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
 import * as THREE from 'three';
+
+import * as POSTPROCESSING from "postprocessing";
+
 @Component({
   selector: 'nx-bridge-nebula',
   templateUrl: './nebula.component.html',
   styleUrls: ['./nebula.component.scss'],
 })
 export class NebulaComponent implements OnInit {
-  //#region Pathes
+  //#region Paths
   private canvasElement: HTMLCanvasElement | null | undefined = null;
   private insertionElementSelector = '#nebula';
   private smokeImagePath = 'assets/replay-viewer/smoke.png';
+  private starsPath = 'assets/replay-viewer/stars.jpg';
   //#endregion
 
   //#region Palette Colors
@@ -25,8 +29,22 @@ export class NebulaComponent implements OnInit {
   //#endregion
 
   //#region Setup
-  private renderer = new THREE.WebGLRenderer();
+  private bestVisual = {
+    powerPreference: "default",
+    antialias: true,
+    stencil: true,
+    depth: true
+  };
+  private bestPerformance = {
+    powerPreference: "high-performance",
+    antialias: false,
+    stencil: false,
+    depth: false
+  }
+  private renderer = new THREE.WebGLRenderer(this.bestPerformance);
+  private loader = new THREE.TextureLoader();
   private scene = new THREE.Scene();
+  private composer = new POSTPROCESSING.EffectComposer(this.renderer);
   //#endregion
 
   //#region Camera
@@ -34,7 +52,7 @@ export class NebulaComponent implements OnInit {
     60,
     window.innerWidth / window.innerHeight,
     0.1,
-    1000
+    10000
   );
   private cameraZPositionStart = 1;
   private cameraXRotationStart = 1.16;
@@ -43,50 +61,61 @@ export class NebulaComponent implements OnInit {
   //#endregion
 
   //#region Cloud and Fog
-  private cloudOpacity = 0.85;
-  private cloudWidth = 500;
-  private numberOfCloudParticles = 50;
+  private cloudOpacity = 0.55;
+  private cloudParticlesMin = 50;
+  private cloudParticlesMax = 150;
+  private cloudWidthMin = 400;
+  private cloudWidthMax =  600;
+  private cloudZRotationAmountMin =  .00033;
+  private cloudZRotationAmountMax =  .0009;
+  private fogDensityMin =  0.0005;
+  private fogDensityMax =  0.001;
+
+  private cloudWidth = this.cloudWidthMin + (Math.random() * (this.cloudWidthMax - this.cloudWidthMin));
+  private cloudHeight = this.cloudWidth;
+  private numberOfCloudParticles =  this.cloudParticlesMin + (Math.random() * (this.cloudParticlesMax - this.cloudParticlesMin));
   private cloudParticles: THREE.Mesh<
     THREE.PlaneGeometry,
     THREE.MeshLambertMaterial
   >[] = [];
 
+
   private cloudXRotationStart = 1.16;
   private cloudYRotationStart = -0.12;
   private cloudZRotationStart = Math.random() * 2 * Math.PI;
-  private cloudZRotationAmount = 0.001;
-  private fogDensity = 0.001;
+  private cloudZRotationAmount = this.cloudZRotationAmountMin + (Math.random() * (this.cloudZRotationAmountMax - this.cloudZRotationAmountMin));
+  private fogDensity = this.fogDensityMin + (Math.random() * (this.fogDensityMax - this.fogDensityMin));
   //#endregion
 
   //#region colors
-  private ambientLightColor = 0x555555;
-  private directionalLightColor = 0xff8c19;
-  private orangeLightColor = 0xcc6600;
-  private redLightColor = 0xd8547e;
-  private blueLightColor = 0x3677ac;
-  private fogColor = 0x03544e;
+  private fogColor = this.colorPrimary1 //0x03544e;
+  private ambientLightColor = 0x555555; // 0x555555;
+  private directionalLightColor = this.colorPrimary4 //0xff8c19;
+  private orangeLightColor = 0x7B6C28//0xcc6600;
+  private redLightColor = this.colorRed //0xd8547e;
+  private blueLightColor = this.colorPrimary2 //0x3677ac;
   //#endregion
 
   //#region Light Settings
-  private orangeLightIntensity = 60;
-  private orangeLightDistance = 450;
-  private orangeLightDecay = 1.7;
-  private redLightIntensity = 60;
-  private redLightDistance = 450;
-  private redLightDecay = 1.7;
-  private blueLightIntensity = 60;
-  private blueLightDistance = 450;
-  private blueLightDecay = 1.7;
+  private orangeLightIntensity = 60; // 60
+  private orangeLightDistance = 450; // 450
+  private orangeLightDecay = 1.7; // 1.7
+  private redLightIntensity = 60; // 60
+  private redLightDistance = 450; // 450
+  private redLightDecay = 1.7; // 1.7
+  private blueLightIntensity = 60; // 60
+  private blueLightDistance = 450; // 450
+  private blueLightDecay = 1.7; // 1.7
 
-  private orangeLightXPosition = 200;
-  private orangeLightYPosition = 300;
-  private orangeLightZPosition = 100;
-  private redLightXPosition = 100;
-  private redLightYPosition = 300;
-  private redLightZPosition = 100;
-  private blueLightXPosition = 300;
-  private blueLightYPosition = 300;
-  private blueLightZPosition = 200;
+  private orangeLightXPosition = 200; //200
+  private orangeLightYPosition = 300; //300
+  private orangeLightZPosition = 100; //100
+  private redLightXPosition = 0; //100
+  private redLightYPosition = 300; //300
+  private redLightZPosition = 100; //100
+  private blueLightXPosition = 500; //300
+  private blueLightYPosition = 300; //300
+  private blueLightZPosition = 200; //200
   //#endregion
 
   //#region Lights
@@ -118,13 +147,14 @@ export class NebulaComponent implements OnInit {
   constructor(private elRef: ElementRef) {}
 
   ngOnInit(): void {
+    window.addEventListener('resize', this.onResize.bind(this));
     this.addCanvasToDom();
     this.addEverythingToScene();
-    this.loadCloudParticles();
     this.setCamera();
     this.setLights();
-
-    this.startAnimation();
+    this.setRenderer();
+    this.loadCloudParticles();
+    this.loadStarsAndThenStart();
   }
 
   private addCanvasToDom() {
@@ -140,7 +170,6 @@ export class NebulaComponent implements OnInit {
     this.scene.add(this.orangeLight);
     this.scene.add(this.redLight);
     this.scene.add(this.blueLight);
-    this.setRenderer();
   }
 
   private animateClouds() {
@@ -150,11 +179,10 @@ export class NebulaComponent implements OnInit {
   }
 
   private loadCloudParticles() {
-    const loader = new THREE.TextureLoader();
-    loader.load(this.smokeImagePath, (texture) => {
+    this.loader.load(this.smokeImagePath, (texture) => {
       const cloudGeo = new THREE.PlaneBufferGeometry(
         this.cloudWidth,
-        this.cloudWidth
+        this.cloudHeight
       );
       const cloudMaterial = new THREE.MeshLambertMaterial({
         map: texture,
@@ -178,6 +206,45 @@ export class NebulaComponent implements OnInit {
         this.cloudParticles.push(cloud);
       }
     });
+  }
+
+  private loadStarsAndThenStart() {
+    this.loader.load(this.starsPath, (texture) => {
+
+      const textureEffect = new POSTPROCESSING.TextureEffect({
+        blendFunction: POSTPROCESSING.BlendFunction.COLOR_DODGE,
+        texture: texture
+      });
+      textureEffect.blendMode.opacity.value = 0.2;
+
+      const bloomEffect = new POSTPROCESSING.BloomEffect({
+            blendFunction: POSTPROCESSING.BlendFunction.COLOR_DODGE,
+            kernelSize: POSTPROCESSING.KernelSize.SMALL,
+            useLuminanceFilter: true,
+            luminanceThreshold: 0.3,
+            luminanceSmoothing: 0.75
+          });
+      bloomEffect.blendMode.opacity.value = 1.5;
+
+      const effectPass = new POSTPROCESSING.EffectPass(
+        this.camera,
+        bloomEffect,
+        textureEffect
+      );
+      effectPass.renderToScreen = true;
+      
+      this.composer.addPass(new POSTPROCESSING.RenderPass(this.scene, this.camera));
+      this.composer.addPass(effectPass);
+      
+      this.startAnimation();
+    });
+  }
+
+  private onResize() {
+    this.camera.aspect = window.innerWidth / window.innerHeight;
+    this.camera.updateProjectionMatrix();
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
+    return null;
   }
 
   private setCamera() {

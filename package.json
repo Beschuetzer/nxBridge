@@ -47,6 +47,7 @@
     "@nrwl/angular": "12.4.0",
     "@types/mongoose": "^5.11.97",
     "paper": "^0.12.15",
+    "postprocessing": "^6.22.2",
     "reflect-metadata": "^0.1.13",
     "rxjs": "~6.6.0",
     "semantic-ui": "^2.4.2",

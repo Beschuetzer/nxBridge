@@ -30,9 +30,9 @@ $announce-self-animation-duration: 1s;
 
 //login-card
 $login-card-logo: '../../bridge-logo.svg';
-$logo-opacity-normal: 0.05;
-$logo-opacity-hover: $logo-opacity-normal * 0.75;
-$login-card-box-shadow: 0 4px 8px 0px rgba(var(--color-primary-1-rgb), 0.33);
+$logo-opacity-normal: 0.1;
+$logo-opacity-hover: .025;
+$login-card-box-shadow: 0 0px 24px 8px rgba(var(--color-primary-4-rgb), 0.75);
 $login-card-form-box-shadow: 0 8px 16px 0px
   rgba(var(--color-primary-1-rgb), 0.66);
 $login-card-border-radius: $default-font-size * 0.5;

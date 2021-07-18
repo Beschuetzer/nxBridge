@@ -64,3 +64,5 @@ Testing------------
 filters------------
   -won by more than...
 
+-switching to ascending/descending doesn't work redLightIntensity
+-playernames don't reset right when switching between players
