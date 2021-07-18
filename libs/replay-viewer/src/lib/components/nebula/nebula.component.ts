@@ -18,6 +18,7 @@ export class NebulaComponent implements OnInit {
 
   //#region Palette Colors
   private colorPrimary1 = 0x28537b;
+  private colorPrimary1Fogged = 0x28537b55;
   private colorPrimary1Light = 0x999999;
   private colorPrimary2 = 0x8ac6d0;
   private colorPrimary3 = 0xf4d262;
@@ -60,8 +61,9 @@ export class NebulaComponent implements OnInit {
   private cameraZRotationStart = 0.27;
   //#endregion
 
-  //#region Cloud and Fog
-  private cloudOpacity = 0.55;
+  //#region Cloud and Fog Settings
+  private cloudOpacityMin = .25;
+  private cloudOpacityMax = .5;
   private cloudParticlesMin = 50;
   private cloudParticlesMax = 150;
   private cloudWidthMin = 400;
@@ -71,27 +73,55 @@ export class NebulaComponent implements OnInit {
   private fogDensityMin =  0.0005;
   private fogDensityMax =  0.001;
 
-  private cloudWidth = this.cloudWidthMin + (Math.random() * (this.cloudWidthMax - this.cloudWidthMin));
-  private cloudHeight = this.cloudWidth;
-  private numberOfCloudParticles =  this.cloudParticlesMin + (Math.random() * (this.cloudParticlesMax - this.cloudParticlesMin));
-  private cloudParticles: THREE.Mesh<
-    THREE.PlaneGeometry,
-    THREE.MeshLambertMaterial
-  >[] = [];
-
-
   private cloudXRotationStart = 1.16;
   private cloudYRotationStart = -0.12;
   private cloudZRotationStart = Math.random() * 2 * Math.PI;
-  private cloudZRotationAmount = this.cloudZRotationAmountMin + (Math.random() * (this.cloudZRotationAmountMax - this.cloudZRotationAmountMin));
-  private fogDensity = this.fogDensityMin + (Math.random() * (this.fogDensityMax - this.fogDensityMin));
   //#endregion
 
-  //#region colors
-  private fogColor = this.colorPrimary1 //0x03544e;
-  private ambientLightColor = 0x555555; // 0x555555;
-  private directionalLightColor = this.colorPrimary4 //0xff8c19;
-  private orangeLightColor = 0x7B6C28//0xcc6600;
+  //#region Post Processing
+  private blendFunctionOptions = {
+    skip: POSTPROCESSING.BlendFunction.SKIP,
+    add: POSTPROCESSING.BlendFunction.ADD,
+    alpha: POSTPROCESSING.BlendFunction.ALPHA,
+    average: POSTPROCESSING.BlendFunction.AVERAGE,
+    burn: POSTPROCESSING.BlendFunction.COLOR_BURN,
+    dodge: POSTPROCESSING.BlendFunction.COLOR_DODGE,
+    darken: POSTPROCESSING.BlendFunction.DARKEN,
+    difference: POSTPROCESSING.BlendFunction.DIFFERENCE,
+    exclusion: POSTPROCESSING.BlendFunction.EXCLUSION,
+    lighten: POSTPROCESSING.BlendFunction.LIGHTEN,
+    multiply: POSTPROCESSING.BlendFunction.MULTIPLY,
+    divide: POSTPROCESSING.BlendFunction.DIVIDE,
+    negation: POSTPROCESSING.BlendFunction.NEGATION,
+    normal: POSTPROCESSING.BlendFunction.NORMAL,
+    overlay: POSTPROCESSING.BlendFunction.OVERLAY,
+    reflect: POSTPROCESSING.BlendFunction.REFLECT, //use
+    screen: POSTPROCESSING.BlendFunction.SCREEN,
+    soft_light: POSTPROCESSING.BlendFunction.SOFT_LIGHT,
+    subtract: POSTPROCESSING.BlendFunction.SUBTRACT,
+  }
+  private blendFunctionsToUse = [
+    this.blendFunctionOptions.alpha,
+    this.blendFunctionOptions.difference,
+    this.blendFunctionOptions.overlay,
+    this.blendFunctionOptions.reflect,
+    this.blendFunctionOptions.screen,
+    this.blendFunctionOptions.soft_light,
+  ];
+  private luminanceThreshold = 0.33;
+  private luminanceSmoothing = 0.33;
+  private bloomEffectBlendModeOpacityValue = .7; //.7
+  private textureEffectBlendModeOpacityValue = .2; //.2
+  private optionToUse = Math.floor(Math.random() * this.blendFunctionsToUse.length);
+  private blendFunction = this.blendFunctionsToUse[this.optionToUse]
+  
+  //#endregion
+
+  //#region Colors
+  private fogColor = 0x03544e //0x03544e;
+  private ambientLightColor = this.colorPrimary1; // 0x555555;
+  private directionalLightColor = this.colorPrimary2 //0xff8c19;
+  private orangeLightColor = this.colorRedLight//0xcc6600;
   private redLightColor = this.colorRed //0xd8547e;
   private blueLightColor = this.colorPrimary2 //0x3677ac;
   //#endregion
@@ -110,15 +140,15 @@ export class NebulaComponent implements OnInit {
   private orangeLightXPosition = 200; //200
   private orangeLightYPosition = 300; //300
   private orangeLightZPosition = 100; //100
-  private redLightXPosition = 0; //100
+  private redLightXPosition = 100; //100
   private redLightYPosition = 300; //300
   private redLightZPosition = 100; //100
-  private blueLightXPosition = 500; //300
+  private blueLightXPosition = 300; //300
   private blueLightYPosition = 300; //300
   private blueLightZPosition = 200; //200
   //#endregion
 
-  //#region Lights
+  //#region Light Creation
   private ambient = new THREE.AmbientLight(this.ambientLightColor);
   private directionalLight = new THREE.DirectionalLight(
     this.directionalLightColor
@@ -143,6 +173,20 @@ export class NebulaComponent implements OnInit {
   );
 
   //#endregion
+
+  //#region Cloud and Fog Value Creation
+  private cloudZRotationAmount = this.cloudZRotationAmountMin + (Math.random() * (this.cloudZRotationAmountMax - this.cloudZRotationAmountMin));
+  private fogDensity = this.fogDensityMin + (Math.random() * (this.fogDensityMax - this.fogDensityMin));
+  private cloudOpacity = this.cloudOpacityMin + (Math.random() * (this.cloudOpacityMax - this.cloudOpacityMin));
+  private cloudWidth = this.cloudWidthMin + (Math.random() * (this.cloudWidthMax - this.cloudWidthMin));
+  private cloudHeight = this.cloudWidth;
+  private numberOfCloudParticles =  this.cloudParticlesMin + (Math.random() * (this.cloudParticlesMax - this.cloudParticlesMin));
+  private cloudParticles: THREE.Mesh<
+    THREE.PlaneGeometry,
+    THREE.MeshLambertMaterial
+  >[] = [];
+  //#endregion
+
 
   constructor(private elRef: ElementRef) {}
 
@@ -215,16 +259,16 @@ export class NebulaComponent implements OnInit {
         blendFunction: POSTPROCESSING.BlendFunction.COLOR_DODGE,
         texture: texture
       });
-      textureEffect.blendMode.opacity.value = 0.2;
+      textureEffect.blendMode.opacity.value = this.textureEffectBlendModeOpacityValue;
 
       const bloomEffect = new POSTPROCESSING.BloomEffect({
-            blendFunction: POSTPROCESSING.BlendFunction.COLOR_DODGE,
+            blendFunction: this.blendFunction,
             kernelSize: POSTPROCESSING.KernelSize.SMALL,
             useLuminanceFilter: true,
-            luminanceThreshold: 0.3,
-            luminanceSmoothing: 0.75
+            luminanceThreshold: this.luminanceThreshold,
+            luminanceSmoothing: this.luminanceSmoothing,
           });
-      bloomEffect.blendMode.opacity.value = 1.5;
+      bloomEffect.blendMode.opacity.value = this.bloomEffectBlendModeOpacityValue;
 
       const effectPass = new POSTPROCESSING.EffectPass(
         this.camera,
@@ -284,8 +328,9 @@ export class NebulaComponent implements OnInit {
     const animate = () => {
       requestAnimationFrame(animate);
 
-      this.renderer.render(this.scene, this.camera);
       this.animateClouds();
+      this.composer.render(.1);
+      // this.renderer.render(this.scene, this.camera);
     };
     animate();
   }
