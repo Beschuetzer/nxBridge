@@ -17,6 +17,7 @@ import { DealPlayerModule } from '@nx-bridge/deal-player';
 import { FilterManagerComponent } from './components/filter-manager/filter-manager.component';
 import { FilterManagerItemComponent } from './components/filter-manager-item/filter-manager-item.component';
 import { LineSpinnerComponent } from './components/line-spinner/line-spinner.component';
+import { NebulaComponent } from './components/nebula/nebula.component';
 @NgModule({
   declarations: [
     LandingPageComponent,
@@ -29,6 +30,7 @@ import { LineSpinnerComponent } from './components/line-spinner/line-spinner.com
     FilterManagerComponent,
     FilterManagerItemComponent,
     LineSpinnerComponent,
+    NebulaComponent,
   ],
   imports: [
     ReactiveFormsModule,
