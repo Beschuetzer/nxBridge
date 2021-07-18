@@ -20,7 +20,7 @@
     background-image: linear-gradient(
       to top,
       rgba(var(--color-black-rgb), 1),
-      rgba(var(--color-black-rgb), 1) 95%,
+      rgba(var(--color-black-rgb), 1) $games-list-black-gradient-amount-small,
       rgba(var(--color-primary-4-rgb), 1)
     );
     grid-column: 1 / -1;
@@ -45,7 +45,7 @@
   }
 
   & .field:nth-of-type(2) label {
-    margin-top: $semantic-ui-text-default-font-size * .5 !important;
+    margin-top: $default-font-size * .25 !important;
 
     @include respond($layout-breakpoint) {
       margin-top: 0 !important;

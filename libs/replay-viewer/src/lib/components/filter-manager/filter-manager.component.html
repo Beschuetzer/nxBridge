@@ -10,6 +10,15 @@
     >
       Reset
     </button>
+    <button
+      class="{{
+        FILTER_MANANGER_CLASSNAME
+      }}__reset ui button color-white bg-color-1  margin-0"
+      type="button"
+      (click)="onHide()"
+    >
+      Hide
+    </button>
   </div>
   <div #applied class="filter-manager__applied ui field">
     <nx-bridge-filter-manager-item

@@ -14,7 +14,7 @@
   & *:not(.non-existant-class, button) {
     color: var(--color-primary-4) !important;
 
-    &:not(label, form, .login-card__buttons, .login-card__email, .search) {
+    &:not(label, form, h4, input, span, .login-card__buttons, .login-card__email, .search) {
       margin-bottom: $default-font-size * .5 !important;
     }
   }
@@ -35,6 +35,38 @@
 
   &__message-area > :nth-child(1):not(.red.message) {
     margin: $default-font-size * 1.25 0 !important;
+  }
+
+  &__subtitle {
+    display: grid;
+    grid-template-columns: repeat(3, max-content);
+    column-gap: $default-font-size;
+
+    & > h4 {
+      margin-bottom: 0 !important;
+    }
+
+    & input {
+      margin-bottom: 0 !important;
+    }
+    
+    & label {
+      display: flex;
+      align-items: center;
+
+      & span {
+        margin-left: $default-font-size * .25;
+
+      }
+    }
+  }
+
+  &__email {
+
+  }
+
+  &__username {
+
   }
 
   &:hover .logo {
@@ -89,4 +121,6 @@
     //   font-size: $default-font-size * 1 !important;
     // }
   }
+
+
 }

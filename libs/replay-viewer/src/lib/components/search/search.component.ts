@@ -1,4 +1,4 @@
-import { Component, HostBinding, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, HostBinding, Input, OnInit, Renderer2 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { take, map } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
@@ -6,6 +6,8 @@ import { SearchService } from '../../services/search.service';
 import { Store } from '@ngrx/store';
 import { AppState, SetIsFilterSame, SetIsLoading, SetLoadingError } from '@nx-bridge/store';
 import { ReducerNames } from '@nx-bridge/interfaces-and-types';
+import { DISPLAY_NONE_CLASSNAME, LOGIN_CARD_CLASSNAME } from '@nx-bridge/constants';
+import { Renderer } from 'three';
 
 @Component({
   selector: 'nx-bridge-search',
@@ -25,6 +27,12 @@ export class SearchComponent implements OnInit {
   public errorHighlightedValue = '';
   public errorSub = Subscription;
   public isNoGamesError = false;
+  public LOGIN_CARD_CLASSNAME = LOGIN_CARD_CLASSNAME;
+  public DISPLAY_NONE_CLASSNAME = DISPLAY_NONE_CLASSNAME;
+
+  get currentField(): string {
+    return 'username';
+  }
 
   get emailIsValid(): boolean | undefined {
     const email = this.initialForm.get('email');
@@ -58,7 +66,9 @@ export class SearchComponent implements OnInit {
 
   constructor(
     private searchService: SearchService,
-    private store: Store<AppState>
+    private store: Store<AppState>,
+    private elRef: ElementRef,
+    private renderer: Renderer2,
   ) {}
 
   ngOnInit(): void {
@@ -77,6 +87,21 @@ export class SearchComponent implements OnInit {
         })
       )
       .subscribe();
+  }
+
+  onEmailClick() {
+    const {usernameInput, emailInput} = this.getInputs();
+    
+    if (usernameInput) this.renderer.addClass(usernameInput, DISPLAY_NONE_CLASSNAME);
+    if (emailInput) this.renderer.removeClass(emailInput, DISPLAY_NONE_CLASSNAME);
+  }
+
+  onUsernameClick() {
+    const {usernameInput, emailInput} = this.getInputs();
+    console.log('usernameInput =', usernameInput);
+    console.log('emailInput =', emailInput);
+    if (usernameInput) this.renderer.removeClass(usernameInput, DISPLAY_NONE_CLASSNAME);
+    if (emailInput) this.renderer.addClass(emailInput, DISPLAY_NONE_CLASSNAME);
   }
 
   onReset() {
@@ -98,6 +123,15 @@ export class SearchComponent implements OnInit {
     this.resetForm();
 
     this.searchService.shouldNavigateToGames = true;
+  }
+
+  public getInputs() {
+    const loginCard = this.elRef.nativeElement;
+    const usernameInput = loginCard?.querySelector(`.${LOGIN_CARD_CLASSNAME}__username`);
+    const emailInput = loginCard?.querySelector(`.${LOGIN_CARD_CLASSNAME}__email`);
+    if (!emailInput || !usernameInput) return {usernameInput: null, emailInput: null};
+
+    return {usernameInput, emailInput};
   }
 
   public resetForm() {

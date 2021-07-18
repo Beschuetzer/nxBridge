@@ -3,9 +3,31 @@
     {{ titleMsg }}
   </h2>
 
+  <div class="login-card__subtitle">
+    <h4>Search by:</h4>
+    <label>
+      <input
+        (click)="onUsernameClick()"
+        type="radio"
+        name="search"
+        value="username"
+        checked
+      />
+      <span>Username</span>
+    </label>
+    <label>
+      <input
+        (click)="onEmailClick()"
+        type="radio"
+        name="search"
+        value="email"
+      />
+      <span>Email</span>
+    </label>
+  </div>
 
   <div class="field">
-    <div class="field">
+    <div class="field login-card__username">
       <label>Username</label>
       <input
         (click)="onInputClick()"
@@ -16,7 +38,7 @@
         maxlength="12"
       />
     </div>
-    <div class="field">
+    <div class="field login-card__email {{DISPLAY_NONE_CLASSNAME}}">
       <label>Email</label>
       <input
         (click)="onInputClick()"
@@ -43,15 +65,16 @@
     <ng-template #space>
       <p *ngIf="!error">&nbsp;</p>
     </ng-template>
-    <div *ngIf="error && !isNoGamesError" class="ui red message"
+    <div
+      *ngIf="error && !isNoGamesError"
+      class="ui red message"
       innerHTML="{{ error }}<b>{{ errorHighlightedValue }}</b>"
-    >
-      
-    </div>
-    <div *ngIf="error && isNoGamesError" class="ui red message"
+    ></div>
+    <div
+      *ngIf="error && isNoGamesError"
+      class="ui red message"
       innerHTML="<b>{{ errorHighlightedValue }}</b> {{ error }}"
-    >
-    </div>
+    ></div>
   </div>
 
   <div class="{{ isLandingPage ? 'login-card__buttons' : '' }}">
@@ -83,4 +106,3 @@
 </form>
 
 <nx-bridge-filter-manager></nx-bridge-filter-manager>
-

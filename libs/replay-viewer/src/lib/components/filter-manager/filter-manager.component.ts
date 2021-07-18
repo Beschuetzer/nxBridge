@@ -21,6 +21,7 @@ import {
   filterManagerBids,
   filterManagerDoubleOptions,
   rootRoute,
+  DISPLAY_NONE_CLASSNAME,
 } from '@nx-bridge/constants';
 import {
   AddPlayerHasCard,
@@ -102,6 +103,7 @@ export class FilterManagerComponent implements OnInit {
   private hasPlayerHasCardChanged = false;
 
   public FILTER_MANANGER_CLASSNAME = FILTER_MANAGER_CLASSNAME;
+  public DISPLAY_NONE_CLASSNAME = DISPLAY_NONE_CLASSNAME;
   public beforeDate: DateObj = { date: null };
   public afterDate: DateObj = { date: null };
   public filterItems: FilterItems = {};
@@ -456,6 +458,24 @@ export class FilterManagerComponent implements OnInit {
   //NOTE: need this to trigger *ngIf properly
   onGameClick(e: Event) {
     return;
+  }
+
+  onHide() {
+    const filterManager = this.elRef.nativeElement as HTMLElement;
+    const applied = filterManager.querySelector(`.${FILTER_MANAGER_CLASSNAME}__applied`) as HTMLElement;
+    const options = filterManager.querySelector(`.${FILTER_MANAGER_CLASSNAME}__options`) as HTMLElement;
+    const details = filterManager.querySelector(`.${FILTER_MANAGER_CLASSNAME}__details`) as HTMLElement;
+
+    if (applied.classList.contains(DISPLAY_NONE_CLASSNAME)) {
+      this.renderer.removeClass(applied, DISPLAY_NONE_CLASSNAME);
+      this.renderer.removeClass(options, DISPLAY_NONE_CLASSNAME);
+      this.renderer.removeClass(details, DISPLAY_NONE_CLASSNAME);
+    } else {
+      this.renderer.addClass(applied, DISPLAY_NONE_CLASSNAME);
+      this.renderer.addClass(options, DISPLAY_NONE_CLASSNAME);
+      this.renderer.addClass(details, DISPLAY_NONE_CLASSNAME);
+    }
+
   }
 
   onPlayerInGameChange() {

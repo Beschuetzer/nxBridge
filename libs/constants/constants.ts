@@ -27,6 +27,7 @@ export const HIDDEN_CLASSNAME = 'hidden';
 export const VISIBLE_CLASSNAME = 'visible';
 export const DISPLAY_NONE_CLASSNAME = 'd-none';
 export const MATCHED_DEAL_CLASSNAME = 'matched-deal';
+export const LOGIN_CARD_CLASSNAME = 'login-card';
 export const DEALS_LIST_CLASSNAME = 'deals-list';
 export const DEAL_DETAIL_CLASSNAME = 'deal-detail';
 export const GAME_DETAIL_CLASSNAME = 'game-detail';

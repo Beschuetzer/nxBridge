@@ -66,3 +66,5 @@ filters------------
 
 -switching to ascending/descending doesn't work redLightIntensity
 -playernames don't reset right when switching between players
+-add hide button for search section and 
+-add hide button for sorting section

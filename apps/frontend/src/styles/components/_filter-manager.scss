@@ -1,4 +1,5 @@
 .filter-manager {
+  max-height: auto;
   overflow-y: auto;
   margin-top: $default-font-size * .5;
   width: 100%;
@@ -8,7 +9,8 @@
   ;
 
   @include respond($layout-breakpoint) {
-    margin-top: $default-font-size * .5;
+    max-height: 33vh;
+    margin-top: $default-font-size * .25;
   }
 
   & label {
@@ -22,6 +24,10 @@
 
   &__applied {
     padding: $default-font-size * .25  0 $default-font-size * .25 $default-font-size * .25;
+
+    @include respond($layout-breakpoint) {
+      padding: $default-font-size * .125  0 $default-font-size * .125 $default-font-size * .125;
+    }
   }
   
   &__options {
@@ -29,10 +35,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    // margin-top: $semantic-ui-text-default-font-size * .5 !important;
 
     @include respond($layout-breakpoint) {
-      justify-content: space-evenly;
+      border-bottom: none;
     }
   }
   
@@ -40,6 +45,10 @@
    
     &-deal, &-game {
       border-bottom: 1px dashed var(--color-primary-4);
+
+      @include respond($layout-breakpoint) {
+        border-bottom: none;
+      }
 
       & > * {
         padding-left: $default-font-size * .25;
@@ -63,7 +72,7 @@
     padding-top: $default-font-size * .25;
 
     @include respond($layout-breakpoint) {
-      justify-content: space-around;
+      // justify-content: space-around;
     }
   }
 
@@ -94,6 +103,13 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    @include respond($layout-breakpoint) {
+      display: grid;
+      grid-template-columns: repeat(2, max-content);
+      column-gap: $default-font-size * .5;
+      justify-content: flex-start;
+    }
 
     & button {
       color: var(--color-red);
