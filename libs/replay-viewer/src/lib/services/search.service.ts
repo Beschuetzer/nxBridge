@@ -87,6 +87,36 @@ export class SearchService {
     };
   }
 
+  getAreDealsLoaded() {
+    let areLoaded = false;
+    this.store
+      .select(ReducerNames.deals)
+      .pipe(take(1))
+      .subscribe((dealState) => {
+        areLoaded = Object.keys(dealState.fetchedDeals).length > 0;
+      });
+    return areLoaded;
+  }
+
+  getAreGamesLoaded() {
+    let areGamesLoaded = false;
+    this.store.select(ReducerNames.deals).pipe(take(1)).subscribe(dealState => {
+      areGamesLoaded = Object.keys(dealState.fetchedDeals).length > 0;
+    })
+    return areGamesLoaded;
+  }
+
+  getIsLoading() {
+    let isLoading = false;
+    this.store
+      .select(ReducerNames.general)
+      .pipe(take(1))
+      .subscribe((generalState) => {
+        isLoading = generalState.isLoading;
+      });
+    return isLoading;
+  }
+
   setCurrentlyDisplayingGames() {
     //NOTE: assumming the games are sorted in descending order at this point (happens in getLocalStorageUserWithGames)
     let sortPreference: string;
@@ -156,14 +186,6 @@ export class SearchService {
         });
     } else this.getGameCount();
     return '';
-  }
-
-  private getAreGamesLoaded() {
-    let areGamesLoaded = false;
-    this.store.select(ReducerNames.deals).pipe(take(1)).subscribe(dealState => {
-      areGamesLoaded = Object.keys(dealState.fetchedDeals).length > 0;
-    })
-    return areGamesLoaded;
   }
 
   private getDealsToLoad(neededDeals: DealRequest, neededDealsAsStrings: string[], localStorageDeals: FetchedDeals) {
@@ -352,7 +374,6 @@ export class SearchService {
         const combinedDeals = {...localStorageDeals, ...deals};
         this.localStorageManager.saveDeals(combinedDeals);
 
-        debugger;
         const relevantDeals = this.getRelevantDeals(combinedDeals, neededDealsAsStrings);
         this.store.dispatch(new SetFetchedDeals(relevantDeals));
       })

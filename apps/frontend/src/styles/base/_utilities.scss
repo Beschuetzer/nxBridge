@@ -245,3 +245,16 @@
 .announce-self {
   animation: announce-self 1 $announce-self-animation-duration $animation-easing-standard
 }
+
+.page-load__spinner {
+  position: absolute;
+  top: 0%;
+  left: 0%;
+  width: 100vw;
+  height: 100vh;
+  // transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+}

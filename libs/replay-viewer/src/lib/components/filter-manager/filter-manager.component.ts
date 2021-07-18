@@ -89,13 +89,13 @@ export class FilterManagerComponent implements OnInit {
     return true;
   }
   @HostBinding('class.hidden') get toggleHidden() {
-    return this.filterManagerService.getAreDealsLoaded();
+    return !this.searchService.getAreDealsLoaded();
   }
   @HostBinding('class.d-none') get toggleDisplayNone() {
     return this.router.url === `/${rootRoute}`;
   }
   @HostBinding('class.announce-self') get toggleAnnounceSelf() {
-    return !this.filterManagerService.getAreDealsLoaded();
+    return this.searchService.getAreDealsLoaded();
   }
 
   private lastButtonPressed: EventTarget | null = null;

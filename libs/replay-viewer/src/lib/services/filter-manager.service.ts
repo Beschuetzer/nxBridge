@@ -240,17 +240,6 @@ export class FiltermanagerService {
     return filteredGames;
   }
 
-  getAreDealsLoaded() {
-    let areLoaded = false;
-    this.store
-      .select(ReducerNames.deals)
-      .pipe(take(1))
-      .subscribe((dealState) => {
-        areLoaded = Object.keys(dealState.fetchedDeals).length > 0;
-      });
-    return !areLoaded;
-  }
-
   getBeforeAndAfterDateInfo() {
     let beforeDate = -2;
     let afterDate = -2;

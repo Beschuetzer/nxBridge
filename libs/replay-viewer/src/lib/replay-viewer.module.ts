@@ -16,6 +16,7 @@ import { PipesModule } from '@nx-bridge/pipes';
 import { DealPlayerModule } from '@nx-bridge/deal-player';
 import { FilterManagerComponent } from './components/filter-manager/filter-manager.component';
 import { FilterManagerItemComponent } from './components/filter-manager-item/filter-manager-item.component';
+import { LineSpinnerComponent } from './components/line-spinner/line-spinner.component';
 @NgModule({
   declarations: [
     LandingPageComponent,
@@ -27,6 +28,7 @@ import { FilterManagerItemComponent } from './components/filter-manager-item/fil
     GamesListViewComponent,
     FilterManagerComponent,
     FilterManagerItemComponent,
+    LineSpinnerComponent,
   ],
   imports: [
     ReactiveFormsModule,
