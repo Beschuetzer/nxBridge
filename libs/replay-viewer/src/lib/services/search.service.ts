@@ -161,16 +161,19 @@ export class SearchService {
   }
 
   startRequest(username: string, email: string) {
+    console.log('username =', username);
+    console.log('email =', email);
     const shouldContinue = this.getShouldContinue(username, email);
     if (!shouldContinue) {
+      this.filterManagerService.reset();
+      this.store.dispatch(new SetIsLoading(false));
       const areGamesLoaded = this.getAreGamesLoaded();
-      if (areGamesLoaded && this.router.url !== `${rootRoute}/games`) {
+      if (areGamesLoaded && this.router.url !== `/${rootRoute}/games`) {
         this.router.navigate([rootRoute , 'games']);
-        this.filterManagerService.reset();
         this.setCurrentlyDisplayingGames();
         return;
       } 
-      else return `Already viewing games by <b>'${username}'</b>.&nbsp;&nbsp;Try resetting filters, if you see no games.`;
+      else return `Already viewing the games of <b>'${username ? username : email}'</b>.`;
     }
 
     this.needToCreateLocalStorageUser = false;
@@ -272,10 +275,9 @@ export class SearchService {
       .select(ReducerNames.users)
       .pipe(take(1))
       .subscribe((userState) => {
-        if (username)
-          shouldContinue = userState.currentlyViewingUser.username !== username;
-        else if (email)
-          shouldContinue = userState.currentlyViewingUser.email !== email;
+        if (!username && !email) shouldContinue = false;
+        if (!username) shouldContinue = userState.currentlyViewingUser.email !== email; 
+        else if (!email) shouldContinue = userState.currentlyViewingUser.username !== username;
       });
 
     return shouldContinue;
@@ -343,7 +345,7 @@ export class SearchService {
         new SetLoadingError(
           `There is no user with that ${
             this.username ? 'username' : 'email'
-          }. &nbsp;&nbsp;They may have recently changed their ${this.username ? 'username' : 'email'} to something other than '${this.username ? this.username : this.email}'.`
+          }. &nbsp;&nbsp;He/She may have recently changed their ${this.username ? 'username' : 'email'} to something other than '${this.username ? this.username : this.email}'.`
         )
       );
       this.store.dispatch(new SetIsLoading(false));

@@ -1,12 +1,27 @@
-import { Component, ElementRef, HostBinding, Input, OnInit, Renderer2 } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostBinding,
+  Input,
+  OnInit,
+  Renderer2,
+} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { take, map } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { SearchService } from '../../services/search.service';
 import { Store } from '@ngrx/store';
-import { AppState, SetIsFilterSame, SetIsLoading, SetLoadingError } from '@nx-bridge/store';
+import {
+  AppState,
+  SetIsFilterSame,
+  SetIsLoading,
+  SetLoadingError,
+} from '@nx-bridge/store';
 import { ReducerNames } from '@nx-bridge/interfaces-and-types';
-import { DISPLAY_NONE_CLASSNAME, LOGIN_CARD_CLASSNAME } from '@nx-bridge/constants';
+import {
+  DISPLAY_NONE_CLASSNAME,
+  LOGIN_CARD_CLASSNAME,
+} from '@nx-bridge/constants';
 import { Renderer } from 'three';
 
 @Component({
@@ -68,7 +83,7 @@ export class SearchComponent implements OnInit {
     private searchService: SearchService,
     private store: Store<AppState>,
     private elRef: ElementRef,
-    private renderer: Renderer2,
+    private renderer: Renderer2
   ) {}
 
   ngOnInit(): void {
@@ -90,18 +105,35 @@ export class SearchComponent implements OnInit {
   }
 
   onEmailClick() {
-    const {usernameInput, emailInput} = this.getInputs();
-    
-    if (usernameInput) this.renderer.addClass(usernameInput, DISPLAY_NONE_CLASSNAME);
-    if (emailInput) this.renderer.removeClass(emailInput, DISPLAY_NONE_CLASSNAME);
+    const { usernameInput, emailInput } = this.getInputs();
+    const form = usernameInput?.closest('form') as HTMLFormElement;
+    form.reset();
+
+    if (usernameInput) {
+      (usernameInput.children[1] as HTMLInputElement).value = '';
+      this.renderer.addClass(usernameInput, DISPLAY_NONE_CLASSNAME);
+    }
+    if (emailInput) {
+      (document.querySelector('#emailCheckbox') as HTMLInputElement).checked = true;
+      (emailInput.children[1] as HTMLInputElement).value = '';
+      this.renderer.removeClass(emailInput, DISPLAY_NONE_CLASSNAME);
+    }
   }
 
   onUsernameClick() {
-    const {usernameInput, emailInput} = this.getInputs();
-    console.log('usernameInput =', usernameInput);
-    console.log('emailInput =', emailInput);
-    if (usernameInput) this.renderer.removeClass(usernameInput, DISPLAY_NONE_CLASSNAME);
-    if (emailInput) this.renderer.addClass(emailInput, DISPLAY_NONE_CLASSNAME);
+    const { usernameInput, emailInput } = this.getInputs();
+    const form = usernameInput?.closest('form') as HTMLFormElement;
+    form.reset();
+
+    if (usernameInput) {
+      (document.querySelector('#usernameCheckbox') as HTMLInputElement).checked = true;
+      (usernameInput.children[1] as HTMLInputElement).value = '';
+      this.renderer.removeClass(usernameInput, DISPLAY_NONE_CLASSNAME);
+    }
+    if (emailInput) {
+      (emailInput.children[1] as HTMLInputElement).value = '';
+      this.renderer.addClass(emailInput, DISPLAY_NONE_CLASSNAME);
+    }
   }
 
   onReset() {
@@ -127,11 +159,16 @@ export class SearchComponent implements OnInit {
 
   public getInputs() {
     const loginCard = this.elRef.nativeElement;
-    const usernameInput = loginCard?.querySelector(`.${LOGIN_CARD_CLASSNAME}__username`);
-    const emailInput = loginCard?.querySelector(`.${LOGIN_CARD_CLASSNAME}__email`);
-    if (!emailInput || !usernameInput) return {usernameInput: null, emailInput: null};
+    const usernameInput = loginCard?.querySelector(
+      `.${LOGIN_CARD_CLASSNAME}__username`
+    ) as HTMLInputElement;
+    const emailInput = loginCard?.querySelector(
+      `.${LOGIN_CARD_CLASSNAME}__email`
+    ) as HTMLInputElement;
+    if (!emailInput || !usernameInput)
+      return { usernameInput: null, emailInput: null };
 
-    return {usernameInput, emailInput};
+    return { usernameInput, emailInput };
   }
 
   public resetForm() {
@@ -167,7 +204,10 @@ export class SearchComponent implements OnInit {
         if (punctuation) {
           if (!this.isNoGamesError) {
             term += punctuation[0];
-            errorWithoutTerm = errorWithoutTerm.replace(new RegExp(punctuation[0] + '$'), '');
+            errorWithoutTerm = errorWithoutTerm.replace(
+              new RegExp(punctuation[0] + '$'),
+              ''
+            );
           }
         }
 
