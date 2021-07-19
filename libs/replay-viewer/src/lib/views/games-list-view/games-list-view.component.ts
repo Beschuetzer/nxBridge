@@ -172,7 +172,7 @@ export class GamesListViewComponent implements OnInit {
     this.setSortPreference(option.value);
 
     this.currentBatch =
-      this.currentBatch === 0
+      this.currentBatch <= 0
         ? this.totalNumberOfPages - 1
         : this.totalNumberOfPages - 1 - this.currentBatch;
     this.store.dispatch(new SetBatchNumber(this.currentBatch));
