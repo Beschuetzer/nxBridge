@@ -125,15 +125,18 @@ export class SearchComponent implements OnInit {
     const subtitle = search.querySelector(`.${LOGIN_CARD_CLASSNAME}__subtitle`) as HTMLElement;
     const inputs = search.querySelector(`.${LOGIN_CARD_CLASSNAME}__inputs`) as HTMLElement;
     const submit = search.querySelector(`.${LOGIN_CARD_CLASSNAME}__submit`) as HTMLElement;
+    const button = search.querySelector(`.${LOGIN_CARD_CLASSNAME}__hide`) as HTMLElement;
 
     if (subtitle?.classList.contains(DISPLAY_NONE_CLASSNAME)) {
       this.renderer.removeClass(subtitle, DISPLAY_NONE_CLASSNAME);
       this.renderer.removeClass(inputs, DISPLAY_NONE_CLASSNAME);
       this.renderer.removeClass(submit, DISPLAY_NONE_CLASSNAME);
+      button.innerHTML = "Hide";
     } else {
       this.renderer.addClass(subtitle, DISPLAY_NONE_CLASSNAME);
       this.renderer.addClass(inputs, DISPLAY_NONE_CLASSNAME);
       this.renderer.addClass(submit, DISPLAY_NONE_CLASSNAME);
+      button.innerHTML = "Show";
     }
   }
 

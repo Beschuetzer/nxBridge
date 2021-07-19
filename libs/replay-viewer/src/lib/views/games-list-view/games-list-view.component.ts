@@ -3,6 +3,7 @@ import {
   ElementRef,
   HostBinding,
   OnInit,
+  Renderer2,
   ViewChild,
 } from '@angular/core';
 import {
@@ -24,6 +25,7 @@ import {
   gameDetailHeightAboveBreakpointCssPropName,
   gameDetailHeightBelowBreakpointCssPropName,
   gameDetailSummaryHeightPercentageCssPropName,
+  GAMES_VIEW_CLASSNAME,
   getNewBatchNumber,
   getNewTotalNumberOfPages,
   LOGIN_CARD_CLASSNAME,
@@ -76,6 +78,7 @@ export class GamesListViewComponent implements OnInit {
     private localStorageManager: LocalStorageManagerService,
     private searchService: SearchService,
     private elRef: ElementRef,
+    private renderer: Renderer2,
   ) {}
 
   ngOnInit(): void {
@@ -107,6 +110,23 @@ export class GamesListViewComponent implements OnInit {
     this.currentBatch = +option.value;
     this.store.dispatch(new SetBatchNumber(this.currentBatch));
     this.searchService.setCurrentlyDisplayingGames();
+  }
+
+  onHide() {
+    const gamesView = this.elRef.nativeElement as HTMLElement;
+    const sizeSort = gamesView.querySelector(`.${GAMES_VIEW_CLASSNAME}__size-sort`) as HTMLElement;
+    const resultsPage = gamesView.querySelector(`.${GAMES_VIEW_CLASSNAME}__results-page`) as HTMLElement;
+    const button = gamesView.querySelector(`.${GAMES_VIEW_CLASSNAME}__hide`) as HTMLElement;
+
+    if (sizeSort.classList.contains(DISPLAY_NONE_CLASSNAME)) {
+      this.renderer.removeClass(sizeSort, DISPLAY_NONE_CLASSNAME);
+      this.renderer.removeClass(resultsPage, DISPLAY_NONE_CLASSNAME);
+      button.innerHTML = 'Hide';
+    } else {
+      this.renderer.addClass(sizeSort, DISPLAY_NONE_CLASSNAME);
+      this.renderer.addClass(resultsPage, DISPLAY_NONE_CLASSNAME);
+      button.innerHTML = 'Show Options';
+    }
   }
 
   onResultsPerPageChange(e: Event, shouldSave = true) {

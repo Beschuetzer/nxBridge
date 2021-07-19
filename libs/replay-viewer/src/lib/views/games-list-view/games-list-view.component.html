@@ -11,7 +11,13 @@
           }}':</span
         >
       </h2>
-      <div>
+      <button
+        class="ui button bg-color-1 color-white games-view__hide"
+        (click)="onHide()"
+      >
+        Hide
+      </button>
+      <div class="games-view__size-sort">
         <label class="ui field">
           Size:&nbsp;
           <select (change)="onSizeChange($event)" class="ui input" #size>
@@ -38,7 +44,7 @@
           </select>
         </label>
       </div>
-      <div class="ui field">
+      <div class="ui field games-view__results-page">
         <label class="ui field">
           Results / page:&nbsp;
           <select #results (change)="onResultsPerPageChange($event)">
@@ -81,8 +87,7 @@
       </span>
 
       <span>
-        &nbsp;<b>{{ totalGames }}</b
-        > {{ totalGames === 1 ? 'game' : 'games' }}
+        &nbsp;<b>{{ totalGames }}</b> {{ totalGames === 1 ? 'game' : 'games' }}
       </span>
       <span>&nbsp;found matching criteria:</span>
     </div>
@@ -93,5 +98,3 @@
 <nx-bridge-deal-player></nx-bridge-deal-player>
 
 <nx-bridge-line-spinner class="page-load__spinner"></nx-bridge-line-spinner>
-
-

@@ -63,7 +63,7 @@
       }
     }
 
-    & > *:nth-child(n + 1) {
+    & > *:nth-child(n + 1):not(.games-view__hide) {
       grid-column: 2 / span 1;
       width: 100%;
       display: flex;
@@ -92,5 +92,13 @@
     align-items: center;
     color: var(--color-primary-3);
     padding-left: $default-font-size * .5;
+  }
+
+  &__hide {
+    margin: 0 !important;
+    width: max-content;
+    grid-column: 3 / span 1;
+    grid-row: 1/ span 1;
+    justify-self: flex-end;
   }
 }

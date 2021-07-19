@@ -468,15 +468,19 @@ export class FilterManagerComponent implements OnInit {
     const applied = filterManager.querySelector(`.${FILTER_MANAGER_CLASSNAME}__applied`) as HTMLElement;
     const options = filterManager.querySelector(`.${FILTER_MANAGER_CLASSNAME}__options`) as HTMLElement;
     const details = filterManager.querySelector(`.${FILTER_MANAGER_CLASSNAME}__details`) as HTMLElement;
+    const button = filterManager.querySelector(`.${FILTER_MANAGER_CLASSNAME}__hide`) as HTMLElement;
+    
 
     if (applied.classList.contains(DISPLAY_NONE_CLASSNAME)) {
       this.renderer.removeClass(applied, DISPLAY_NONE_CLASSNAME);
       this.renderer.removeClass(options, DISPLAY_NONE_CLASSNAME);
       this.renderer.removeClass(details, DISPLAY_NONE_CLASSNAME);
+      button.innerHTML = "Hide";
     } else {
       this.renderer.addClass(applied, DISPLAY_NONE_CLASSNAME);
       this.renderer.addClass(options, DISPLAY_NONE_CLASSNAME);
       this.renderer.addClass(details, DISPLAY_NONE_CLASSNAME);
+      button.innerHTML = "Show";
     }
 
   }
