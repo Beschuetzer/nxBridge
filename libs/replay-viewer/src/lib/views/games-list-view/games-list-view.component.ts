@@ -114,17 +114,23 @@ export class GamesListViewComponent implements OnInit {
 
   onHide() {
     const gamesView = this.elRef.nativeElement as HTMLElement;
-    const sizeSort = gamesView.querySelector(`.${GAMES_VIEW_CLASSNAME}__size-sort`) as HTMLElement;
-    const resultsPage = gamesView.querySelector(`.${GAMES_VIEW_CLASSNAME}__results-page`) as HTMLElement;
+    const size = gamesView.querySelector(`.${GAMES_VIEW_CLASSNAME}__size`) as HTMLElement;
+    const sort = gamesView.querySelector(`.${GAMES_VIEW_CLASSNAME}__sort`) as HTMLElement;
+    const results = gamesView.querySelector(`.${GAMES_VIEW_CLASSNAME}__results`) as HTMLElement;
+    const page = gamesView.querySelector(`.${GAMES_VIEW_CLASSNAME}__page`) as HTMLElement;
     const button = gamesView.querySelector(`.${GAMES_VIEW_CLASSNAME}__hide`) as HTMLElement;
 
-    if (sizeSort.classList.contains(DISPLAY_NONE_CLASSNAME)) {
-      this.renderer.removeClass(sizeSort, DISPLAY_NONE_CLASSNAME);
-      this.renderer.removeClass(resultsPage, DISPLAY_NONE_CLASSNAME);
+    if (size.classList.contains(DISPLAY_NONE_CLASSNAME)) {
+      this.renderer.removeClass(size, DISPLAY_NONE_CLASSNAME);
+      this.renderer.removeClass(results, DISPLAY_NONE_CLASSNAME);
+      this.renderer.removeClass(sort, DISPLAY_NONE_CLASSNAME);
+      this.renderer.removeClass(page, DISPLAY_NONE_CLASSNAME);
       button.innerHTML = 'Hide';
     } else {
-      this.renderer.addClass(sizeSort, DISPLAY_NONE_CLASSNAME);
-      this.renderer.addClass(resultsPage, DISPLAY_NONE_CLASSNAME);
+      this.renderer.addClass(size, DISPLAY_NONE_CLASSNAME);
+      this.renderer.addClass(results, DISPLAY_NONE_CLASSNAME);
+      this.renderer.addClass(sort, DISPLAY_NONE_CLASSNAME);
+      this.renderer.addClass(page, DISPLAY_NONE_CLASSNAME);
       button.innerHTML = 'Show Options';
     }
   }
