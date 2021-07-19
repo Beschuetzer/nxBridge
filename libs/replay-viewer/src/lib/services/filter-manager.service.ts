@@ -554,6 +554,7 @@ export class FiltermanagerService {
     const canSkipContract = this.getCanSkipContract(filters.contract);
     const canSkipDeclarer = this.getCanSkipDeclarer(filters.declarer);
     const canSkipDouble = this.getCanSkipDouble(filters.double);
+    const canSkipGameName = this.getCanSkipGameName(filters.gameName);
     const canSkipOpeningBid = this.getCanSkipOpeningBid(filters.openingBid);
     const canSkipPlayerHasCard = this.getCanSkipPlayerHasCard(
       filters.playerHasCard
@@ -570,6 +571,7 @@ export class FiltermanagerService {
         canSkipContract &&
         canSkipDeclarer &&
         canSkipDouble &&
+        canSkipGameName &&
         canSkipOpeningBid &&
         canSkipPlayerHasCard &&
         canSkipPlayerInGame &&
@@ -579,6 +581,7 @@ export class FiltermanagerService {
       contract: canSkipContract,
       declarer: canSkipDeclarer,
       double: canSkipDouble,
+      gameName: canSkipGameName,
       openingBid: canSkipOpeningBid,
       playerHasCard: canSkipPlayerHasCard,
       playerInGame: canSkipPlayerInGame,
@@ -627,6 +630,9 @@ export class FiltermanagerService {
     if (!canSkip.beforeDate && shouldAddGame)
       shouldAddGame = this.getPassesBeforeDate(filters.beforeDate, game);
 
+    if (!canSkip.gameName && shouldAddGame)
+      shouldAddGame = this.getPassesGameName(filters.gameName, game);
+
     if (!canSkip.wonBy && shouldAddGame)
       shouldAddGame = this.getPassesWonBy(filters.wonBy, game);
 
@@ -671,6 +677,10 @@ export class FiltermanagerService {
     return multiplier === this.filtersInitial.double;
   }
 
+  private getCanSkipGameName(gameName: string) {
+    return gameName === `${reducerDefaultValue}` || !gameName;
+  }
+
   private getCanSkipOpeningBid(bid: string) {
     return bid === this.filtersInitial.openingBid;
   }
@@ -697,7 +707,8 @@ export class FiltermanagerService {
       !wonBy.type ||
       (wonBy.type !== 'less' && wonBy.type !== 'more') ||
       wonBy.amount === undefined ||
-      wonBy.amount === null || wonBy.amount === reducerDefaultValue
+      wonBy.amount === null ||
+      wonBy.amount === reducerDefaultValue
     )
       return true;
     return false;
@@ -729,6 +740,10 @@ export class FiltermanagerService {
     const doubleValue = deal?.doubleValue;
     if (!doubleValue) return false;
     return deal.doubleValue === multiplier;
+  }
+
+  private getPassesGameName(gameName: string, game: GameRelevant) {
+    return game.room.name === gameName; 
   }
 
   private getPassesOpeningBidFilter(bid: string, deal: DealRelevant) {

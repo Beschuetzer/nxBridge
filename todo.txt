@@ -42,6 +42,4 @@ Testing------------
 -add animations/transitions for things like fade in of filters and games?
 -consider change "Games played by..." wording and font-size
 
-Game Filtering stuff----------------------------------------
-  -add filter by room name
 

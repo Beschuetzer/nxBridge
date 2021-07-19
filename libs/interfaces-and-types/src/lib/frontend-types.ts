@@ -7,6 +7,7 @@ export interface CanSkipFilters {
   contract: boolean,
   declarer: boolean,
   double: boolean,
+  gameName: boolean,
   openingBid: boolean,
   playerHasCard: boolean,
   playerInGame: boolean,
