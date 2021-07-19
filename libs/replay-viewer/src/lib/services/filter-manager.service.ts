@@ -464,7 +464,6 @@ export class FiltermanagerService {
       filters.beforeDate
     );
     filteredGames = this.getAfterDateMatches(filteredGames, filters.afterDate);
-    filteredGames = this.getWonByMatches(filteredGames, filters.wonBy);
     filteredGames = this.getPlayerInGameMatches(
       filteredGames,
       filters.playerInGame
@@ -522,6 +521,18 @@ export class FiltermanagerService {
       !playerHasCards ||
       playerHasCards['initial'] ||
       Object.keys(playerHasCards).length === 0
+    )
+      return true;
+    return false;
+  }
+
+  private getCanSkipWonBy(wonBy: WonBy) {
+    if (
+      !wonBy ||
+      !wonBy.type ||
+      (wonBy.type !== 'less' && wonBy.type !== 'more') ||
+      wonBy.amount === undefined ||
+      wonBy.amount === null
     )
       return true;
     return false;
@@ -613,36 +624,23 @@ export class FiltermanagerService {
     return toReturn;
   }
 
-  private getWonByMatches(games: GameRelevant[], wonBy: WonBy) {
-    debugger;
-    if (
-      !wonBy ||
-      !wonBy.type ||
-      (wonBy.type !== 'less' && wonBy.type !== 'more') ||
-      wonBy.amount === undefined ||
-      wonBy.amount === null
-    )
-      return games;
+  private getPassesWonBy(wonBy: WonBy, game: GameRelevant) {
+    const lastDeal = game.deals[game.deals.length - 1];
+    const deal = this.replayViewerDealService.getDealFromStore(lastDeal);
+    if (!deal.northSouth || !deal.eastWest) return true;
+    const nsTotal =
+      deal.northSouth.aboveTheLine + deal.northSouth.totalBelowTheLineScore;
+    const ewTotal =
+      deal.eastWest.aboveTheLine + deal.eastWest.totalBelowTheLineScore;
+    const gameWonByAmount = Math.abs(nsTotal - ewTotal);
 
-    const toReturn: GameRelevant[] = [];
-
-    for (let i = 0; i < games.length; i++) {
-      const game = games[i];
-      const lastDeal = game.deals[game.deals.length - 1];
-      const deal = this.replayViewerDealService.getDealFromStore(lastDeal);
-      if (!deal.northSouth || !deal.eastWest) continue;
-      const nsTotal =
-        deal.northSouth.aboveTheLine + deal.northSouth.totalBelowTheLineScore;
-      const ewTotal =
-        deal.eastWest.aboveTheLine + deal.eastWest.totalBelowTheLineScore;
-      const gameWonByAmount = Math.abs(nsTotal - ewTotal);
-      if (wonBy.type === 'less') {
-        if (gameWonByAmount <= wonBy.amount) toReturn.push(game);
-      } else if (wonBy.type === 'more') {
-        if (gameWonByAmount >= wonBy.amount) toReturn.push(game);
-      }
+    if (wonBy.type === 'less' && gameWonByAmount <= wonBy.amount) {
+      return true;
     }
-    return toReturn;
+    else if (wonBy.type === 'more' && gameWonByAmount >= wonBy.amount)
+      return true;
+
+    return false;
   }
 
   private runFiltersThatModifyDealsThatMatch(
@@ -661,12 +659,14 @@ export class FiltermanagerService {
     const canSkipOpeningBidFilter = this.getCanSkipOpeningBid(
       filters.openingBid
     );
+    const canSkipWonBy = this.getCanSkipWonBy(filters.wonBy);
     const canSkip =
       canSkipContractFilter &&
       canSkipPlayerHasCardFilter &&
       canSkipDeclarerFilter &&
       canSkipOpeningBidFilter &&
-      canSkipDoubleFilter;
+      canSkipDoubleFilter &&
+      canSkipWonBy;
     if (canSkip) return games;
 
     resetMatchedDeals();
@@ -683,14 +683,32 @@ export class FiltermanagerService {
     for (let i = 0; i < games.length; i++) {
       const game = games[i];
 
-      let hasGameBeenAdded = false;
+      let shouldAddGame = false;
+
+      //note: add game level filters here following this pattern
+      if (!canSkipWonBy && !shouldAddGame)
+        shouldAddGame = this.getPassesWonBy(filters.wonBy, game);
+
+      if (shouldAddGame) toReturn.push(game);
+
+      //note: need to add deal filter skip booleans here to prevent unnecessary deal iterations when all deal level filters will be skipped anyway
+      const canSkipDealIteration =
+        canSkipContractFilter &&
+        canSkipDeclarerFilter &&
+        canSkipOpeningBidFilter &&
+        canSkipDoubleFilter &&
+        canSkipPlayerHasCardFilter;
+      
+      if (canSkipDealIteration) continue;
+
       for (let j = 0; j < game.deals.length; j++) {
+        console.log('iterating deals------------------------------------------------');
         const dealId = game.deals[j];
         const deal = fetchedDeals[dealId];
 
-        //note: add filter logic here
         let shouldAddDeal = true;
-
+        
+        //note: add deal level filters here following pattern
         if (!canSkipContractFilter && shouldAddDeal)
           shouldAddDeal = this.getPassesContractFilter(filters.contract, deal);
 
@@ -713,8 +731,8 @@ export class FiltermanagerService {
           );
 
         if (shouldAddDeal) {
-          if (!hasGameBeenAdded) {
-            hasGameBeenAdded = true;
+          if (!shouldAddGame) {
+            shouldAddGame = true;
             toReturn.push(game);
           }
           this.dealsThatMatch = [...this.dealsThatMatch, dealId];
@@ -722,7 +740,7 @@ export class FiltermanagerService {
       }
     }
 
-    this.store.dispatch(new SetDealsThatMatchFilters(this.dealsThatMatch));
+    if (this.dealsThatMatch.length > 0) this.store.dispatch(new SetDealsThatMatchFilters(this.dealsThatMatch));
 
     return toReturn;
   }
