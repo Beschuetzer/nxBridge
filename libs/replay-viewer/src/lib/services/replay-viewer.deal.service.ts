@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { ANIMATION_DURATION, DEAL_DETAIL_BUTTON_BORDER_BOTTOM_CLASSNAME, gameDetailBorderClosed, gameDetailBorderCssPropName, gameDetailBorderOpen } from '@nx-bridge/constants';
-import { ToggleDealDetailButtonBehaviour } from '@nx-bridge/interfaces-and-types';
-
+import { Deal, DealRelevant, ReducerNames, ToggleDealDetailButtonBehaviour } from '@nx-bridge/interfaces-and-types';
+import { AppState } from '@nx-bridge/store';
+import {take } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +11,18 @@ import { ToggleDealDetailButtonBehaviour } from '@nx-bridge/interfaces-and-types
 export class ReplayViewerDealService {
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  constructor() {}
+  constructor(
+    private store: Store<AppState>,
+  ) {}
+
+  getDealFromStore(dealId: string) {
+    let deal: DealRelevant = {} as DealRelevant;
+    this.store.select(ReducerNames.deals).pipe(take(1)).subscribe(dealState => {
+      deal = dealState.fetchedDeals[dealId];
+    })
+
+    return deal;
+  }
 
   setGameDetailBorderToBlack() {
     setTimeout(() => {
