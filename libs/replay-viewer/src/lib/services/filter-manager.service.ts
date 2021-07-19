@@ -31,6 +31,7 @@ import {
   SetPlayerInGameFilter,
   RemovePlayerHasCard,
   RemovePlayerInGameFilter,
+  SetWonByFilter,
 } from '@nx-bridge/store';
 import { switchMap, take } from 'rxjs/operators';
 import {
@@ -47,80 +48,91 @@ import {
 export class FiltermanagerService {
   //#region NOTE: new filters need to be added inside this region
   public filters = {
-    beforeDate: {
-      string: 'beforeDate',
-    },
     afterDate: {
       string: 'afterDate',
+      errorKey: 'afterDate-error',
+    },
+    beforeDate: {
+      string: 'beforeDate',
+      errorKey: 'beforeDate-error',
+    },
+    contract: {
+      string: 'contract',
+      errorKey: 'contract-error',
+    },
+    dealsThatMatchFilters: {
+      string: 'dealsThatMatchFilters',
+    },
+    declarer: {
+      string: 'declarer',
+      errorKey: 'declarer-error',
+    },
+    double: {
+      string: 'double',
+      errorKey: 'double-error',
+    },
+    openingBid: {
+      string: 'openingBid',
+      errorKey: 'openingBid-error',
     },
     playerHasCard: {
       string: 'playerHasCard',
       errorKey: 'playerHasCardError',
     },
-    dealsThatMatchFilters: {
-      string: 'dealsThatMatchFilters',
-    },
-    contract: {
-      string: 'contract',
-    },
-    declarer: {
-      string: 'declarer',
-    },
-    openingBid: {
-      string: 'openingBid',
-    },
-    double: {
-      string: 'double',
-    },
     playerInGame: {
       string: 'playerInGame',
       errorKey: 'playerInGame-error',
     },
+    wonBy: {
+      string: 'wonBy',
+      errorKey: 'wonBy-error',
+    },
   };
   public filtersInitial: Filters = {
-    [this.filters.beforeDate.string]: 0,
     [this.filters.afterDate.string]: 0,
-    [this.filters.playerHasCard.string]: { initial: [reducerDefaultValue] },
-    [this.filters.dealsThatMatchFilters.string]: [`${reducerDefaultValue}`],
+    [this.filters.beforeDate.string]: 0,
     [this.filters.contract.string]: `${reducerDefaultValue}`,
+    [this.filters.dealsThatMatchFilters.string]: [`${reducerDefaultValue}`],
     [this.filters.declarer.string]: `${reducerDefaultValue}`,
-    [this.filters.openingBid.string]: `${reducerDefaultValue}`,
     [this.filters.double.string]: reducerDefaultValue,
+    [this.filters.openingBid.string]: `${reducerDefaultValue}`,
+    [this.filters.playerHasCard.string]: { initial: [reducerDefaultValue] },
     [this.filters.playerInGame.string]: [`${reducerDefaultValue}`],
+    [this.filters.wonBy.string]: reducerDefaultValue,
   };
   public filterResetActions = {
-    [this.filters.beforeDate.string]: new SetBeforeDate(
-      this.filtersInitial?.beforeDate
-    ),
     [this.filters.afterDate.string]: new SetAfterDate(
       this.filtersInitial?.afterDate
     ),
-    [this.filters.playerHasCard.string]: new SetPlayerHasCard(
-      this.filtersInitial?.playerHasCard
-    ),
-    [this.filters.dealsThatMatchFilters.string]: new SetDealsThatMatchFilters(
-      this.filtersInitial?.dealsThatMatchFilters
+    [this.filters.beforeDate.string]: new SetBeforeDate(
+      this.filtersInitial?.beforeDate
     ),
     [this.filters.contract.string]: new SetContractFilter(
       this.filtersInitial?.contract
     ),
+    [this.filters.dealsThatMatchFilters.string]: new SetDealsThatMatchFilters(
+      this.filtersInitial?.dealsThatMatchFilters
+    ),
     [this.filters.declarer.string]: new SetDeclarerFilter(
       this.filtersInitial?.declarer
-    ),
-    [this.filters.openingBid.string]: new SetOpeningBidFilter(
-      this.filtersInitial?.openingBid
     ),
     [this.filters.double.string]: new SetDoubleFilter(
       this.filtersInitial?.double
     ),
+    [this.filters.openingBid.string]: new SetOpeningBidFilter(
+      this.filtersInitial?.openingBid
+    ),
+    [this.filters.playerHasCard.string]: new SetPlayerHasCard(
+      this.filtersInitial?.playerHasCard
+    ),
     [this.filters.playerInGame.string]: new SetPlayerInGameFilter(
       this.filtersInitial?.playerInGame
     ),
+    [this.filters.wonBy.string]: new SetWonByFilter(this.filtersInitial?.wonBy),
   };
   public filterMsgs: { [key: string]: any } = {
-    none: 'No Filters applied',
-    game: {
-      player: '',
+    contract: {
+      valid: 'Contract was',
     },
     date: {
       before: {
@@ -139,21 +151,19 @@ export class FiltermanagerService {
         },
       },
     },
-    playerHasCard: {
-      valid: '',
-      invalid: 'already set to',
-    },
-    contract: {
-      valid: 'Contract was',
-    },
     declarer: {
       valid: 'Declarer was',
     },
+    double: {
+      valid: 'DealRelevant was doubled',
+    },
+    none: 'No Filters applied',
     openingBid: {
       valid: 'Opening bid was',
     },
-    double: {
-      valid: 'DealRelevant was doubled',
+    playerHasCard: {
+      valid: '',
+      invalid: 'already set to',
     },
     playerInGame: {
       valid: 'was in the game',
@@ -162,6 +172,12 @@ export class FiltermanagerService {
         alreadyPresent: 'is already present',
       },
     },
+    wonBy: {
+      valid: {
+        pre: 'Won by at least',
+        post: 'points.',
+      }
+    }
   };
   //#endregion
 
@@ -564,7 +580,10 @@ export class FiltermanagerService {
     return shouldAddDeal;
   }
 
-  private getPlayerInGameMatches(games: GameRelevant[], playersInGame: PlayerInGame) {
+  private getPlayerInGameMatches(
+    games: GameRelevant[],
+    playersInGame: PlayerInGame
+  ) {
     if (playersInGame.includes(`${reducerDefaultValue}`) || !playersInGame)
       return games;
 
@@ -587,7 +606,10 @@ export class FiltermanagerService {
     return toReturn;
   }
 
-  private runFiltersThatModifyDealsThatMatch(games: GameRelevant[], filters: Filters) {
+  private runFiltersThatModifyDealsThatMatch(
+    games: GameRelevant[],
+    filters: Filters
+  ) {
     this.dealsThatMatch = [];
 
     //note: add skipping logic in here

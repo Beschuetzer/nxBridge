@@ -6,29 +6,31 @@ export const reducerDefaultValue = -1;
 
 export interface FilterState {
   [key: string]: any;
-  beforeDate: number;
   afterDate: number;
-  isFilterSame: boolean;
-  playerHasCard: PlayerHasCard;
+  beforeDate: number;
   contract: string;
-  declarer: string;
-  openingBid: string;
-  double: number;
-  playerInGame: string[];
   dealsThatMatchFilters: string[];
+  declarer: string;
+  double: number;
+  isFilterSame: boolean;
+  openingBid: string;
+  playerHasCard: PlayerHasCard;
+  playerInGame: string[];
+  wonBy: number;
 }
 
 const INITIAL_STATE: FilterState = {
-  beforeDate: 0,
   afterDate: 0,
-  isFilterSame: false,
-  playerHasCard: { initial: [] },
+  beforeDate: 0,
   contract: `${reducerDefaultValue}`,
-  declarer: `${reducerDefaultValue}`,
-  openingBid: `${reducerDefaultValue}`,
-  double: reducerDefaultValue,
-  playerInGame: [`${reducerDefaultValue}`],
   dealsThatMatchFilters: [`${reducerDefaultValue}`],
+  declarer: `${reducerDefaultValue}`,
+  double: reducerDefaultValue,
+  isFilterSame: false,
+  openingBid: `${reducerDefaultValue}`,
+  playerHasCard: { initial: [] },
+  playerInGame: [`${reducerDefaultValue}`],
+  wonBy: reducerDefaultValue,
 };
 
 export function filterReducer(
@@ -36,68 +38,16 @@ export function filterReducer(
   action: fromFilterActions.FilterActions
 ) {
   switch (action.type) {
-    case fromFilterActions.SET_AFTER_DATE:
-      return {
-        ...state,
-        afterDate: action.payload,
-      };
-    case fromFilterActions.SET_BEFORE_DATE:
-      return {
-        ...state,
-        beforeDate: action.payload,
-      };
-    case fromFilterActions.SET_PLAYER_HAS_CARD:
-      return {
-        ...state,
-        playerHasCard: action.payload,
-      };
-    case fromFilterActions.SET_DEALS_THAT_MATCH_FILTERS:
-      return {
-        ...state,
-        dealsThatMatchFilters: action.payload,
-      };
-    case fromFilterActions.SET_CONTRACT_FILTER:
-      return {
-        ...state,
-        contract: action.payload,
-      };
-    case fromFilterActions.SET_DECLARER_FILTER:
-      return {
-        ...state,
-        declarer: action.payload,
-      };
-    case fromFilterActions.SET_OPENING_BID_FILTER:
-      return {
-        ...state,
-        openingBid: action.payload,
-      };
-    case fromFilterActions.SET_DOUBLE_FILTER:
-      return {
-        ...state,
-        double: action.payload,
-      };
-    case fromFilterActions.SET_PLAYER_IN_GAME_FILTER:
-      return {
-        ...state,
-        playerInGame: action.payload,
-      };
     case fromFilterActions.ADD_PLAYER_IN_GAME_FILTER:
       const toAdd = [...state.playerInGame];
-      const indexToAdd = toAdd.findIndex(current => current === `${reducerDefaultValue}`);
+      const indexToAdd = toAdd.findIndex(
+        (current) => current === `${reducerDefaultValue}`
+      );
       if (indexToAdd !== -1) toAdd.splice(indexToAdd, 1);
 
       return {
         ...state,
         playerInGame: [...toAdd, action.payload],
-      };
-    case fromFilterActions.REMOVE_PLAYER_IN_GAME_FILTER:
-      const newPlayerInGame = [...state.playerInGame];
-      const indexOfPlayerInGame = newPlayerInGame.findIndex(current => action.payload === current);
-      if (indexOfPlayerInGame !== -1) newPlayerInGame.splice(indexOfPlayerInGame, 1);
-
-      return {
-        ...state,
-        playerInGame: newPlayerInGame,
       };
     case fromFilterActions.ADD_PLAYER_HAS_CARD:
       const newPlayerHasCard = { ...action.payload };
@@ -135,12 +85,74 @@ export function filterReducer(
         ...state,
         playerHasCard: { ...state.playerHasCard, ...newPlayerHasCardFilter },
       };
+    case fromFilterActions.REMOVE_PLAYER_IN_GAME_FILTER:
+      const newPlayerInGame = [...state.playerInGame];
+      const indexOfPlayerInGame = newPlayerInGame.findIndex(
+        (current) => action.payload === current
+      );
+      if (indexOfPlayerInGame !== -1)
+        newPlayerInGame.splice(indexOfPlayerInGame, 1);
+
+      return {
+        ...state,
+        playerInGame: newPlayerInGame,
+      };
+    case fromFilterActions.SET_AFTER_DATE:
+      return {
+        ...state,
+        afterDate: action.payload,
+      };
+    case fromFilterActions.SET_BEFORE_DATE:
+      return {
+        ...state,
+        beforeDate: action.payload,
+      };
+    case fromFilterActions.SET_CONTRACT_FILTER:
+      return {
+        ...state,
+        contract: action.payload,
+      };
+    case fromFilterActions.SET_DEALS_THAT_MATCH_FILTERS:
+      return {
+        ...state,
+        dealsThatMatchFilters: action.payload,
+      };
+    case fromFilterActions.SET_DECLARER_FILTER:
+      return {
+        ...state,
+        declarer: action.payload,
+      };
+    case fromFilterActions.SET_DOUBLE_FILTER:
+      return {
+        ...state,
+        double: action.payload,
+      };
     case fromFilterActions.SET_IS_FILTER_SAME:
       return {
         ...state,
         isFilterSame: action.payload,
       };
-
+    case fromFilterActions.SET_OPENING_BID_FILTER:
+      return {
+        ...state,
+        openingBid: action.payload,
+      };
+    case fromFilterActions.SET_PLAYER_HAS_CARD:
+      return {
+        ...state,
+        playerHasCard: action.payload,
+      };
+    case fromFilterActions.SET_PLAYER_IN_GAME_FILTER:
+      return {
+        ...state,
+        playerInGame: action.payload,
+      };
+    case fromFilterActions.SET_WON_BY_FILTER:
+      const newWonBy = action.payload;
+      return {
+        ...state, 
+        wonBy: isNaN(newWonBy) ? reducerDefaultValue : newWonBy,
+      }
     default:
       return state;
   }

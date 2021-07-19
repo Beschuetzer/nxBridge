@@ -37,6 +37,7 @@ import {
   SetIsFilterSame,
   SetOpeningBidFilter,
   SetPlayerHasCard,
+  SetWonByFilter,
 } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
 import {
@@ -85,7 +86,8 @@ export class FilterManagerComponent implements OnInit {
   @ViewChild('openingBidSelect')
   openingBidFilterElement: ElementRef | null = null;
   @ViewChild('doubleSelect') doubleFilterElement: ElementRef | null = null;
-  @ViewChild('playerInGameSelect') playerInGameFilterElement: ElementRef | null = null;
+  @ViewChild('playerInGameSelect')
+  playerInGameFilterElement: ElementRef | null = null;
   @ViewChild('wonByInput') wonByFilterElement: ElementRef | null = null;
 
   @HostBinding('class.filter-manager') get classname() {
@@ -96,8 +98,11 @@ export class FilterManagerComponent implements OnInit {
   }
   @HostBinding('class.d-none') get toggleDisplayNone() {
     // return ;
-    return (!this.searchService.getAreDealsLoaded() && window.innerWidth <= MOBILE_START_WIDTH) || this.router.url === `/${rootRoute}`;
-
+    return (
+      (!this.searchService.getAreDealsLoaded() &&
+        window.innerWidth <= MOBILE_START_WIDTH) ||
+      this.router.url === `/${rootRoute}`
+    );
   }
   @HostBinding('class.announce-self') get toggleAnnounceSelf() {
     return this.searchService.getAreDealsLoaded();
@@ -137,7 +142,10 @@ export class FilterManagerComponent implements OnInit {
           dealState.fetchedDeals
         );
         if (uniquePlayerNames) {
-          this.playerNames = [...filterManagerPlayerNames, ...uniquePlayerNames];
+          this.playerNames = [
+            ...filterManagerPlayerNames,
+            ...uniquePlayerNames,
+          ];
         }
       }
     });
@@ -398,7 +406,28 @@ export class FilterManagerComponent implements OnInit {
   }
 
   onAddWonBy(e: Event) {
+    const eventTarget = e.currentTarget || e.target;
+    if (!this.getCanAdd(e, eventTarget as EventTarget)) return;
 
+    const wonByElement = this.wonByFilterElement
+      ?.nativeElement as HTMLSelectElement;
+    const selectedAmount = +wonByElement.value;
+    if (!selectedAmount) return;
+    this.lastButtonPressed = eventTarget;
+
+    this.store.dispatch(new SetWonByFilter(+selectedAmount));
+    this.store.dispatch(new SetIsFilterSame(false));
+    this.searchService.setCurrentlyDisplayingGames();
+
+    const message = `${this.filterManagerService.filterMsgs.wonBy.valid.pre} <b>${selectedAmount}</b> ${this.filterManagerService.filterMsgs.wonBy.valid.post}`
+
+    const filterItem: FilterItem = {
+      message,
+      error: '',
+      elementsToReset: [wonByElement],
+    }
+
+    this.filterItems[this.filterManagerService.filters.wonBy.string] = filterItem;
   }
 
   onContractChange() {
@@ -442,7 +471,9 @@ export class FilterManagerComponent implements OnInit {
     if (!toDelete.key) throw new Error('No toDelete.key...');
     delete this.filterItems[toDelete.key];
 
-    const shouldResetStore = this.filterManagerService.getShouldResetStoreOnDeletion(toDelete);
+    const shouldResetStore = this.filterManagerService.getShouldResetStoreOnDeletion(
+      toDelete
+    );
     if (shouldResetStore) {
       //note: need to verify correct action is being dispatched when adding new filter
       this.filterManagerService.dispatchCorrectResetAction(toDelete);
@@ -472,24 +503,30 @@ export class FilterManagerComponent implements OnInit {
 
   onHide() {
     const filterManager = this.elRef.nativeElement as HTMLElement;
-    const applied = filterManager.querySelector(`.${FILTER_MANAGER_CLASSNAME}__applied`) as HTMLElement;
-    const options = filterManager.querySelector(`.${FILTER_MANAGER_CLASSNAME}__options`) as HTMLElement;
-    const details = filterManager.querySelector(`.${FILTER_MANAGER_CLASSNAME}__details`) as HTMLElement;
-    const button = filterManager.querySelector(`.${FILTER_MANAGER_CLASSNAME}__hide`) as HTMLElement;
-    
+    const applied = filterManager.querySelector(
+      `.${FILTER_MANAGER_CLASSNAME}__applied`
+    ) as HTMLElement;
+    const options = filterManager.querySelector(
+      `.${FILTER_MANAGER_CLASSNAME}__options`
+    ) as HTMLElement;
+    const details = filterManager.querySelector(
+      `.${FILTER_MANAGER_CLASSNAME}__details`
+    ) as HTMLElement;
+    const button = filterManager.querySelector(
+      `.${FILTER_MANAGER_CLASSNAME}__hide`
+    ) as HTMLElement;
 
     if (applied.classList.contains(DISPLAY_NONE_CLASSNAME)) {
       this.renderer.removeClass(applied, DISPLAY_NONE_CLASSNAME);
       this.renderer.removeClass(options, DISPLAY_NONE_CLASSNAME);
       this.renderer.removeClass(details, DISPLAY_NONE_CLASSNAME);
-      button.innerHTML = "Hide";
+      button.innerHTML = 'Hide';
     } else {
       this.renderer.addClass(applied, DISPLAY_NONE_CLASSNAME);
       this.renderer.addClass(options, DISPLAY_NONE_CLASSNAME);
       this.renderer.addClass(details, DISPLAY_NONE_CLASSNAME);
-      button.innerHTML = "Show";
+      button.innerHTML = 'Show';
     }
-
   }
 
   onPlayerInGameChange() {
@@ -547,15 +584,11 @@ export class FilterManagerComponent implements OnInit {
     resetMatchedDeals();
   }
 
-  onWonByChange() {
+  onWonByChange() {this.lastButtonPressed = null}
 
-  }
-
-  onWonByClick() {
-    
-  }
+  onWonByClick() {}
   //#endregion
-  
+
   //#region Private Methods
   private getCanAdd(e: Event, eventTarget: EventTarget) {
     return this.lastButtonPressed !== eventTarget;
@@ -625,7 +658,11 @@ export class FilterManagerComponent implements OnInit {
   private handleDateChange(e: Event, dateType: DateType) {
     let shouldDispatchChange = false;
     const input = (e.currentTarget || e.target) as HTMLInputElement;
-    const { isDateInvalid, dateObj, filterMsgError } = this.filterManagerService.validateDate(
+    const {
+      isDateInvalid,
+      dateObj,
+      filterMsgError,
+    } = this.filterManagerService.validateDate(
       input.value,
       dateType,
       this.beforeDate,
