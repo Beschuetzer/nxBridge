@@ -68,7 +68,6 @@
         <input #openingBid (click)="onOpeningBidClick()" type="checkbox" />
         Opening bid was ...
       </label>
-
       <label>
         <input
           #playerHasCard
@@ -76,6 +75,10 @@
           type="checkbox"
         />
         Player had a specific card
+      </label>
+      <label>
+        <input #dealResult (click)="onDealResultClick()" type="checkbox" />
+        Result was ... than ...
       </label>
     </div>
 
@@ -281,6 +284,44 @@
       </button>
     </div>
 
+    <div
+      *ngIf="deal.checked && dealResultCheckbox?.nativeElement.checked"
+      class="{{ FILTER_MANANGER_CLASSNAME }}__deal-result"
+    >
+      <label>
+        <div>Deal result was:</div>
+        <div class="{{ FILTER_MANANGER_CLASSNAME }}__item-options">
+          <select #dealResultType (click)="onWonByChange()" class="ui input">
+            <option value="equal">=</option>
+            <option
+              value="less"
+              [innerHtml]="comparers.lessThanEqualTo"
+            ></option>
+            <option
+              value="more"
+              [innerHtml]="comparers.greaterThanEqualTo"
+            ></option>
+          </select>
+          <input
+            #dealResultAmount
+            (click)="onDealResultChange()"
+            type="number"
+            min="-7"
+            max="7"
+            step="1"
+            value="0"
+            class="ui input"
+          />
+        </div>
+      </label>
+      <button
+        (click)="onAddDealResult($event)"
+        class="ui button filter-manager__add-button"
+      >
+        Add
+      </button>
+    </div>
+
     <!-- Game-related filters -->
     <div
       *ngIf="game.checked && gameNameCheckbox?.nativeElement.checked"
@@ -339,21 +380,29 @@
     >
       <label>
         <div>Won by:</div>
-        <select #wonByType (click)="onWonByChange()" class="ui input">
-          <option value="less">&#8804;</option>
-          <option value="more">&#8805;</option>
-        </select>
-        <input
-          #wonByInput
-          (click)="onWonByChange()"
-          type="number"
-          min="0"
-          max="100000"
-          step="10"
-          value="0"
-          placeholder="Enter won by number here"
-          class="ui input"
-        />
+        <div class="{{ FILTER_MANANGER_CLASSNAME }}__item-options">
+          <select #wonByType (click)="onWonByChange()" class="ui input">
+            <option
+              value="less"
+              [innerHtml]="comparers.lessThanEqualTo"
+            ></option>
+            <option
+              value="more"
+              [innerHtml]="comparers.greaterThanEqualTo"
+            ></option>
+          </select>
+          <input
+            #wonByAmount
+            (click)="onWonByChange()"
+            type="number"
+            min="0"
+            max="100000"
+            step="10"
+            value="0"
+            placeholder="Enter won by number here"
+            class="ui input"
+          />
+        </div>
       </label>
       <button
         (click)="onAddWonBy($event)"

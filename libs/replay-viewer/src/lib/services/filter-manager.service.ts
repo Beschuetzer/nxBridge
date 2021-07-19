@@ -35,6 +35,7 @@ import {
   RemovePlayerInGameFilter,
   SetWonByFilter,
   SetGameNameFilter,
+  SetDealResultFilter,
 } from '@nx-bridge/store';
 import { switchMap, take } from 'rxjs/operators';
 import {
@@ -63,6 +64,10 @@ export class FiltermanagerService {
     contract: {
       string: 'contract',
       errorKey: 'contract-error',
+    },
+    dealResult: {
+      string: 'dealResult',
+      errorKey: 'dealResult-error',
     },
     dealsThatMatchFilters: {
       string: 'dealsThatMatchFilters',
@@ -100,6 +105,7 @@ export class FiltermanagerService {
     [this.filters.afterDate.string]: 0,
     [this.filters.beforeDate.string]: 0,
     [this.filters.contract.string]: `${reducerDefaultValue}`,
+    [this.filters.dealResult.string]: `${reducerDefaultValue}`,
     [this.filters.dealsThatMatchFilters.string]: [`${reducerDefaultValue}`],
     [this.filters.declarer.string]: `${reducerDefaultValue}`,
     [this.filters.double.string]: reducerDefaultValue,
@@ -118,6 +124,9 @@ export class FiltermanagerService {
     ),
     [this.filters.contract.string]: new SetContractFilter(
       this.filtersInitial?.contract
+    ),
+    [this.filters.dealResult.string]: new SetDealResultFilter(
+      this.filtersInitial?.dealResult
     ),
     [this.filters.dealsThatMatchFilters.string]: new SetDealsThatMatchFilters(
       this.filtersInitial?.dealsThatMatchFilters
@@ -145,6 +154,9 @@ export class FiltermanagerService {
   public filterMsgs: { [key: string]: any } = {
     contract: {
       valid: 'Contract was',
+    },
+    dealResult: {
+      valid: 'Deal result',
     },
     date: {
       before: {

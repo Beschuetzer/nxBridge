@@ -1,5 +1,9 @@
 import { Action } from '@ngrx/store';
-import { PlayerHasCard, WonBy } from '@nx-bridge/interfaces-and-types';
+import {
+  DealResult,
+  PlayerHasCard,
+  WonBy,
+} from '@nx-bridge/interfaces-and-types';
 
 export const ADD_PLAYER_HAS_CARD = '[Filter] ADD_PLAYER_HAS_CARD';
 export const ADD_PLAYER_IN_GAME_FILTER = '[Filter] ADD_PLAYER_IN_GAME_FILTER';
@@ -9,6 +13,7 @@ export const REMOVE_PLAYER_IN_GAME_FILTER =
 export const SET_AFTER_DATE = '[Filter] SET_AFTER_DATE';
 export const SET_BEFORE_DATE = '[Filter] SET_BEFORE_DATE';
 export const SET_CONTRACT_FILTER = '[Filter] SET_CONTRACT_FILTER';
+export const SET_DEAL_RESULT_FILTER = '[Filter] SET_DEAL_RESULT_FILTER';
 export const SET_DEALS_THAT_MATCH_FILTERS =
   '[Filter] SET_DEALS_THAT_MATCH_FILTERS';
 export const SET_DECLARER_FILTER = '[Filter] SET_DECLARER_FILTER';
@@ -54,6 +59,12 @@ export class SetContractFilter implements Action {
   readonly type = SET_CONTRACT_FILTER;
   constructor(public payload: string) {}
 }
+
+export class SetDealResultFilter implements Action {
+  readonly type = SET_DEAL_RESULT_FILTER;
+  constructor(public payload: DealResult) {}
+}
+
 export class SetDealsThatMatchFilters implements Action {
   readonly type = SET_DEALS_THAT_MATCH_FILTERS;
   constructor(public payload: string[]) {}
@@ -107,6 +118,7 @@ export type FilterActions =
   | SetAfterDate
   | SetBeforeDate
   | SetContractFilter
+  | SetDealResultFilter
   | SetDealsThatMatchFilters
   | SetDeclarerFilter
   | SetDoubleFilter

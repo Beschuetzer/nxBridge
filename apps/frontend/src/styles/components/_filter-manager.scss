@@ -46,13 +46,12 @@
     &-deal, &-game {
       border-bottom: 1px dashed var(--color-primary-4);
 
-      @include respond($layout-breakpoint) {
-        border-bottom: none;
-      }
+      // @include respond($layout-breakpoint) {
+      //   border-bottom: none;
+      // }
 
       & > * {
         padding-left: $default-font-size * .25;
-
       }
     }
 
@@ -92,32 +91,34 @@
   }
 
   &__contract,
+  &__deal-result,
   &__double,
   &__declarer,
   &__opening-bid,
   &__game-name, 
   &__player-has-card, 
-  &__player-in-game {
+  &__player-in-game,
+  &__won-by {
     & label {
       flex-direction: column;
       align-items: flex-start;
     }
   }
 
-  &__won-by {
-    justify-content: space-between;
+  // &__won-by {
+  //   justify-content: space-between;
 
-    & input, & select {
-      width: max-content !important;
-      margin-top: $default-font-size * .25 !important;
-      margin-left: auto !important;
+  //   // & input, & select {
+  //   //   width: max-content !important;
+  //   //   margin-top: $default-font-size * .25 !important;
+  //   //   margin-left: auto !important;
 
-      @include respond($layout-breakpoint) {
-        width: 100% !important;
-        margin-left: $default-font-size * .25 !important;
-      }
-    }
-  }
+  //   //   @include respond($layout-breakpoint) {
+  //   //     width: 100% !important;
+  //   //     margin-left: $default-font-size * .25 !important;
+  //   //   }
+  //   // }
+  // }
 
   &__player-has-card {
     padding: $default-font-size * .5 0;
@@ -137,6 +138,16 @@
       grid-template-columns: repeat(2, max-content);
       column-gap: $default-font-size * .5;
       justify-content: flex-start;
+    }
+
+    &-options {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+
+      & > * {
+        margin: 0 !important;
+      }
     }
 
     & button {

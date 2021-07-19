@@ -45,3 +45,5 @@ Testing------------
 -add 'Result was ...' filter that takes an int from -7 to -1 and either <, >, =, <=, or >= and returns deals where the number of (tricksMade - tricksRequired) satisfies condition (the logic is some else already)
 
 
+-add class for all filters that handles label styling issue
+-work on deletion of 

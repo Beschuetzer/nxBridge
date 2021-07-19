@@ -1,17 +1,17 @@
-import { DealRelevant } from "./both-types";
+import { DealRelevant } from './both-types';
 
 export interface CanSkipFilters {
-  all: boolean,
-  afterDate: boolean,
-  beforeDate: boolean,
-  contract: boolean,
-  declarer: boolean,
-  double: boolean,
-  gameName: boolean,
-  openingBid: boolean,
-  playerHasCard: boolean,
-  playerInGame: boolean,
-  wonBy: boolean,
+  all: boolean;
+  afterDate: boolean;
+  beforeDate: boolean;
+  contract: boolean;
+  declarer: boolean;
+  double: boolean;
+  gameName: boolean;
+  openingBid: boolean;
+  playerHasCard: boolean;
+  playerInGame: boolean;
+  wonBy: boolean;
 }
 //#region Interfaces
 export interface DateObj {
@@ -34,10 +34,14 @@ export interface DealCore {
   doubleValue: number;
   northSouth?: DealScoring;
   eastWest?: DealScoring;
-};
+}
 export interface DealGameIncomplete extends DealCore {
   agreeWithClaim: AgreeWithClaim;
   acceptedClaims: AcceptedClaim[];
+}
+export interface DealResult {
+  type: DealResultType;
+  amount: number;
 }
 export interface ErrorMessage {
   message: string;
@@ -55,12 +59,12 @@ export interface FilterItem {
   elementsToReset: any[];
   date?: Date;
   isDateInvalid?: boolean;
-  username?: string,
-  card?: number,
+  username?: string;
+  card?: number;
 }
 export interface FilterItemDeletion {
   key: string;
-  resetAction: any; 
+  resetAction: any;
   username?: string;
   card?: number;
 }
@@ -202,7 +206,7 @@ export interface UserIds {
   [key: string]: string;
 }
 export interface WonBy {
-  type: WonByType,
+  type: WonByType;
   amount: number;
 }
 //#endregion
@@ -247,7 +251,12 @@ export type CardValuesAsString =
   | 'Four'
   | 'Three'
   | 'Two';
-export type Contract = { prefix: string; htmlEntity: string, doubleMultiplier: number };
+export type Contract = {
+  prefix: string;
+  htmlEntity: string;
+  doubleMultiplier: number;
+};
+export type DealResultType = WonByType | 'equal';
 export type DealScoring = {
   [key: string]: any;
   aboveTheLine: number;
@@ -301,7 +310,7 @@ export type UserObj = {
   status: string;
   preferences: Preferences;
 };
-export type WonByType = 'less' | 'more';
+export type WonByType = 'less' | 'more' | '-1';
 //#endregion
 
 //#region Enums

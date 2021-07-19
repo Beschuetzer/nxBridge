@@ -1,5 +1,5 @@
 /* eslint-disable no-case-declarations */
-import { PlayerHasCard } from '@nx-bridge/interfaces-and-types';
+import { DealResult, PlayerHasCard, WonBy } from '@nx-bridge/interfaces-and-types';
 import * as fromFilterActions from '../actions/filter.actions';
 
 export const reducerDefaultValue = -1;
@@ -9,6 +9,7 @@ export interface FilterState {
   afterDate: number;
   beforeDate: number;
   contract: string;
+  dealResult: DealResult;
   dealsThatMatchFilters: string[];
   declarer: string;
   double: number;
@@ -17,13 +18,14 @@ export interface FilterState {
   openingBid: string;
   playerHasCard: PlayerHasCard;
   playerInGame: string[];
-  wonBy: number;
+  wonBy: WonBy;
 }
 
 const INITIAL_STATE: FilterState = {
   afterDate: 0,
   beforeDate: 0,
   contract: `${reducerDefaultValue}`,
+  dealResult: {amount: reducerDefaultValue, type: `${reducerDefaultValue}`} as DealResult,
   dealsThatMatchFilters: [`${reducerDefaultValue}`],
   declarer: `${reducerDefaultValue}`,
   double: reducerDefaultValue,
@@ -32,7 +34,7 @@ const INITIAL_STATE: FilterState = {
   openingBid: `${reducerDefaultValue}`,
   playerHasCard: { initial: [] },
   playerInGame: [`${reducerDefaultValue}`],
-  wonBy: reducerDefaultValue,
+  wonBy: {amount: reducerDefaultValue, type: `${reducerDefaultValue}`} as WonBy,
 };
 
 export function filterReducer(
@@ -114,6 +116,14 @@ export function filterReducer(
         ...state,
         contract: action.payload,
       };
+    case fromFilterActions.SET_DEAL_RESULT_FILTER:
+      const newDealResult = action.payload;
+      return {
+        ...state,
+        dealResult: isNaN(newDealResult.amount)
+          ? { amount: reducerDefaultValue, type: `${reducerDefaultValue}` }
+          : newDealResult,
+      };
     case fromFilterActions.SET_DEALS_THAT_MATCH_FILTERS:
       return {
         ...state,
@@ -159,7 +169,7 @@ export function filterReducer(
       return {
         ...state,
         wonBy: isNaN(newWonBy.amount)
-          ? { amount: reducerDefaultValue, type: 'less' }
+          ? { amount: reducerDefaultValue, type: `${reducerDefaultValue}` }
           : newWonBy,
       };
     default:

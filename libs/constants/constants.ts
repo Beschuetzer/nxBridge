@@ -94,3 +94,7 @@ export const filterManagerCardsAsNumbers = ['Pick a Card', ...Array(52).keys()];
 export const filterManagerPlayerNames = ['Pick a Username'];
 export const filterManagerGameNames = ['Pick a Game Name'];
 export const filterManagerDoubleOptions = ['Pick a Multiplier', 'Once', 'Twice'];
+export const COMPARER_HTML_ENTITIES = {
+  lessThanEqualTo: "&#8804;",
+  greaterThanEqualTo: "&#8805;",
+}

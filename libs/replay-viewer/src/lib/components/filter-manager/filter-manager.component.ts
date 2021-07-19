@@ -24,6 +24,7 @@ import {
   DISPLAY_NONE_CLASSNAME,
   MOBILE_START_WIDTH,
   filterManagerGameNames,
+  COMPARER_HTML_ENTITIES,
 } from '@nx-bridge/constants';
 import {
   AddPlayerHasCard,
@@ -33,6 +34,7 @@ import {
   SetAfterDate,
   SetBeforeDate,
   SetContractFilter,
+  SetDealResultFilter,
   SetDeclarerFilter,
   SetDoubleFilter,
   SetGameNameFilter,
@@ -52,6 +54,7 @@ import {
   FilterItemDeletion,
   PlayerInGame,
   WonByType,
+  DealResultType,
 } from '@nx-bridge/interfaces-and-types';
 import { SearchService } from '../../services/search.service';
 import { FiltermanagerService } from '../../services/filter-manager.service';
@@ -73,6 +76,7 @@ export class FilterManagerComponent implements OnInit {
   @ViewChild('date') dateCheckbox: ElementRef | null = null;
 
   @ViewChild('deal') dealCheckbox: ElementRef | null = null;
+  @ViewChild('dealResult') dealResultCheckbox: ElementRef | null = null;
   @ViewChild('playerHasCard') playerHasCardCheckbox: ElementRef | null = null;
   @ViewChild('contract') contractCheckbox: ElementRef | null = null;
   @ViewChild('declarer') declarerCheckbox: ElementRef | null = null;
@@ -86,6 +90,10 @@ export class FilterManagerComponent implements OnInit {
   @ViewChild('cards') cardsFilterElement: ElementRef | null = null;
   @ViewChild('contractsSelect')
   contractsFilterElement: ElementRef | null = null;
+  @ViewChild('dealResultAmount')
+  dealResultAmountFilterElement: ElementRef | null = null;
+  @ViewChild('dealResultType')
+  dealResultTypeFilterElement: ElementRef | null = null;
   @ViewChild('declarerSelect') declarerFilterElement: ElementRef | null = null;
   @ViewChild('gameNameSelect') gameNameFilterElement: ElementRef | null = null;
   @ViewChild('openingBidSelect')
@@ -93,7 +101,7 @@ export class FilterManagerComponent implements OnInit {
   @ViewChild('doubleSelect') doubleFilterElement: ElementRef | null = null;
   @ViewChild('playerInGameSelect')
   playerInGameFilterElement: ElementRef | null = null;
-  @ViewChild('wonByInput') wonByAmountFilterElement: ElementRef | null = null;
+  @ViewChild('wonByAmount') wonByAmountFilterElement: ElementRef | null = null;
   @ViewChild('wonByType') wonByTypeFilterElement: ElementRef | null = null;
 
   @HostBinding('class.filter-manager') get classname() {
@@ -128,6 +136,7 @@ export class FilterManagerComponent implements OnInit {
   public playerNames = filterManagerPlayerNames;
   public gameNames = filterManagerGameNames;
   public doubleOptions = filterManagerDoubleOptions;
+  public comparers = COMPARER_HTML_ENTITIES;
 
   get joinedInputErrorClassnames() {
     return this.filterManagerService.inputErrorClassnames.join(' ');
@@ -145,7 +154,9 @@ export class FilterManagerComponent implements OnInit {
   ngOnInit(): void {
     this.store.select(ReducerNames.deals).subscribe((dealState) => {
       if (dealState.fetchedDeals && this.playerNames.length <= 1) {
-        console.log('adding unique player names------------------------------------------------');
+        console.log(
+          'adding unique player names------------------------------------------------'
+        );
         const uniquePlayerNames = this.filterManagerService.getUniquePlayerNames(
           dealState.fetchedDeals
         );
@@ -157,15 +168,16 @@ export class FilterManagerComponent implements OnInit {
         }
       }
     });
-    this.store.select(ReducerNames.users).subscribe(userState => {
+    this.store.select(ReducerNames.users).subscribe((userState) => {
       if (userState.currentlyViewingUser.games) {
-        console.log('adding unique game names------------------------------------------------');
-        const uniqueGameNames = this.filterManagerService.getUniqueGameNames(userState.currentlyViewingUser.games);
+        console.log(
+          'adding unique game names------------------------------------------------'
+        );
+        const uniqueGameNames = this.filterManagerService.getUniqueGameNames(
+          userState.currentlyViewingUser.games
+        );
         if (uniqueGameNames) {
-          this.gameNames = [
-            ...filterManagerGameNames,
-            ...uniqueGameNames,
-          ];
+          this.gameNames = [...filterManagerGameNames, ...uniqueGameNames];
         }
       }
     });
@@ -202,6 +214,71 @@ export class FilterManagerComponent implements OnInit {
 
     this.filterItems[
       this.filterManagerService.filters.contract.string
+    ] = filterItem;
+  }
+
+  onAddDealResult(e: Event) {
+    debugger;
+    const eventTarget = e.currentTarget || e.target;
+    if (!this.getCanAdd(e, eventTarget as EventTarget)) return;
+
+    const dealResultAmountElement = this.dealResultAmountFilterElement
+      ?.nativeElement as HTMLInputElement;
+    const dealResultTypeElement = this.dealResultTypeFilterElement
+      ?.nativeElement as HTMLSelectElement;
+    const selectedAmount = +dealResultAmountElement.value;
+    const selectedType = dealResultTypeElement.value as DealResultType;
+
+    if (
+      selectedAmount < -7 ||
+      selectedAmount > 7 ||
+      selectedAmount === undefined ||
+      isNaN(selectedAmount) ||
+      !selectedType
+    )
+      return;
+
+    this.lastButtonPressed = eventTarget;
+
+    this.store.dispatch(
+      new SetDealResultFilter({
+        amount: +selectedAmount,
+        type: selectedType as WonByType,
+      })
+    );
+    this.store.dispatch(new SetIsFilterSame(false));
+    this.searchService.setCurrentlyDisplayingGames();
+
+    this.filterManagerService.setInputErrorClassnames(
+      dealResultAmountElement,
+      true
+    );
+    this.filterManagerService.setInputErrorClassnames(
+      dealResultTypeElement,
+      true
+    );
+
+    let comparer = '=';
+    if (selectedType === 'less') this.comparers.lessThanEqualTo;
+    else if (selectedType === 'more')
+      comparer = this.comparers.greaterThanEqualTo;
+
+    const filterItem: FilterItem = {
+      message: `${
+        this.filterManagerService.filterMsgs.dealResult.valid
+      } ${comparer} ${
+        selectedAmount === 0
+          ? 'made bid'
+          : selectedAmount > 0
+          ? `${Math.abs(selectedAmount)} overtrick`
+          : `${Math.abs(selectedAmount)} undertrick`
+      }.`,
+      error: '',
+      elementsToReset: [dealResultAmountElement],
+    };
+
+    this.filterItems[
+      this.filterManagerService.filters.dealResult.string
     ] = filterItem;
   }
 
@@ -250,10 +327,7 @@ export class FilterManagerComponent implements OnInit {
     this.store.dispatch(new SetDoubleFilter(selectedMultiplier));
     this.searchService.setCurrentlyDisplayingGames();
 
-    this.filterManagerService.setInputErrorClassnames(
-      doubleSelectOption,
-      true
-    );
+    this.filterManagerService.setInputErrorClassnames(doubleSelectOption, true);
 
     const filterItem: FilterItem = {
       message: `${this.filterManagerService.filterMsgs.double.valid} ${
@@ -283,18 +357,17 @@ export class FilterManagerComponent implements OnInit {
     this.store.dispatch(new SetGameNameFilter(selectedGameName));
     this.searchService.setCurrentlyDisplayingGames();
 
-    this.filterManagerService.setInputErrorClassnames(
-      gameNameOption,
-      true
-    );
+    this.filterManagerService.setInputErrorClassnames(gameNameOption, true);
 
     const filterItem: FilterItem = {
       message: `${this.filterManagerService.filterMsgs.gameName.valid} ${selectedGameName}`,
       error: '',
       elementsToReset: [gameNameOption],
-    }
-    
-    this.filterItems[this.filterManagerService.filters.gameName.string] = filterItem;
+    };
+
+    this.filterItems[
+      this.filterManagerService.filters.gameName.string
+    ] = filterItem;
   }
 
   onAddOpeningBid(e: Event) {
@@ -312,10 +385,7 @@ export class FilterManagerComponent implements OnInit {
     this.store.dispatch(new SetIsFilterSame(false));
     this.searchService.setCurrentlyDisplayingGames();
 
-    this.filterManagerService.setInputErrorClassnames(
-      openingBidSelect,
-      true
-    );
+    this.filterManagerService.setInputErrorClassnames(openingBidSelect, true);
 
     const filterItem: FilterItem = {
       message: `${
@@ -433,10 +503,7 @@ export class FilterManagerComponent implements OnInit {
     if (selectedPlayerInGame === filterManagerPlayerNames[0]) return;
     this.lastButtonPressed = eventTarget;
 
-    this.filterManagerService.setInputErrorClassnames(
-      playerInGameSelect,
-      true
-    );
+    this.filterManagerService.setInputErrorClassnames(playerInGameSelect, true);
 
     const isTooMany = currentPlayerInGame.length >= 4;
     const isAlreadyPresent = currentPlayerInGame.includes(selectedPlayerInGame);
@@ -504,17 +571,13 @@ export class FilterManagerComponent implements OnInit {
     this.store.dispatch(new SetIsFilterSame(false));
     this.searchService.setCurrentlyDisplayingGames();
 
-    this.filterManagerService.setInputErrorClassnames(
-      wonByAmountElement,
-      true
-    );
-    this.filterManagerService.setInputErrorClassnames(
-      wonByTypeElement,
-      true
-    );
+    this.filterManagerService.setInputErrorClassnames(wonByAmountElement, true);
+    this.filterManagerService.setInputErrorClassnames(wonByTypeElement, true);
 
     let message = `${this.filterManagerService.filterMsgs.wonBy.valid.pre} ${
-      selectedType === 'less' ? '&#8804;' : '&#8805;'
+      selectedType === 'less'
+        ? this.comparers.lessThanEqualTo
+        : this.comparers.greaterThanEqualTo
     } <b>${selectedAmount}</b> ${
       this.filterManagerService.filterMsgs.wonBy.valid.post
     }`;
@@ -560,6 +623,8 @@ export class FilterManagerComponent implements OnInit {
     const shouldDispatchChange = this.handleDateChange(e, DateType.after);
     this.dispatchChanges(this.afterDate, shouldDispatchChange, DateType.after);
   }
+  onDealResultClick() {this.lastButtonPressed = null;}
+  onDealResultChange() { this.lastButtonPressed = null;}
   onDeclarerClick() {}
   onDoubleClick() {}
   onDoubleChange() {
@@ -591,7 +656,7 @@ export class FilterManagerComponent implements OnInit {
   }
   onWonByClick() {}
   //#endregion
-  
+
   onFilterItemDeletion(toDelete: FilterItemDeletion) {
     if (!toDelete.key) throw new Error('No toDelete.key...');
     delete this.filterItems[toDelete.key];

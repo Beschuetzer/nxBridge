@@ -99,8 +99,20 @@
   margin-left: auto !important;
 }
 
+.margin-left-fourth {
+  margin-left: $default-font-size * .25 !important;
+}
+
+.margin-left-1 {
+  margin-left: $default-font-size * 1 !important;
+}
+
 .margin-right-auto {
   margin-right: auto !important;
+}
+
+.margin-right-1 {
+  margin-right: $default-font-size * 1 !important;
 }
 
 .padding-0 {
