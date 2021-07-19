@@ -196,6 +196,7 @@ export class FiltermanagerService {
     });
   }
 
+  //#region Public Methods
   canResetDealsThatMatchFilters(filterItems: FilterItems) {
     //note: add keys of filters that DO NOT work on the deal level below
     const keysToCheckAgainst = [
@@ -453,47 +454,139 @@ export class FiltermanagerService {
 
     return { isDateInvalid, dateObj, filterMsgError };
   }
+  //#endregion
+  
+  private applyFilters(
+    games: GameRelevant[],
+    filters: Filters
+  ) {
+    this.dealsThatMatch = [];
 
-  private applyFilters(games: GameRelevant[], filters: Filters) {
-    let filteredGames: GameRelevant[] = games;
-
-    //NOTE: add new filters here; arrange in order of least to most cpu intensive to minimize cpu load
-
-    filteredGames = this.getBeforeDateMatches(
-      filteredGames,
-      filters.beforeDate
+    //note: add skipping logic in here
+    const canSkipAfterDate = this.getCanSkipAfterDate(filters.afterDate);
+    const canSkipBeforeDate = this.getCanSkipBeforeDate(filters.beforeDate);
+    const canSkipContractFilter = this.getCanSkipContract(filters.contract);
+    const canSkipDeclarerFilter = this.getCanSkipDeclarer(filters.declarer);
+    const canSkipDoubleFilter = this.getCanSkipDouble(filters.double);
+    const canSkipOpeningBidFilter = this.getCanSkipOpeningBid(
+      filters.openingBid
     );
-    filteredGames = this.getAfterDateMatches(filteredGames, filters.afterDate);
-    filteredGames = this.runFiltersThatModifyDealsThatMatch(
-      filteredGames,
-      filters
+    const canSkipPlayerHasCardFilter = this.getCanSkipPlayerHasCard(
+      filters.playerHasCard
     );
+    const canSkipPlayerInGameFilter = this.getCanSkipPlayerInGame(
+      filters.playerInGame
+    );
+    const canSkipWonByFilter = this.getCanSkipWonBy(filters.wonBy);
+    const canSkip =
+      canSkipAfterDate &&
+      canSkipBeforeDate &&
+      canSkipContractFilter &&
+      canSkipDeclarerFilter &&
+      canSkipDoubleFilter &&
+      canSkipOpeningBidFilter &&
+      canSkipPlayerHasCardFilter &&
+      canSkipPlayerInGameFilter &&
+      canSkipWonByFilter;
+    if (canSkip) return games;
 
-    return filteredGames;
-  }
+    resetMatchedDeals();
 
-  private getAfterDateMatches(games: GameRelevant[], afterDate: number) {
-    if (!afterDate) return games;
+    let fetchedDeals = [] as any;
+    this.store
+      .select(ReducerNames.deals)
+      .pipe(take(1))
+      .subscribe((dealState) => {
+        fetchedDeals = dealState.fetchedDeals;
+      });
 
-    const toReturn: GameRelevant[] = [];
+    const toReturn = [];
     for (let i = 0; i < games.length; i++) {
       const game = games[i];
-      if (game.completionDate >= afterDate) toReturn.push(game);
+
+      let shouldAddGame = true;
+
+      //note: add game level filters here following this pattern
+      if (!canSkipAfterDate && shouldAddGame)
+        shouldAddGame = this.getPassesAfterDate(filters.afterDate, game);
+
+        if (!canSkipBeforeDate && shouldAddGame)
+        shouldAddGame = this.getPassesBeforeDate(filters.beforeDate, game);
+        
+      if (!canSkipWonByFilter && shouldAddGame)
+        shouldAddGame = this.getPassesWonBy(filters.wonBy, game);
+
+      if (!canSkipPlayerInGameFilter && shouldAddGame)
+        shouldAddGame = this.getPassesPlayerInGame(filters.playerInGame, game);
+
+      if (shouldAddGame) toReturn.push(game);
+
+      //note: need to add deal filter skip booleans here to prevent unnecessary deal iterations when all deal level filters will be skipped anyway
+      const canSkipDealIteration =
+        canSkipContractFilter &&
+        canSkipDeclarerFilter &&
+        canSkipOpeningBidFilter &&
+        canSkipDoubleFilter &&
+        canSkipPlayerHasCardFilter;
+
+      if (canSkipDealIteration) continue;
+
+      for (let j = 0; j < game.deals.length; j++) {
+        console.log(
+          'iterating deals------------------------------------------------'
+        );
+        const dealId = game.deals[j];
+        const deal = fetchedDeals[dealId];
+
+        let shouldAddDeal = true;
+
+        //note: add deal level filters here following pattern
+        if (!canSkipContractFilter && shouldAddDeal)
+          shouldAddDeal = this.getPassesContractFilter(filters.contract, deal);
+
+        if (!canSkipDeclarerFilter && shouldAddDeal)
+          shouldAddDeal = this.getPassesDeclarerFilter(filters.declarer, deal);
+
+        if (!canSkipOpeningBidFilter && shouldAddDeal)
+          shouldAddDeal = this.getPassesOpeningBidFilter(
+            filters.openingBid,
+            deal
+          );
+
+        if (!canSkipDoubleFilter && shouldAddDeal)
+          shouldAddDeal = this.getPassesDoubleFilter(filters.double, deal);
+
+        if (!canSkipPlayerHasCardFilter && shouldAddDeal)
+          shouldAddDeal = this.getPassesPlayerHasCardFilter(
+            filters.playerHasCard,
+            deal
+          );
+
+        if (shouldAddDeal) {
+          if (!shouldAddGame) {
+            shouldAddGame = true;
+            toReturn.push(game);
+          }
+          this.dealsThatMatch = [...this.dealsThatMatch, dealId];
+        }
+      }
     }
+
+    if (this.dealsThatMatch.length > 0)
+      this.store.dispatch(new SetDealsThatMatchFilters(this.dealsThatMatch));
 
     return toReturn;
   }
 
-  private getBeforeDateMatches(games: GameRelevant[], beforeDate: number) {
-    if (!beforeDate) return games;
+  //#region getCanSkip functions
+  private getCanSkipAfterDate(afterDate: number) {
+    if (!afterDate) return true;
+    return false;
+  }
 
-    const toReturn: GameRelevant[] = [];
-    for (let i = 0; i < games.length; i++) {
-      const game = games[i];
-      if (game.completionDate <= beforeDate) toReturn.push(game);
-    }
-
-    return toReturn;
+  private getCanSkipBeforeDate(beforeDate: number) {
+    if (!beforeDate) return true;
+    return false;
   }
 
   private getCanSkipContract(contract: string) {
@@ -537,6 +630,18 @@ export class FiltermanagerService {
       wonBy.amount === null
     )
       return true;
+    return false;
+  }
+  //#endregion
+
+  //#region getPasses functions
+  private getPassesAfterDate(afterDate: number, game: GameRelevant) {
+    if (game.completionDate >= afterDate) return true;
+    return false;
+  }
+
+  private getPassesBeforeDate(beforeDate: number, game: GameRelevant) {
+    if (game.completionDate <= beforeDate) return true;
     return false;
   }
 
@@ -632,117 +737,6 @@ export class FiltermanagerService {
 
     return false;
   }
+  //#endregion
 
-  private runFiltersThatModifyDealsThatMatch(
-    games: GameRelevant[],
-    filters: Filters
-  ) {
-    this.dealsThatMatch = [];
-
-    //note: add skipping logic in here
-
-    const canSkipContractFilter = this.getCanSkipContract(filters.contract);
-    const canSkipDeclarerFilter = this.getCanSkipDeclarer(filters.declarer);
-    const canSkipDoubleFilter = this.getCanSkipDouble(filters.double);
-    const canSkipOpeningBidFilter = this.getCanSkipOpeningBid(
-      filters.openingBid
-    );
-    const canSkipPlayerHasCardFilter = this.getCanSkipPlayerHasCard(
-      filters.playerHasCard
-    );
-    const canSkipPlayerInGameFilter = this.getCanSkipPlayerInGame(
-      filters.playerInGame
-    );
-    const canSkipWonByFilter = this.getCanSkipWonBy(filters.wonBy);
-    const canSkip =
-      canSkipContractFilter &&
-      canSkipDeclarerFilter &&
-      canSkipDoubleFilter &&
-      canSkipOpeningBidFilter &&
-      canSkipPlayerHasCardFilter &&
-      canSkipPlayerInGameFilter &&
-      canSkipWonByFilter;
-    if (canSkip) return games;
-
-    resetMatchedDeals();
-
-    let fetchedDeals = [] as any;
-    this.store
-      .select(ReducerNames.deals)
-      .pipe(take(1))
-      .subscribe((dealState) => {
-        fetchedDeals = dealState.fetchedDeals;
-      });
-
-    const toReturn = [];
-    for (let i = 0; i < games.length; i++) {
-      const game = games[i];
-
-      let shouldAddGame = false;
-
-      //note: add game level filters here following this pattern
-      if (!canSkipWonByFilter && !shouldAddGame)
-        shouldAddGame = this.getPassesWonBy(filters.wonBy, game);
-
-      if (!canSkipPlayerInGameFilter && !shouldAddGame)
-        shouldAddGame = this.getPassesPlayerInGame(filters.playerInGame, game);
-
-      if (shouldAddGame) toReturn.push(game);
-
-      //note: need to add deal filter skip booleans here to prevent unnecessary deal iterations when all deal level filters will be skipped anyway
-      const canSkipDealIteration =
-        canSkipContractFilter &&
-        canSkipDeclarerFilter &&
-        canSkipOpeningBidFilter &&
-        canSkipDoubleFilter &&
-        canSkipPlayerHasCardFilter;
-
-      if (canSkipDealIteration) continue;
-
-      for (let j = 0; j < game.deals.length; j++) {
-        console.log(
-          'iterating deals------------------------------------------------'
-        );
-        const dealId = game.deals[j];
-        const deal = fetchedDeals[dealId];
-
-        let shouldAddDeal = true;
-
-        //note: add deal level filters here following pattern
-        if (!canSkipContractFilter && shouldAddDeal)
-          shouldAddDeal = this.getPassesContractFilter(filters.contract, deal);
-
-        if (!canSkipDeclarerFilter && shouldAddDeal)
-          shouldAddDeal = this.getPassesDeclarerFilter(filters.declarer, deal);
-
-        if (!canSkipOpeningBidFilter && shouldAddDeal)
-          shouldAddDeal = this.getPassesOpeningBidFilter(
-            filters.openingBid,
-            deal
-          );
-
-        if (!canSkipDoubleFilter && shouldAddDeal)
-          shouldAddDeal = this.getPassesDoubleFilter(filters.double, deal);
-
-        if (!canSkipPlayerHasCardFilter && shouldAddDeal)
-          shouldAddDeal = this.getPassesPlayerHasCardFilter(
-            filters.playerHasCard,
-            deal
-          );
-
-        if (shouldAddDeal) {
-          if (!shouldAddGame) {
-            shouldAddGame = true;
-            toReturn.push(game);
-          }
-          this.dealsThatMatch = [...this.dealsThatMatch, dealId];
-        }
-      }
-    }
-
-    if (this.dealsThatMatch.length > 0)
-      this.store.dispatch(new SetDealsThatMatchFilters(this.dealsThatMatch));
-
-    return toReturn;
-  }
 }
