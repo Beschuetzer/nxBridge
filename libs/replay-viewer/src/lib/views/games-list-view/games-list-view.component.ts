@@ -20,11 +20,13 @@ import {
 } from '@nx-bridge/interfaces-and-types';
 import {
   dealsListButtonFontSizeCssPropName,
+  DISPLAY_NONE_CLASSNAME,
   gameDetailHeightAboveBreakpointCssPropName,
   gameDetailHeightBelowBreakpointCssPropName,
   gameDetailSummaryHeightPercentageCssPropName,
   getNewBatchNumber,
   getNewTotalNumberOfPages,
+  LOGIN_CARD_CLASSNAME,
   NOT_AVAILABLE_STRING,
   playerLabelsDisplayTypeCssPropName,
   playerNamesDisplayTypeCssPropName,
@@ -72,7 +74,8 @@ export class GamesListViewComponent implements OnInit {
   constructor(
     private store: Store<AppState>,
     private localStorageManager: LocalStorageManagerService,
-    private searchService: SearchService
+    private searchService: SearchService,
+    private elRef: ElementRef,
   ) {}
 
   ngOnInit(): void {
@@ -96,6 +99,7 @@ export class GamesListViewComponent implements OnInit {
     this.preferences = this.localStorageManager.getPreferences();
     this.setOptionElementsPerPreferences();
     this.changeSize(this.preferences.size);
+    this.showSearchHideButton();
   }
 
   onCurrentPageChange(e: Event) {
@@ -268,5 +272,12 @@ export class GamesListViewComponent implements OnInit {
     this.store.dispatch(
       new SetResultsPerPagePreference(newResultsPerPagePreference)
     );
+  }
+
+  private showSearchHideButton() {
+    const gamesListView = this.elRef.nativeElement as HTMLElement;
+    const loginCardHide = gamesListView.querySelector(`.${LOGIN_CARD_CLASSNAME}__hide`);
+
+    loginCardHide?.classList.remove(DISPLAY_NONE_CLASSNAME);
   }
 }

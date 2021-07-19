@@ -22,6 +22,7 @@ import {
   filterManagerDoubleOptions,
   rootRoute,
   DISPLAY_NONE_CLASSNAME,
+  MOBILE_START_WIDTH,
 } from '@nx-bridge/constants';
 import {
   AddPlayerHasCard,
@@ -93,7 +94,9 @@ export class FilterManagerComponent implements OnInit {
     return !this.searchService.getAreDealsLoaded();
   }
   @HostBinding('class.d-none') get toggleDisplayNone() {
-    return this.router.url === `/${rootRoute}`;
+    // return ;
+    return (!this.searchService.getAreDealsLoaded() && window.innerWidth <= MOBILE_START_WIDTH) || this.router.url === `/${rootRoute}`;
+
   }
   @HostBinding('class.announce-self') get toggleAnnounceSelf() {
     return this.searchService.getAreDealsLoaded();

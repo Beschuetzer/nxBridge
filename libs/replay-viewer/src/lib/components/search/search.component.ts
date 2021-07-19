@@ -120,19 +120,20 @@ export class SearchComponent implements OnInit {
     }
   }
 
-  onUsernameClick() {
-    const { usernameInput, emailInput } = this.getInputs();
-    const form = usernameInput?.closest('form') as HTMLFormElement;
-    form.reset();
+  onHide() {
+    const search = this.elRef.nativeElement as HTMLElement;
+    const subtitle = search.querySelector(`.${LOGIN_CARD_CLASSNAME}__subtitle`) as HTMLElement;
+    const inputs = search.querySelector(`.${LOGIN_CARD_CLASSNAME}__inputs`) as HTMLElement;
+    const submit = search.querySelector(`.${LOGIN_CARD_CLASSNAME}__submit`) as HTMLElement;
 
-    if (usernameInput) {
-      (document.querySelector('#usernameCheckbox') as HTMLInputElement).checked = true;
-      (usernameInput.children[1] as HTMLInputElement).value = '';
-      this.renderer.removeClass(usernameInput, DISPLAY_NONE_CLASSNAME);
-    }
-    if (emailInput) {
-      (emailInput.children[1] as HTMLInputElement).value = '';
-      this.renderer.addClass(emailInput, DISPLAY_NONE_CLASSNAME);
+    if (subtitle?.classList.contains(DISPLAY_NONE_CLASSNAME)) {
+      this.renderer.removeClass(subtitle, DISPLAY_NONE_CLASSNAME);
+      this.renderer.removeClass(inputs, DISPLAY_NONE_CLASSNAME);
+      this.renderer.removeClass(submit, DISPLAY_NONE_CLASSNAME);
+    } else {
+      this.renderer.addClass(subtitle, DISPLAY_NONE_CLASSNAME);
+      this.renderer.addClass(inputs, DISPLAY_NONE_CLASSNAME);
+      this.renderer.addClass(submit, DISPLAY_NONE_CLASSNAME);
     }
   }
 
@@ -157,7 +158,7 @@ export class SearchComponent implements OnInit {
     this.searchService.shouldNavigateToGames = true;
   }
 
-  public getInputs() {
+  getInputs() {
     const loginCard = this.elRef.nativeElement;
     const usernameInput = loginCard?.querySelector(
       `.${LOGIN_CARD_CLASSNAME}__username`
@@ -171,8 +172,24 @@ export class SearchComponent implements OnInit {
     return { usernameInput, emailInput };
   }
 
-  public resetForm() {
+  resetForm() {
     this.initializeForm();
+  }
+
+  onUsernameClick() {
+    const { usernameInput, emailInput } = this.getInputs();
+    const form = usernameInput?.closest('form') as HTMLFormElement;
+    form.reset();
+
+    if (usernameInput) {
+      (document.querySelector('#usernameCheckbox') as HTMLInputElement).checked = true;
+      (usernameInput.children[1] as HTMLInputElement).value = '';
+      this.renderer.removeClass(usernameInput, DISPLAY_NONE_CLASSNAME);
+    }
+    if (emailInput) {
+      (emailInput.children[1] as HTMLInputElement).value = '';
+      this.renderer.addClass(emailInput, DISPLAY_NONE_CLASSNAME);
+    }
   }
 
   private initializeForm() {

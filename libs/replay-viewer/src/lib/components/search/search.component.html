@@ -1,7 +1,10 @@
 <form (ngSubmit)="onSubmit()" [formGroup]="initialForm" class="ui form">
-  <h2 class="header ui {{ isLandingPage ? 'login-card__title' : '' }}">
-    {{ titleMsg }}
-  </h2>
+  <div class="login-card__header">
+    <h2 class="ui header {{ isLandingPage ? 'login-card__title' : '' }}">
+      {{ titleMsg }}
+    </h2>
+    <button type="button" class="ui button bg-color-1 color-white d-none login-card__hide" (click)="onHide()">Hide</button>
+  </div>
 
   <div class="login-card__subtitle">
     <h4>Search by:</h4>
@@ -28,7 +31,7 @@
     </label>
   </div>
 
-  <div class="field">
+  <div class="field login-card__inputs">
     <div class="field login-card__username">
       <label>Username</label>
       <input
@@ -79,7 +82,7 @@
     ></div>
   </div>
 
-  <div class="{{ isLandingPage ? 'login-card__buttons' : '' }}">
+  <div class="{{ isLandingPage ? 'login-card__buttons' : 'login-card__submit' }}">
     <button
       class="ui button bg-color-3 hover-bg-color-1 hover-color-3 w-100 margin-0"
       type="submit"

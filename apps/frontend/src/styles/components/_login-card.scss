@@ -14,7 +14,7 @@
   & *:not(.non-existant-class, button) {
     color: var(--color-primary-4) !important;
 
-    &:not(label, form, h4, input, span, .login-card__buttons, .login-card__email, .search) {
+    &:not(label, form, h4, input, span, .login-card__buttons, .login-card__email, .search, .login-card__header) {
       margin-bottom: $default-font-size * .5 !important;
     }
   }
@@ -24,6 +24,17 @@
     border-bottom: 1px solid rgba(var(--color-primary-3-rgb), .5) !important;
     text-align: center;
     letter-spacing: 0.094rem;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+   
+  }
+
+  &__hide {
+    margin: 0 !important;
   }
 
   &__buttons{ 
@@ -91,6 +102,10 @@
 
     @include respond($layout-breakpoint) {
       border-bottom: none !important;
+    }
+
+    & .login-card__header {
+      margin-bottom: $default-font-size * 0;
     }
 
     & button {
