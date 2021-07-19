@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { PlayerHasCard } from '@nx-bridge/interfaces-and-types';
+import { PlayerHasCard, WonBy } from '@nx-bridge/interfaces-and-types';
 
 export const ADD_PLAYER_HAS_CARD = '[Filter] ADD_PLAYER_HAS_CARD';
 export const ADD_PLAYER_IN_GAME_FILTER = '[Filter] ADD_PLAYER_IN_GAME_FILTER';
@@ -88,7 +88,7 @@ export class SetPlayerInGameFilter implements Action {
 
 export class SetWonByFilter implements Action {
   readonly type = SET_WON_BY_FILTER;
-  constructor(public payload: number) {}
+  constructor(public payload: WonBy) {}
 }
 
 export type FilterActions =

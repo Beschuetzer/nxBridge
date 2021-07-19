@@ -49,6 +49,7 @@ import {
   FilterItems,
   FilterItemDeletion,
   PlayerInGame,
+  WonByType,
 } from '@nx-bridge/interfaces-and-types';
 import { SearchService } from '../../services/search.service';
 import { FiltermanagerService } from '../../services/filter-manager.service';
@@ -88,7 +89,8 @@ export class FilterManagerComponent implements OnInit {
   @ViewChild('doubleSelect') doubleFilterElement: ElementRef | null = null;
   @ViewChild('playerInGameSelect')
   playerInGameFilterElement: ElementRef | null = null;
-  @ViewChild('wonByInput') wonByFilterElement: ElementRef | null = null;
+  @ViewChild('wonByInput') wonByAmountFilterElement: ElementRef | null = null;
+  @ViewChild('wonByType') wonByTypeFilterElement: ElementRef | null = null;
 
   @HostBinding('class.filter-manager') get classname() {
     return true;
@@ -409,24 +411,27 @@ export class FilterManagerComponent implements OnInit {
     const eventTarget = e.currentTarget || e.target;
     if (!this.getCanAdd(e, eventTarget as EventTarget)) return;
 
-    const wonByElement = this.wonByFilterElement
-      ?.nativeElement as HTMLSelectElement;
-    const selectedAmount = +wonByElement.value;
-    if (!selectedAmount) return;
+    const wonByAmountElement = this.wonByAmountFilterElement
+      ?.nativeElement as HTMLInputElement;
+    const wonByTypeElement = this.wonByTypeFilterElement?.nativeElement as HTMLSelectElement
+    const selectedAmount = +wonByAmountElement.value;
+    const selectedType = wonByTypeElement.value as WonByType;
+
+    if (selectedAmount < 0 || selectedAmount === undefined || isNaN(selectedAmount) || !selectedType) return;
     this.lastButtonPressed = eventTarget;
 
-    this.store.dispatch(new SetWonByFilter(+selectedAmount));
+    this.store.dispatch(new SetWonByFilter({amount: +selectedAmount, type: selectedType as WonByType}));
     this.store.dispatch(new SetIsFilterSame(false));
     this.searchService.setCurrentlyDisplayingGames();
 
-    const message = `${this.filterManagerService.filterMsgs.wonBy.valid.pre} <b>${selectedAmount}</b> ${this.filterManagerService.filterMsgs.wonBy.valid.post}`
+    let message = `${this.filterManagerService.filterMsgs.wonBy.valid.pre} ${selectedType} than <b>${selectedAmount}</b> ${this.filterManagerService.filterMsgs.wonBy.valid.post}`
+    if (selectedAmount === 0 && selectedType === 'less') message = "Game was a tie."
 
     const filterItem: FilterItem = {
       message,
       error: '',
-      elementsToReset: [wonByElement],
+      elementsToReset: [wonByAmountElement],
     }
-
     this.filterItems[this.filterManagerService.filters.wonBy.string] = filterItem;
   }
 

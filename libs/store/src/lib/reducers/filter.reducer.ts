@@ -151,7 +151,7 @@ export function filterReducer(
       const newWonBy = action.payload;
       return {
         ...state, 
-        wonBy: isNaN(newWonBy) ? reducerDefaultValue : newWonBy,
+        wonBy: isNaN(newWonBy.amount) ? {amount: reducerDefaultValue, type: 'less'} : newWonBy,
       }
     default:
       return state;

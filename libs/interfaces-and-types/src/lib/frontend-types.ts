@@ -188,6 +188,10 @@ export interface User {
 export interface UserIds {
   [key: string]: string;
 }
+export interface WonBy {
+  type: WonByType,
+  amount: number;
+}
 //#endregion
 
 //#region Types
@@ -284,6 +288,7 @@ export type UserObj = {
   status: string;
   preferences: Preferences;
 };
+export type WonByType = 'less' | 'more';
 //#endregion
 
 //#region Enums

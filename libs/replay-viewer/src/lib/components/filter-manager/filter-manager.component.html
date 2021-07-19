@@ -87,7 +87,7 @@
       </label>
       <label>
         <input #wonBy (click)="onWonByClick()" type="checkbox" />
-        Won by at least ...
+        Won by ... than ...
       </label>
     </div>
 
@@ -288,14 +288,23 @@
       class="{{ FILTER_MANANGER_CLASSNAME }}__won-by"
     >
       <label>
-        Won by at least:
+        Won by
+        <select
+          #wonByType
+          (click)="onWonByChange()"
+          class="ui input"
+        >
+          <option value="less">less than</option>
+          <option value="more">more than</option>
+        </select>
         <input
           #wonByInput
           (click)="onWonByChange()"
           type="number"
-          min="10"
+          min="0"
           max="100000"
           step="10"
+          value="0"
           placeholder="Enter won by number here"
           class="ui input"
         />

@@ -94,7 +94,7 @@
   &__won-by {
     justify-content: space-between;
 
-    & input {
+    & input, & select {
       width: max-content !important;
       margin-top: $default-font-size * .25 !important;
       margin-left: auto !important;

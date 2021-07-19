@@ -14,6 +14,7 @@ import {
   PlayerInGame,
   ReducerNames,
   UserIds,
+  WonBy,
 } from '@nx-bridge/interfaces-and-types';
 import {
   AppState,
@@ -175,10 +176,10 @@ export class FiltermanagerService {
     },
     wonBy: {
       valid: {
-        pre: 'Won by at least',
+        pre: 'Won by',
         post: 'points.',
-      }
-    }
+      },
+    },
   };
   //#endregion
 
@@ -186,7 +187,10 @@ export class FiltermanagerService {
   public dealsThatMatch: string[] = [];
   public users: UserIds | null = null;
 
-  constructor(private store: Store<AppState>, private replayViewerDealService: ReplayViewerDealService) {
+  constructor(
+    private store: Store<AppState>,
+    private replayViewerDealService: ReplayViewerDealService
+  ) {
     this.store.select(ReducerNames.users).subscribe((userState) => {
       this.users = userState.userIds;
     });
@@ -454,16 +458,13 @@ export class FiltermanagerService {
     let filteredGames: GameRelevant[] = games;
 
     //NOTE: add new filters here; arrange in order of least to most cpu intensive to minimize cpu load
-    
+
     filteredGames = this.getBeforeDateMatches(
       filteredGames,
       filters.beforeDate
     );
     filteredGames = this.getAfterDateMatches(filteredGames, filters.afterDate);
-    filteredGames = this.getWonByMatches(
-      filteredGames,
-      filters.wonBy
-    );
+    filteredGames = this.getWonByMatches(filteredGames, filters.wonBy);
     filteredGames = this.getPlayerInGameMatches(
       filteredGames,
       filters.playerInGame
@@ -612,8 +613,17 @@ export class FiltermanagerService {
     return toReturn;
   }
 
-  private getWonByMatches(games: GameRelevant[], wonByAmount: number) {
-    if (!wonByAmount) return games;
+  private getWonByMatches(games: GameRelevant[], wonBy: WonBy) {
+    debugger;
+    if (
+      !wonBy ||
+      !wonBy.type ||
+      (wonBy.type !== 'less' && wonBy.type !== 'more') ||
+      wonBy.amount === undefined ||
+      wonBy.amount === null
+    )
+      return games;
+
     const toReturn: GameRelevant[] = [];
 
     for (let i = 0; i < games.length; i++) {
@@ -621,12 +631,17 @@ export class FiltermanagerService {
       const lastDeal = game.deals[game.deals.length - 1];
       const deal = this.replayViewerDealService.getDealFromStore(lastDeal);
       if (!deal.northSouth || !deal.eastWest) continue;
-      const nsTotal = deal.northSouth.aboveTheLine + deal.northSouth.totalBelowTheLineScore;
-      const ewTotal = deal.eastWest.aboveTheLine + deal.eastWest.totalBelowTheLineScore;
-      if (Math.abs(nsTotal - ewTotal) >= wonByAmount) toReturn.push(game);
-      else debugger;
+      const nsTotal =
+        deal.northSouth.aboveTheLine + deal.northSouth.totalBelowTheLineScore;
+      const ewTotal =
+        deal.eastWest.aboveTheLine + deal.eastWest.totalBelowTheLineScore;
+      const gameWonByAmount = Math.abs(nsTotal - ewTotal);
+      if (wonBy.type === 'less') {
+        if (gameWonByAmount <= wonBy.amount) toReturn.push(game);
+      } else if (wonBy.type === 'more') {
+        if (gameWonByAmount >= wonBy.amount) toReturn.push(game);
+      }
     }
-
     return toReturn;
   }
 
