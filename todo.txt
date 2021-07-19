@@ -47,5 +47,5 @@ Game Filtering stuff----------------------------------------
   -won by more than... ()
 
 
--figure out how to run the game level filters in the same loop as the deal level ones?
-
+-bug when applying won more than 130 and contract 1 diamond
+-bug when tie and 1 club contract

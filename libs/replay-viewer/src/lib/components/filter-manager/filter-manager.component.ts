@@ -229,8 +229,8 @@ export class FilterManagerComponent implements OnInit {
 
     const filterItem: FilterItem = {
       message: `${this.filterManagerService.filterMsgs.double.valid} ${
-        selectedMultiplier === 2 ? 'Once' : 'Twice'
-      }`,
+        selectedMultiplier === 2 ? 'once' : 'twice'
+      }.`,
       error: '',
       elementsToReset: [doubleSelectOption],
     };

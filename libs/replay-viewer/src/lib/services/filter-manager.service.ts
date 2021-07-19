@@ -159,7 +159,7 @@ export class FiltermanagerService {
       valid: 'Declarer was',
     },
     double: {
-      valid: 'DealRelevant was doubled',
+      valid: 'Deal was doubled',
     },
     none: 'No Filters applied',
     openingBid: {
@@ -178,7 +178,7 @@ export class FiltermanagerService {
     },
     wonBy: {
       valid: {
-        pre: 'Won by',
+        pre: 'Game won by',
         post: 'points.',
       },
     },
@@ -481,30 +481,32 @@ export class FiltermanagerService {
       const game = games[i];
 
       //note: add game level filters here following this pattern
-      let shouldAddGame = this.getShouldAddGame(game, filters, canSkip);
-      
+      const hasPassedGameFilters = this.getPassesGameFilters(game, filters, canSkip);
+      let gameAddedAlready = false;
+
       //note: need to add deal-level filter canSkip logic below
-      const canSkipDealIteration = this.getShouldSkipDealIteration(canSkip);
+      const canSkipDealIteration = this.getCanSkipDealIteration(canSkip);
       
-      if (shouldAddGame) toReturn.push(game);
+      if (hasPassedGameFilters && canSkipDealIteration) {
+        toReturn.push(game);
+        gameAddedAlready = true;
+      }
       if (canSkipDealIteration) continue;
 
+     let shouldAddGame = false;
       for (let j = 0; j < game.deals.length; j++) {
-        console.log(
-          'iterating deals------------------------------------------------'
-        );
         const dealId = game.deals[j];
         const deal = fetchedDeals[dealId];
 
         //note: add deal level filters here following pattern inside
-        const shouldAddDeal = this.getShouldAddDeal(deal, filters, canSkip);
+        const canAddDeal = this.getCanAddDeal(deal, filters, canSkip);
 
-        if (shouldAddDeal) {
-          if (!shouldAddGame) {
+        if (canAddDeal) {
+          if (!shouldAddGame && !gameAddedAlready && hasPassedGameFilters) {
             shouldAddGame = true;
             toReturn.push(game);
           }
-          this.dealsThatMatch = [...this.dealsThatMatch, dealId];
+          if (hasPassedGameFilters) this.dealsThatMatch = [...this.dealsThatMatch, dealId];
         }
       }
     }
@@ -554,7 +556,7 @@ export class FiltermanagerService {
     };
   }
 
-  private getShouldAddDeal(
+  private getCanAddDeal(
     deal: DealRelevant,
     filters: Filters,
     canSkip: CanSkipFilters
@@ -582,7 +584,7 @@ export class FiltermanagerService {
     return shouldAddDeal;
   }
 
-  private getShouldAddGame(
+  private getPassesGameFilters(
     game: GameRelevant,
     filters: Filters,
     canSkip: CanSkipFilters
@@ -604,7 +606,7 @@ export class FiltermanagerService {
     return shouldAddGame;
   }
 
-  private getShouldSkipDealIteration(canSkip: CanSkipFilters) {
+  private getCanSkipDealIteration(canSkip: CanSkipFilters) {
     //note: prevents unnecessary deal iterations when all deal level filters will be skipped anyway
     return (
       canSkip.contract &&
