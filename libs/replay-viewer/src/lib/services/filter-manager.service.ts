@@ -464,10 +464,6 @@ export class FiltermanagerService {
       filters.beforeDate
     );
     filteredGames = this.getAfterDateMatches(filteredGames, filters.afterDate);
-    filteredGames = this.getPlayerInGameMatches(
-      filteredGames,
-      filters.playerInGame
-    );
     filteredGames = this.runFiltersThatModifyDealsThatMatch(
       filteredGames,
       filters
@@ -522,6 +518,12 @@ export class FiltermanagerService {
       playerHasCards['initial'] ||
       Object.keys(playerHasCards).length === 0
     )
+      return true;
+    return false;
+  }
+
+  private getCanSkipPlayerInGame(playersInGame: PlayerInGame) {
+    if (playersInGame.includes(`${reducerDefaultValue}`) || !playersInGame)
       return true;
     return false;
   }
@@ -598,30 +600,19 @@ export class FiltermanagerService {
     return shouldAddDeal;
   }
 
-  private getPlayerInGameMatches(
-    games: GameRelevant[],
-    playersInGame: PlayerInGame
+  private getPassesPlayerInGame(
+    playersInGame: PlayerInGame,
+    game: GameRelevant
   ) {
-    if (playersInGame.includes(`${reducerDefaultValue}`) || !playersInGame)
-      return games;
+    const seating = game.room.seating;
+    if (!seating) return true;
 
-    const toReturn: GameRelevant[] = [];
-    for (let i = 0; i < games.length; i++) {
-      const game = games[i];
-      const seating = game.room.seating;
-
-      let canAdd = true;
-      for (let i = 0; i < playersInGame.length; i++) {
-        const userOfPlayerWhoMustBeInGame = playersInGame[i];
-        const usersNamesInGame = Object.values(seating);
-        if (!usersNamesInGame.includes(userOfPlayerWhoMustBeInGame)) {
-          canAdd = false;
-          break;
-        }
-      }
-      if (canAdd) toReturn.push(game);
+    for (let i = 0; i < playersInGame.length; i++) {
+      const userOfPlayerWhoMustBeInGame = playersInGame[i];
+      const usersNamesInGame = Object.values(seating);
+      if (!usersNamesInGame.includes(userOfPlayerWhoMustBeInGame)) return false;
     }
-    return toReturn;
+    return true;
   }
 
   private getPassesWonBy(wonBy: WonBy, game: GameRelevant) {
@@ -636,8 +627,7 @@ export class FiltermanagerService {
 
     if (wonBy.type === 'less' && gameWonByAmount <= wonBy.amount) {
       return true;
-    }
-    else if (wonBy.type === 'more' && gameWonByAmount >= wonBy.amount)
+    } else if (wonBy.type === 'more' && gameWonByAmount >= wonBy.amount)
       return true;
 
     return false;
@@ -650,23 +640,28 @@ export class FiltermanagerService {
     this.dealsThatMatch = [];
 
     //note: add skipping logic in here
-    const canSkipPlayerHasCardFilter = this.getCanSkipPlayerHasCard(
-      filters.playerHasCard
-    );
+
     const canSkipContractFilter = this.getCanSkipContract(filters.contract);
     const canSkipDeclarerFilter = this.getCanSkipDeclarer(filters.declarer);
     const canSkipDoubleFilter = this.getCanSkipDouble(filters.double);
     const canSkipOpeningBidFilter = this.getCanSkipOpeningBid(
       filters.openingBid
     );
-    const canSkipWonBy = this.getCanSkipWonBy(filters.wonBy);
+    const canSkipPlayerHasCardFilter = this.getCanSkipPlayerHasCard(
+      filters.playerHasCard
+    );
+    const canSkipPlayerInGameFilter = this.getCanSkipPlayerInGame(
+      filters.playerInGame
+    );
+    const canSkipWonByFilter = this.getCanSkipWonBy(filters.wonBy);
     const canSkip =
       canSkipContractFilter &&
-      canSkipPlayerHasCardFilter &&
       canSkipDeclarerFilter &&
-      canSkipOpeningBidFilter &&
       canSkipDoubleFilter &&
-      canSkipWonBy;
+      canSkipOpeningBidFilter &&
+      canSkipPlayerHasCardFilter &&
+      canSkipPlayerInGameFilter &&
+      canSkipWonByFilter;
     if (canSkip) return games;
 
     resetMatchedDeals();
@@ -686,8 +681,11 @@ export class FiltermanagerService {
       let shouldAddGame = false;
 
       //note: add game level filters here following this pattern
-      if (!canSkipWonBy && !shouldAddGame)
+      if (!canSkipWonByFilter && !shouldAddGame)
         shouldAddGame = this.getPassesWonBy(filters.wonBy, game);
+
+      if (!canSkipPlayerInGameFilter && !shouldAddGame)
+        shouldAddGame = this.getPassesPlayerInGame(filters.playerInGame, game);
 
       if (shouldAddGame) toReturn.push(game);
 
@@ -698,16 +696,18 @@ export class FiltermanagerService {
         canSkipOpeningBidFilter &&
         canSkipDoubleFilter &&
         canSkipPlayerHasCardFilter;
-      
+
       if (canSkipDealIteration) continue;
 
       for (let j = 0; j < game.deals.length; j++) {
-        console.log('iterating deals------------------------------------------------');
+        console.log(
+          'iterating deals------------------------------------------------'
+        );
         const dealId = game.deals[j];
         const deal = fetchedDeals[dealId];
 
         let shouldAddDeal = true;
-        
+
         //note: add deal level filters here following pattern
         if (!canSkipContractFilter && shouldAddDeal)
           shouldAddDeal = this.getPassesContractFilter(filters.contract, deal);
@@ -740,7 +740,8 @@ export class FiltermanagerService {
       }
     }
 
-    if (this.dealsThatMatch.length > 0) this.store.dispatch(new SetDealsThatMatchFilters(this.dealsThatMatch));
+    if (this.dealsThatMatch.length > 0)
+      this.store.dispatch(new SetDealsThatMatchFilters(this.dealsThatMatch));
 
     return toReturn;
   }

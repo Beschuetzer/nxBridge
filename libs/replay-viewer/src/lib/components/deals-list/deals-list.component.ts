@@ -123,7 +123,6 @@ export class DealsListComponent implements OnInit {
       .pipe(take(1))
       .subscribe((gamesState) => {
         isGameAlreadyOpen = gamesState.isViewingGame;
-        console.log('isOpenAlready =', isGameAlreadyOpen);
       });
     return isGameAlreadyOpen;
   }
