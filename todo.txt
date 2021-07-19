@@ -65,5 +65,3 @@ filters------------
   -won by more than...
 
 -switching to ascending/descending doesn't work redLightIntensity
--playernames don't reset right when switching between players
--PutnamPatt 2/8/21, 5:54 PM says that deal 4 passed out when it didn't

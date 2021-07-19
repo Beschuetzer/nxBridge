@@ -135,7 +135,9 @@ export class FilterManagerComponent implements OnInit {
         const uniquePlayerNames = this.filterManagerService.getUniquePlayerNames(
           dealState.fetchedDeals
         );
-        if (uniquePlayerNames) this.playerNames.push(...uniquePlayerNames);
+        if (uniquePlayerNames) {
+          this.playerNames = [...filterManagerPlayerNames, ...uniquePlayerNames];
+        }
       }
     });
   }
