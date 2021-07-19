@@ -91,6 +91,21 @@
     }
   }
 
+  &__won-by {
+    justify-content: space-between;
+
+    & input {
+      width: max-content !important;
+      margin-top: $default-font-size * .25 !important;
+      margin-left: auto !important;
+
+      @include respond($layout-breakpoint) {
+        width: 100% !important;
+        margin-left: $default-font-size * .25 !important;
+      }
+    }
+  }
+
   &__player-has-card {
     padding: $default-font-size * .5 0;
 

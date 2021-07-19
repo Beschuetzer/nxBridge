@@ -15,7 +15,8 @@ Components:
 
 Optimizations------------------------------------------------------
   -need to keep track of how many times each userId is queried and use that info to remove the least queried usernames when space runs short (add a check in every localStorageManager method that saves which checks space available and basically deletes the minimal amount of 'least valuable' localStorage data as possible)
-  -save deals in localStorage
+  -need a function to remove the oldest localStorageUser by last access date and call when storage is full or approaching it
+
 
 Prettification-------------------
   -game-detail__score width is a bit 'off'
@@ -24,25 +25,13 @@ Prettification-------------------
   -change deal-detail__summary-text to red or green depending on if declarer won it.
 
 Todos----------------------------------------------------------
-  -landing reset button is messed up (disabled when valid email and no username for example)
-  -Add threejs nebular to landing
-  -add ngIf to email and username fields (hide the other if one is valid)
   -figure out how to move landing service validators to a new service folder in the frontend project in a ValidatorsService file
-
-  Game Filtering stuff----------------------------------------
-  -add filter by room name option for the GameList
-  -add sorting options for gameslist (ascending / descending by date and name)
-  -add show games between date
-  -add show games played with another player or players
-
 
 
 
 
 -figure out how to make closing deal-player reset everything
-
 -add goto nth card played text box?
--change how deal winners works (always show 14 columns)
 
 Testing------------
   -test already stored LocalStorageUser scenario works
@@ -50,16 +39,9 @@ Testing------------
 
 
 -move deal components private methods to RepplayViewerDealService?
-
-
--need a function to remove the oldest localStorageUser by last access date and call when storage is full or approaching it
-
 -add animations/transitions for things like fade in of filters and games?
 -consider change "Games played by..." wording and font-size
--finish sortDescending and sortAscending()?
--clicking too quickly on a game-detail after initial load causes issues (maybe do after click of some sort that can reset the game-detail?)
 
-
-
-filters------------
-  -won by more than...
+Game Filtering stuff----------------------------------------
+  -add filter by room name
+  -won by more than... ()

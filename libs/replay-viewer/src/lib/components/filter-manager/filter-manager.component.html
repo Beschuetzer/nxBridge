@@ -85,6 +85,10 @@
         <input #playerInGame (click)="onPlayerInGameClick()" type="checkbox" />
         Player was in game
       </label>
+      <label>
+        <input #wonBy (click)="onWonByClick()" type="checkbox" />
+        Won by more than ...
+      </label>
     </div>
 
     <!-- Date-related filters -->
@@ -273,6 +277,31 @@
       </select>
       <button
         (click)="onAddPlayerInGame($event)"
+        class="ui button filter-manager__add-button"
+      >
+        Add
+      </button>
+    </div>
+
+    <div
+      *ngIf="game.checked && wonByCheckbox?.nativeElement.checked"
+      class="{{ FILTER_MANANGER_CLASSNAME }}__won-by"
+    >
+      <label>
+        Won by more than:
+        <input
+          #wonByInput
+          (click)="onWonByChange()"
+          type="number"
+          min="10"
+          max="100000"
+          step="10"
+          placeholder="Enter won by number here"
+          class="ui input"
+        />
+      </label>
+      <button
+        (click)="onAddWonBy($event)"
         class="ui button filter-manager__add-button"
       >
         Add

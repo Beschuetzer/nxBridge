@@ -63,6 +63,7 @@ export class FilterManagerComponent implements OnInit {
   //NOTE: new checkboxes need to be added to resetFilterCheckboxes() in reset()
   @ViewChild('game') gameCheckbox: ElementRef | null = null;
   @ViewChild('playerInGame') playerInGameCheckbox: ElementRef | null = null;
+  @ViewChild('wonBy') wonByCheckbox: ElementRef | null = null;
 
   @ViewChild('date') dateCheckbox: ElementRef | null = null;
 
@@ -84,8 +85,8 @@ export class FilterManagerComponent implements OnInit {
   @ViewChild('openingBidSelect')
   openingBidFilterElement: ElementRef | null = null;
   @ViewChild('doubleSelect') doubleFilterElement: ElementRef | null = null;
-  @ViewChild('playerInGameSelect')
-  playerInGameFilterElement: ElementRef | null = null;
+  @ViewChild('playerInGameSelect') playerInGameFilterElement: ElementRef | null = null;
+  @ViewChild('wonByInput') wonByFilterElement: ElementRef | null = null;
 
   @HostBinding('class.filter-manager') get classname() {
     return true;
@@ -396,6 +397,10 @@ export class FilterManagerComponent implements OnInit {
     }
   }
 
+  onAddWonBy(e: Event) {
+
+  }
+
   onContractChange() {
     this.lastButtonPressed = null;
   }
@@ -541,8 +546,17 @@ export class FilterManagerComponent implements OnInit {
     this.dispatchChanges(this.afterDate, true, DateType.after);
     resetMatchedDeals();
   }
-  //#endregion
 
+  onWonByChange() {
+
+  }
+
+  onWonByClick() {
+    
+  }
+  //#endregion
+  
+  //#region Private Methods
   private getCanAdd(e: Event, eventTarget: EventTarget) {
     return this.lastButtonPressed !== eventTarget;
   }
@@ -677,4 +691,5 @@ export class FilterManagerComponent implements OnInit {
       ];
     }
   }
+  //#endregion
 }

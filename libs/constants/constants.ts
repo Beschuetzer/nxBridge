@@ -52,7 +52,7 @@ export const dealsListDetailsButtonChoices: [string, string] = [
 ];
 export const dealDetailButtonChoices: [string, string] = ['Show', 'Hide'];
 
-export const MOBILE_START_WIDTH = 655;
+export const MOBILE_START_WIDTH = 561;
 export const ANIMATION_DURATION = 500;
 
 export const gameDetailHeightAboveBreakpointCssPropName =
