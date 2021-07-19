@@ -171,7 +171,7 @@ export class FilterManagerComponent implements OnInit {
     });
   }
 
-  //#region Public Methods
+  //#region onAdd Methods
   onAddContract(e: Event) {
     const eventTarget = e.currentTarget || e.target;
     if (!this.getCanAdd(e, eventTarget as EventTarget)) return;
@@ -219,6 +219,11 @@ export class FilterManagerComponent implements OnInit {
     this.store.dispatch(new SetIsFilterSame(false));
     this.searchService.setCurrentlyDisplayingGames();
 
+    this.filterManagerService.setInputErrorClassnames(
+      declarerSelectElement,
+      true
+    );
+
     const filterItem: FilterItem = {
       message: `${this.filterManagerService.filterMsgs.declarer.valid} ${selectedDeclarer}.`,
       error: '',
@@ -244,6 +249,11 @@ export class FilterManagerComponent implements OnInit {
     this.store.dispatch(new SetIsFilterSame(false));
     this.store.dispatch(new SetDoubleFilter(selectedMultiplier));
     this.searchService.setCurrentlyDisplayingGames();
+
+    this.filterManagerService.setInputErrorClassnames(
+      doubleSelectOption,
+      true
+    );
 
     const filterItem: FilterItem = {
       message: `${this.filterManagerService.filterMsgs.double.valid} ${
@@ -273,6 +283,11 @@ export class FilterManagerComponent implements OnInit {
     this.store.dispatch(new SetGameNameFilter(selectedGameName));
     this.searchService.setCurrentlyDisplayingGames();
 
+    this.filterManagerService.setInputErrorClassnames(
+      gameNameOption,
+      true
+    );
+
     const filterItem: FilterItem = {
       message: `${this.filterManagerService.filterMsgs.gameName.valid} ${selectedGameName}`,
       error: '',
@@ -296,6 +311,11 @@ export class FilterManagerComponent implements OnInit {
     this.store.dispatch(new SetOpeningBidFilter(selectedBid));
     this.store.dispatch(new SetIsFilterSame(false));
     this.searchService.setCurrentlyDisplayingGames();
+
+    this.filterManagerService.setInputErrorClassnames(
+      openingBidSelect,
+      true
+    );
 
     const filterItem: FilterItem = {
       message: `${
@@ -413,6 +433,11 @@ export class FilterManagerComponent implements OnInit {
     if (selectedPlayerInGame === filterManagerPlayerNames[0]) return;
     this.lastButtonPressed = eventTarget;
 
+    this.filterManagerService.setInputErrorClassnames(
+      playerInGameSelect,
+      true
+    );
+
     const isTooMany = currentPlayerInGame.length >= 4;
     const isAlreadyPresent = currentPlayerInGame.includes(selectedPlayerInGame);
     const error = isAlreadyPresent
@@ -467,6 +492,7 @@ export class FilterManagerComponent implements OnInit {
       !selectedType
     )
       return;
+
     this.lastButtonPressed = eventTarget;
 
     this.store.dispatch(
@@ -477,6 +503,15 @@ export class FilterManagerComponent implements OnInit {
     );
     this.store.dispatch(new SetIsFilterSame(false));
     this.searchService.setCurrentlyDisplayingGames();
+
+    this.filterManagerService.setInputErrorClassnames(
+      wonByAmountElement,
+      true
+    );
+    this.filterManagerService.setInputErrorClassnames(
+      wonByTypeElement,
+      true
+    );
 
     let message = `${this.filterManagerService.filterMsgs.wonBy.valid.pre} ${
       selectedType === 'less' ? '&#8804;' : '&#8805;'
@@ -495,17 +530,16 @@ export class FilterManagerComponent implements OnInit {
       this.filterManagerService.filters.wonBy.string
     ] = filterItem;
   }
+  //#endregion
 
+  //#region onChange and onClick methods (NOTE: need these to trigger *ngIf properly)
   onContractChange() {
     this.lastButtonPressed = null;
   }
   onContractClick() {}
-
-  //NOTE: need this to trigger *ngIf properly
   onDateClick(e: Event) {
     return;
   }
-
   onDateBeforeChange(e: Event) {
     this.lastButtonPressed = null;
     const shouldDispatchChange = this.handleDateChange(e, DateType.before);
@@ -515,24 +549,49 @@ export class FilterManagerComponent implements OnInit {
       DateType.before
     );
   }
-
+  onDealClick(e: Event) {
+    return;
+  }
   onDeclarerChange() {
     this.lastButtonPressed = null;
   }
-
   onDateAfterChange(e: Event) {
     this.lastButtonPressed = null;
     const shouldDispatchChange = this.handleDateChange(e, DateType.after);
     this.dispatchChanges(this.afterDate, shouldDispatchChange, DateType.after);
   }
-
   onDeclarerClick() {}
-
   onDoubleClick() {}
   onDoubleChange() {
     this.lastButtonPressed = null;
   }
+  onGameClick(e: Event) {
+    return;
+  }
+  onGameNameChange() {
+    this.lastButtonPressed = null;
+  }
+  onGameNameClick() {}
+  onPlayerInGameChange() {
+    this.lastButtonPressed = null;
+  }
+  onPlayerInGameClick() {}
+  onPlayerHasCardChange() {
+    this.lastButtonPressed = null;
+    this.hasPlayerHasCardChanged = true;
+  }
+  onPlayerHasCardClick() {}
+  onOpeningBidChange() {
+    this.lastButtonPressed = null;
+  }
+  onOpeningBidClick() {}
 
+  onWonByChange() {
+    this.lastButtonPressed = null;
+  }
+  onWonByClick() {}
+  //#endregion
+  
   onFilterItemDeletion(toDelete: FilterItemDeletion) {
     if (!toDelete.key) throw new Error('No toDelete.key...');
     delete this.filterItems[toDelete.key];
@@ -562,17 +621,6 @@ export class FilterManagerComponent implements OnInit {
       );
     }
   }
-
-  //NOTE: need this to trigger *ngIf properly
-  onGameClick(e: Event) {
-    return;
-  }
-
-  onGameNameChange() {
-    this.lastButtonPressed = null;
-  }
-  onGameNameClick() {}
-
   onHide() {
     const filterManager = this.elRef.nativeElement as HTMLElement;
     const applied = filterManager.querySelector(
@@ -600,30 +648,6 @@ export class FilterManagerComponent implements OnInit {
       button.innerHTML = 'Show';
     }
   }
-
-  onPlayerInGameChange() {
-    this.lastButtonPressed = null;
-  }
-  onPlayerInGameClick() {}
-
-  onPlayerHasCardChange() {
-    this.lastButtonPressed = null;
-    this.hasPlayerHasCardChanged = true;
-  }
-
-  onPlayerHasCardClick() {}
-
-  //NOTE: need this to trigger *ngIf properly
-  onDealClick(e: Event) {
-    return;
-  }
-
-  onOpeningBidChange() {
-    this.lastButtonPressed = null;
-  }
-
-  onOpeningBidClick() {}
-
   onReset() {
     const filterCheckboxElements = [
       this.gameCheckbox,
@@ -655,14 +679,6 @@ export class FilterManagerComponent implements OnInit {
     this.dispatchChanges(this.afterDate, true, DateType.after);
     resetMatchedDeals();
   }
-
-  onWonByChange() {
-    this.lastButtonPressed = null;
-  }
-
-  onWonByClick() {}
-  //#endregion
-
   //#region Private Methods
   private getCanAdd(e: Event, eventTarget: EventTarget) {
     return this.lastButtonPressed !== eventTarget;

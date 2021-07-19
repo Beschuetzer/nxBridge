@@ -38,7 +38,10 @@ Testing------------
   -how does providing email to a localStorageUser already present work? does it save email?
 
 
+
 -add animations/transitions for things like fade in of filters and games?
 -move deal components private methods to RepplayViewerDealService?
+
+-add 'Result was ...' filter that takes an int from -7 to -1 and either <, >, =, <=, or >= and returns deals where the number of (tricksMade - tricksRequired) satisfies condition (the logic is some else already)
 
 
