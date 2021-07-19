@@ -53,16 +53,12 @@
       *ngIf="deal.checked"
     >
       <label>
-        <input
-          #playerHasCard
-          (click)="onPlayerHasCardClick()"
-          type="checkbox"
-        />
-        Player had a specific card
-      </label>
-      <label>
         <input #contract (click)="onContractClick()" type="checkbox" />
         Contract was ...
+      </label>
+      <label>
+        <input #double (click)="onDoubleClick()" type="checkbox" /> Deal was
+        doubled ...
       </label>
       <label>
         <input #declarer (click)="onDeclarerClick()" type="checkbox" />
@@ -72,11 +68,17 @@
         <input #openingBid (click)="onOpeningBidClick()" type="checkbox" />
         Opening bid was ...
       </label>
+
       <label>
-        <input #double (click)="onDoubleClick()" type="checkbox" /> Deal was
-        doubled ...
+        <input
+          #playerHasCard
+          (click)="onPlayerHasCardClick()"
+          type="checkbox"
+        />
+        Player had a specific card
       </label>
     </div>
+
     <div
       class="{{ FILTER_MANANGER_CLASSNAME }}__details-game"
       *ngIf="game.checked"
@@ -119,41 +121,32 @@
 
     <!-- Deal-related filters -->
     <div
-      *ngIf="
-        deal.checked && playerHasCardCheckbox?.nativeElement.checked === true
-      "
-      class="{{ FILTER_MANANGER_CLASSNAME }}__player-has-card"
+      *ngIf="deal.checked && contractCheckbox?.nativeElement.checked"
+      class="{{ FILTER_MANANGER_CLASSNAME }}__contract"
     >
-      <span>Username:</span>
-      <select
-        #players
-        (click)="onPlayerHasCardChange()"
-        class="{{ joinedInputErrorClassnames }}"
-      >
-        <option *ngFor="let playerName of playerNames; let i = index">
-          {{ playerName }}
-        </option>
-      </select>
-      <span>&nbsp;had the&nbsp;</span>
-      <select
-        (click)="onPlayerHasCardChange()"
-        class="{{ joinedInputErrorClassnames }}"
-        #cards
-        class=""
-      >
-        <option
-          *ngFor="let cardAsNumber of cardsAsNumbers; let i = index"
-          innerHTML="{{ cardAsNumber | cardAsNumberToCardHtmlEntityString }}"
-          [ngClass]="{
-            'color-red': i >= 14 && i <= 39,
-            'color-black': i < 14 || i > 39,
-            'filter-manager__player-options': true
-          }"
-          [value]="i - 1"
-        ></option>
-      </select>
+      <label>
+        <span>Contract was :</span>
+        <select
+          (click)="onContractChange()"
+          class="{{ joinedInputErrorClassnames }}"
+          #contractsSelect
+          class=""
+        >
+          <option
+            *ngFor="let contract of contracts; let i = index"
+            innerHTML="{{ contract | getContractAsHtmlEntityString }}"
+            [class]="
+              (i - 1) % 5 === 1 || (i - 1) % 5 === 2
+                ? 'color-red'
+                : 'color-black'
+            "
+            [value]="i - 1"
+          ></option>
+        </select>
+      </label>
+
       <button
-        (click)="onAddPlayerHasCard($event)"
+        (click)="onAddContract($event)"
         class="ui button filter-manager__add-button"
       >
         Add
@@ -161,27 +154,27 @@
     </div>
 
     <div
-      *ngIf="deal.checked && contractCheckbox?.nativeElement.checked"
-      class="{{ FILTER_MANANGER_CLASSNAME }}__contract"
+      *ngIf="deal.checked && doubleCheckbox?.nativeElement.checked"
+      class="{{ FILTER_MANANGER_CLASSNAME }}__double"
     >
-      <span>Contract was :</span>
-      <select
-        (click)="onContractChange()"
-        class="{{ joinedInputErrorClassnames }}"
-        #contractsSelect
-        class=""
-      >
-        <option
-          *ngFor="let contract of contracts; let i = index"
-          innerHTML="{{ contract | getContractAsHtmlEntityString }}"
-          [class]="
-            (i - 1) % 5 === 1 || (i - 1) % 5 === 2 ? 'color-red' : 'color-black'
-          "
-          [value]="i - 1"
-        ></option>
-      </select>
+      <label>
+        <span>Deal was doubled:</span>
+        <select
+          (click)="onDoubleChange()"
+          class="{{ joinedInputErrorClassnames }}"
+          #doubleSelect
+          class=""
+        >
+          <option
+            *ngFor="let doubleOption of doubleOptions; let i = index"
+            [value]="i * 2"
+          >
+            {{ doubleOption }}
+          </option>
+        </select>
+      </label>
       <button
-        (click)="onAddContract($event)"
+        (click)="onAddDouble($event)"
         class="ui button filter-manager__add-button"
       >
         Add
@@ -192,16 +185,18 @@
       *ngIf="deal.checked && declarerCheckbox?.nativeElement.checked"
       class="{{ FILTER_MANANGER_CLASSNAME }}__declarer"
     >
-      <span>Declarer was:</span>
-      <select
-        #declarerSelect
-        (click)="onDeclarerChange()"
-        class="{{ joinedInputErrorClassnames }}"
-      >
-        <option *ngFor="let playerName of playerNames; let i = index">
-          {{ playerName }}
-        </option>
-      </select>
+      <label>
+        <span>Declarer was:</span>
+        <select
+          #declarerSelect
+          (click)="onDeclarerChange()"
+          class="{{ joinedInputErrorClassnames }}"
+        >
+          <option *ngFor="let playerName of playerNames; let i = index">
+            {{ playerName }}
+          </option>
+        </select>
+      </label>
       <button
         (click)="onAddDeclarer($event)"
         class="ui button filter-manager__add-button"
@@ -214,22 +209,26 @@
       *ngIf="deal.checked && openingBidCheckbox?.nativeElement.checked"
       class="{{ FILTER_MANANGER_CLASSNAME }}__opening-bid"
     >
-      <span>Opening bid was :</span>
-      <select
-        (click)="onOpeningBidChange()"
-        class="{{ joinedInputErrorClassnames }}"
-        #openingBidSelect
-        class=""
-      >
-        <option
-          *ngFor="let bid of bids; let i = index"
-          innerHTML="{{ bid | getContractAsHtmlEntityString }}"
-          [class]="
-            (i - 1) % 5 === 1 || (i - 1) % 5 === 2 ? 'color-red' : 'color-black'
-          "
-          [value]="i - 1"
-        ></option>
-      </select>
+      <label>
+        <span>Opening bid was :</span>
+        <select
+          (click)="onOpeningBidChange()"
+          class="{{ joinedInputErrorClassnames }}"
+          #openingBidSelect
+          class=""
+        >
+          <option
+            *ngFor="let bid of bids; let i = index"
+            innerHTML="{{ bid | getContractAsHtmlEntityString }}"
+            [class]="
+              (i - 1) % 5 === 1 || (i - 1) % 5 === 2
+                ? 'color-red'
+                : 'color-black'
+            "
+            [value]="i - 1"
+          ></option>
+        </select>
+      </label>
       <button
         (click)="onAddOpeningBid($event)"
         class="ui button filter-manager__add-button"
@@ -239,25 +238,43 @@
     </div>
 
     <div
-      *ngIf="deal.checked && doubleCheckbox?.nativeElement.checked"
-      class="{{ FILTER_MANANGER_CLASSNAME }}__double"
+      *ngIf="
+        deal.checked && playerHasCardCheckbox?.nativeElement.checked === true
+      "
+      class="{{ FILTER_MANANGER_CLASSNAME }}__player-has-card"
     >
-      <span>Deal was doubled:</span>
-      <select
-        (click)="onDoubleChange()"
-        class="{{ joinedInputErrorClassnames }}"
-        #doubleSelect
-        class=""
-      >
-        <option
-          *ngFor="let doubleOption of doubleOptions; let i = index"
-          [value]="i * 2"
+      <label>
+        <span>Player:</span>
+        <select
+          #players
+          (click)="onPlayerHasCardChange()"
+          class="{{ joinedInputErrorClassnames }}"
         >
-          {{ doubleOption }}
-        </option>
-      </select>
+          <option *ngFor="let playerName of playerNames; let i = index">
+            {{ playerName }}
+          </option>
+        </select>
+        <span>&nbsp;had the&nbsp;</span>
+        <select
+          (click)="onPlayerHasCardChange()"
+          class="{{ joinedInputErrorClassnames }}"
+          #cards
+          class=""
+        >
+          <option
+            *ngFor="let cardAsNumber of cardsAsNumbers; let i = index"
+            innerHTML="{{ cardAsNumber | cardAsNumberToCardHtmlEntityString }}"
+            [ngClass]="{
+              'color-red': i >= 14 && i <= 39,
+              'color-black': i < 14 || i > 39,
+              'filter-manager__player-options': true
+            }"
+            [value]="i - 1"
+          ></option>
+        </select>
+      </label>
       <button
-        (click)="onAddDouble($event)"
+        (click)="onAddPlayerHasCard($event)"
         class="ui button filter-manager__add-button"
       >
         Add
@@ -276,7 +293,7 @@
           (click)="onGameNameChange()"
           class="{{ joinedInputErrorClassnames }}"
         >
-          <option 
+          <option
             *ngFor="let gameName of gameNames; let i = index"
             [value]="gameName"
           >
@@ -308,7 +325,6 @@
           </option>
         </select>
       </label>
-
       <button
         (click)="onAddPlayerInGame($event)"
         class="ui button filter-manager__add-button"
