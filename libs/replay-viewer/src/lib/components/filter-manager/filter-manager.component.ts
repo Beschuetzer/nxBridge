@@ -23,6 +23,7 @@ import {
   rootRoute,
   DISPLAY_NONE_CLASSNAME,
   MOBILE_START_WIDTH,
+  filterManagerGameNames,
 } from '@nx-bridge/constants';
 import {
   AddPlayerHasCard,
@@ -34,6 +35,7 @@ import {
   SetContractFilter,
   SetDeclarerFilter,
   SetDoubleFilter,
+  SetGameNameFilter,
   SetIsFilterSame,
   SetOpeningBidFilter,
   SetPlayerHasCard,
@@ -85,6 +87,7 @@ export class FilterManagerComponent implements OnInit {
   @ViewChild('contractsSelect')
   contractsFilterElement: ElementRef | null = null;
   @ViewChild('declarerSelect') declarerFilterElement: ElementRef | null = null;
+  @ViewChild('gameNameSelect') gameNameFilterElement: ElementRef | null = null;
   @ViewChild('openingBidSelect')
   openingBidFilterElement: ElementRef | null = null;
   @ViewChild('doubleSelect') doubleFilterElement: ElementRef | null = null;
@@ -123,6 +126,7 @@ export class FilterManagerComponent implements OnInit {
   public bids = [...filterManagerBids, ...contracts];
   public cardsAsNumbers = filterManagerCardsAsNumbers;
   public playerNames = filterManagerPlayerNames;
+  public gameNames = filterManagerGameNames;
   public doubleOptions = filterManagerDoubleOptions;
 
   get joinedInputErrorClassnames() {
@@ -140,7 +144,8 @@ export class FilterManagerComponent implements OnInit {
 
   ngOnInit(): void {
     this.store.select(ReducerNames.deals).subscribe((dealState) => {
-      if (dealState.fetchedDeals) {
+      if (dealState.fetchedDeals && this.playerNames.length <= 1) {
+        console.log('adding unique player names------------------------------------------------');
         const uniquePlayerNames = this.filterManagerService.getUniquePlayerNames(
           dealState.fetchedDeals
         );
@@ -148,6 +153,18 @@ export class FilterManagerComponent implements OnInit {
           this.playerNames = [
             ...filterManagerPlayerNames,
             ...uniquePlayerNames,
+          ];
+        }
+      }
+    });
+    this.store.select(ReducerNames.users).subscribe(userState => {
+      if (userState.currentlyViewingUser.games) {
+        console.log('adding unique game names------------------------------------------------');
+        const uniqueGameNames = this.filterManagerService.getUniqueGameNames(userState.currentlyViewingUser.games);
+        if (uniqueGameNames) {
+          this.gameNames = [
+            ...filterManagerGameNames,
+            ...uniqueGameNames,
           ];
         }
       }
@@ -242,7 +259,27 @@ export class FilterManagerComponent implements OnInit {
   }
 
   onAddGameName(e: Event) {
+    const eventTarget = e.currentTarget || e.target;
+    if (!this.getCanAdd(e, eventTarget as EventTarget)) return;
 
+    const gameNameOption = this.gameNameFilterElement
+      ?.nativeElement as HTMLSelectElement;
+    const selectedGameName = gameNameOption.value;
+
+    if (!selectedGameName) return;
+    this.lastButtonPressed = eventTarget;
+
+    this.store.dispatch(new SetIsFilterSame(false));
+    this.store.dispatch(new SetGameNameFilter(selectedGameName));
+    this.searchService.setCurrentlyDisplayingGames();
+
+    const filterItem: FilterItem = {
+      message: `${this.filterManagerService.filterMsgs.gameName.valid} ${selectedGameName}`,
+      error: '',
+      elementsToReset: [gameNameOption],
+    }
+    
+    this.filterItems[this.filterManagerService.filters.gameName.string] = filterItem;
   }
 
   onAddOpeningBid(e: Event) {
@@ -418,26 +455,45 @@ export class FilterManagerComponent implements OnInit {
 
     const wonByAmountElement = this.wonByAmountFilterElement
       ?.nativeElement as HTMLInputElement;
-    const wonByTypeElement = this.wonByTypeFilterElement?.nativeElement as HTMLSelectElement
+    const wonByTypeElement = this.wonByTypeFilterElement
+      ?.nativeElement as HTMLSelectElement;
     const selectedAmount = +wonByAmountElement.value;
     const selectedType = wonByTypeElement.value as WonByType;
 
-    if (selectedAmount < 0 || selectedAmount === undefined || isNaN(selectedAmount) || !selectedType) return;
+    if (
+      selectedAmount < 0 ||
+      selectedAmount === undefined ||
+      isNaN(selectedAmount) ||
+      !selectedType
+    )
+      return;
     this.lastButtonPressed = eventTarget;
 
-    this.store.dispatch(new SetWonByFilter({amount: +selectedAmount, type: selectedType as WonByType}));
+    this.store.dispatch(
+      new SetWonByFilter({
+        amount: +selectedAmount,
+        type: selectedType as WonByType,
+      })
+    );
     this.store.dispatch(new SetIsFilterSame(false));
     this.searchService.setCurrentlyDisplayingGames();
 
-    let message = `${this.filterManagerService.filterMsgs.wonBy.valid.pre} ${selectedType === 'less' ? '&#8804;' : '&#8805;'} <b>${selectedAmount}</b> ${this.filterManagerService.filterMsgs.wonBy.valid.post}`
-    if (selectedAmount === 0 && selectedType === 'less') message = "Game was a tie."
+    let message = `${this.filterManagerService.filterMsgs.wonBy.valid.pre} ${
+      selectedType === 'less' ? '&#8804;' : '&#8805;'
+    } <b>${selectedAmount}</b> ${
+      this.filterManagerService.filterMsgs.wonBy.valid.post
+    }`;
+    if (selectedAmount === 0 && selectedType === 'less')
+      message = 'Game was a tie.';
 
     const filterItem: FilterItem = {
       message,
       error: '',
       elementsToReset: [wonByAmountElement],
-    }
-    this.filterItems[this.filterManagerService.filters.wonBy.string] = filterItem;
+    };
+    this.filterItems[
+      this.filterManagerService.filters.wonBy.string
+    ] = filterItem;
   }
 
   onContractChange() {
@@ -515,7 +571,7 @@ export class FilterManagerComponent implements OnInit {
   onGameNameChange() {
     this.lastButtonPressed = null;
   }
-  onGameNameClick(){}
+  onGameNameClick() {}
 
   onHide() {
     const filterManager = this.elRef.nativeElement as HTMLElement;
@@ -600,7 +656,9 @@ export class FilterManagerComponent implements OnInit {
     resetMatchedDeals();
   }
 
-  onWonByChange() {this.lastButtonPressed = null}
+  onWonByChange() {
+    this.lastButtonPressed = null;
+  }
 
   onWonByClick() {}
   //#endregion

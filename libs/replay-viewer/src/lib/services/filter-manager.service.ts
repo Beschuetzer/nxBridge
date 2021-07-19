@@ -34,6 +34,7 @@ import {
   RemovePlayerHasCard,
   RemovePlayerInGameFilter,
   SetWonByFilter,
+  SetGameNameFilter,
 } from '@nx-bridge/store';
 import { switchMap, take } from 'rxjs/operators';
 import {
@@ -74,6 +75,10 @@ export class FiltermanagerService {
       string: 'double',
       errorKey: 'double-error',
     },
+    gameName: {
+      string: 'gameName',
+      errorKey: 'gameName-error',
+    },
     openingBid: {
       string: 'openingBid',
       errorKey: 'openingBid-error',
@@ -98,6 +103,7 @@ export class FiltermanagerService {
     [this.filters.dealsThatMatchFilters.string]: [`${reducerDefaultValue}`],
     [this.filters.declarer.string]: `${reducerDefaultValue}`,
     [this.filters.double.string]: reducerDefaultValue,
+    [this.filters.gameName.string]: `${reducerDefaultValue}`,
     [this.filters.openingBid.string]: `${reducerDefaultValue}`,
     [this.filters.playerHasCard.string]: { initial: [reducerDefaultValue] },
     [this.filters.playerInGame.string]: [`${reducerDefaultValue}`],
@@ -121,6 +127,9 @@ export class FiltermanagerService {
     ),
     [this.filters.double.string]: new SetDoubleFilter(
       this.filtersInitial?.double
+    ),
+    [this.filters.gameName.string]: new SetGameNameFilter(
+      this.filtersInitial?.gameName
     ),
     [this.filters.openingBid.string]: new SetOpeningBidFilter(
       this.filtersInitial?.openingBid
@@ -159,6 +168,9 @@ export class FiltermanagerService {
     },
     double: {
       valid: 'Deal was doubled',
+    },
+    gameName: {
+      valid: 'Game was named',
     },
     none: 'No Filters applied',
     openingBid: {
@@ -369,6 +381,19 @@ export class FiltermanagerService {
           if (index === -1) uniqueNames.push(username);
         }
       }
+    }
+
+    return uniqueNames;
+  }
+
+  getUniqueGameNames(games: GameRelevant[]) {
+    if (!games) return;
+
+    const uniqueNames: string[] = [];
+
+    for (let i = 0; i < games.length; i++) {
+      const gameName = games[i].room.name;
+      if (!uniqueNames.includes(gameName)) uniqueNames.push(gameName);
     }
 
     return uniqueNames;

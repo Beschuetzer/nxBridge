@@ -12,6 +12,7 @@ export interface FilterState {
   dealsThatMatchFilters: string[];
   declarer: string;
   double: number;
+  gameName: string;
   isFilterSame: boolean;
   openingBid: string;
   playerHasCard: PlayerHasCard;
@@ -26,6 +27,7 @@ const INITIAL_STATE: FilterState = {
   dealsThatMatchFilters: [`${reducerDefaultValue}`],
   declarer: `${reducerDefaultValue}`,
   double: reducerDefaultValue,
+  gameName: `${reducerDefaultValue}`,
   isFilterSame: false,
   openingBid: `${reducerDefaultValue}`,
   playerHasCard: { initial: [] },
@@ -127,6 +129,11 @@ export function filterReducer(
         ...state,
         double: action.payload,
       };
+    case fromFilterActions.SET_GAME_NAME_FILTER:
+      return {
+        ...state,
+        gameName: action.payload,
+      };
     case fromFilterActions.SET_IS_FILTER_SAME:
       return {
         ...state,
@@ -150,9 +157,11 @@ export function filterReducer(
     case fromFilterActions.SET_WON_BY_FILTER:
       const newWonBy = action.payload;
       return {
-        ...state, 
-        wonBy: isNaN(newWonBy.amount) ? {amount: reducerDefaultValue, type: 'less'} : newWonBy,
-      }
+        ...state,
+        wonBy: isNaN(newWonBy.amount)
+          ? { amount: reducerDefaultValue, type: 'less' }
+          : newWonBy,
+      };
     default:
       return state;
   }

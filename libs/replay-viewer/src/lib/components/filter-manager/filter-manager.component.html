@@ -272,12 +272,15 @@
       <label>
         <div>Game was named:</div>
         <select
-          #declarerSelect
+          #gameNameSelect
           (click)="onGameNameChange()"
           class="{{ joinedInputErrorClassnames }}"
         >
-          <option *ngFor="let playerName of playerNames; let i = index">
-            {{ playerName }}
+          <option 
+            *ngFor="let gameName of gameNames; let i = index"
+            [value]="gameName"
+          >
+            {{ gameName }}
           </option>
         </select>
       </label>
