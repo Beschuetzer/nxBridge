@@ -1,8 +1,10 @@
 import { ElementRef, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import {
+  CanSkipFilters,
   DateObj,
   DateType,
+  Deal,
   DealRelevant,
   FetchedDeals,
   FilterItem,
@@ -455,40 +457,14 @@ export class FiltermanagerService {
     return { isDateInvalid, dateObj, filterMsgError };
   }
   //#endregion
-  
-  private applyFilters(
-    games: GameRelevant[],
-    filters: Filters
-  ) {
+
+  private applyFilters(games: GameRelevant[], filters: Filters) {
     this.dealsThatMatch = [];
 
     //note: add skipping logic in here
-    const canSkipAfterDate = this.getCanSkipAfterDate(filters.afterDate);
-    const canSkipBeforeDate = this.getCanSkipBeforeDate(filters.beforeDate);
-    const canSkipContractFilter = this.getCanSkipContract(filters.contract);
-    const canSkipDeclarerFilter = this.getCanSkipDeclarer(filters.declarer);
-    const canSkipDoubleFilter = this.getCanSkipDouble(filters.double);
-    const canSkipOpeningBidFilter = this.getCanSkipOpeningBid(
-      filters.openingBid
-    );
-    const canSkipPlayerHasCardFilter = this.getCanSkipPlayerHasCard(
-      filters.playerHasCard
-    );
-    const canSkipPlayerInGameFilter = this.getCanSkipPlayerInGame(
-      filters.playerInGame
-    );
-    const canSkipWonByFilter = this.getCanSkipWonBy(filters.wonBy);
-    const canSkip =
-      canSkipAfterDate &&
-      canSkipBeforeDate &&
-      canSkipContractFilter &&
-      canSkipDeclarerFilter &&
-      canSkipDoubleFilter &&
-      canSkipOpeningBidFilter &&
-      canSkipPlayerHasCardFilter &&
-      canSkipPlayerInGameFilter &&
-      canSkipWonByFilter;
-    if (canSkip) return games;
+    const canSkip = this.getCanSkipFilters(filters);
+
+    if (canSkip.all) return games;
 
     resetMatchedDeals();
 
@@ -504,31 +480,13 @@ export class FiltermanagerService {
     for (let i = 0; i < games.length; i++) {
       const game = games[i];
 
-      let shouldAddGame = true;
-
       //note: add game level filters here following this pattern
-      if (!canSkipAfterDate && shouldAddGame)
-        shouldAddGame = this.getPassesAfterDate(filters.afterDate, game);
-
-        if (!canSkipBeforeDate && shouldAddGame)
-        shouldAddGame = this.getPassesBeforeDate(filters.beforeDate, game);
-        
-      if (!canSkipWonByFilter && shouldAddGame)
-        shouldAddGame = this.getPassesWonBy(filters.wonBy, game);
-
-      if (!canSkipPlayerInGameFilter && shouldAddGame)
-        shouldAddGame = this.getPassesPlayerInGame(filters.playerInGame, game);
-
+      let shouldAddGame = this.getShouldAddGame(game, filters, canSkip);
+      
+      //note: need to add deal-level filter canSkip logic below
+      const canSkipDealIteration = this.getShouldSkipDealIteration(canSkip);
+      
       if (shouldAddGame) toReturn.push(game);
-
-      //note: need to add deal filter skip booleans here to prevent unnecessary deal iterations when all deal level filters will be skipped anyway
-      const canSkipDealIteration =
-        canSkipContractFilter &&
-        canSkipDeclarerFilter &&
-        canSkipOpeningBidFilter &&
-        canSkipDoubleFilter &&
-        canSkipPlayerHasCardFilter;
-
       if (canSkipDealIteration) continue;
 
       for (let j = 0; j < game.deals.length; j++) {
@@ -538,29 +496,8 @@ export class FiltermanagerService {
         const dealId = game.deals[j];
         const deal = fetchedDeals[dealId];
 
-        let shouldAddDeal = true;
-
-        //note: add deal level filters here following pattern
-        if (!canSkipContractFilter && shouldAddDeal)
-          shouldAddDeal = this.getPassesContractFilter(filters.contract, deal);
-
-        if (!canSkipDeclarerFilter && shouldAddDeal)
-          shouldAddDeal = this.getPassesDeclarerFilter(filters.declarer, deal);
-
-        if (!canSkipOpeningBidFilter && shouldAddDeal)
-          shouldAddDeal = this.getPassesOpeningBidFilter(
-            filters.openingBid,
-            deal
-          );
-
-        if (!canSkipDoubleFilter && shouldAddDeal)
-          shouldAddDeal = this.getPassesDoubleFilter(filters.double, deal);
-
-        if (!canSkipPlayerHasCardFilter && shouldAddDeal)
-          shouldAddDeal = this.getPassesPlayerHasCardFilter(
-            filters.playerHasCard,
-            deal
-          );
+        //note: add deal level filters here following pattern inside
+        const shouldAddDeal = this.getShouldAddDeal(deal, filters, canSkip);
 
         if (shouldAddDeal) {
           if (!shouldAddGame) {
@@ -577,6 +514,107 @@ export class FiltermanagerService {
 
     return toReturn;
   }
+
+  //#region ApplyFilters Helpers
+  private getCanSkipFilters(filters: Filters): CanSkipFilters {
+    const canSkipAfterDate = this.getCanSkipAfterDate(filters.afterDate);
+    const canSkipBeforeDate = this.getCanSkipBeforeDate(filters.beforeDate);
+    const canSkipContract = this.getCanSkipContract(filters.contract);
+    const canSkipDeclarer = this.getCanSkipDeclarer(filters.declarer);
+    const canSkipDouble = this.getCanSkipDouble(filters.double);
+    const canSkipOpeningBid = this.getCanSkipOpeningBid(filters.openingBid);
+    const canSkipPlayerHasCard = this.getCanSkipPlayerHasCard(
+      filters.playerHasCard
+    );
+    const canSkipPlayerInGame = this.getCanSkipPlayerInGame(
+      filters.playerInGame
+    );
+    const canSkipWonBy = this.getCanSkipWonBy(filters.wonBy);
+
+    return {
+      all:
+        canSkipAfterDate &&
+        canSkipBeforeDate &&
+        canSkipContract &&
+        canSkipDeclarer &&
+        canSkipDouble &&
+        canSkipOpeningBid &&
+        canSkipPlayerHasCard &&
+        canSkipPlayerInGame &&
+        canSkipWonBy,
+      afterDate: canSkipAfterDate,
+      beforeDate: canSkipBeforeDate,
+      contract: canSkipContract,
+      declarer: canSkipDeclarer,
+      double: canSkipDouble,
+      openingBid: canSkipOpeningBid,
+      playerHasCard: canSkipPlayerHasCard,
+      playerInGame: canSkipPlayerInGame,
+      wonBy: canSkipWonBy,
+    };
+  }
+
+  private getShouldAddDeal(
+    deal: DealRelevant,
+    filters: Filters,
+    canSkip: CanSkipFilters
+  ) {
+    let shouldAddDeal = true;
+
+    if (!canSkip.contract && shouldAddDeal)
+      shouldAddDeal = this.getPassesContractFilter(filters.contract, deal);
+
+    if (!canSkip.declarer && shouldAddDeal)
+      shouldAddDeal = this.getPassesDeclarerFilter(filters.declarer, deal);
+
+    if (!canSkip.openingBid && shouldAddDeal)
+      shouldAddDeal = this.getPassesOpeningBidFilter(filters.openingBid, deal);
+
+    if (!canSkip.double && shouldAddDeal)
+      shouldAddDeal = this.getPassesDoubleFilter(filters.double, deal);
+
+    if (!canSkip.playerHasCard && shouldAddDeal)
+      shouldAddDeal = this.getPassesPlayerHasCardFilter(
+        filters.playerHasCard,
+        deal
+      );
+
+    return shouldAddDeal;
+  }
+
+  private getShouldAddGame(
+    game: GameRelevant,
+    filters: Filters,
+    canSkip: CanSkipFilters
+  ) {
+    let shouldAddGame = true;
+
+    if (!canSkip.afterDate && shouldAddGame)
+      shouldAddGame = this.getPassesAfterDate(filters.afterDate, game);
+
+    if (!canSkip.beforeDate && shouldAddGame)
+      shouldAddGame = this.getPassesBeforeDate(filters.beforeDate, game);
+
+    if (!canSkip.wonBy && shouldAddGame)
+      shouldAddGame = this.getPassesWonBy(filters.wonBy, game);
+
+    if (!canSkip.playerInGame && shouldAddGame)
+      shouldAddGame = this.getPassesPlayerInGame(filters.playerInGame, game);
+
+    return shouldAddGame;
+  }
+
+  private getShouldSkipDealIteration(canSkip: CanSkipFilters) {
+    //note: prevents unnecessary deal iterations when all deal level filters will be skipped anyway
+    return (
+      canSkip.contract &&
+      canSkip.declarer &&
+      canSkip.openingBid &&
+      canSkip.double &&
+      canSkip.playerHasCard
+    );
+  }
+  //#endregion
 
   //#region getCanSkip functions
   private getCanSkipAfterDate(afterDate: number) {
@@ -738,5 +776,4 @@ export class FiltermanagerService {
     return false;
   }
   //#endregion
-
 }

@@ -1,5 +1,17 @@
 import { DealRelevant } from "./both-types";
 
+export interface CanSkipFilters {
+  all: boolean,
+  afterDate: boolean,
+  beforeDate: boolean,
+  contract: boolean,
+  declarer: boolean,
+  double: boolean,
+  openingBid: boolean,
+  playerHasCard: boolean,
+  playerInGame: boolean,
+  wonBy: boolean,
+}
 //#region Interfaces
 export interface DateObj {
   date: Date | null;
