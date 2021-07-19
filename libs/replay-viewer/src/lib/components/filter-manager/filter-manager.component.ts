@@ -424,7 +424,7 @@ export class FilterManagerComponent implements OnInit {
     this.store.dispatch(new SetIsFilterSame(false));
     this.searchService.setCurrentlyDisplayingGames();
 
-    let message = `${this.filterManagerService.filterMsgs.wonBy.valid.pre} ${selectedType} than <b>${selectedAmount}</b> ${this.filterManagerService.filterMsgs.wonBy.valid.post}`
+    let message = `${this.filterManagerService.filterMsgs.wonBy.valid.pre} ${selectedType === 'less' ? '&#8804;' : '&#8805;'} <b>${selectedAmount}</b> ${this.filterManagerService.filterMsgs.wonBy.valid.post}`
     if (selectedAmount === 0 && selectedType === 'less') message = "Game was a tie."
 
     const filterItem: FilterItem = {
@@ -476,6 +476,7 @@ export class FilterManagerComponent implements OnInit {
     if (!toDelete.key) throw new Error('No toDelete.key...');
     delete this.filterItems[toDelete.key];
 
+    //note: if adding filters with multiple instances, need to add logic in getShouldResetStoreOnDeletion
     const shouldResetStore = this.filterManagerService.getShouldResetStoreOnDeletion(
       toDelete
     );
@@ -488,7 +489,7 @@ export class FilterManagerComponent implements OnInit {
     }
 
     //note: this is here to remove errors when valid filter is deleted
-    //add another deleteError call inside deleteErrors when adding a new filter
+    //add another deleteError call inside deleteErrors when adding a new filter that can have errors
     this.deleteErrors(toDelete);
 
     if (

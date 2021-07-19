@@ -4,7 +4,6 @@ import {
   CanSkipFilters,
   DateObj,
   DateType,
-  Deal,
   DealRelevant,
   FetchedDeals,
   FilterItem,
@@ -476,24 +475,29 @@ export class FiltermanagerService {
         fetchedDeals = dealState.fetchedDeals;
       });
 
+    //note: need to add deal-level filter canSkip logic below
+    const canSkipDealIteration = this.getCanSkipDealIteration(canSkip);
+
     const toReturn = [];
+
     for (let i = 0; i < games.length; i++) {
       const game = games[i];
 
       //note: add game level filters here following this pattern
-      const hasPassedGameFilters = this.getPassesGameFilters(game, filters, canSkip);
+      const hasPassedGameFilters = this.getPassesGameFilters(
+        game,
+        filters,
+        canSkip
+      );
       let gameAddedAlready = false;
 
-      //note: need to add deal-level filter canSkip logic below
-      const canSkipDealIteration = this.getCanSkipDealIteration(canSkip);
-      
       if (hasPassedGameFilters && canSkipDealIteration) {
         toReturn.push(game);
         gameAddedAlready = true;
       }
       if (canSkipDealIteration) continue;
 
-     let shouldAddGame = false;
+      let shouldAddGame = false;
       for (let j = 0; j < game.deals.length; j++) {
         const dealId = game.deals[j];
         const deal = fetchedDeals[dealId];
@@ -506,7 +510,8 @@ export class FiltermanagerService {
             shouldAddGame = true;
             toReturn.push(game);
           }
-          if (hasPassedGameFilters) this.dealsThatMatch = [...this.dealsThatMatch, dealId];
+          if (hasPassedGameFilters)
+            this.dealsThatMatch = [...this.dealsThatMatch, dealId];
         }
       }
     }
@@ -667,7 +672,7 @@ export class FiltermanagerService {
       !wonBy.type ||
       (wonBy.type !== 'less' && wonBy.type !== 'more') ||
       wonBy.amount === undefined ||
-      wonBy.amount === null
+      wonBy.amount === null || wonBy.amount === reducerDefaultValue
     )
       return true;
     return false;

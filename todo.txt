@@ -44,8 +44,4 @@ Testing------------
 
 Game Filtering stuff----------------------------------------
   -add filter by room name
-  -won by more than... ()
 
-
--bug when applying won more than 130 and contract 1 diamond
--bug when tie and 1 club contract
