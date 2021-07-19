@@ -130,10 +130,10 @@ export class DealPlayerService {
       //hearts
       if (!spades || spades.length === 0) return [hearts, clubs, diamonds, spades];
       return [hearts, spades, diamonds, clubs];
-    } else if (suitIndex === 4){
+    } else if (suitIndex === 3){
       if (!hearts || hearts.length === 0) return [spades, diamonds, clubs, hearts];
       return hand;
-    } else if (suitIndex === 5) {
+    } else if (suitIndex === 4) {
       if (!hearts || hearts.length === 0) return [spades, diamonds, clubs, hearts];
       if (!spades || spades.length === 0) return [diamonds, clubs, hearts, spades];
       if (!diamonds || diamonds.length === 0) return [spades, hearts, clubs, diamonds];

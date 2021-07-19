@@ -38,8 +38,7 @@ Testing------------
   -how does providing email to a localStorageUser already present work? does it save email?
 
 
--move deal components private methods to RepplayViewerDealService?
 -add animations/transitions for things like fade in of filters and games?
--consider change "Games played by..." wording and font-size
+-move deal components private methods to RepplayViewerDealService?
 
 
