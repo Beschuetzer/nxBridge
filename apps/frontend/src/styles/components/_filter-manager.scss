@@ -91,6 +91,13 @@
     }
   }
 
+  &__game-name, &__player-in-game {
+    & label {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
   &__won-by {
     justify-content: space-between;
 

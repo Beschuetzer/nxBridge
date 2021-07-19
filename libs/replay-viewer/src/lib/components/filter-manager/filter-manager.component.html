@@ -82,6 +82,10 @@
       *ngIf="game.checked"
     >
       <label>
+        <input #gameName (click)="onGameNameClick()" type="checkbox" />
+        Game was named ...
+      </label>
+      <label>
         <input #playerInGame (click)="onPlayerInGameClick()" type="checkbox" />
         Player was in game
       </label>
@@ -262,19 +266,46 @@
 
     <!-- Game-related filters -->
     <div
+      *ngIf="game.checked && gameNameCheckbox?.nativeElement.checked"
+      class="{{ FILTER_MANANGER_CLASSNAME }}__game-name"
+    >
+      <label>
+        <div>Game was named:</div>
+        <select
+          #declarerSelect
+          (click)="onGameNameChange()"
+          class="{{ joinedInputErrorClassnames }}"
+        >
+          <option *ngFor="let playerName of playerNames; let i = index">
+            {{ playerName }}
+          </option>
+        </select>
+      </label>
+      <button
+        (click)="onAddGameName($event)"
+        class="ui button filter-manager__add-button"
+      >
+        Add
+      </button>
+    </div>
+
+    <div
       *ngIf="game.checked && playerInGameCheckbox?.nativeElement.checked"
       class="{{ FILTER_MANANGER_CLASSNAME }}__player-in-game"
     >
-      <span>Player was in game:</span>
-      <select
-        #playerInGameSelect
-        (click)="onPlayerInGameChange()"
-        class="{{ joinedInputErrorClassnames }}"
-      >
-        <option *ngFor="let playerName of playerNames; let i = index">
-          {{ playerName }}
-        </option>
-      </select>
+      <label>
+        <div>Player was in game:</div>
+        <select
+          #playerInGameSelect
+          (click)="onPlayerInGameChange()"
+          class="{{ joinedInputErrorClassnames }}"
+        >
+          <option *ngFor="let playerName of playerNames; let i = index">
+            {{ playerName }}
+          </option>
+        </select>
+      </label>
+
       <button
         (click)="onAddPlayerInGame($event)"
         class="ui button filter-manager__add-button"
@@ -288,12 +319,8 @@
       class="{{ FILTER_MANANGER_CLASSNAME }}__won-by"
     >
       <label>
-        Won by
-        <select
-          #wonByType
-          (click)="onWonByChange()"
-          class="ui input"
-        >
+        <div>Won by:</div>
+        <select #wonByType (click)="onWonByChange()" class="ui input">
           <option value="less">&#8804;</option>
           <option value="more">&#8805;</option>
         </select>

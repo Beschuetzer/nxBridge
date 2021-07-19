@@ -64,6 +64,7 @@ import { Router } from '@angular/router';
 export class FilterManagerComponent implements OnInit {
   //NOTE: new checkboxes need to be added to resetFilterCheckboxes() in reset()
   @ViewChild('game') gameCheckbox: ElementRef | null = null;
+  @ViewChild('gameName') gameNameCheckbox: ElementRef | null = null;
   @ViewChild('playerInGame') playerInGameCheckbox: ElementRef | null = null;
   @ViewChild('wonBy') wonByCheckbox: ElementRef | null = null;
 
@@ -238,6 +239,10 @@ export class FilterManagerComponent implements OnInit {
     this.filterItems[
       this.filterManagerService.filters.double.string
     ] = filterItem;
+  }
+
+  onAddGameName(e: Event) {
+
   }
 
   onAddOpeningBid(e: Event) {
@@ -506,6 +511,11 @@ export class FilterManagerComponent implements OnInit {
   onGameClick(e: Event) {
     return;
   }
+
+  onGameNameChange() {
+    this.lastButtonPressed = null;
+  }
+  onGameNameClick(){}
 
   onHide() {
     const filterManager = this.elRef.nativeElement as HTMLElement;
