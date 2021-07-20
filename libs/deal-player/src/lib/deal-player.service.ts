@@ -58,6 +58,11 @@ export class DealPlayerService {
   private MIN_SCALE_AMOUNT_NORMAL = 0.5;
   private MIN_TARGET_VIEW_PORT_WIDTH = 600;
   private MAX_TARGET_VIEW_PORT_WIDTH = 1800;
+  private SMALL_VIEWPORT_THRESHOLD = 400;
+  private LARGE_VIEWPORT_THRESHOLD = this
+    .SCALE_AMOUNT_THRESHOLD_VIEW_PORT_WIDTH;
+  private SMALL_VIEWPORT_OFFSET = -1;
+  private LARGE_VIEWPORT_OFFSET = -1;
   public isMobile = window.innerWidth <= MOBILE_START_WIDTH;
   private cardScaleAmount = this.isMobile
     ? this.MIN_SCALE_AMOUNT_MOBILE
@@ -79,9 +84,8 @@ export class DealPlayerService {
   private redrawTimeout: any;
 
   constructor(
-    private store: Store<AppState>
-  ) // eslint-disable-next-line @typescript-eslint/no-empty-function
-  {}
+    private store: Store<AppState> // eslint-disable-next-line @typescript-eslint/no-empty-function
+  ) {}
 
   getCorrectlyArrangedHand(hand: number[], direction: string) {
     if (
@@ -102,7 +106,7 @@ export class DealPlayerService {
         contract = dealState.currentlyViewingDeal.contract;
       });
 
-    if(!contract) return hand;
+    if (!contract) return hand;
 
     const possibleContractSuits = [
       ...suitsAsCapitalizedStrings.map((suit) =>
@@ -119,30 +123,37 @@ export class DealPlayerService {
     const hearts = [...hand[1]];
     const clubs = [...hand[2]];
     const diamonds = [...hand[3]];
-    
+
     if (suitIndex === 0) {
       //clubs
-      if (!hearts || hearts.length === 0) return [clubs, diamonds, spades, hearts];
+      if (!hearts || hearts.length === 0)
+        return [clubs, diamonds, spades, hearts];
       return [clubs, hearts, spades, diamonds];
     } else if (suitIndex === 1) {
       //diamonds
-      if (!spades || spades.length === 0) return [diamonds, clubs, hearts, spades];
+      if (!spades || spades.length === 0)
+        return [diamonds, clubs, hearts, spades];
       return [diamonds, spades, hearts, clubs];
     } else if (suitIndex === 2) {
       //hearts
-      if (!spades || spades.length === 0) return [hearts, clubs, diamonds, spades];
+      if (!spades || spades.length === 0)
+        return [hearts, clubs, diamonds, spades];
       return [hearts, spades, diamonds, clubs];
-    } else if (suitIndex === 3){
-      if (!hearts || hearts.length === 0) return [spades, diamonds, clubs, hearts];
+    } else if (suitIndex === 3) {
+      if (!hearts || hearts.length === 0)
+        return [spades, diamonds, clubs, hearts];
       return hand;
     } else if (suitIndex === 4) {
-      if (!hearts || hearts.length === 0) return [spades, diamonds, clubs, hearts];
-      if (!spades || spades.length === 0) return [diamonds, clubs, hearts, spades];
-      if (!diamonds || diamonds.length === 0) return [spades, hearts, clubs, diamonds];
-      if (!clubs || clubs.length === 0) return [hearts, spades, diamonds, clubs];
+      if (!hearts || hearts.length === 0)
+        return [spades, diamonds, clubs, hearts];
+      if (!spades || spades.length === 0)
+        return [diamonds, clubs, hearts, spades];
+      if (!diamonds || diamonds.length === 0)
+        return [spades, hearts, clubs, diamonds];
+      if (!clubs || clubs.length === 0)
+        return [hearts, spades, diamonds, clubs];
       return hand;
-    }
-    else return hand;
+    } else return hand;
   }
 
   getStartingPosition(numberOfCardsInHand: number, direction: string) {
@@ -424,6 +435,14 @@ export class DealPlayerService {
     this.cardHeight = this.cardWidth * 1.5;
     this.cardVisibleOffset = this.cardHeight / 4 - 2.5;
     this.cardSpacingIncrement = this.cardWidth / 6;
+    this.SMALL_VIEWPORT_OFFSET =
+      window.innerWidth <= this.SMALL_VIEWPORT_THRESHOLD
+        ? this.cardWidth / 16
+        : 0;
+    this.LARGE_VIEWPORT_OFFSET =
+      window.innerWidth >= this.LARGE_VIEWPORT_THRESHOLD
+        ? this.cardWidth / 16
+        : 0;
   }
 
   setCanvasMetrics() {
@@ -442,7 +461,8 @@ export class DealPlayerService {
     cardAsRaster.position.x =
       startingPosition +
       this.cardWidth / 2 +
-      this.cardSpacingIncrement * nthCard;
+      this.cardSpacingIncrement * nthCard +
+      (this.keepCardsCentered ? 0 : this.SMALL_VIEWPORT_OFFSET);
     cardAsRaster.position.y = -this.cardVisibleOffset;
   }
 
@@ -454,7 +474,8 @@ export class DealPlayerService {
     cardAsRaster.position.x =
       startingPosition +
       this.cardWidth / 2 +
-      this.cardSpacingIncrement * nthCard;
+      this.cardSpacingIncrement * nthCard +
+      (this.keepCardsCentered ? 0 : this.SMALL_VIEWPORT_OFFSET);
     cardAsRaster.position.y =
       (this.canvasHeight as number) + this.cardVisibleOffset;
   }
@@ -467,7 +488,9 @@ export class DealPlayerService {
     cardAsRaster.position.y =
       startingPosition +
       this.cardWidth / 2 +
-      this.cardSpacingIncrement * nthCard;
+      this.cardSpacingIncrement * nthCard +
+      (this.keepCardsCentered ? 0 : this.LARGE_VIEWPORT_OFFSET * 2);
+
     cardAsRaster.position.x =
       (this.canvasWidth as number) + this.cardVisibleOffset;
     if (cardAsRaster.rotation > -89.5 || cardAsRaster.rotation < -90.5)
@@ -482,7 +505,9 @@ export class DealPlayerService {
     cardAsRaster.position.y =
       startingPosition +
       this.cardWidth / 2 +
-      this.cardSpacingIncrement * nthCard;
+      this.cardSpacingIncrement * nthCard -
+      (this.keepCardsCentered ? 0 : this.LARGE_VIEWPORT_OFFSET * 0.33);
+
     cardAsRaster.position.x = -this.cardVisibleOffset;
     if (cardAsRaster.rotation < 89.5 || cardAsRaster.rotation > 90.5)
       cardAsRaster.rotate(90);

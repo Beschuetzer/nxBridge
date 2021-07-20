@@ -44,5 +44,5 @@ Testing------------
 -add 'Deal Pass out' filter?
 
 -refactor game private methods to service
-
+-add close of deal-player when clicking on 'background' of it
 

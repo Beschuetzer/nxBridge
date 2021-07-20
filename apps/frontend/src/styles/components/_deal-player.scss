@@ -1,7 +1,7 @@
 .deal-player {
   color: var(--color-black);
   font-size: $default-font-size;
-  background-color: rgba(var(--color-primary-1-rgb), 1);
+  background-color: rgba(var(--color-primary-2-rgb), .1);
   position: absolute;
   top: 0px;
   left: 0;
@@ -52,8 +52,8 @@
   }
 
   &__close {
-    --color: var(--color-primary-4-rgb);
-    --opacity: 0.33;
+    --color: var(--color-red-light-rgb);
+    --opacity: 0.85;
     position: fixed;
     right: 0;
     top: 0;
@@ -63,14 +63,14 @@
     padding: $default-font-size * 1 $default-font-size * 0.5;
     user-select: none;
     font-size: $default-font-size * 3;
+    transition: color $animation-duration * .5 $animation-easing-standard;
 
     &:hover {
-      --opacity: 0.5;
+      --opacity: 1;
     }
 
     @include respond(deal-player-layout-switch) {
-      --color: var(--color-primary-1-rgb);
-      padding: $default-font-size $default-font-size * 1.5;
+      // padding: $default-font-size $default-font-size * 1.5;
     }
   }
 
@@ -487,6 +487,7 @@
       font-weight: 700;
       text-align: center;
       color: $deal-player-table-background;
+      background-color: $deal-player-table-header-background;
     }
 
     &-table {
@@ -552,6 +553,7 @@
       &__tables-header {
         padding: $default-font-size;
         color: $deal-player-table-background;
+        background-color: $deal-player-table-header-background;
         border-right: $deal-player-border;
       }
 
