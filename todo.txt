@@ -42,5 +42,6 @@ Testing------------
 -add animations/transitions for things like fade in of filters and games?
 
 -add 'Deal Pass out' filter?
+-add 'Deal split' filter? (finds games where winning team won by x number of deals)
 
- -fix issue with deals-list__deal-count msg when equal (getDealCountMessage())
+-have deal-detail__summary be light red or light green depending on whether declarer made bid

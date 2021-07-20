@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { ANIMATION_DURATION, cardinalDirections, DEAL_DETAIL_BUTTON_BORDER_BOTTOM_CLASSNAME, gameDetailBorderClosed, gameDetailBorderCssPropName, gameDetailBorderOpen, getAmountMadeAndNeededFromDeal, getCharValueFromCardValueString, getDirectionFromSeating, getPartnerFromDirection, NOT_AVAILABLE_STRING, teams, teamsFull } from '@nx-bridge/constants';
-import { CardinalDirection, CardValuesAsString, Deal, DealRelevant, FetchedDeals, ReducerNames, Seating, Team, ToggleDealDetailButtonBehavior } from '@nx-bridge/interfaces-and-types';
+import { CardinalDirection, CardValuesAsString, Deal, DealRelevant, FetchedDeals, ReducerNames, Seating, Team, TeamScoring, ToggleDealDetailButtonBehavior } from '@nx-bridge/interfaces-and-types';
 import { AppState, reducerDefaultValue } from '@nx-bridge/store';
 import {take } from 'rxjs/operators';
 
@@ -26,14 +26,32 @@ export class ReplayViewerDealService {
   //   return result;
   // }
 
-  getDealCountMessage(deals: DealRelevant[], seating: Seating) {
-    let winningTeam: Team;
+  getDealCountMessage(lastDealId: string, dealsWonCounts: TeamScoring) {
+    if (!lastDealId || lastDealId === NOT_AVAILABLE_STRING) return NOT_AVAILABLE_STRING;
+
     const afterWinners = ' won ';
     const betweenPlayed = ' deals to ';
-    let nsDealsWon = 0;
-    let ewDealsWon = 0;
+    const lastDeal = this.getDealFromStore(lastDealId);
+    const finalScores = this.getFinalScoreFromLastDeal(lastDeal);
+
+    let winningTeam: Team | 'Tie' = teams[0];
+    let winningTeamsCount = dealsWonCounts['northSouth'];
+    let losingTeamsCount = dealsWonCounts['eastWest'];
+
+    if (finalScores.eastWest === finalScores.northSouth) winningTeam = "Tie"
+    else if (finalScores.eastWest > finalScores.northSouth) {
+      winningTeam = teams[1];
+      winningTeamsCount = dealsWonCounts['eastWest'];
+      losingTeamsCount = dealsWonCounts['northSouth'];
+    }
+
+    return `${winningTeam}${afterWinners}${winningTeamsCount}${betweenPlayed}${losingTeamsCount}`;
+  }
+
+  getDealsWonCounts(deals: DealRelevant[], seating: Seating) {
+    let northSouth = 0;
+    let eastWest = 0;
     let winner: Team | null;
-    debugger
 
     for (let i = 0; i < deals.length; i++) {
       const deal = deals[i];
@@ -43,28 +61,14 @@ export class ReplayViewerDealService {
         nextDeal = deals[i + 1];
         winner = this.getDealWinnerFromScoreDifference(deal, nextDeal, seating, i);
       } else {
-        winner = this.getDealWinnerFromPureCalculation(deal, seating);
+        winner = this.getDealWinnerFromRoundWinners(deal, seating);
       }
 
-      if (winner === teams[0]) nsDealsWon++;
-      else if (winner === teams[1]) ewDealsWon++;
+      if (winner === teams[0]) northSouth++;
+      else if (winner === teams[1]) eastWest++;
     }
 
-    if (nsDealsWon === ewDealsWon) {
-      return `No winners here just players (tied)!`;
-    } else {
-      if (nsDealsWon > ewDealsWon) winningTeam = teams[0];
-      else winningTeam = teams[1];
-
-      let larger = nsDealsWon;
-      let smaller = ewDealsWon;
-      if (ewDealsWon > nsDealsWon) {
-        larger = ewDealsWon;
-        smaller = nsDealsWon;
-      }
-
-      return `${winningTeam}${afterWinners}${larger}${betweenPlayed}${smaller}`;
-    }
+    return {northSouth, eastWest} as TeamScoring;
   }
 
   getDealFromStore(dealId: string) {
@@ -164,7 +168,7 @@ export class ReplayViewerDealService {
       (dealNorthSouth?.aboveTheLine !== dealAfterDealNorthSouth?.aboveTheLine &&
       dealEastWest?.aboveTheLine !== dealAfterDealEastWest?.aboveTheLine)
     ) {
-      return this.getDealWinnerFromPureCalculation(deal, seating);
+      return this.getDealWinnerFromRoundWinners(deal, seating);
     }
 
     const keysToCompare = [
@@ -199,10 +203,10 @@ export class ReplayViewerDealService {
       }
     }
 
-    return this.getDealWinnerFromPureCalculation(deal, seating);
+    return this.getDealWinnerFromRoundWinners(deal, seating);
   }
 
-  getDealWinnerFromPureCalculation(deal: DealRelevant, seating: Seating): Team {
+  getDealWinnerFromRoundWinners(deal: DealRelevant, seating: Seating): Team {
     const declarer = this.getDeclarerFromDeal(deal);
     const declarersDirection = getDirectionFromSeating(
       seating as Seating,
@@ -281,6 +285,13 @@ export class ReplayViewerDealService {
     const randomInt =
       0 + Math.floor(Math.random() * (options.length - 0.00001));
     return options[randomInt];
+  }
+
+  getFinalScoreFromLastDeal(lastDeal: DealRelevant) {
+    if (!lastDeal.northSouth || !lastDeal.eastWest) return {northSouth: reducerDefaultValue, eastWest: reducerDefaultValue};
+    const northSouth = lastDeal.northSouth.aboveTheLine + lastDeal.northSouth.totalBelowTheLineScore;
+    const eastWest = lastDeal.eastWest.aboveTheLine + lastDeal.eastWest.totalBelowTheLineScore;
+    return {northSouth, eastWest}
   }
 
   setGameDetailBorderToBlack() {

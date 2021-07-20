@@ -26,6 +26,7 @@ import {
   getDeclarerFromDeal,
   ANIMATION_DURATION,
   GAME_DETAIL_BORDER_BOTTOM_CLASSNAME,
+  NOT_AVAILABLE_STRING,
 } from '@nx-bridge/constants';
 import {
   CardinalDirection,
@@ -153,7 +154,10 @@ export class DealsListComponent implements OnInit {
   private loadRelevantDeals() {
     this.deals = this.replayViewerDealService.getDealsToGet(this.dealsAsStrings as string[]);
     this.setTeams();
-    this.dealCountMessage = this.replayViewerDealService.getDealCountMessage(this.deals, this.seating as Seating);
+
+    const dealsWonCounts = this.replayViewerDealService.getDealsWonCounts(this.deals, this.seating as Seating);
+    this.dealCountMessage = this.replayViewerDealService.getDealCountMessage(this.dealsAsStrings ? this.dealsAsStrings[this.dealsAsStrings.length - 1] : NOT_AVAILABLE_STRING, dealsWonCounts);
+
     this.isLoading = false;
   }
 

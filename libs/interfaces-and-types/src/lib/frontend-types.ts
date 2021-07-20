@@ -187,6 +187,10 @@ export interface Stats {
   dealsWonDoubled: number;
   ties: number;
 }
+export interface TeamScoring {
+  northSouth: number;
+  eastWest: number;
+}
 export interface User {
   // _id: any;
   username: string;
