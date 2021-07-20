@@ -40,7 +40,6 @@ Testing------------
 
 
 -add animations/transitions for things like fade in of filters and games?
--move deal components private methods to RepplayViewerDealService?
 
 -add 'Deal Pass out' filter?
 

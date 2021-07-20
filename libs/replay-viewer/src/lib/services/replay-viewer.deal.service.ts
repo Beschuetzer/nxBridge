@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { ANIMATION_DURATION, cardinalDirections, DEAL_DETAIL_BUTTON_BORDER_BOTTOM_CLASSNAME, gameDetailBorderClosed, gameDetailBorderCssPropName, gameDetailBorderOpen, getCharValueFromCardValueString, getDirectionFromSeating, getPartnerFromDirection, NOT_AVAILABLE_STRING, teams, teamsFull } from '@nx-bridge/constants';
-import { CardinalDirection, CardValuesAsString, Deal, DealRelevant, FetchedDeals, ReducerNames, Seating, Team, ToggleDealDetailButtonBehaviour } from '@nx-bridge/interfaces-and-types';
-import { AppState } from '@nx-bridge/store';
+import { ANIMATION_DURATION, cardinalDirections, DEAL_DETAIL_BUTTON_BORDER_BOTTOM_CLASSNAME, gameDetailBorderClosed, gameDetailBorderCssPropName, gameDetailBorderOpen, getAmountMadeAndNeededFromDeal, getCharValueFromCardValueString, getDirectionFromSeating, getPartnerFromDirection, NOT_AVAILABLE_STRING, teams, teamsFull } from '@nx-bridge/constants';
+import { CardinalDirection, CardValuesAsString, Deal, DealRelevant, FetchedDeals, ReducerNames, Seating, Team, ToggleDealDetailButtonBehavior } from '@nx-bridge/interfaces-and-types';
+import { AppState, reducerDefaultValue } from '@nx-bridge/store';
 import {take } from 'rxjs/operators';
 
 @Injectable({
@@ -14,6 +14,17 @@ export class ReplayViewerDealService {
   constructor(
     private store: Store<AppState>,
   ) {}
+
+  // addQuotationsToUsernames(
+  //   elements: HTMLCollection,
+  //   nthChildToUse: number
+  // ) {
+  //   let result = elements[nthChildToUse].innerHTML;
+  //   if (nthChildToUse === 0 && result !== '&nbsp;') {
+  //     result = `'${elements[nthChildToUse].innerHTML}'`;
+  //   }
+  //   return result;
+  // }
 
   getDealCountMessage(deals: DealRelevant[], seating: Seating) {
     let winningTeam: Team;
@@ -104,18 +115,7 @@ export class ReplayViewerDealService {
     return declarer ? declarer : NOT_AVAILABLE_STRING;
   }
   
-  getIsGameAlreadyOpen() {
-    let isGameAlreadyOpen = false;
-    this.store
-      .select(ReducerNames.games)
-      .pipe(take(1))
-      .subscribe((gamesState) => {
-        isGameAlreadyOpen = gamesState.isViewingGame;
-      });
-    return isGameAlreadyOpen;
-  }
-
-  private getDealWinnerFromScoreDifference(
+  getDealWinnerFromScoreDifference(
     deal: DealRelevant,
     dealAfterDeal: DealRelevant,
     seating: Seating,
@@ -175,7 +175,7 @@ export class ReplayViewerDealService {
     return this.getDealWinnerFromPureCalculation(deal, seating);
   }
 
-  private getDealWinnerFromPureCalculation(deal: DealRelevant, seating: Seating): Team {
+  getDealWinnerFromPureCalculation(deal: DealRelevant, seating: Seating): Team {
     const declarer = this.getDeclarerFromDeal(deal);
     const declarersDirection = getDirectionFromSeating(
       seating as Seating,
@@ -216,6 +216,46 @@ export class ReplayViewerDealService {
     }
   }
 
+  getIsGameAlreadyOpen() {
+    let isGameAlreadyOpen = false;
+    this.store
+      .select(ReducerNames.games)
+      .pipe(take(1))
+      .subscribe((gamesState) => {
+        isGameAlreadyOpen = gamesState.isViewingGame;
+      });
+    return isGameAlreadyOpen;
+  }
+
+  getMadeAmountString(deal: DealRelevant, contractPrefix: number, seating: Seating, declarer: string): [string, number] {
+    const { amountMade, amountNeeded } = getAmountMadeAndNeededFromDeal(deal as DealRelevant, contractPrefix, seating as Seating, declarer);
+
+    if (amountMade === reducerDefaultValue || typeof amountNeeded !== 'number') return [NOT_AVAILABLE_STRING, 0];
+    const difference = Math.abs(amountMade - amountNeeded);
+
+    let result = this.getMadeItString();
+    if (amountMade < amountNeeded) result = `went down ${difference}`;
+    else if (amountMade > amountNeeded)
+      result = `made ${difference} ${
+        difference === 1 ? 'overtrick' : 'overtricks'
+      }`;
+
+    return [result, difference];
+  }
+
+  getMadeItString() {
+    const options = [
+      'JUST made it',
+      'BARELY made it',
+      'almost lost the contract',
+    ];
+
+    //returns a random integer from lower_bound_inclusive to upper_bound_exclusive
+    const randomInt =
+      0 + Math.floor(Math.random() * (options.length - 0.00001));
+    return options[randomInt];
+  }
+
   setGameDetailBorderToBlack() {
     setTimeout(() => {
       const newValue = `${gameDetailBorderCssPropName}: ${gameDetailBorderOpen}`;
@@ -223,22 +263,21 @@ export class ReplayViewerDealService {
     }, ANIMATION_DURATION)
   }
 
-
   setGameDetailBorderToNormal() {
     const newValue = `${gameDetailBorderCssPropName}: ${gameDetailBorderClosed}`;
     document.documentElement.style.cssText += newValue;
   }
 
-  toggleButtonBottomBorder(buttons: HTMLElement[], behaviour = ToggleDealDetailButtonBehaviour.toggle) {
+  toggleButtonBottomBorder(buttons: HTMLElement[], behaviour = ToggleDealDetailButtonBehavior.toggle) {
     if (!buttons) return;
     for (let i = 0; i < buttons.length; i++) {
       const button = buttons[i];
 
-      if (behaviour === ToggleDealDetailButtonBehaviour.toggle) button.classList.toggle(DEAL_DETAIL_BUTTON_BORDER_BOTTOM_CLASSNAME);
+      if (behaviour === ToggleDealDetailButtonBehavior.toggle) button.classList.toggle(DEAL_DETAIL_BUTTON_BORDER_BOTTOM_CLASSNAME);
 
-      else if (behaviour === ToggleDealDetailButtonBehaviour.open) button.classList.remove(DEAL_DETAIL_BUTTON_BORDER_BOTTOM_CLASSNAME);
+      else if (behaviour === ToggleDealDetailButtonBehavior.open) button.classList.remove(DEAL_DETAIL_BUTTON_BORDER_BOTTOM_CLASSNAME);
 
-      else if (behaviour === ToggleDealDetailButtonBehaviour.close) button.classList.add(DEAL_DETAIL_BUTTON_BORDER_BOTTOM_CLASSNAME);
+      else if (behaviour === ToggleDealDetailButtonBehavior.close) button.classList.add(DEAL_DETAIL_BUTTON_BORDER_BOTTOM_CLASSNAME);
 
     }
   }

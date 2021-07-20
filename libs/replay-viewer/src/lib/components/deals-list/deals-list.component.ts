@@ -35,7 +35,7 @@ import {
   ReducerNames,
   Seating,
   Team,
-  ToggleDealDetailButtonBehaviour,
+  ToggleDealDetailButtonBehavior,
 } from '@nx-bridge/interfaces-and-types';
 import {
   AppState,
@@ -157,25 +157,57 @@ export class DealsListComponent implements OnInit {
     this.isLoading = false;
   }
 
-  private toggleGameDetailScoreBorder() {
-    const gameDetail = (this.elRef.nativeElement as HTMLElement).closest(
-      `.${GAME_DETAIL_CLASSNAME}`
-    ) as HTMLElement;
-    const gameDetailScorelement = gameDetail.querySelector(
-      `.${GAME_DETAIL_CLASSNAME}__score`
-    ) as HTMLElement;
-    toggleClassOnList(
-      [gameDetailScorelement],
-      GAME_DETAIL_BORDER_BOTTOM_CLASSNAME
-    );
-  }
-
-
   private setTeams() {
     if (!this.seating)
       throw new Error('Problem with this.seating in deals-list');
     this.northSouthPlayers = [this.seating.north, this.seating.south];
     this.eastWestPlayers = [this.seating.east, this.seating.west];
+  }
+
+  private toggleDealButtonsBorderBottoms(e: Event) {
+    const button = (e.currentTarget || e.target) as HTMLElement;
+    const isOpening = !button.innerHTML.match(/show/i);
+    const gameDetail = (this.elRef.nativeElement as HTMLElement)?.closest(
+      `.${GAME_DETAIL_CLASSNAME}`
+    );
+    const dealDetailViewButtons = gameDetail?.querySelectorAll(
+      `.${DEAL_DETAIL_CLASSNAME}__view-button`
+    );
+    const dealWatchDetailButtons = gameDetail?.querySelectorAll(
+      `.${DEAL_DETAIL_CLASSNAME}__watch-button`
+    );
+    this.replayViewerDealService.toggleButtonBottomBorder(
+      [...(dealDetailViewButtons as any), ...(dealWatchDetailButtons as any)],
+      isOpening
+        ? ToggleDealDetailButtonBehavior.open
+        : ToggleDealDetailButtonBehavior.close
+    );
+  }
+
+  private toggleDealItems(e: Event) {
+    const itemsToChange = this.elRef.nativeElement.querySelectorAll(
+      `.${DEAL_DETAIL_CLASSNAME}__tables`
+    );
+    const clickedButton = (e.currentTarget || e.target) as HTMLButtonElement;
+
+    let isOpening = false;
+    if (clickedButton.innerHTML.trim() === this.buttonChoicesDetails[0])
+      isOpening = true;
+
+    for (let i = 0; i < itemsToChange.length; i++) {
+      const itemToChange = itemsToChange[i];
+      itemToChange.classList.remove(DISPLAY_NONE_CLASSNAME);
+
+      const itemsParent = itemToChange.parentNode;
+      const buttonToToggleInnerHTML = itemsParent.querySelector('button');
+
+      if (isOpening) {
+        buttonToToggleInnerHTML.innerHTML = dealDetailButtonChoices[1];
+      } else {
+        itemToChange.classList.add(DISPLAY_NONE_CLASSNAME);
+        buttonToToggleInnerHTML.innerHTML = dealDetailButtonChoices[0];
+      }
+    }
   }
 
   private toggleDeals(button: HTMLElement) {
@@ -205,49 +237,16 @@ export class DealsListComponent implements OnInit {
     );
   }
 
-  private toggleDealButtonsBorderBottoms(e: Event) {
-    const button = (e.currentTarget || e.target) as HTMLElement;
-    const isOpening = !button.innerHTML.match(/show/i);
-    const gameDetail = (this.elRef.nativeElement as HTMLElement)?.closest(
+  private toggleGameDetailScoreBorder() {
+    const gameDetail = (this.elRef.nativeElement as HTMLElement).closest(
       `.${GAME_DETAIL_CLASSNAME}`
+    ) as HTMLElement;
+    const gameDetailScorelement = gameDetail.querySelector(
+      `.${GAME_DETAIL_CLASSNAME}__score`
+    ) as HTMLElement;
+    toggleClassOnList(
+      [gameDetailScorelement],
+      GAME_DETAIL_BORDER_BOTTOM_CLASSNAME
     );
-    const dealDetailViewButtons = gameDetail?.querySelectorAll(
-      `.${DEAL_DETAIL_CLASSNAME}__view-button`
-    );
-    const dealWatchDetailButtons = gameDetail?.querySelectorAll(
-      `.${DEAL_DETAIL_CLASSNAME}__watch-button`
-    );
-    this.replayViewerDealService.toggleButtonBottomBorder(
-      [...(dealDetailViewButtons as any), ...(dealWatchDetailButtons as any)],
-      isOpening
-        ? ToggleDealDetailButtonBehaviour.open
-        : ToggleDealDetailButtonBehaviour.close
-    );
-  }
-
-  private toggleDealItems(e: Event) {
-    const itemsToChange = this.elRef.nativeElement.querySelectorAll(
-      `.${DEAL_DETAIL_CLASSNAME}__tables`
-    );
-    const clickedButton = (e.currentTarget || e.target) as HTMLButtonElement;
-
-    let isOpening = false;
-    if (clickedButton.innerHTML.trim() === this.buttonChoicesDetails[0])
-      isOpening = true;
-
-    for (let i = 0; i < itemsToChange.length; i++) {
-      const itemToChange = itemsToChange[i];
-      itemToChange.classList.remove(DISPLAY_NONE_CLASSNAME);
-
-      const itemsParent = itemToChange.parentNode;
-      const buttonToToggleInnerHTML = itemsParent.querySelector('button');
-
-      if (isOpening) {
-        buttonToToggleInnerHTML.innerHTML = dealDetailButtonChoices[1];
-      } else {
-        itemToChange.classList.add(DISPLAY_NONE_CLASSNAME);
-        buttonToToggleInnerHTML.innerHTML = dealDetailButtonChoices[0];
-      }
-    }
   }
 }

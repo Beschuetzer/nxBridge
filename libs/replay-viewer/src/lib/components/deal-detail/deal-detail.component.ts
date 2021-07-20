@@ -223,7 +223,7 @@ export class DealDetailComponent implements OnInit {
   }
 
   setDealSummarySuffix() {
-    const [entireString, difference] = this.getMadeAmountString();
+    const [entireString, difference] = this.replayViewerDealService.getMadeAmountString(this.deal as DealRelevant, +this.contract.prefix, this.seating as Seating, this.declarer);
     if (entireString === NOT_AVAILABLE_STRING) {
       this.dealSummaryMessageSuffixPre = this.DEAL_PASSED_OUT_MESSAGE;
       this.dealSummaryMessageContract = '';
@@ -280,22 +280,6 @@ export class DealDetailComponent implements OnInit {
     this.dealSummaryMessageSuffixPre = `${str}`;
     this.dealSummaryMessageSuffixNumber = ``;
     this.dealSummaryMessageSuffixPost = ``;
-  }
-
-  private getMadeAmountString(): [string, number] {
-    const { amountMade, amountNeeded } = getAmountMadeAndNeededFromDeal(this.deal as DealRelevant, +this.contract.prefix, this.seating as Seating, this.declarer);
-
-    if (amountMade === reducerDefaultValue || typeof amountNeeded !== 'number') return [NOT_AVAILABLE_STRING, 0];
-    const difference = Math.abs(amountMade - amountNeeded);
-
-    let result = this.getMadeItString();
-    if (amountMade < amountNeeded) result = `went down ${difference}`;
-    else if (amountMade > amountNeeded)
-      result = `made ${difference} ${
-        difference === 1 ? 'overtrick' : 'overtricks'
-      }`;
-
-    return [result, difference];
   }
 
   //#region setBiddingTable Helpers
@@ -452,33 +436,8 @@ export class DealDetailComponent implements OnInit {
   //#endregion
 
   //#region Misc
-  private addQuotationsToUsernames(
-    elements: HTMLCollection,
-    nthChildToUse: number
-  ) {
-    let result = elements[nthChildToUse].innerHTML;
-    if (nthChildToUse === 0 && result !== '&nbsp;') {
-      result = `'${elements[nthChildToUse].innerHTML}'`;
-    }
-    return result;
-  }
-
-  private getMadeItString() {
-    const options = [
-      'JUST made it',
-      'BARELY made it',
-      'almost lost the contract',
-    ];
-
-    //returns a random integer from lower_bound_inclusive to upper_bound_exclusive
-    const randomInt =
-      0 + Math.floor(Math.random() * (options.length - 0.00001));
-    return options[randomInt];
-  }
-
   private getNewElement(elementType: string) {
     return this.renderer.createElement(elementType);
   }
-
   //#endregion
 }

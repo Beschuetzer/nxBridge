@@ -335,7 +335,7 @@ export enum SortOptions {
   ascending = 'ascending',
   descending = 'descending',
 }
-export enum ToggleDealDetailButtonBehaviour {
+export enum ToggleDealDetailButtonBehavior {
   toggle,
   open,
   close,
