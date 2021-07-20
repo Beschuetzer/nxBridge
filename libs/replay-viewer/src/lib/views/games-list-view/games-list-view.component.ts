@@ -39,6 +39,7 @@ import {
 import { LocalStorageManagerService } from '../../services/local-storage-manager.service';
 import { gameDetailSizes } from '@nx-bridge/computed-styles';
 import { SearchService } from '../../services/search.service';
+import { timeStamp } from 'node:console';
 
 @Component({
   selector: 'nx-bridge-games-list-view',
@@ -63,6 +64,7 @@ export class GamesListViewComponent implements OnInit {
   public resultsPerPageOptions = RESULTS_PER_PAGE_OPTIONS;
   public resultsPerPage = this.DEFAULT_RESULTS_PER_PAGE;
   public totalNumberOfPages = -1;
+  public totalNumberOfDeals = -1;
   public currentBatch = 0;
   public totalGames = -1;
   public preferences: GameDetailDisplayPreferences = {} as GameDetailDisplayPreferences;
@@ -82,6 +84,9 @@ export class GamesListViewComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.store.select(ReducerNames.deals).subscribe(dealState => {
+      this.totalNumberOfDeals = dealState.dealsAsStrings?.length;
+    })
     this.store.select(ReducerNames.users).subscribe((userState) => {
       this.currentlyViewingUser = userState.currentlyViewingUser;
     });

@@ -97,11 +97,37 @@ export class ReplayViewerDealService {
   }
 
   getDeclarerFromDeal(deal: DealRelevant) {
-    if (!deal) return NOT_AVAILABLE_STRING;
-    
-    const declarer = deal.bids[deal.bids.length - 4][0];
-    const declarersBid = deal.bids[deal.bids.length - 4][1];
-    return declarersBid.match(/pass/i) ? NOT_AVAILABLE_STRING : declarer;
+    if (!deal || !deal.declarer || !deal.contract) return NOT_AVAILABLE_STRING;
+
+    let contract = '';
+    let potentialDeclarer = '';
+    let indexOfDeclarersPartner = -1;
+
+    for(let i = deal.bids.length - 1; i >= 0; i--) {
+      const bidder = deal.bids[i][0];
+      const bid = deal.bids[i][1];
+      if (!bid.match(/pass/i) && !bid.match(/double/i)) {
+        contract = bid;
+        potentialDeclarer = bidder;
+        indexOfDeclarersPartner = i - 2;
+        break;
+      }
+    }
+
+    let potentialDeclarersPartner = '';
+    if (indexOfDeclarersPartner >= 0 ) potentialDeclarersPartner = deal.bids[indexOfDeclarersPartner][0];
+    else potentialDeclarersPartner = deal.bids[indexOfDeclarersPartner + 4][0];
+
+    const splitContract = contract.split(' ');
+    for (let i = 0; i < deal.bids.length; i++) {
+      const bidder = deal.bids[i][0];
+      const bid = deal.bids[i][1];
+      if (bidder === potentialDeclarersPartner || bidder === potentialDeclarer) {
+        if (bid.match(splitContract[1])) return bidder;
+      } 
+    }
+
+    return NOT_AVAILABLE_STRING;
   }
 
   getDeclarerFromStore(userId: string) {

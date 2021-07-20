@@ -229,7 +229,7 @@ export class FilterManagerComponent implements OnInit {
     const selectedType = dealResultTypeElement.value as DealResultType;
 
     if (
-      selectedAmount < -7 ||
+      selectedAmount < -13 ||
       selectedAmount > 7 ||
       selectedAmount === undefined ||
       isNaN(selectedAmount) ||

@@ -781,7 +781,7 @@ export class FiltermanagerService {
 
     const { amountMade, amountNeeded } = getAmountMadeAndNeededFromDeal(deal as DealRelevant, contractNumber, game.room.seating as Seating, declarer);
 
-    if (amountMade === reducerDefaultValue || typeof amountNeeded !== 'number') return true;
+    if (amountMade === reducerDefaultValue || typeof amountNeeded !== 'number') return false;
     const difference = amountMade - amountNeeded;
 
     if (dealResult.type === 'equal') return difference === dealResult.amount;

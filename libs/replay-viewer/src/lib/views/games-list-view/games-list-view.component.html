@@ -78,14 +78,17 @@
       <span *ngIf="numberOfDealsMatchingFilters !== -1">
         <span
           ><b>{{ numberOfDealsMatchingFilters }}</b>
-          {{ numberOfDealsMatchingFilters === 1 ? 'deal' : 'deals' }} in
+          out of 
+          <b>{{totalNumberOfDeals}}</b>
+          <!-- {{ numberOfDealsMatchingFilters === 1 ? 'deal' : 'deals' }} from  -->
+          deals from
         </span>
       </span>
 
       <span>
-        &nbsp;<b>{{ totalGames }}</b> {{ totalGames === 1 ? 'game' : 'games' }}
+        &nbsp;<b>{{ totalGames }}</b> different {{ totalGames === 1 ? 'game' : 'games' }}
       </span>
-      <span>&nbsp;found matching criteria:</span>
+      <span>&nbsp;were found that match the criteria:</span>
     </div>
     <nx-bridge-games-list></nx-bridge-games-list>
   </section>
