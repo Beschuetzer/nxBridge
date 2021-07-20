@@ -90,20 +90,20 @@
     }
   }
 
-  &__contract,
-  &__deal-result,
-  &__double,
-  &__declarer,
-  &__opening-bid,
-  &__game-name, 
-  &__player-has-card, 
-  &__player-in-game,
-  &__won-by {
-    & label {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-  }
+  // &__contract,
+  // &__deal-result,
+  // &__double,
+  // &__declarer,
+  // &__opening-bid,
+  // &__game-name, 
+  // &__player-has-card, 
+  // &__player-in-game,
+  // &__won-by {
+  //   & label {
+  //     flex-direction: column;
+  //     align-items: flex-start;
+  //   }
+  // }
 
   // &__won-by {
   //   justify-content: space-between;

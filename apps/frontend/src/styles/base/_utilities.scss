@@ -24,6 +24,11 @@
 .justify-content-center {
   justify-content: center !important;
 }
+.flex-column-start {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+}
 
 //misc
 .transparent {

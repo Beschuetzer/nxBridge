@@ -127,7 +127,7 @@
       *ngIf="deal.checked && contractCheckbox?.nativeElement.checked"
       class="{{ FILTER_MANANGER_CLASSNAME }}__contract"
     >
-      <label>
+      <label class="flex-column-start">
         <span>Contract was :</span>
         <select
           (click)="onContractChange()"
@@ -160,7 +160,7 @@
       *ngIf="deal.checked && doubleCheckbox?.nativeElement.checked"
       class="{{ FILTER_MANANGER_CLASSNAME }}__double"
     >
-      <label>
+      <label class="flex-column-start">
         <span>Deal was doubled:</span>
         <select
           (click)="onDoubleChange()"
@@ -188,7 +188,7 @@
       *ngIf="deal.checked && declarerCheckbox?.nativeElement.checked"
       class="{{ FILTER_MANANGER_CLASSNAME }}__declarer"
     >
-      <label>
+      <label class="flex-column-start">
         <span>Declarer was:</span>
         <select
           #declarerSelect
@@ -212,7 +212,7 @@
       *ngIf="deal.checked && openingBidCheckbox?.nativeElement.checked"
       class="{{ FILTER_MANANGER_CLASSNAME }}__opening-bid"
     >
-      <label>
+      <label class="flex-column-start">
         <span>Opening bid was :</span>
         <select
           (click)="onOpeningBidChange()"
@@ -246,7 +246,7 @@
       "
       class="{{ FILTER_MANANGER_CLASSNAME }}__player-has-card"
     >
-      <label>
+      <label class="flex-column-start">
         <span>Player:</span>
         <select
           #players
@@ -288,10 +288,14 @@
       *ngIf="deal.checked && dealResultCheckbox?.nativeElement.checked"
       class="{{ FILTER_MANANGER_CLASSNAME }}__deal-result"
     >
-      <label>
+      <label class="flex-column-start">
         <div>Deal result was:</div>
         <div class="{{ FILTER_MANANGER_CLASSNAME }}__item-options">
-          <select #dealResultType (click)="onDealResultChange()" class="ui input">
+          <select
+            #dealResultType
+            (click)="onDealResultChange()"
+            class="ui input"
+          >
             <option value="equal">=</option>
             <option
               value="less"
@@ -327,7 +331,7 @@
       *ngIf="game.checked && gameNameCheckbox?.nativeElement.checked"
       class="{{ FILTER_MANANGER_CLASSNAME }}__game-name"
     >
-      <label>
+      <label class="flex-column-start">
         <div>Game was named:</div>
         <select
           #gameNameSelect
@@ -354,7 +358,7 @@
       *ngIf="game.checked && playerInGameCheckbox?.nativeElement.checked"
       class="{{ FILTER_MANANGER_CLASSNAME }}__player-in-game"
     >
-      <label>
+      <label class="flex-column-start">
         <div>Player was in game:</div>
         <select
           #playerInGameSelect
@@ -378,7 +382,7 @@
       *ngIf="game.checked && wonByCheckbox?.nativeElement.checked"
       class="{{ FILTER_MANANGER_CLASSNAME }}__won-by"
     >
-      <label>
+      <label class="flex-column-start">
         <div>Won by:</div>
         <div class="{{ FILTER_MANANGER_CLASSNAME }}__item-options">
           <select #wonByType (click)="onWonByChange()" class="ui input">
