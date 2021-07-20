@@ -126,8 +126,8 @@
     justify-content: space-evenly;
     align-items: center;
     padding: $default-font-size * 0.25;
-    border-top: $deal-player-control-border;
-    border-bottom: $deal-player-control-border;
+    border-top: $deal-player-border;
+    border-bottom: $deal-player-border;
 
     @include respond(super-small) {
       left: 50vw;
@@ -593,11 +593,13 @@
   &__canvas,
   &__play,
   &__controls {
-    // border-left: $deal-player-border;
-    border-right: $deal-player-border-thick;
+    border-left: $deal-player-border;
+    border-right: $deal-player-border;
 
     @include respond(deal-player-layout-switch) {
       grid-column: 1/-1; 
+      border-right: $deal-player-border-thick;
+      border-left: none;
     }
 
     @include respond(super-small) {
