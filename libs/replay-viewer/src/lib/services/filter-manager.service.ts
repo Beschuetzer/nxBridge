@@ -5,6 +5,8 @@ import {
   DateObj,
   DateType,
   DealRelevant,
+  DealResult,
+  DealResultType,
   FetchedDeals,
   FilterItem,
   FilterItemDeletion,
@@ -560,47 +562,6 @@ export class FiltermanagerService {
   }
 
   //#region ApplyFilters Helpers
-  private getCanSkipFilters(filters: Filters): CanSkipFilters {
-    const canSkipAfterDate = this.getCanSkipAfterDate(filters.afterDate);
-    const canSkipBeforeDate = this.getCanSkipBeforeDate(filters.beforeDate);
-    const canSkipContract = this.getCanSkipContract(filters.contract);
-    const canSkipDeclarer = this.getCanSkipDeclarer(filters.declarer);
-    const canSkipDouble = this.getCanSkipDouble(filters.double);
-    const canSkipGameName = this.getCanSkipGameName(filters.gameName);
-    const canSkipOpeningBid = this.getCanSkipOpeningBid(filters.openingBid);
-    const canSkipPlayerHasCard = this.getCanSkipPlayerHasCard(
-      filters.playerHasCard
-    );
-    const canSkipPlayerInGame = this.getCanSkipPlayerInGame(
-      filters.playerInGame
-    );
-    const canSkipWonBy = this.getCanSkipWonBy(filters.wonBy);
-
-    return {
-      all:
-        canSkipAfterDate &&
-        canSkipBeforeDate &&
-        canSkipContract &&
-        canSkipDeclarer &&
-        canSkipDouble &&
-        canSkipGameName &&
-        canSkipOpeningBid &&
-        canSkipPlayerHasCard &&
-        canSkipPlayerInGame &&
-        canSkipWonBy,
-      afterDate: canSkipAfterDate,
-      beforeDate: canSkipBeforeDate,
-      contract: canSkipContract,
-      declarer: canSkipDeclarer,
-      double: canSkipDouble,
-      gameName: canSkipGameName,
-      openingBid: canSkipOpeningBid,
-      playerHasCard: canSkipPlayerHasCard,
-      playerInGame: canSkipPlayerInGame,
-      wonBy: canSkipWonBy,
-    };
-  }
-
   private getCanAddDeal(
     deal: DealRelevant,
     filters: Filters,
@@ -620,6 +581,9 @@ export class FiltermanagerService {
     if (!canSkip.double && shouldAddDeal)
       shouldAddDeal = this.getPassesDoubleFilter(filters.double, deal);
 
+    if (!canSkip.dealResult && shouldAddDeal)
+      shouldAddDeal = this.getPassesDealResultFilter(filters.dealResult, deal);
+
     if (!canSkip.playerHasCard && shouldAddDeal)
       shouldAddDeal = this.getPassesPlayerHasCardFilter(
         filters.playerHasCard,
@@ -627,6 +591,50 @@ export class FiltermanagerService {
       );
 
     return shouldAddDeal;
+  }
+
+  private getCanSkipFilters(filters: Filters): CanSkipFilters {
+    const canSkipAfterDate = this.getCanSkipAfterDate(filters.afterDate);
+    const canSkipBeforeDate = this.getCanSkipBeforeDate(filters.beforeDate);
+    const canSkipContract = this.getCanSkipContract(filters.contract);
+    const canSkipDealResult = this.getCanSkipDealResult(filters.dealResult);
+    const canSkipDeclarer = this.getCanSkipDeclarer(filters.declarer);
+    const canSkipDouble = this.getCanSkipDouble(filters.double);
+    const canSkipGameName = this.getCanSkipGameName(filters.gameName);
+    const canSkipOpeningBid = this.getCanSkipOpeningBid(filters.openingBid);
+    const canSkipPlayerHasCard = this.getCanSkipPlayerHasCard(
+      filters.playerHasCard
+    );
+    const canSkipPlayerInGame = this.getCanSkipPlayerInGame(
+      filters.playerInGame
+    );
+    const canSkipWonBy = this.getCanSkipWonBy(filters.wonBy);
+
+    return {
+      all:
+        canSkipAfterDate &&
+        canSkipBeforeDate &&
+        canSkipContract &&
+        canSkipDealResult &&
+        canSkipDeclarer &&
+        canSkipDouble &&
+        canSkipGameName &&
+        canSkipOpeningBid &&
+        canSkipPlayerHasCard &&
+        canSkipPlayerInGame &&
+        canSkipWonBy,
+      afterDate: canSkipAfterDate,
+      beforeDate: canSkipBeforeDate,
+      contract: canSkipContract,
+      dealResult: canSkipDealResult,
+      declarer: canSkipDeclarer,
+      double: canSkipDouble,
+      gameName: canSkipGameName,
+      openingBid: canSkipOpeningBid,
+      playerHasCard: canSkipPlayerHasCard,
+      playerInGame: canSkipPlayerInGame,
+      wonBy: canSkipWonBy,
+    };
   }
 
   private getPassesGameFilters(
@@ -658,6 +666,7 @@ export class FiltermanagerService {
     //note: prevents unnecessary deal iterations when all deal level filters will be skipped anyway
     return (
       canSkip.contract &&
+      canSkip.dealResult &&
       canSkip.declarer &&
       canSkip.openingBid &&
       canSkip.double &&
@@ -679,6 +688,18 @@ export class FiltermanagerService {
 
   private getCanSkipContract(contract: string) {
     return contract === this.filtersInitial.contract;
+  }
+
+  private getCanSkipDealResult(dealResult: DealResult) {
+    if (
+      !dealResult ||
+      dealResult.amount === reducerDefaultValue ||
+      dealResult.type === `${reducerDefaultValue}` ||
+      dealResult.amount === undefined ||
+      dealResult.type === undefined
+    )
+      return true;
+    return false;
   }
 
   private getCanSkipDeclarer(declarer: string) {
@@ -743,6 +764,14 @@ export class FiltermanagerService {
     return false;
   }
 
+  private getPassesDealResultFilter(
+    dealResult: DealResult,
+    deal: DealRelevant
+  ) {
+    
+    return true;
+  }
+
   private getPassesDeclarerFilter(declarer: string, deal: DealRelevant) {
     const declarerFromDeal = this.users ? this.users[deal.declarer] : null;
     return declarer === declarerFromDeal;
@@ -755,7 +784,7 @@ export class FiltermanagerService {
   }
 
   private getPassesGameName(gameName: string, game: GameRelevant) {
-    return game.room.name === gameName; 
+    return game.room.name === gameName;
   }
 
   private getPassesOpeningBidFilter(bid: string, deal: DealRelevant) {

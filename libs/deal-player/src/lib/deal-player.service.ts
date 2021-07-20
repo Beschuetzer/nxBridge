@@ -102,6 +102,8 @@ export class DealPlayerService {
         contract = dealState.currentlyViewingDeal.contract;
       });
 
+    if(!contract) return hand;
+
     const possibleContractSuits = [
       ...suitsAsCapitalizedStrings.map((suit) =>
         suit.substr(0, suit.length - 1).toLowerCase()
@@ -110,7 +112,7 @@ export class DealPlayerService {
     ];
     const suitIndex = possibleContractSuits.findIndex((suit) => {
       const regExp = new RegExp(suit, 'i');
-      return contract.match(regExp);
+      return contract?.match(regExp);
     });
 
     const spades = [...hand[0]];

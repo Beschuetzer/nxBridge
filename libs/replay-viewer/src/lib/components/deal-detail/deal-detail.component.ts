@@ -41,11 +41,14 @@ import {
   tricksInABook,
   NOT_AVAILABLE_STRING,
   DEAL_PASSED_OUT_MESSAGE,
+  getPlayingPlayers,
+  getAmountMadeAndNeededFromDeal,
 } from '@nx-bridge/constants';
 import { Store } from '@ngrx/store';
 import {
   AppState,
   CurrentlyViewingDeal,
+  reducerDefaultValue,
   SetCurrentlyViewingDeal,
   SetCurrentlyViewingDealContract,
 } from '@nx-bridge/store';
@@ -283,16 +286,9 @@ export class DealDetailComponent implements OnInit {
   }
 
   private getMadeAmountString(): [string, number] {
-    const playingPlayers: [string, string] = this.getPlayingPlayers();
-    if (!playingPlayers[0]) return [NOT_AVAILABLE_STRING, -1];
+    const { amountMade, amountNeeded } = getAmountMadeAndNeededFromDeal(this.deal as DealRelevant, +this.contract.prefix, this.seating as Seating, this.declarer);
 
-    const amountNeeded = +this.contract.prefix + tricksInABook;
-    const amountMade = this.deal?.roundWinners.reduce((count, roundWinner) => {
-      if (playingPlayers.includes(roundWinner[0])) return count + 1;
-      return count;
-    }, 0);
-
-    if (!amountMade) return [NOT_AVAILABLE_STRING, 0];
+    if (amountMade === reducerDefaultValue || typeof amountNeeded !== 'number') return [NOT_AVAILABLE_STRING, 0];
     const difference = Math.abs(amountMade - amountNeeded);
 
     let result = this.getMadeItString();
@@ -468,26 +464,6 @@ export class DealDetailComponent implements OnInit {
       result = `'${elements[nthChildToUse].innerHTML}'`;
     }
     return result;
-  }
-
-  private getPlayingPlayers(): [string, string] {
-    //return the declarer and the declarer's partner as an array of strings
-    if (!this.seating)
-      throw new Error('Problem with this.seating in deal-detail');
-    try {
-      const declarersDirection = getDirectionFromSeating(
-        this.seating,
-        this.declarer
-      );
-      const declarersPartner = getPartnerFromDirection(
-        this.seating,
-        declarersDirection as CardinalDirection
-      );
-      return [this.declarer, declarersPartner];
-    } catch (err) {
-      console.log('err =', err);
-      return ['', ''];
-    }
   }
 
   private getMadeItString() {

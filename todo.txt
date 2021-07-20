@@ -46,4 +46,4 @@ Testing------------
 
 
 -add class for all filters that handles label styling issue
--work on deletion of 
+-work on filtering logic for dealResult

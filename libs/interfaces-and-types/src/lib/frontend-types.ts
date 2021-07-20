@@ -5,6 +5,7 @@ export interface CanSkipFilters {
   afterDate: boolean;
   beforeDate: boolean;
   contract: boolean;
+  dealResult: boolean;
   declarer: boolean;
   double: boolean;
   gameName: boolean;

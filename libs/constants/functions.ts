@@ -1,23 +1,30 @@
+import { reducerDefaultValue } from '@nx-bridge/store';
 import {
+  CardinalDirection,
   CardValuesAsString,
   DateObj,
   DealRelevant,
   GameRelevant,
+  ReducerNames,
+  Seating,
   SortOptions,
 } from '@nx-bridge/interfaces-and-types';
 import * as mongoose from 'mongoose';
 import {
   getCharacterFromCardAsNumber,
   getCharValueFromCardValueString,
+  getDirectionFromSeating,
   getHtmlEntityFromSuitOrCardAsNumber,
   getHtmlEntitySpan,
   getIsBidPlayable,
+  getPartnerFromDirection,
 } from './playing/functions';
 import { MATCHED_DEAL_CLASSNAME } from '@nx-bridge/constants';
 import { NOT_AVAILABLE_STRING } from './constants';
 import {
   suitsAsCapitalizedStrings,
   suitsHtmlEntities,
+  tricksInABook,
 } from './playing/constants';
 
 export function capitalize(str: string) {
@@ -252,4 +259,37 @@ export function getContractAsHtmlEntityString(contract: string) {
   );
   const htmlEntitySpan = getHtmlEntitySpan(split[1], true);
   return `${number}${htmlEntitySpan}`;
+}
+
+export function getPlayingPlayers(seating: Seating, declarer: string): [string, string] {
+  //return the declarer and the declarer's partner as an array of strings
+  if (!seating)
+    throw new Error('Problem with seating in deal-detail');
+  try {
+    const declarersDirection = getDirectionFromSeating(
+      seating,
+      declarer
+    );
+    const declarersPartner = getPartnerFromDirection(
+      seating,
+      declarersDirection as CardinalDirection
+    );
+    return [declarer, declarersPartner];
+  } catch (err) {
+    console.log('err =', err);
+    return ['', ''];
+  }
+}
+
+export function getAmountMadeAndNeededFromDeal(deal: DealRelevant, contractPrefix: number, seating: Seating, declarer: string) {
+  const playingPlayers: [string, string] = getPlayingPlayers(seating as Seating, declarer);
+    if (!playingPlayers[0]) return {amountNeeded: NOT_AVAILABLE_STRING, amountMade: reducerDefaultValue};
+
+    const amountNeeded = contractPrefix + tricksInABook;
+    const amountMade = deal?.roundWinners.reduce((count, roundWinner) => {
+      if (playingPlayers.includes(roundWinner[0])) return count + 1;
+      return count;
+    }, 0);
+
+  return {amountNeeded, amountMade};
 }
