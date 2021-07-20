@@ -261,7 +261,7 @@ export class LocalStorageManagerService {
     const sizeLocalStorageValue = localStorage.getItem(
       this.sizePreferenceInLocalStorage
     );
-    return sizeLocalStorageValue ? sizeLocalStorageValue : SIZE_OPTIONS.small;
+    return sizeLocalStorageValue ? sizeLocalStorageValue : SIZE_OPTIONS.large;
   }
 
   getSortPreference() {

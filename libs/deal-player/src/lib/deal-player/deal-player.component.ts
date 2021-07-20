@@ -2,6 +2,7 @@ import {
   Component,
   ElementRef,
   HostBinding,
+  HostListener,
   OnInit,
   Renderer2,
 } from '@angular/core';
@@ -22,6 +23,7 @@ import {
   MOBILE_START_WIDTH,
   HEIGHT_AUTO_CLASSNAME,
   NOT_AVAILABLE_STRING,
+  checkForParentOfType,
 } from '@nx-bridge/constants';
 
 import { Store } from '@ngrx/store';
@@ -41,6 +43,7 @@ import { DealPlayerService } from '../deal-player.service';
   styleUrls: ['./deal-player.component.scss'],
 })
 export class DealPlayerComponent implements OnInit {
+  @HostListener('click', ["$event"]) onClick(e: Event) {this.onHostClick(e)}
   @HostBinding(`class.${DEAL_PLAYER_CLASSNAME}`) get classname() {
     return true;
   }
@@ -97,18 +100,16 @@ export class DealPlayerComponent implements OnInit {
     this.dealPlayerService.keepCardsCentered = newValue;
   }
 
+  onHostClick(e: Event) {
+    const currentTarget = e.target as HTMLElement;
+    const isChildClick =  checkForParentOfType(currentTarget, 'nx-bridge-deal-player', DEAL_PLAYER_CLASSNAME);
+
+    if (!isChildClick) this.close();
+  }
+  
+
   onClose() {
-    this.hasLoadedDeal = false;
-    this.onPause();
-    this.dealPlayerService.resetCardsPlayed();
-    this.resetTable();
-    this.renderer.removeClass(this.elRef.nativeElement, VISIBLE_CLASSNAME);
-    this.dealPlayerService.setCardsRotationAndPosition();
-    this.store.dispatch(
-      new SetCurrentlyViewingDeal({} as CurrentlyViewingDeal)
-    );
-    this.resetVariables();
-    this.removeHeightAuto();
+    this.close();
   }
 
   onNext() {
@@ -191,6 +192,20 @@ export class DealPlayerComponent implements OnInit {
     this.renderer.removeClass(contract.children[1], COLOR_BLACK_CLASSNAME);
     this.renderer.removeClass(contract.children[1], COLOR_RED_CLASSNAME);
     this.renderer.addClass(contract.children[1], classToAdd);
+  }
+
+  private close() {
+    this.hasLoadedDeal = false;
+    this.onPause();
+    this.dealPlayerService.resetCardsPlayed();
+    this.resetTable();
+    this.renderer.removeClass(this.elRef.nativeElement, VISIBLE_CLASSNAME);
+    this.dealPlayerService.setCardsRotationAndPosition();
+    this.store.dispatch(
+      new SetCurrentlyViewingDeal({} as CurrentlyViewingDeal)
+    );
+    this.resetVariables();
+    this.removeHeightAuto();
   }
 
   private displayCardInTable(cardAsNumber: number) {

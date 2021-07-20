@@ -7,10 +7,10 @@
 	padding: 0;
 	box-sizing: inherit;
 }
-html {
+html, body {
 	/* 62.5% of the browser supplied font-size is usually 16px */
 	/* bad practice to declarer px font-size here as it removes users ability to set font-size in browser */
-	font-size: 87.5% !important;
+	font-size: 100% !important;
 	@include respond(big-desktop) {
 		font-size: 125% !important;
 	}
@@ -19,17 +19,18 @@ html {
 	}
 	@include respond(tab-port) {
 		// font-size: 43.75%;
-		font-size: 75% !important;
+		font-size: 87.5% !important;
 	}
-	// @include respond(phone) {
+	@include respond(phone) {
 	//     font-size: 37.5%;
-	// }
+		font-size: 81.25% !important;
+	}
 	@include respond(nav-break) {
 		// font-size: 31.25%;
 		// font-size: 62.5% !important;
 	}
 	@include respond(small-font) {
-		// font-size: 1.65vmin;
+		font-size: 75% !important;
 	}
 	box-sizing: border-box;
 

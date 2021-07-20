@@ -16,6 +16,7 @@
   }
 
   &__title{
+    font-size: $semantic-ui-text-default-font-size;
     display: grid;
     grid-template-columns: max-content 1fr max-content;
     grid-template-rows: repeat(3, max-content);

@@ -46,3 +46,4 @@ Testing------------
 -refactor game private methods to service
 -add close of deal-player when clicking on 'background' of it
 
+-change transform location for filters animation below layout-breakpoint

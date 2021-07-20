@@ -13,12 +13,12 @@
   // background: rgba(var(--color-black-rgb), 1);
 
   @include respond($layout-breakpoint) {
-    padding: $default-font-size * .25;
+    padding: 0 $default-font-size * .25 $default-font-size * .25 $default-font-size * .25;
     grid-gap: $default-font-size * .25;
   }
 
   @include respond(big-desktop) {
-    grid-auto-rows: $default-font-size * 7;
+    // grid-auto-rows: $default-font-size * 7;
     
     & > *, .game-detail__header > * {
       font-size: $default-font-size * .75 !important;

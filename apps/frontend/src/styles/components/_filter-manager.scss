@@ -1,16 +1,15 @@
 .filter-manager {
   max-height: auto;
   overflow-y: auto;
-  margin-top: $default-font-size * .5;
+  margin-top: $default-font-size * 0.5;
   width: 100%;
-  height:   100%;
-  transition:
-    opacity $announce-self-animation-duration * .5 $animation-easing-standard,
-  ;
+  height: 100%;
+  transition: opacity $announce-self-animation-duration * 0.5
+    $animation-easing-standard;
 
   @include respond($layout-breakpoint) {
     max-height: 33vh;
-    margin-top: $default-font-size * .25;
+    margin-top: $default-font-size * 0.25;
   }
 
   & label {
@@ -18,20 +17,22 @@
     align-items: center;
 
     & input {
-      margin-right: $default-font-size * .125;
+      margin-right: $default-font-size * 0.125;
     }
   }
 
   &__applied {
-    padding: $default-font-size * .25  0 $default-font-size * .25 $default-font-size * .25;
+    padding: $default-font-size * 0.25 0 $default-font-size * 0.25
+      $default-font-size * 0.25;
 
     @include respond($layout-breakpoint) {
-      padding: $default-font-size * .125  0 $default-font-size * .125 $default-font-size * .125;
+      padding: $default-font-size * 0.125 0 $default-font-size * 0.125
+        $default-font-size * 0.125;
     }
   }
-  
+
   &__options {
-    border-bottom: 1px dashed var(--color-primary-4);
+    // border-bottom: 1px dashed var(--color-primary-4);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -40,26 +41,37 @@
       border-bottom: none;
     }
   }
-  
+
+  &__options label:not(&__date label) {
+    @include label-fx;
+  }
+  &__details label:not(&__date label) {
+    @include label-fx;
+    &::before {
+      left: $default-font-size * .25;
+    }
+  }
+
   &__details {
-   
-    &-deal, &-game {
-      border-bottom: 1px dashed var(--color-primary-4);
+    &-deal,
+    &-game {
+      // border-bottom: 1px dashed var(--color-primary-4);
 
       // @include respond($layout-breakpoint) {
       //   border-bottom: none;
       // }
 
       & > * {
-        padding-left: $default-font-size * .25;
+        padding-left: $default-font-size * 0.25;
       }
     }
 
     & > div:not(&-deal, &-game) {
-      border: 1px solid rgba(var(--color-primary-4-rgb), .5);
-      border-radius: $default-font-size * .25;
-      padding: $semantic-ui-text-default-font-size * 0 $default-font-size * .25 $default-font-size * .25 $default-font-size * .25;
-      margin-top: $default-font-size * .25;
+      border: 1px solid rgba(var(--color-primary-4-rgb), 0.5);
+      border-radius: $default-font-size * 0.25;
+      padding: $semantic-ui-text-default-font-size * 0 $default-font-size * 0.25
+        $default-font-size * 0.25 $default-font-size * 0.25;
+      margin-top: $default-font-size * 0.25;
     }
   }
 
@@ -68,7 +80,7 @@
     justify-content: space-between;
     align-items: center;
     border-top: 1px solid rgba(var(--color-primary-4-rgb), 1);
-    padding-top: $default-font-size * .25;
+    padding-top: $default-font-size * 0.25;
 
     @include respond($layout-breakpoint) {
       // justify-content: space-around;
@@ -76,22 +88,22 @@
   }
 
   &__date {
-    padding-top: $default-font-size * .25;
-     
+    padding-top: $default-font-size * 0.25;
+
     & label {
       flex-direction: column;
       align-items: flex-start;
     }
 
     & input {
-      padding: $default-font-size * .25 $default-font-size * .125 !important;
+      padding: $default-font-size * 0.25 $default-font-size * 0.125 !important;
       // font-size: $default-font-size * .45 !important;
       // font-size: $default-font-size *  !important;
     }
   }
 
   &__player-has-card {
-    padding: $default-font-size * .5 0;
+    padding: $default-font-size * 0.5 0;
 
     &-options {
       font-size: $semantic-ui-text-default-font-size * 1.25;
@@ -106,7 +118,7 @@
     @include respond($layout-breakpoint) {
       display: grid;
       grid-template-columns: repeat(2, max-content);
-      column-gap: $default-font-size * .5;
+      column-gap: $default-font-size * 0.5;
       justify-content: flex-start;
     }
 
@@ -128,13 +140,13 @@
   &__button {
     margin: 0 !important;
     line-height: 0 !important;
-    padding: $default-font-size * .5 $default-font-size * .25 !important;
+    padding: $default-font-size * 0.5 $default-font-size * 0.25 !important;
     @include filter-manager-button-colors;
   }
 
   &__add-button {
     @include filter-manager-button-colors;
     width: 100%;
-    margin: $default-font-size * .25 0 0 0 !important;
+    margin: $default-font-size * 0.25 0 0 0 !important;
   }
 }

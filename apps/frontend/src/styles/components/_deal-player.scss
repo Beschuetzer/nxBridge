@@ -168,7 +168,7 @@
     transform: translate(-50%, -50%);
 
     @include respond(super-small) {
-      left: 50vw;
+      left: 48vw;
       --width: 60%;
     }
 
@@ -427,7 +427,7 @@
     background-color: rgba(var(--color-primary-4-rgb), 1);
     user-select: none;
     cursor: pointer;
-    max-width: $default-font-size * 39;
+    // max-width: $default-font-size * 39;
     grid-template-columns: repeat(4, 1fr);
     justify-items: center;
     grid-column: 2 / span 1;
@@ -468,6 +468,7 @@
     grid-column: 1 / span 1;
     grid-row: 1 / -1;
     overflow: auto;
+    height: max-content;
 
     @include respond(deal-player-layout-switch) {
       grid-column: 1/span 1;
@@ -539,6 +540,7 @@
     grid-column: 3 / span 1;
     grid-row: 1 / span 1;
     padding: 0;
+    height: max-content;
 
     @include respond(deal-player-layout-switch) {
       grid-column: 2/-1;
