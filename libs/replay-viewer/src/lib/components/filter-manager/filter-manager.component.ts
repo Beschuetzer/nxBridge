@@ -218,7 +218,6 @@ export class FilterManagerComponent implements OnInit {
   }
 
   onAddDealResult(e: Event) {
-    debugger;
     const eventTarget = e.currentTarget || e.target;
     if (!this.getCanAdd(e, eventTarget as EventTarget)) return;
 

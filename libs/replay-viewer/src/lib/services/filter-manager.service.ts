@@ -2,6 +2,7 @@ import { ElementRef, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import {
   CanSkipFilters,
+  CardValuesAsString,
   DateObj,
   DateType,
   DealRelevant,
@@ -16,6 +17,7 @@ import {
   PlayerHasCard,
   PlayerInGame,
   ReducerNames,
+  Seating,
   UserIds,
   WonBy,
 } from '@nx-bridge/interfaces-and-types';
@@ -43,6 +45,8 @@ import { switchMap, take } from 'rxjs/operators';
 import {
   FILTER_MANAGER_CLASSNAME,
   flatten,
+  getAmountMadeAndNeededFromDeal,
+  getCharValueFromCardValueString,
   getHtmlEntitySpan,
   NOT_AVAILABLE_STRING,
   resetMatchedDeals,
@@ -542,7 +546,7 @@ export class FiltermanagerService {
         const deal = fetchedDeals[dealId];
 
         //note: add deal level filters here following pattern inside
-        const canAddDeal = this.getCanAddDeal(deal, filters, canSkip);
+        const canAddDeal = this.getCanAddDeal(deal, filters, canSkip, game);
 
         if (canAddDeal) {
           if (!shouldAddGame && !gameAddedAlready && hasPassedGameFilters) {
@@ -565,7 +569,8 @@ export class FiltermanagerService {
   private getCanAddDeal(
     deal: DealRelevant,
     filters: Filters,
-    canSkip: CanSkipFilters
+    canSkip: CanSkipFilters,
+    game?: GameRelevant,
   ) {
     let shouldAddDeal = true;
 
@@ -582,7 +587,7 @@ export class FiltermanagerService {
       shouldAddDeal = this.getPassesDoubleFilter(filters.double, deal);
 
     if (!canSkip.dealResult && shouldAddDeal)
-      shouldAddDeal = this.getPassesDealResultFilter(filters.dealResult, deal);
+      shouldAddDeal = this.getPassesDealResultFilter(filters.dealResult, deal, game ? game : {} as GameRelevant);
 
     if (!canSkip.playerHasCard && shouldAddDeal)
       shouldAddDeal = this.getPassesPlayerHasCardFilter(
@@ -766,9 +771,22 @@ export class FiltermanagerService {
 
   private getPassesDealResultFilter(
     dealResult: DealResult,
-    deal: DealRelevant
+    deal: DealRelevant,
+    game: GameRelevant,
   ) {
-    
+    if (!deal || !game?.room) return true;
+
+    const contractNumber = +getCharValueFromCardValueString((deal.contract.split(' ')[0]) as CardValuesAsString);
+    const declarer = this.replayViewerDealService.getDeclarerFromStore(deal.declarer);
+
+    const { amountMade, amountNeeded } = getAmountMadeAndNeededFromDeal(deal as DealRelevant, contractNumber, game.room.seating as Seating, declarer);
+
+    if (amountMade === reducerDefaultValue || typeof amountNeeded !== 'number') return true;
+    const difference = amountMade - amountNeeded;
+
+    if (dealResult.type === 'equal') return difference === dealResult.amount;
+    else if (dealResult.type === 'less') return difference <= dealResult.amount;
+    else if (dealResult.type === 'more') return difference >= dealResult.amount;
     return true;
   }
 
