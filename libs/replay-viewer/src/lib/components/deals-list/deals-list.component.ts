@@ -62,7 +62,6 @@ export class DealsListComponent implements OnInit {
   public DISPLAY_NONE_CLASSNAME = DISPLAY_NONE_CLASSNAME;
   public DEAL_DETAIL_CLASSNAME = DEAL_DETAIL_CLASSNAME;
   public deals: DealRelevant[] = [];
-  public dealResults: { [key: string]: Team } = {};
   public dealsListItems: NodeList | null | undefined = null;
   public isLoading = false;
   public dealCountMessage = 'DealRelevant Count Here';
@@ -85,7 +84,7 @@ export class DealsListComponent implements OnInit {
   }
 
   onDealsButtonClick(e: Event) {
-    if (this.getIsGameAlreadyOpen() && !this.isAllowedToClose) return;
+    if (this.replayViewerDealService.getIsGameAlreadyOpen() && !this.isAllowedToClose) return;
 
     const button = (e.currentTarget || e.target) as HTMLElement;
     this.handleDealsButtonLogic(button);
@@ -114,38 +113,6 @@ export class DealsListComponent implements OnInit {
       this.isAllowedToClose = false;
       this.store.dispatch(new SetIsViewingGame(false));
     }
-  }
-
-  private getIsGameAlreadyOpen() {
-    let isGameAlreadyOpen = false;
-    this.store
-      .select(ReducerNames.games)
-      .pipe(take(1))
-      .subscribe((gamesState) => {
-        isGameAlreadyOpen = gamesState.isViewingGame;
-      });
-    return isGameAlreadyOpen;
-  }
-
-  private getDealsToGet() {
-    if (!this.dealsAsStrings) return [];
-
-    let fetchedDeals: FetchedDeals = {};
-    const dealsToReturn: DealRelevant[] = [];
-
-    this.store
-      .select(ReducerNames.deals)
-      .pipe(take(1))
-      .subscribe((dealState) => {
-        fetchedDeals = dealState.fetchedDeals;
-      });
-
-    for (let i = 0; i < this.dealsAsStrings.length; i++) {
-      const dealAsString = this.dealsAsStrings[i];
-      dealsToReturn.push(fetchedDeals[dealAsString]);
-    }
-
-    return dealsToReturn;
   }
 
   private handleDealsButtonLogic(button: HTMLElement) {
@@ -184,50 +151,10 @@ export class DealsListComponent implements OnInit {
   }
 
   private loadRelevantDeals() {
-    this.deals = this.getDealsToGet();
+    this.deals = this.replayViewerDealService.getDealsToGet(this.dealsAsStrings as string[]);
     this.setTeams();
-    this.setDealCountMessage();
+    this.dealCountMessage = this.replayViewerDealService.getDealCountMessage(this.deals, this.seating as Seating);
     this.isLoading = false;
-  }
-
-  private setDealCountMessage() {
-    let winningTeam: Team;
-    const afterWinners = ' won ';
-    const betweenPlayed = ' deals to ';
-    let nsDealsWon = 0;
-    let ewDealsWon = 0;
-    let winner: Team | null;
-
-    for (let i = 0; i < this.deals.length; i++) {
-      const deal = this.deals[i];
-      if (!deal) continue;
-      let nextDeal = null;
-      if (i !== this.deals.length - 1) {
-        nextDeal = this.deals[i + 1];
-        winner = this.getDealWinnerFromScoreDifference(deal, nextDeal, i);
-      } else {
-        winner = this.getDealWinnerFromPureCalculation(deal);
-      }
-
-      if (winner === teams[0]) nsDealsWon++;
-      else if (winner === teams[1]) ewDealsWon++;
-    }
-
-    if (nsDealsWon === ewDealsWon) {
-      this.dealCountMessage = `No winners here just players (tied)!`;
-    } else {
-      if (nsDealsWon > ewDealsWon) winningTeam = teams[0];
-      else winningTeam = teams[1];
-
-      let larger = nsDealsWon;
-      let smaller = ewDealsWon;
-      if (ewDealsWon > nsDealsWon) {
-        larger = ewDealsWon;
-        smaller = nsDealsWon;
-      }
-
-      this.dealCountMessage = `${winningTeam}${afterWinners}${larger}${betweenPlayed}${smaller}`;
-    }
   }
 
   private toggleGameDetailScoreBorder() {
@@ -243,107 +170,6 @@ export class DealsListComponent implements OnInit {
     );
   }
 
-  private getDealWinnerFromScoreDifference(
-    deal: DealRelevant,
-    dealAfterDeal: DealRelevant,
-    nthDeal?: number
-  ): Team | null {
-
-    if (!deal.declarer) return null;
-
-    const dealNorthSouth = deal[teamsFull[0]];
-    const dealAfterDealNorthSouth = dealAfterDeal[teamsFull[0]];
-    const dealEastWest = deal[teamsFull[1]];
-    const dealAfterDealEastWest = dealAfterDeal[teamsFull[1]];
-
-    if (
-      dealNorthSouth === undefined ||
-      dealAfterDealNorthSouth === undefined ||
-      dealEastWest === undefined ||
-      dealAfterDealEastWest === undefined ||
-      (dealNorthSouth?.aboveTheLine !== dealAfterDealNorthSouth?.aboveTheLine &&
-      dealEastWest?.aboveTheLine !== dealAfterDealEastWest?.aboveTheLine)
-    ) {
-      return this.getDealWinnerFromPureCalculation(deal);
-    }
-
-    const keysToCompare = [
-      'aboveTheLine',
-      'belowTheLine',
-      'totalBelowTheLineScore',
-    ];
-    for (const key of keysToCompare) {
-      if (
-        !dealNorthSouth ||
-        !dealAfterDealNorthSouth ||
-        !dealEastWest ||
-        !dealAfterDealEastWest
-      )
-        return '';
-      const nsValue = dealNorthSouth[key];
-      const nsAfterValue = dealAfterDealNorthSouth[key];
-      const ewValue = dealEastWest[key];
-      const ewAfterValue = dealAfterDealEastWest[key];
-
-      if (
-        nsValue === undefined ||
-        ewValue === undefined ||
-        nsAfterValue === undefined ||
-        ewAfterValue === undefined
-      )
-        throw new Error('Invalid key in getDealWinnerFromScoreDifference()');
-      if (nsValue !== nsAfterValue && ewValue === ewAfterValue) {
-        this.dealResults[`${nthDeal}`] = teams[0];
-        return teams[0];
-      } else if (nsValue === nsAfterValue && ewValue !== ewAfterValue) {
-        this.dealResults[`${nthDeal}`] = teams[1];
-        return teams[1];
-      }
-    }
-
-    return this.getDealWinnerFromPureCalculation(deal);
-  }
-
-  private getDealWinnerFromPureCalculation(deal: DealRelevant): Team {
-    const declarer = getDeclarerFromDeal(deal);
-    const declarersDirection = getDirectionFromSeating(
-      this.seating as Seating,
-      declarer
-    );
-    const declarersPartner = getPartnerFromDirection(
-      this.seating as Seating,
-      declarersDirection as CardinalDirection
-    );
-    const declaringTeamUsernames = [declarer, declarersPartner];
-    const contractPrefixAsNumber = +getCharValueFromCardValueString(
-      deal.contract.split(' ')[0] as CardValuesAsString
-    );
-    const numberTricksNeeded = contractPrefixAsNumber + 6;
-
-    const tricksDeclarerMade = deal.roundWinners.reduce(
-      (count, roundWinner) => {
-        if (declaringTeamUsernames.includes(roundWinner[0])) count++;
-        return count;
-      },
-      0
-    );
-
-    if (tricksDeclarerMade >= numberTricksNeeded) {
-      if (
-        declarersDirection === cardinalDirections[0] ||
-        declarersDirection === cardinalDirections[2]
-      )
-        return teams[0];
-      else return teams[1];
-    } else {
-      if (
-        declarersDirection === cardinalDirections[0] ||
-        declarersDirection === cardinalDirections[2]
-      )
-        return teams[1];
-      else return teams[0];
-    }
-  }
 
   private setTeams() {
     if (!this.seating)

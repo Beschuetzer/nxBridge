@@ -90,36 +90,6 @@
     }
   }
 
-  // &__contract,
-  // &__deal-result,
-  // &__double,
-  // &__declarer,
-  // &__opening-bid,
-  // &__game-name, 
-  // &__player-has-card, 
-  // &__player-in-game,
-  // &__won-by {
-  //   & label {
-  //     flex-direction: column;
-  //     align-items: flex-start;
-  //   }
-  // }
-
-  // &__won-by {
-  //   justify-content: space-between;
-
-  //   // & input, & select {
-  //   //   width: max-content !important;
-  //   //   margin-top: $default-font-size * .25 !important;
-  //   //   margin-left: auto !important;
-
-  //   //   @include respond($layout-breakpoint) {
-  //   //     width: 100% !important;
-  //   //     margin-left: $default-font-size * .25 !important;
-  //   //   }
-  //   // }
-  // }
-
   &__player-has-card {
     padding: $default-font-size * .5 0;
 
