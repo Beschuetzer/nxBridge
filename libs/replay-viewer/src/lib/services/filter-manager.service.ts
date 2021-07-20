@@ -777,7 +777,7 @@ export class FiltermanagerService {
     if (!deal || !game?.room) return true;
 
     const contractNumber = +getCharValueFromCardValueString((deal.contract.split(' ')[0]) as CardValuesAsString);
-    const declarer = this.replayViewerDealService.getDeclarerFromStore(deal.declarer);
+    const declarer = this.replayViewerDealService.getDeclarerFromDeal(deal);
 
     const { amountMade, amountNeeded } = getAmountMadeAndNeededFromDeal(deal as DealRelevant, contractNumber, game.room.seating as Seating, declarer);
 

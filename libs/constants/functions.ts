@@ -261,15 +261,14 @@ export function getContractAsHtmlEntityString(contract: string) {
   return `${number}${htmlEntitySpan}`;
 }
 
-export function getPlayingPlayers(seating: Seating, declarer: string): [string, string] {
+export function getPlayingPlayers(
+  seating: Seating,
+  declarer: string
+): [string, string] {
   //return the declarer and the declarer's partner as an array of strings
-  if (!seating)
-    throw new Error('Problem with seating in deal-detail');
+  if (!seating) throw new Error('Problem with seating in deal-detail');
   try {
-    const declarersDirection = getDirectionFromSeating(
-      seating,
-      declarer
-    );
+    const declarersDirection = getDirectionFromSeating(seating, declarer);
     const declarersPartner = getPartnerFromDirection(
       seating,
       declarersDirection as CardinalDirection
@@ -281,15 +280,31 @@ export function getPlayingPlayers(seating: Seating, declarer: string): [string, 
   }
 }
 
-export function getAmountMadeAndNeededFromDeal(deal: DealRelevant, contractPrefix: number, seating: Seating, declarer: string) {
-  const playingPlayers: [string, string] = getPlayingPlayers(seating as Seating, declarer);
-    if (!playingPlayers[0]) return {amountNeeded: NOT_AVAILABLE_STRING, amountMade: reducerDefaultValue};
+export function getAmountMadeAndNeededFromDeal(
+  deal: DealRelevant,
+  contractPrefix: number,
+  seating: Seating,
+  declarer: string
+) {
+  const error = {
+    amountNeeded: NOT_AVAILABLE_STRING,
+    amountMade: reducerDefaultValue,
+  };
 
-    const amountNeeded = contractPrefix + tricksInABook;
-    const amountMade = deal?.roundWinners.reduce((count, roundWinner) => {
-      if (playingPlayers.includes(roundWinner[0])) return count + 1;
-      return count;
-    }, 0);
+  if (!deal.contract || !deal.declarer) return error;
 
-  return {amountNeeded, amountMade};
+  const playingPlayers: [string, string] = getPlayingPlayers(
+    seating as Seating,
+    declarer
+  );
+  
+  if (!playingPlayers[0]) return error;
+
+  const amountNeeded = contractPrefix + tricksInABook;
+  const amountMade = deal?.roundWinners.reduce((count, roundWinner) => {
+    if (playingPlayers.includes(roundWinner[0])) return count + 1;
+    return count;
+  }, 0);
+
+  return { amountNeeded, amountMade };
 }

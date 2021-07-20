@@ -24,6 +24,14 @@ export class ReplayViewerDealService {
     return deal;
   }
 
+  getDeclarerFromDeal(deal: DealRelevant) {
+    if (!deal) return NOT_AVAILABLE_STRING;
+    
+    const declarer = deal.bids[deal.bids.length - 4][0];
+    const declarersBid = deal.bids[deal.bids.length - 4][1];
+    return declarersBid.match(/pass/i) ? NOT_AVAILABLE_STRING : declarer;
+  }
+
   getDeclarerFromStore(userId: string) {
     if (!userId) return NOT_AVAILABLE_STRING;
 

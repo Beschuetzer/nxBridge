@@ -46,5 +46,3 @@ Testing------------
 
 
 -add class for all filters that handles label styling issue
--deal 7 with paula
--deal 6 yogurt 2/16 8:35 issue with saying 'Deal Passed out'

@@ -86,7 +86,7 @@ export class DealDetailComponent implements OnInit {
     private renderer: Renderer2,
     private elRef: ElementRef,
     private store: Store<AppState>,
-    private replayViewDealService: ReplayViewerDealService
+    private replayViewerDealService: ReplayViewerDealService,
   ) {}
 
   ngOnInit(): void {
@@ -127,7 +127,7 @@ export class DealDetailComponent implements OnInit {
   onDetailClick(e: Event) {
     const button = (e.currentTarget || e.target) as HTMLElement;
     const buttonSibling = button.nextElementSibling as HTMLElement;
-    this.replayViewDealService.toggleButtonBottomBorder([
+    this.replayViewerDealService.toggleButtonBottomBorder([
       button,
       buttonSibling,
     ]);
@@ -250,10 +250,7 @@ export class DealDetailComponent implements OnInit {
   }
 
   setDeclarer() {
-    const declarer = this.deal?.declarer;
-
-    if (declarer && this.users) this.declarer = this.users[declarer];
-    else this.declarer = NOT_AVAILABLE_STRING;
+    this.declarer = this.replayViewerDealService.getDeclarerFromDeal(this.deal as DealRelevant);
   }
 
   setHands() {
