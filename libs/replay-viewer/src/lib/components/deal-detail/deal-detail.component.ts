@@ -63,6 +63,14 @@ export class DealDetailComponent implements OnInit {
   @HostBinding('class.deal-detail') get classname() {
     return true;
   }
+  @HostBinding('class.deal-detail__failure') get dealDetailFailure() {
+
+    return !this.dealSummaryMessageSuffixPost.match(/overtrick/i) && !this.dealSummaryMessageSuffixPre.match(/made/i) && !this.dealSummaryMessageSuffixPre.match(/almost/i);
+  }
+  @HostBinding('class.deal-detail__success') get dealDetailSuccess() {
+    return this.dealSummaryMessageSuffixPost.match(/overtrick/i) || this.dealSummaryMessageSuffixPre.match(/made/i) || this.dealSummaryMessageSuffixPre.match(/almost/i);
+  }
+ 
   @Input() deal: DealRelevant | null = null;
   @Input() dealIndex: number | null = null;
   @Input() seating: Seating | null = null;

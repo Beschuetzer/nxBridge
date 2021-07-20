@@ -65,10 +65,16 @@
       // @include respond($layout-breakpoint) {
       //   border-bottom: none;
       // }
-
       & > * {
-        padding: $default-font-size * 0.25 0 0 $default-font-size * 0.25;
+        padding: 0 0 0 $default-font-size * 0.25;
       }
+
+      @include respond($layout-breakpoint) {
+        & > * {
+          padding: $default-font-size * 0.25 0 0 $default-font-size * 0.25;
+        }  
+      }
+      
     }
 
     & > div:not(&-deal, &-game) {

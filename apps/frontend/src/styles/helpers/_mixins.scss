@@ -141,6 +141,7 @@
   border-right: $deal-detail-table-border;
   padding: 0 $default-font-size * 0.5;
   color: var(--color-black);
+  background-color: var(--color-white);
   line-break: anywhere;
 }
 
@@ -161,29 +162,30 @@
     content: '';
     position: absolute;
     bottom: 1px;
-    left: $default-font-size * .66;
+    left: $default-font-size * 0.66;
     background-color: rgba(var(--color-primary-3-rgb), 1);
-    width: 70%;
+    width: 66%;
     height: 1px;
 
     --scale-amount: 0;
     transform: scale(var(--scale-amount));
     transform-origin: left;
-    transition: transform $animation-duration * 1
-      $animation-easing-standard-easeInOutBack;
+    transition: transform $animation-duration * .5 $animation-easing-modern;
   }
 
-  &:hover, &:active, &:focus {
-		cursor: pointer;
+  &:hover,
+  &:active,
+  &:focus {
+    cursor: pointer;
     color: rgba(var(--color-primary-3-rgb), 1) !important;
     transition: color $animation-duration * 0.25 $animation-easing-flash;
   }
 
-	&:hover {
-		&::before {
+  &:hover {
+    &::before {
       --scale-amount: 1;
     }
-	}
+  }
 }
 /* ------------------------------------------------------------------------------------------------- */
 //Media Query Manager

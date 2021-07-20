@@ -29,7 +29,8 @@
     // border-bottom: $games-list-border;
     background-image: linear-gradient(
       var(--games-view-title-gradient-direction),
-      rgba(#{$games-list-gradient-color-1}, 1),
+      rgba(#{$games-list-gradient-color-2}, 1),
+      rgba(#{$games-list-gradient-color-1}, 1) calc(100% - #{$games-list-black-gradient-amount} - 19%),
       rgba(#{$games-list-gradient-color-1}, 1) calc(#{$games-list-black-gradient-amount} + 19%),
       rgba(#{$games-list-gradient-color-2}, 1),
     );

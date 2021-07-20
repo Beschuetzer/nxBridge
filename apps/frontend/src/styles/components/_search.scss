@@ -1,13 +1,16 @@
 .search {
+  resize: horizontal;
+  overflow-x: auto;
   position: relative;
   grid-column: 1 / span 1;
   grid-row: 2 / -1;
-  padding: $default-font-size * 5.3125 $default-font-size * 0.5 $default-font-size * 0.5 $default-font-size * 0.5;
+  padding: $default-font-size * 1 $default-font-size * 0.5 $default-font-size * 0.5 $default-font-size * 0.5;
   display: flex;
   flex-direction: column;
   // justify-content: center;
   align-items: center;
-  min-width: 25vmin;  
+  min-width: $default-font-size * 12.125;
+  max-width: 100vw;
   background-image: linear-gradient(
     var(--search-linear-gradient-direction),
     rgba(var(--color-black-rgb), 1),
@@ -28,6 +31,7 @@
     width: 100%;
     padding: $default-font-size * 0.25;
     border-bottom: $deal-player-border-thin;
+    min-width: 100vw;  
   }
 
   & *:not(select, option, input, .button, .color-red-light, .color-green-light, .color-red-light, .color-white, .login-card__header) {

@@ -279,6 +279,10 @@
 
 .matched-deal {
   background-color: rgba(var(--color-primary-3-rgb), 1) !important;
+
+  & *:not(button) {
+    background-color: rgba(var(--color-primary-3-rgb), 1) !important;
+  }
 }
 
 .announce-self {
@@ -300,4 +304,16 @@
   align-items: center;
   justify-content: center;
   backdrop-filter: blur(10px);
+}
+
+.deal-detail__success {
+  & *:not(.deal-detail__hands-table *, .deal-detail__bids-table *) {
+    background-color: var(--color-green-almost-white);
+  }
+}
+
+.deal-detail__failure {
+  & *:not(.deal-detail__hands-table *, .deal-detail__bids-table *) {
+    background-color: var(--color-red-almost-white);
+  }
 }
