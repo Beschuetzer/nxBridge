@@ -19,6 +19,7 @@ $color-red: #7b3428;
 $color-red-light: #FF9494;
 $color-green: #537b28;
 $color-green-light: #89C549;
+$color-green-super-light: #E3F2D4;
 
 :root {
 	--color-grey-light-1: #{$color-grey-light-1};
@@ -38,6 +39,7 @@ $color-green-light: #89C549;
 	--color-red-light: #{$color-red-light};
 	--color-green: #{$color-green};
 	--color-green-light: #{$color-green-light};
+	--color-green-super-light: #{$color-green-super-light};
 	--color-black-rgb: 	#{hexToRGB($color-black)};
   --color-grey-20-rgb: #{hexToRGB($color-grey-20)};
 	--color-grey-40-rgb: #{hexToRGB($color-grey-40)};
@@ -48,6 +50,7 @@ $color-green-light: #89C549;
 	--color-red-light-rgb: #{hexToRGB($color-red-light)};
 	--color-green-rgb: #{hexToRGB($color-green)};
 	--color-green-light-rgb: #{hexToRGB($color-green-light)};
+	--color-green-super-light-rgb: #{hexToRGB($color-green-super-light)};
 
 	--color-primary-1: #{$color-primary-1};
 	--color-primary-1-light: #{$color-primary-1-light};

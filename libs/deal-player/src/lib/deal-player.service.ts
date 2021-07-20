@@ -41,6 +41,7 @@ export class DealPlayerService {
   public cards: paper.Raster[] = [];
   public cardPlayerOrder: [string, string, string, string] | null = null;
   public handsToRender: Hands | null = null;
+  public SCALE_AMOUNT_THRESHOLD_VIEW_PORT_WIDTH = 1350;
   private cardWidth = -1;
   private cardHeight = -1;
   private cardVisibleOffset = -1;
@@ -51,7 +52,6 @@ export class DealPlayerService {
   private DEFAULT_CARD_POSITION = -1000;
   private CARD_MOBILE_PIXEL_WIDTH = 233;
   private CARD_FULL_PIXEL_WIDTH = 360;
-  private SCALE_AMOUNT_THRESHOLD_VIEW_PORT_WIDTH = 1350;
   private MAX_SCALE_AMOUNT_BELOW_THRESHOLD = 0.7;
   private MAX_SCALE_AMOUNT_ABOVE_THRESHOLD = 0.75;
   private MIN_SCALE_AMOUNT_MOBILE = 0.7;

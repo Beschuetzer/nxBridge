@@ -1,7 +1,7 @@
 .deal-player {
   color: var(--color-black);
   font-size: $default-font-size;
-  background-color: rgba(var(--color-primary-2-rgb), .1);
+  background-color: rgba(var(--color-green-super-light-rgb), 1);
   position: absolute;
   top: 0px;
   left: 0;
@@ -331,7 +331,7 @@
   }
 
   &__canvas {
-    background-color: rgba(var(--color-green-light-rgb), 1);
+    background-color: rgba(var(--color-green-super-light-rgb), 1);
     --height: 87.3vh;
     user-select: none;
     -webkit-user-drag: none;

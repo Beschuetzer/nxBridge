@@ -59,11 +59,18 @@
 
     & input {
       margin-bottom: 0 !important;
+      &:hover {
+        cursor: pointer;
+      }
     }
     
     & label {
       display: flex;
       align-items: center;
+
+      &:hover {
+        cursor: pointer;
+      }
 
       & span {
         margin-left: $default-font-size * .25;

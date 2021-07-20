@@ -36,6 +36,7 @@ import {
 } from '@nx-bridge/store';
 import { Contract, Hands, ReducerNames, Seating } from '@nx-bridge/interfaces-and-types';
 import { DealPlayerService } from '../deal-player.service';
+import { AnonymousSubject } from 'rxjs/internal/Subject';
 
 @Component({
   selector: 'nx-bridge-deal-player',
@@ -65,6 +66,7 @@ export class DealPlayerComponent implements OnInit {
   public error = '';
   private hasLoadedDeal = false;
   private shouldChangePlaySpeed = false;
+  private closeWhenResizedTimeout: any;
   
   public isMobile = window.innerWidth <= MOBILE_START_WIDTH;
   public isPlaying = false;
@@ -88,7 +90,7 @@ export class DealPlayerComponent implements OnInit {
 
     this.store.select(ReducerNames.deals).subscribe((dealState) => {
       this.handleDealsUpdates(dealState);
-      this.addHeightAuto();
+      if (window.innerWidth <= this.dealPlayerService.SCALE_AMOUNT_THRESHOLD_VIEW_PORT_WIDTH) this.addHeightAuto();
     });
   }
 
@@ -104,12 +106,11 @@ export class DealPlayerComponent implements OnInit {
     const currentTarget = e.target as HTMLElement;
     const isChildClick =  checkForParentOfType(currentTarget, 'nx-bridge-deal-player', DEAL_PLAYER_CLASSNAME);
 
-    if (!isChildClick) this.close();
+    if (!isChildClick) this.closeWindow();
   }
-  
 
   onClose() {
-    this.close();
+    this.closeWindow();
   }
 
   onNext() {
@@ -194,7 +195,7 @@ export class DealPlayerComponent implements OnInit {
     this.renderer.addClass(contract.children[1], classToAdd);
   }
 
-  private close() {
+  private closeWindow() {
     this.hasLoadedDeal = false;
     this.onPause();
     this.dealPlayerService.resetCardsPlayed();

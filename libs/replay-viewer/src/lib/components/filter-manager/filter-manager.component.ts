@@ -112,11 +112,18 @@ export class FilterManagerComponent implements OnInit {
   }
   @HostBinding('class.d-none') get toggleDisplayNone() {
     // return ;
+    if (window.innerWidth <= MOBILE_START_WIDTH) return false;
     return (
       (!this.searchService.getAreDealsLoaded() &&
         window.innerWidth <= MOBILE_START_WIDTH) ||
       this.router.url === `/${rootRoute}`
     );
+  }
+  @HostBinding('class.h-0') get getHeightAuto() {
+    if (window.innerWidth <= MOBILE_START_WIDTH) {
+      if (!this.searchService.getAreDealsLoaded()) return true;
+    } 
+    return false;
   }
   @HostBinding('class.announce-self') get toggleAnnounceSelf() {
     return this.searchService.getAreDealsLoaded();

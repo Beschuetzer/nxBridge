@@ -1,12 +1,21 @@
 @keyframes announce-self {
   0%{
     background-color: rgba(var(--color-black-rgb), 1);
-    // border-radius: 100%;
     transform: translateY(100%) scaleX(1.5);
   }
   33% {
     background-color: rgba(var(--color-black-rgb), 0);
-    // border-radius: 0;
     transform: translateY(-40%) scale(.01);
+  }
+}
+
+@keyframes announce-self-mobile {
+  0%{
+    background-color: rgba(var(--color-black-rgb), 1);
+    transform: translateX(-100%) scale(.1);
+  }
+  66% {
+    background-color: rgba(var(--color-black-rgb), 0);
+    transform: translateX(5%) scale(1);
   }
 }
