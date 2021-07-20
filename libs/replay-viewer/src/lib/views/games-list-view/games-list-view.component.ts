@@ -10,8 +10,6 @@ import {
   AppState,
   reducerDefaultValue,
   SetBatchNumber,
-  SetResultsPerPagePreference,
-  SetSortingPreference,
 } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
 import {
@@ -20,26 +18,18 @@ import {
   ReducerNames,
 } from '@nx-bridge/interfaces-and-types';
 import {
-  dealsListButtonFontSizeCssPropName,
   DISPLAY_NONE_CLASSNAME,
-  gameDetailHeightAboveBreakpointCssPropName,
-  gameDetailHeightBelowBreakpointCssPropName,
-  gameDetailSummaryHeightPercentageCssPropName,
   GAMES_VIEW_CLASSNAME,
   getNewBatchNumber,
   getNewTotalNumberOfPages,
-  LOGIN_CARD_CLASSNAME,
   NOT_AVAILABLE_STRING,
-  playerLabelsDisplayTypeCssPropName,
-  playerNamesDisplayTypeCssPropName,
   RESULTS_PER_PAGE_OPTIONS,
   SIZE_OPTIONS,
   SORT_OPTIONS,
 } from '@nx-bridge/constants';
 import { LocalStorageManagerService } from '../../services/local-storage-manager.service';
-import { gameDetailSizes } from '@nx-bridge/computed-styles';
 import { SearchService } from '../../services/search.service';
-import { timeStamp } from 'node:console';
+import { ReplayViewerGameService } from '../../services/replay-viewer.game.service';
 
 @Component({
   selector: 'nx-bridge-games-list-view',
@@ -81,6 +71,7 @@ export class GamesListViewComponent implements OnInit {
     private searchService: SearchService,
     private elRef: ElementRef,
     private renderer: Renderer2,
+    private replayerViewerGameService: ReplayViewerGameService,
   ) {}
 
   ngOnInit(): void {
@@ -103,11 +94,11 @@ export class GamesListViewComponent implements OnInit {
       else this.numberOfDealsMatchingFilters = -1;
     });
 
-    this.setDefaultResultsPerPage();
+    this.replayerViewerGameService.setDefaultResultsPerPage(this.resultsElement);
     this.preferences = this.localStorageManager.getPreferences();
     this.setOptionElementsPerPreferences();
-    this.changeSize(this.preferences.size);
-    this.showSearchHideButton();
+    this.replayerViewerGameService.changeGameSize(this.preferences.size);
+    this.replayerViewerGameService.showSearchHideButton(this.elRef);
   }
 
   onCurrentPageChange(e: Event) {
@@ -154,27 +145,28 @@ export class GamesListViewComponent implements OnInit {
     );
     this.store.dispatch(new SetBatchNumber(this.currentBatch));
 
-    this.setResultsPerPagePreference(option.value);
+    this.replayerViewerGameService.setResultsPerPagePreference(option.value);
     this.resultsPerPage = +option.value;
     this.searchService.setCurrentlyDisplayingGames();
     this.totalNumberOfPages = getNewTotalNumberOfPages(
       +option.value,
       this.totalGames
     );
-    this.selectCurrentPage(this.currentBatch);
+
+    this.replayerViewerGameService.selectCurrentPage(this.currentBatch, this.currentPageElement);
   }
 
   onSizeChange(e: Event, shouldSave = true) {
     const option = (e.currentTarget || e.target) as HTMLOptionElement;
     if (shouldSave) this.localStorageManager.saveSizePreference(option.value);
-    this.changeSize(option.value);
+    this.replayerViewerGameService.changeGameSize(option.value);
   }
 
   onSortChange(e: Event, shouldSave = true) {
     const option = (e.currentTarget || e.target) as HTMLOptionElement;
     if (shouldSave) this.localStorageManager.saveSortPreference(option.value);
 
-    this.setSortPreference(option.value);
+    this.replayerViewerGameService.setSortPreference(option.value);
 
     this.currentBatch =
       this.currentBatch <= 0
@@ -183,7 +175,7 @@ export class GamesListViewComponent implements OnInit {
     this.store.dispatch(new SetBatchNumber(this.currentBatch));
 
     this.searchService.setCurrentlyDisplayingGames();
-    this.selectCurrentPage(this.currentBatch);
+    this.replayerViewerGameService.selectCurrentPage(this.currentBatch, this.currentPageElement);
   }
 
   setOptionElementsPerPreferences() {
@@ -204,7 +196,7 @@ export class GamesListViewComponent implements OnInit {
 
       let stringToDispatch = this.sortOptions.ascending;
       if (childIndex === 1) stringToDispatch = this.sortOptions.descending;
-      this.setSortPreference(stringToDispatch);
+      this.replayerViewerGameService.setSortPreference(stringToDispatch);
     }
     if (sizeElement) {
       let childIndex = 0;
@@ -246,69 +238,4 @@ export class GamesListViewComponent implements OnInit {
     }
   }
 
-  private changeSize(newSize: string) {
-    if (!newSize) return;
-    document.documentElement.style.setProperty(
-      gameDetailHeightAboveBreakpointCssPropName,
-      gameDetailSizes[newSize].gameDetailHeight.aboveBreakpoint
-    );
-    document.documentElement.style.setProperty(
-      gameDetailHeightBelowBreakpointCssPropName,
-      gameDetailSizes[newSize].gameDetailHeight.belowBreakpoint
-    );
-    document.documentElement.style.setProperty(
-      gameDetailSummaryHeightPercentageCssPropName,
-      gameDetailSizes[newSize].summaryHeightPercent
-    );
-    document.documentElement.style.setProperty(
-      playerLabelsDisplayTypeCssPropName,
-      gameDetailSizes[newSize].playerLabelsDisplayType
-    );
-    document.documentElement.style.setProperty(
-      playerNamesDisplayTypeCssPropName,
-      gameDetailSizes[newSize].playerNamesDisplayType
-    );
-    document.documentElement.style.setProperty(
-      dealsListButtonFontSizeCssPropName,
-      gameDetailSizes[newSize].dealsListButtonFontSize
-    );
-  }
-
-  private selectCurrentPage(newBatchNumber: number) {
-    //note: timeout is needed to allow the re-render to take place
-    setTimeout(() => {
-      const currentPageElement = this.currentPageElement
-        ?.nativeElement as HTMLElement;
-      const currentPageOptionElement = currentPageElement?.children[
-        newBatchNumber
-      ] as HTMLOptionElement;
-      if (currentPageOptionElement) currentPageOptionElement.selected = true;
-    }, 50);
-  }
-
-  private setDefaultResultsPerPage() {
-    const resultsElement = this.resultsElement
-      ?.nativeElement as HTMLSelectElement;
-    const lastResultOption = resultsElement.children[
-      resultsElement.children.length - 1
-    ] as HTMLOptionElement;
-    if (lastResultOption) lastResultOption.selected = true;
-  }
-
-  private setSortPreference(newSortPreference: string) {
-    this.store.dispatch(new SetSortingPreference(newSortPreference));
-  }
-
-  private setResultsPerPagePreference(newResultsPerPagePreference: string) {
-    this.store.dispatch(
-      new SetResultsPerPagePreference(newResultsPerPagePreference)
-    );
-  }
-
-  private showSearchHideButton() {
-    const gamesListView = this.elRef.nativeElement as HTMLElement;
-    const loginCardHide = gamesListView.querySelector(`.${LOGIN_CARD_CLASSNAME}__hide`);
-
-    loginCardHide?.classList.remove(DISPLAY_NONE_CLASSNAME);
-  }
 }

@@ -44,6 +44,5 @@ Testing------------
 -add 'Deal Pass out' filter?
 
 -refactor game private methods to service
--add 'out of x' where x is total number of fetchedDeals for the user in game-list-view msg pertaining to deals
 
 
