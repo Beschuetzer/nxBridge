@@ -33,6 +33,7 @@ export class ReplayViewerDealService {
     let nsDealsWon = 0;
     let ewDealsWon = 0;
     let winner: Team | null;
+    debugger
 
     for (let i = 0; i < deals.length; i++) {
       const deal = deals[i];

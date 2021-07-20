@@ -90,7 +90,7 @@ export class DealPlayerComponent implements OnInit {
 
     this.store.select(ReducerNames.deals).subscribe((dealState) => {
       this.handleDealsUpdates(dealState);
-      if (window.innerWidth <= this.dealPlayerService.SCALE_AMOUNT_THRESHOLD_VIEW_PORT_WIDTH) this.addHeightAuto();
+      this.addHeightAuto();
     });
   }
 

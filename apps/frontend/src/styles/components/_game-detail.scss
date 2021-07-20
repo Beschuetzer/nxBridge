@@ -234,8 +234,9 @@
           // display: none;
           position: sticky;
           top: 0;
-          left: 0;
-          width: 100%;
+          left: 50%;
+          transform: translateX(-50%);
+          width: max-content;
           height: auto;
           font-size: $default-font-size * 1.5 !important;
           padding: $default-font-size * 0.3125;
