@@ -118,6 +118,7 @@
   }
 
   &__play {
+    background-color: rgba(var(--color-primary-4-rgb), 1);
     user-select: none;
     font-size: $default-font-size * 0.74;
     grid-column: 2 / span 1;
@@ -330,6 +331,7 @@
   }
 
   &__canvas {
+    background-color: rgba(var(--color-green-light-rgb), 1);
     --height: 87.3vh;
     user-select: none;
     -webkit-user-drag: none;
@@ -373,11 +375,11 @@
       // overflow: hidden;
 
       @include respond(deal-player-layout-switch) {
-        width: 97.5% !important;
+        // width: 97.5% !important;
       }
 
       @include respond(super-small) {
-        width: 100vw !important;
+        // width: 100vw !important;
       }
     }
 
@@ -422,6 +424,7 @@
   }
 
   &__controls {
+    background-color: rgba(var(--color-primary-4-rgb), 1);
     user-select: none;
     cursor: pointer;
     max-width: $default-font-size * 39;
@@ -590,17 +593,16 @@
   &__canvas,
   &__play,
   &__controls {
-    background-color: rgba(var(--color-primary-4-rgb), 1);
-    border-left: $deal-player-border;
-    border-right: $deal-player-border;
+    // border-left: $deal-player-border;
+    border-right: $deal-player-border-thick;
 
     @include respond(deal-player-layout-switch) {
       grid-column: 1/-1; 
     }
 
     @include respond(super-small) {
-      width: 100vw;
-      border: none;
+      // width: 100vw;
+      // border: none;
     }
   }
 }

@@ -22,9 +22,7 @@ export class GameDetailComponent implements OnInit {
   public nsScoreGreater: number | boolean = -1;
   public teams = teams;
   
-  private winner: Team = '';
-  private setScorelWaitDuration = 1000;
-  private setScoreInterval: any;
+  // private winner: Team = '';
 
   constructor(
     private store: Store<AppState>,
@@ -66,9 +64,9 @@ export class GameDetailComponent implements OnInit {
     }
 
     
-    let winner = "NS";
-    if (this.eastWestScore && this.northSouthScore && this.eastWestScore > this.northSouthScore) winner = "EW";
-    this.winner = winner as Team;
+    // let winner = "NS";
+    // if (this.eastWestScore && this.northSouthScore && this.eastWestScore > this.northSouthScore) winner = "EW";
+    // this.winner = winner as Team;
 
     if (this.northSouthScore !== undefined && this.eastWestScore !== undefined) {
       this.nsScoreGreater = this.northSouthScore > this.eastWestScore
