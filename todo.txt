@@ -44,6 +44,6 @@ Testing------------
 -add 'Deal Pass out' filter?
 -add 'Deal split' filter? (finds games where winning team won by x number of deals)
 
--need to fix portfolio links to amajreplays.herokuapp.com
-
+ 
 -change .matched-deals to have an animation of some sort
+-change .icon

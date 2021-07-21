@@ -1,0 +1,41 @@
+https://medium.com/@andrew.ray.gilbert/deploy-an-nx-workspace-to-heroku-c0b8ba0e6fe9
+
+
+Modify app.module.ts in the Backend to Statically Serve the Angular Frontend
+
+  -npm install --save @nestjs/serve-static
+  -in app.module.ts for backend:
+    import { ServeStaticModule } from '@nestjs/serve-static';
+    import { join } from 'path'; 
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'nx-app'),
+      exclude: ['/api*']
+    })
+
+Change port to PORT in the main.ts file in the Backend
+Build the Frontend and Backend:
+   -open the main.ts file located in /apps/api/src. Change the reference to process.env.port to process.env.PORT
+
+Modify package.json to (a) Specify Engines and (b) Run the Backend in the start Script
+  -get node version with 'node --version'
+  -add to package.json:
+    "engines" : {
+      "node" : "14.x" <---your version
+    },
+    "scripts": {
+      "start": "node dist/apps/api/main"  <--start backend (which in turn serves front end)
+    }
+
+Modify the .gitignore File to Commit and Push Our /dist Folder(optional?)
+
+Create a Procfile for Heroku in project root called "Procfile" (no extension) and include:
+  web: npm run start
+
+
+Build and deploy:
+  -remember to build projects with 'nx build [projectName]'
+  -connect project to heroku project (if necessary) heroku git:remote -a [projectName]
+  -push to heroku per usual
+  -remember to add any .env variables to the heroku project as config vars:
+    heroku config:set SOME_ENV_VAR=soMeValuE
+  -if an npm package doesn't install properly (e.g. semantic-ui) try using the CDN instead
