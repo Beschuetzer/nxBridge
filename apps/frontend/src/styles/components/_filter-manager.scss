@@ -35,7 +35,7 @@
     }
   }
 
-  &__options {
+  &__filters {
     // border-bottom: 1px dashed var(--color-primary-4);
     display: flex;
     justify-content: space-between;
@@ -46,7 +46,7 @@
     }
   }
 
-  &__options label:not(&__date label) {
+  &__filters label:not(&__date label) {
     @include label-fx;
   }
   &__details label:not(&__date label, .flex-column-start) {
@@ -58,26 +58,38 @@
   }
 
   &__details {
-    &-deal,
-    &-game {
-      // border-bottom: 1px dashed var(--color-primary-4);
-
+    &-checkboxes {
       // @include respond($layout-breakpoint) {
-      //   border-bottom: none;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax($default-font-size * 8, 1fr));
       // }
-      & > * {
-        padding: 0 0 0 $default-font-size * 0.25;
-      }
-
-      @include respond($layout-breakpoint) {
-        & > * {
-          padding: $default-font-size * 0.25 0 0 $default-font-size * 0.25;
-        }  
-      }
-      
     }
 
-    & > div:not(&-deal, &-game) {
+    // &-game {
+    //   @include respond($layout-breakpoint) {
+    //   }
+    // }
+
+    // &-deal,
+    // &-game {
+    //   // border-bottom: 1px dashed var(--color-primary-4);
+
+    //   // @include respond($layout-breakpoint) {
+    //   //   border-bottom: none;
+    //   // }
+    //   & > * {
+    //     padding: 0 0 0 $default-font-size * 0.25;
+    //   }
+
+    //   @include respond($layout-breakpoint) {
+    //     & > * {
+    //       padding: $default-font-size * 0.25 0 0 $default-font-size * 0.25;
+    //     }  
+    //   }
+      
+    // }
+
+    & > div:not(&-deal, &-game, &-checkboxes) {
       border: 1px solid rgba(var(--color-primary-4-rgb), 0.5);
       border-radius: $default-font-size * 0.25;
       padding: $semantic-ui-text-default-font-size * 0 $default-font-size * 0.25

@@ -31,7 +31,7 @@
   </div>
 
   <!-- main checkboxes -->
-  <div class="{{ FILTER_MANANGER_CLASSNAME }}__options field">
+  <div class="{{ FILTER_MANANGER_CLASSNAME }}__filters field">
     <label>
       <input #date (click)="onDateClick($event)" type="checkbox" />
       Date
@@ -47,28 +47,24 @@
   </div>
 
   <div class="{{ FILTER_MANANGER_CLASSNAME }}__details">
-    <!-- sub-checkboxes -->
-    <div
-      class="{{ FILTER_MANANGER_CLASSNAME }}__details-deal"
-      *ngIf="deal.checked"
-    >
-      <label>
+    <div class="{{ FILTER_MANANGER_CLASSNAME }}__details-checkboxes">
+      <label *ngIf="deal.checked">
         <input #contract (click)="onContractClick()" type="checkbox" />
         Contract was ...
       </label>
-      <label>
+      <label *ngIf="deal.checked">
         <input #double (click)="onDoubleClick()" type="checkbox" /> Deal was
         doubled ...
       </label>
-      <label>
+      <label *ngIf="deal.checked">
         <input #declarer (click)="onDeclarerClick()" type="checkbox" />
         Declarer was ...
       </label>
-      <label>
+      <label *ngIf="deal.checked">
         <input #openingBid (click)="onOpeningBidClick()" type="checkbox" />
         Opening bid was ...
       </label>
-      <label>
+      <label *ngIf="deal.checked">
         <input
           #playerHasCard
           (click)="onPlayerHasCardClick()"
@@ -76,25 +72,23 @@
         />
         Player had a specific card
       </label>
-      <label>
+      <label *ngIf="deal.checked">
         <input #dealResult (click)="onDealResultClick()" type="checkbox" />
         Result was ... than ...
       </label>
-    </div>
 
-    <div
-      class="{{ FILTER_MANANGER_CLASSNAME }}__details-game"
-      *ngIf="game.checked"
-    >
-      <label>
+    
+      <!--game filters start here  -->
+
+      <label *ngIf="game.checked">
         <input #gameName (click)="onGameNameClick()" type="checkbox" />
         Game was named ...
       </label>
-      <label>
+      <label *ngIf="game.checked">
         <input #playerInGame (click)="onPlayerInGameClick()" type="checkbox" />
         Player was in game
       </label>
-      <label>
+      <label *ngIf="game.checked">
         <input #wonBy (click)="onWonByClick()" type="checkbox" />
         Won by ... than ...
       </label>
