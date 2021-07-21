@@ -2,7 +2,7 @@
   width: 97.5%;
   max-width: $default-font-size * 20;
   padding: $default-font-size * 1;
-  border: $default-font-size * .1 solid rgba(var(--color-primary-4-rgb), 1);
+  border: $default-font-size * 0.1 solid rgba(var(--color-primary-4-rgb), 1);
   border-radius: $login-card-border-radius;
   box-shadow: $login-card-box-shadow;
   position: absolute;
@@ -14,14 +14,14 @@
   & *:not(.non-existant-class, button) {
     color: var(--color-primary-4) !important;
 
-    &:not(label, form, h4, input, span, .login-card__buttons, .login-card__email, .search, .login-card__header) {
-      margin-bottom: $default-font-size * .5 !important;
+    &:not(label, form, h4, input, span, .login-card__buttons, .login-card__email, .search, .login-card__header, .login-card__title) {
+      margin-bottom: $default-font-size * 0.5 !important;
     }
   }
 
   &__title {
-    margin-bottom: $default-font-size * 1.2 !important;
-    border-bottom: 1px solid rgba(var(--color-primary-3-rgb), .5) !important;
+    margin: $default-font-size * 0 !important;
+    border-bottom: 1px solid rgba(var(--color-primary-3-rgb), 0.5) !important;
     text-align: center;
     letter-spacing: 0.094rem;
   }
@@ -30,14 +30,13 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-   
   }
 
   &__hide {
     margin: 0 !important;
   }
 
-  &__buttons{ 
+  &__buttons {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-column-gap: $default-font-size;
@@ -48,10 +47,31 @@
     margin: $default-font-size * 1.25 0 !important;
   }
 
+  &__submit {
+    margin-top: $default-font-size * 0.5;
+
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: $default-font-size * 0.25;
+    margin-top: $default-font-size * 0.5;
+
+    @include respond($layout-breakpoint) {
+      margin-top: $default-font-size * 0.25;
+    }
+  }
+
   &__subtitle {
+    margin-top: $default-font-size * 0.5;
+
     display: grid;
     grid-template-columns: repeat(3, max-content);
     column-gap: $default-font-size;
+
+    &:not(.login-card .login-card__subtitle) {
+      @include respond($layout-breakpoint) {
+        margin-top: $default-font-size * 0;
+      }
+    }
 
     & > h4 {
       margin-bottom: 0 !important;
@@ -63,7 +83,7 @@
         cursor: pointer;
       }
     }
-    
+
     & label {
       display: flex;
       align-items: center;
@@ -73,34 +93,38 @@
       }
 
       & span {
-        margin-left: $default-font-size * .25;
-
+        margin-left: $default-font-size * 0.25;
       }
     }
   }
 
   &__email {
-
   }
 
   &__username {
-
   }
 
   &:hover .logo {
     opacity: $logo-opacity-hover;
-    background-image: url($login-card-logo), linear-gradient(to bottom, rgba(var(--color-primary-4-rgb), 1), rgba(var(--color-primary-3-rgb), 1));
-  } 
+    background-image: url($login-card-logo),
+      linear-gradient(
+        to bottom,
+        rgba(var(--color-primary-4-rgb), 1),
+        rgba(var(--color-primary-3-rgb), 1)
+      );
+  }
 
   & .search {
+    resize: none;
+    overflow-x: hidden;
     background-image: radial-gradient(
-      rgba(var(--color-black-rgb), 1), 
-      rgba(var(--color-black-rgb), .001)
+      rgba(var(--color-black-rgb), 1),
+      rgba(var(--color-black-rgb), 0.001)
     );
     background-image: linear-gradient(
       to bottom,
       rgba(var(--color-black-rgb), 1),
-      rgba(var(--color-primary-1-rgb), .1)
+      rgba(var(--color-primary-1-rgb), 0.1)
     );
     padding: $default-font-size;
     // background-color: rgba(var(--color-primary-4-rgb), .75);
@@ -116,15 +140,14 @@
     }
 
     & button {
-    
       &:nth-of-type(1) {
         margin-bottom: 0 !important;
       }
     }
 
     & form {
+      margin-bottom: 0;
       & > .field:nth-of-type(1) {
-      
         @include respond($layout-breakpoint) {
           display: block;
         }
@@ -143,6 +166,4 @@
     //   font-size: $default-font-size * 1 !important;
     // }
   }
-
-
 }

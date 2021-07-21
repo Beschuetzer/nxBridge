@@ -4,13 +4,14 @@
   position: relative;
   grid-column: 1 / span 1;
   grid-row: 2 / -1;
-  padding: $default-font-size * 1 $default-font-size * 0.5 $default-font-size * 0 $default-font-size * 0.5;
+  padding: $default-font-size * 1 $default-font-size * 0.5 $default-font-size *
+    0 $default-font-size * 0.5;
   display: flex;
   flex-direction: column;
   // justify-content: center;
   align-items: center;
   min-width: $default-font-size * 12.125;
-  max-width: 100vw;
+  max-width: 66vw;
   background-image: linear-gradient(
     var(--search-linear-gradient-direction),
     rgba(var(--color-black-rgb), 1),
@@ -21,6 +22,7 @@
 
   @include respond($layout-breakpoint) {
     resize: none;
+    overflow-x: hidden;
     background-image: linear-gradient(
       to top,
       rgba(var(--color-black-rgb), 1),
@@ -30,12 +32,14 @@
     grid-column: 1 / -1;
     grid-row: 2 / span 1;
     width: 100%;
-    padding: $default-font-size * 0.25;
+    padding: $default-font-size * 0.25 $default-font-size * 0.25 0
+      $default-font-size * 0.25;
     border-bottom: $deal-player-border-thin;
-    min-width: 100vw;  
+    min-width: 100vw;
   }
 
-  & *:not(select, option, input, .button, .color-red-light, .color-green-light, .color-red-light, .color-white, .login-card__header) {
+  &
+    *:not(form, select, option, input, .button, .color-red-light, .color-green-light, .color-red-light, .color-white, .login-card__header) {
     color: var(--color-primary-4) !important;
     margin-bottom: 0 !important;
   }
@@ -47,7 +51,6 @@
 
   & .login-card__header {
     color: var(--color-primary-4) !important;
-    margin-bottom: $default-font-size * .5;
     font-size: $semantic-ui-text-default-font-size !important;
 
     @include respond($layout-breakpoint) {
@@ -56,11 +59,11 @@
   }
 
   & label {
-    text-align: left;    
+    text-align: left;
   }
 
   & .field:nth-of-type(n + 1) label {
-    margin-top: $default-font-size * .25 !important;
+    margin-top: $default-font-size * 0.25 !important;
 
     @include respond($layout-breakpoint) {
       margin-top: 0 !important;
@@ -69,29 +72,12 @@
 
   & form {
     width: 100%;
+    margin-bottom: $default-font-size * 0.25;
     // & input, & button {
     //   @include respond($layout-breakpoint) {
     //     font-size: $default-font-size * .5 !important;
     //   }
     // }
-    
-
-    & > div {
-      &:last-of-type {
-        margin-top: $default-font-size * 0.5;
-
-        @include respond($layout-breakpoint) {
-          display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          column-gap: $default-font-size * 0.25;
-          margin-top: $default-font-size * 0.5;
-        }
-
-        @include respond($layout-breakpoint) {
-          margin-top: $default-font-size * .25;
-        }
-      }
-    }
 
     & > .field:nth-of-type(1) {
       @include respond($layout-breakpoint) {
@@ -107,7 +93,7 @@
       // max-width: $default-font-size * 8 !important;
     }
 
-    &:nth-of-type(1):not(.filter-manager__reset, .filter-manager__button, .filter-manager__add-button, .login-card__hide) {
+    &:nth-of-type(1):not(button, .filter-manager__reset, .filter-manager__button, .filter-manager__add-button, .login-card__hide) {
       margin-bottom: $default-font-size * 0.5 !important;
 
       @include respond($layout-breakpoint) {

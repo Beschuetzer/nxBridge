@@ -44,10 +44,10 @@
     & > * {
       &:first-child {
         line-break: anywhere;
-        @include respond(tab-land) {
+        // @include respond(tab-land) {
           flex-direction: column;
           align-items: flex-start !important;  
-        }
+        // }
 
         @include respond(tab-port) {
           // font-size: $default-font-size * .75;
