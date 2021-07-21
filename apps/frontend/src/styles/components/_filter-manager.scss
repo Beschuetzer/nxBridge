@@ -3,11 +3,9 @@
   overflow-y: auto;
   width: 100%;
   height: 100%;
-  transition: 
-    opacity $announce-self-animation-duration * 0.5 $animation-easing-standard,
-    height $announce-self-animation-duration * 1 $animation-easing-standard,
-
-    ;
+  transition: opacity $announce-self-animation-duration * 0.5
+      $animation-easing-standard,
+    height $announce-self-animation-duration * 1 $animation-easing-standard;
 
   @include respond($layout-breakpoint) {
     overflow-x: hidden;
@@ -28,8 +26,8 @@
     top: 0;
     background-color: var(--color-black);
     z-index: 10;
-    border-top: 1px solid rgba(var(--color-primary-4-rgb), .5);
-    border-bottom: 1px solid rgba(var(--color-primary-4-rgb), .5);
+    border-top: 1px solid rgba(var(--color-primary-4-rgb), 0.5);
+    border-bottom: 1px solid rgba(var(--color-primary-4-rgb), 0.5);
     padding: $default-font-size * 0.25 0 $default-font-size * 0.25
       $default-font-size * 0.25;
 
@@ -47,34 +45,62 @@
 
     @include respond($layout-breakpoint) {
       border-bottom: none;
+      // margin: $default-font-size * 0.25 0 !important;
     }
   }
 
-  &__filters label:not(&__date label) {
-    @include label-fx;
+  &__filters {
+    margin-bottom: 0 !important;
+
+    @include respond($layout-breakpoint) {
+      margin-bottom: $default-font-size * .25 !important;
+    }
+
+    & label:not(&__date label) {
+      @include label-fx;
+    }
   }
-  &__details label:not(&__date label, .flex-column-start) {
-    @include label-fx;
-    &::before {
-      left: $default-font-size * .93;
-      width: 87.5%;
+  &__details {
+    margin: $default-font-size * 0.25 0 !important;
+
+    & label:not(&__date label, .flex-column-start) {
+      @include label-fx;
+      &::before {
+        // left: $default-font-size * 0.93;
+        width: 90%;
+      }
     }
   }
 
   &__details {
     &-checkboxes {
       // @include respond($layout-breakpoint) {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax($default-font-size * 8, 1fr));
+      display: grid;
+      grid-template-columns: repeat(
+        auto-fill,
+        minmax($default-font-size * 8, 1fr)
+      );
+
+      @include respond($layout-breakpoint) {
+        row-gap: $default-font-size * 0.125;
+      }
       // }
     }
 
     &-filters {
+      --max: calc(#{$default-font-size} * 6);
       margin: $default-font-size * 0.25 0;
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax($default-font-size * 6, 1fr));
-      column-gap: $default-font-size * .25;
-      row-gap: $default-font-size * .25;
+      grid-template-columns: repeat(
+        auto-fill,
+        minmax(var(--max), 1fr)
+      );
+      column-gap: $default-font-size * 0.25;
+      row-gap: $default-font-size * 0.25;
+
+      @include respond($layout-breakpoint) {
+        --max: calc(#{$default-font-size} * 6.375);
+      }
     }
 
     // &-game {
@@ -96,9 +122,9 @@
     //   @include respond($layout-breakpoint) {
     //     & > * {
     //       padding: $default-font-size * 0.25 0 0 $default-font-size * 0.25;
-    //     }  
+    //     }
     //   }
-      
+
     // }
 
     & div:not(&-deal, &-game, &-checkboxes, &-filters) {
@@ -115,7 +141,7 @@
     justify-content: space-between;
     align-items: center;
     border-top: 1px solid rgba(var(--color-primary-4-rgb), 1);
-    padding: $default-font-size * 0.25 0 ;
+    padding: $default-font-size * 0.25 0;
 
     @include respond($layout-breakpoint) {
       // justify-content: space-around;
@@ -126,6 +152,7 @@
     padding-top: $default-font-size * 0.25;
 
     & label {
+      width: 100% !important;
       flex-direction: column;
       align-items: flex-start;
     }
@@ -157,6 +184,16 @@
       justify-content: flex-start;
     }
 
+    &-container {
+      display: grid;
+      grid-template-columns: min-content 1fr;
+      column-gap: $semantic-ui-text-default-font-size * .25;
+    }
+
+    &-text {
+      color: var(--color-green-light) !important;
+    }
+
     &-options {
       display: flex;
       justify-content: space-between;
@@ -164,6 +201,22 @@
 
       & > * {
         margin: 0 !important;
+      }
+    }
+
+    &-grid {
+      --max: 1fr;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax($default-font-size * 8.5, var(--max)));
+
+      @include respond($layout-breakpoint) {
+        --max: 50%;
+        & > *:nth-child(2n + 1) button {
+          order: -1;
+        }  
+        & > *:nth-child(2n + 2) .filter-manager__item {
+          justify-content: flex-end;
+        }  
       }
     }
 
@@ -175,7 +228,7 @@
   &__button {
     margin: 0 !important;
     line-height: 0 !important;
-    padding: $default-font-size * 0.5 $default-font-size * 0.25 !important;
+    padding: $semantic-ui-text-default-font-size * 0.5 $semantic-ui-text-default-font-size * 0.25 !important;
     @include filter-manager-button-colors;
   }
 

@@ -10,8 +10,7 @@
   flex-direction: column;
   // justify-content: center;
   align-items: center;
-  min-width: $default-font-size * 12.125;
-  max-width: 66vw;
+  
   background-image: linear-gradient(
     var(--search-linear-gradient-direction),
     rgba(var(--color-black-rgb), 1),
@@ -20,7 +19,22 @@
   );
   box-shadow: $games-list-outer-box-shadow-left;
 
+  &:not(.login-card .search) {
+    min-width: $default-font-size * 13;
+    max-width: 66vw;
+  }
+
+  @include respond(search-max-width-switch) {
+    &:not(.login-card .search) {
+      max-width: 50vw;
+    }
+  }
+
   @include respond($layout-breakpoint) {
+    &:not(.login-card .search) {
+      min-width: 100vw;
+    }
+
     resize: none;
     overflow-x: hidden;
     background-image: linear-gradient(
@@ -35,11 +49,10 @@
     padding: $default-font-size * 0.25 $default-font-size * 0.25 0
       $default-font-size * 0.25;
     border-bottom: $deal-player-border-thin;
-    min-width: 100vw;
   }
 
   &
-    *:not(form, select, option, input, .button, .color-red-light, .color-green-light, .color-red-light, .color-white, .login-card__header) {
+    *:not(form, select, option, input, .button, .color-red-light, .color-green-light, .color-red-light, .color-white, .login-card__header, .filter-manager__filters, .filter-manager__details-filters, .login-card__subtitle, .filter-manager__item-text) {
     color: var(--color-primary-4) !important;
     margin-bottom: 0 !important;
   }
@@ -63,11 +76,11 @@
   }
 
   & .field:nth-of-type(n + 1) label {
-    margin-top: $default-font-size * 0.25 !important;
+    // margin-top: $default-font-size * 0.25 !important;
 
-    @include respond($layout-breakpoint) {
-      margin-top: 0 !important;
-    }
+    // @include respond($layout-breakpoint) {
+    //   margin-top: 0 !important;
+    // }
   }
 
   & form {

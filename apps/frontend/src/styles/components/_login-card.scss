@@ -14,7 +14,7 @@
   & *:not(.non-existant-class, button) {
     color: var(--color-primary-4) !important;
 
-    &:not(label, form, h4, input, span, .login-card__buttons, .login-card__email, .search, .login-card__header, .login-card__title) {
+    &:not(label, form, h4, input, span, .login-card__buttons, .login-card__email, .search, .login-card__header, .login-card__title, .login-card__subtitle) {
       margin-bottom: $default-font-size * 0.5 !important;
     }
   }
@@ -41,6 +41,7 @@
     grid-template-columns: 1fr 1fr;
     grid-column-gap: $default-font-size;
     margin-bottom: 0 !important;
+    margin-top: $default-font-size !important;
   }
 
   &__message-area > :nth-child(1):not(.red.message) {
@@ -53,7 +54,7 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     column-gap: $default-font-size * 0.25;
-    margin-top: $default-font-size * 0.5;
+    margin-top: $default-font-size * 0.25;
 
     @include respond($layout-breakpoint) {
       margin-top: $default-font-size * 0.25;
@@ -61,7 +62,7 @@
   }
 
   &__subtitle {
-    margin-top: $default-font-size * 0.5;
+    margin: $default-font-size * .5 0;
 
     display: grid;
     grid-template-columns: repeat(3, max-content);
@@ -69,7 +70,7 @@
 
     &:not(.login-card .login-card__subtitle) {
       @include respond($layout-breakpoint) {
-        margin-top: $default-font-size * 0;
+        margin: $default-font-size * 0;
       }
     }
 

@@ -1,11 +1,18 @@
 <div class="{{FILTER_MANAGER_CLASSNAME}}__item">
-  <span
-    class="filter-manager__text"
-    [innerHtml]="messageToShow"
-  ></span>
-  <button 
+  <div class="{{FILTER_MANAGER_CLASSNAME}}__item-container">
+    <!-- <span
+      class="{{FILTER_MANAGER_CLASSNAME}}__item-svg"
+    >*</span> -->
+    <button 
     class="{{FILTER_MANAGER_CLASSNAME}}__button ui button"
     (click)="onDelete()"
     [innerHtml]="closeButtonHtmlEntity"
   ></button>
+    <span
+      class="filter-manager__item-text"
+      [innerHtml]="messageToShow"
+    ></span>
+  </div>
+  
+  
 </div>

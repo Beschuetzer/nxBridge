@@ -1,5 +1,9 @@
 .games-view {
-  background-image: linear-gradient(to right, var(--color-primary-1), var(--color-black));
+  background-image: linear-gradient(
+    to right,
+    var(--color-primary-1),
+    var(--color-black)
+  );
   color: var(--color-primary-1);
   width: 100%;
   grid-column: 2 / -1;
@@ -15,7 +19,7 @@
     grid-row: 3/-1;
   }
 
-  &__title{
+  &__title {
     font-size: $semantic-ui-text-default-font-size;
     display: grid;
     grid-template-columns: max-content 1fr max-content;
@@ -23,30 +27,36 @@
     justify-items: center;
     align-items: center;
     margin: 0;
-    padding: $default-font-size * .5 $default-font-size;
+    padding: $default-font-size * 0.5 $default-font-size;
     width: 100%;
     color: var(--color-primary-4);
     // border-bottom: $games-list-border;
     background-image: linear-gradient(
       var(--games-view-title-gradient-direction),
       rgba(#{$games-list-gradient-color-2}, 1),
-      rgba(#{$games-list-gradient-color-1}, 1) calc(100% - #{$games-list-black-gradient-amount} - 19%),
-      rgba(#{$games-list-gradient-color-1}, 1) calc(#{$games-list-black-gradient-amount} + 19%),
-      rgba(#{$games-list-gradient-color-2}, 1),
+      rgba(#{$games-list-gradient-color-1}, 1)
+        calc(100% - #{$games-list-black-gradient-amount} - 19%),
+      rgba(#{$games-list-gradient-color-1}, 1)
+        calc(#{$games-list-black-gradient-amount} + 19%),
+      rgba(#{$games-list-gradient-color-2}, 1)
     );
     box-shadow: $games-list-outer-box-shadow-bottom;
 
     @include respond($layout-breakpoint) {
       --games-view-title-gradient-direction: #{$search-linear-gradient-direction};
-      padding: $default-font-size * .25;
+      padding: $default-font-size * 0.25;
+    }
+
+    @include respond(small-font) {
+      row-gap: $default-font-size * .25;
     }
 
     & > * {
       &:first-child {
         line-break: anywhere;
         // @include respond(tab-land) {
-          flex-direction: column;
-          align-items: flex-start !important;  
+        flex-direction: column;
+        align-items: flex-start !important;
         // }
 
         @include respond(tab-port) {
@@ -64,20 +74,19 @@
     }
 
     & label {
-      &:hover, & > *:hover {
+      &:hover,
+      & > *:hover {
         cursor: pointer;
       }
-
-      
     }
 
-    & > *:nth-child(1){
+    & > *:nth-child(1) {
       margin: 0 !important;
     }
 
     & > *:nth-child(1) {
       // justify-content: center;
-       
+
       @include respond(small-font) {
         flex-direction: column;
         // font-size: $default-font-size * .75;
@@ -93,12 +102,11 @@
 
     & > *:nth-child(n + 2):not(button) {
       justify-content: space-between;
-      padding: $default-font-size * .25 0;
+      padding: $default-font-size * 0.25 0;
 
       @include respond(small-font) {
         justify-content: center;
         padding: 0;
-
       }
     }
 
@@ -108,19 +116,24 @@
   }
 
   &__summary {
+    font-size: $semantic-ui-text-default-font-size;
     width: 100%;
     display: flex;
     justify-content: flex-start;
     align-items: center;
     color: var(--color-primary-3);
-    padding-left: $default-font-size * .5;
+    padding: $default-font-size * 0.25 $default-font-size * .5;
+
+    @include respond($layout-breakpoint) {
+      padding: $default-font-size * 0.25 $default-font-size * .25;
+    }
   }
 
   &__hide {
     margin: 0 !important;
     width: max-content;
     grid-column: 3 / span 1;
-    grid-row: 1/ span 1;
+    grid-row: 1 / span 1;
     justify-self: flex-end;
   }
 }

@@ -20,14 +20,19 @@
       Hide
     </button>
   </div>
-  <div #applied class="filter-manager__applied ui field">
-    <nx-bridge-filter-manager-item
+  <div #applied class="filter-manager__applied ui field"
+    *ngIf="filterItemsLength > 0"
+  >
+    <span>Applied:</span>
+    <div class="{{ FILTER_MANANGER_CLASSNAME }}__item-grid">
+      <nx-bridge-filter-manager-item
       *ngFor="let filterItem of filterItems | keyvalue; let i = index"
       [filterItem]="filterItem.value"
       [filterItemKey]="filterItem.key"
       [indexOfItem]="i"
       (deletion)="onFilterItemDeletion($event)"
     ></nx-bridge-filter-manager-item>
+    </div>
   </div>
 
   <!-- main checkboxes -->
@@ -46,7 +51,9 @@
     </label>
   </div>
 
-  <div class="{{ FILTER_MANANGER_CLASSNAME }}__details">
+  <div class="{{ FILTER_MANANGER_CLASSNAME }}__details"
+    *ngIf="date.checked || deal.checked || game.checked"
+  >
     <div class="{{ FILTER_MANANGER_CLASSNAME }}__details-checkboxes">
       <label *ngIf="deal.checked">
         <input #contract (click)="onContractClick()" type="checkbox" />
@@ -93,10 +100,14 @@
       </label>
     </div>
 
-    <div class="{{ FILTER_MANANGER_CLASSNAME }}__details-filters">
+    <div class="{{ FILTER_MANANGER_CLASSNAME }}__details-filters"
+      *ngIf="date.checked || deal.checked || game.checked"
+    >
       <!-- Date-related filters -->
       <div *ngIf="date.checked" class="{{ FILTER_MANANGER_CLASSNAME }}__date">
-        <label>
+        <label
+          class="{{ FILTER_MANANGER_CLASSNAME }}__date-inputs"  
+        >
           Completed after:
           <input
             #afterDate
@@ -105,7 +116,9 @@
             type="datetime-local"
           />
         </label>
-        <label>
+        <label
+          class="{{FILTER_MANANGER_CLASSNAME}}__date-inputs"  
+        >
           Completed before:
           <input
             #beforeDate

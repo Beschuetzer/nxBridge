@@ -149,6 +149,10 @@ export class FilterManagerComponent implements OnInit {
     return this.filterManagerService.inputErrorClassnames.join(' ');
   }
 
+  get filterItemsLength() {
+    return Object.keys(this.filterItems).length;
+  }
+
   constructor(
     private renderer: Renderer2,
     private elRef: ElementRef,
@@ -308,7 +312,7 @@ export class FilterManagerComponent implements OnInit {
     );
 
     const filterItem: FilterItem = {
-      message: `${this.filterManagerService.filterMsgs.declarer.valid} ${selectedDeclarer}.`,
+      message: `${this.filterManagerService.filterMsgs.declarer.valid} '${selectedDeclarer}'.`,
       error: '',
       elementsToReset: [declarerSelectElement],
     };
@@ -693,10 +697,8 @@ export class FilterManagerComponent implements OnInit {
     }
   }
   onHide() {
+    debugger;
     const filterManager = this.elRef.nativeElement as HTMLElement;
-    const applied = filterManager.querySelector(
-      `.${FILTER_MANAGER_CLASSNAME}__applied`
-    ) as HTMLElement;
     const details = filterManager.querySelector(
       `.${FILTER_MANAGER_CLASSNAME}__details`
     ) as HTMLElement;
@@ -707,13 +709,11 @@ export class FilterManagerComponent implements OnInit {
       `.${FILTER_MANAGER_CLASSNAME}__hide`
     ) as HTMLElement;
 
-    if (applied.classList.contains(DISPLAY_NONE_CLASSNAME)) {
-      if (applied) this.renderer.removeClass(applied, DISPLAY_NONE_CLASSNAME);
+    if (filters?.classList.contains(DISPLAY_NONE_CLASSNAME)) {
       if (details) this.renderer.removeClass(details, DISPLAY_NONE_CLASSNAME);
       if (filters) this.renderer.removeClass(filters, DISPLAY_NONE_CLASSNAME);
       button.innerHTML = 'Hide';
     } else {
-      if (applied) this.renderer.addClass(applied, DISPLAY_NONE_CLASSNAME);
       if (details) this.renderer.addClass(details, DISPLAY_NONE_CLASSNAME);
       if (filters) this.renderer.addClass(filters, DISPLAY_NONE_CLASSNAME);
       button.innerHTML = 'Show';
