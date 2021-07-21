@@ -44,4 +44,6 @@ Testing------------
 -add 'Deal Pass out' filter?
 -add 'Deal split' filter? (finds games where winning team won by x number of deals)
 
--have deal-detail__summary be light red or light green depending on whether declarer made bid
+-need to fix portfolio links to amajreplays.herokuapp.com
+
+-change .matched-deals to have an animation of some sort
