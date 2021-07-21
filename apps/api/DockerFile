@@ -1,0 +1,10 @@
+FROM node:12-alpine
+WORKDIR /app
+COPY .next ./.next
+COPY package.json ./package.json
+RUN yarn
+CMD yarn next start -p $PORT
+
+nx g @nrwl/workspace:run-commands deploy \
+  --project api \
+  --command "cd dist/apps/api && cp ../../../apps/api/Dockerfile . && heroku container:login && heroku container:push web -a replay-viewer && heroku container:release web -a replay-viewer"

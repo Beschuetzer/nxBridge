@@ -44,4 +44,4 @@ Testing------------
 -add 'Deal Pass out' filter?
 -add 'Deal split' filter? (finds games where winning team won by x number of deals)
 
--have deal-detail__summary be light red or light green depending on whether declarer made bid
+-make filter sub checkboxes be a grid with a max height and two columns
