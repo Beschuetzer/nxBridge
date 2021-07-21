@@ -53,7 +53,7 @@
     margin-bottom: 0 !important;
 
     @include respond($layout-breakpoint) {
-      margin-bottom: $default-font-size * .25 !important;
+      margin-bottom: $default-font-size * 0.25 !important;
     }
 
     & label:not(&__date label) {
@@ -91,10 +91,7 @@
       --max: calc(#{$default-font-size} * 6);
       margin: $default-font-size * 0.25 0;
       display: grid;
-      grid-template-columns: repeat(
-        auto-fill,
-        minmax(var(--max), 1fr)
-      );
+      grid-template-columns: repeat(auto-fill, minmax(var(--max), 1fr));
       column-gap: $default-font-size * 0.25;
       row-gap: $default-font-size * 0.25;
 
@@ -177,17 +174,56 @@
     justify-content: space-between;
     align-items: center;
 
-    @include respond($layout-breakpoint) {
-      display: grid;
-      grid-template-columns: repeat(2, max-content);
-      column-gap: $default-font-size * 0.5;
-      justify-content: flex-start;
-    }
+    // @include respond($layout-breakpoint) {
+    //   display: grid;
+    //   grid-template-columns: repeat(2, max-content);
+    //   column-gap: $default-font-size * 0.5;
+    //   justify-content: flex-start;
+    // }
 
     &-container {
+      position: relative;
       display: grid;
       grid-template-columns: min-content 1fr;
-      column-gap: $semantic-ui-text-default-font-size * .25;
+      column-gap: $semantic-ui-text-default-font-size * 0.25;
+
+      & span {
+        transition: color $animation-duration * 0.5 $animation-easing-standard;
+      }
+
+      & button {
+        --before-opacity: .1;
+        --before-scale-x: 0;
+        --before-height: 0px;
+        $transform-duration: $animation-duration * 0.5;
+
+        &::before {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: $default-font-size;
+          right: 0;
+          height: var(--before-height);
+          background-color: rgba(var(--color-red-light-rgb), var(--before-opacity));
+          transform: scaleX(var(--before-scale-x));
+          transform-origin: left;
+          transition: 
+            background $animation-duration * 0.5 $animation-easing-standard $transform-duration,
+            height $animation-duration * 0.5 $animation-easing-standard $transform-duration,
+            transform $transform-duration $animation-easing-standard,
+          ;
+        }
+
+        &:hover + * {
+          color: var(--color-red-light) !important;
+        }
+
+        &:hover::before {
+          --before-height: #{$default-font-size * .75};
+          --before-opacity: 1;
+          --before-scale-x: 1;
+        }
+      }
     }
 
     &-text {
@@ -206,18 +242,27 @@
 
     &-grid {
       --max: 1fr;
+      --min: calc(#{$default-font-size} * 8.5);
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax($default-font-size * 8.5, var(--max)));
+      grid-template-columns: repeat(auto-fill, minmax(var(--min), var(--max)));
 
-      @include respond($layout-breakpoint) {
-        --max: 50%;
-        & > *:nth-child(2n + 1) button {
-          order: -1;
-        }  
-        & > *:nth-child(2n + 2) .filter-manager__item {
-          justify-content: flex-end;
-        }  
-      }
+      // @include respond($layout-breakpoint) {
+      //   --max: 50%;
+      //   & > *:nth-child(2n + 2) {
+      //     & .filter-manager__item-container {
+      //       // grid-template-columns: 1fr min-content;
+      //       // width: max-content;
+      //       // margin-left: auto;
+      //     }
+
+      //     & button {
+      //       // order: 2;
+      //     }
+      //   }
+      //   & > *:nth-child(2n + 2) .filter-manager__item {
+      //     // justify-content: flex-end;
+      //   }
+      // }
     }
 
     & button {
@@ -228,7 +273,8 @@
   &__button {
     margin: 0 !important;
     line-height: 0 !important;
-    padding: $semantic-ui-text-default-font-size * 0.5 $semantic-ui-text-default-font-size * 0.25 !important;
+    padding: $semantic-ui-text-default-font-size * 0.5
+      $semantic-ui-text-default-font-size * 0.25 !important;
     @include filter-manager-button-colors;
   }
 

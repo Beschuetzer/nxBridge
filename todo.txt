@@ -46,7 +46,7 @@ Testing------------
 -change .matched-deals to have an animation of some sort
 -fix login-card styling at small viewports
 
--when hoving delete 'x', have a red before pseudo go all the way to the left
 -can do something about max length names for filter-item player-has-card?
 -filter-item erros are green  
 -adding a new filter-item doesn't remove player-has-card-error (only playerHasCard ones do)
+-when hoving delete 'x', have a red before pseudo go all the way to the left
