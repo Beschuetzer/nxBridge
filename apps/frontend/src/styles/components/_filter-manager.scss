@@ -26,6 +26,12 @@
   }
 
   &__applied {
+    position: sticky;
+    top: 0;
+    background-color: var(--color-black);
+    z-index: 10;
+    border-top: 1px solid rgba(var(--color-primary-4-rgb), .5);
+    border-bottom: 1px solid rgba(var(--color-primary-4-rgb), .5);
     padding: $default-font-size * 0.25 0 $default-font-size * 0.25
       $default-font-size * 0.25;
 
@@ -65,6 +71,14 @@
       // }
     }
 
+    &-filters {
+      margin: $default-font-size * 0.25 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax($default-font-size * 6, 1fr));
+      column-gap: $default-font-size * .25;
+      row-gap: $default-font-size * .25;
+    }
+
     // &-game {
     //   @include respond($layout-breakpoint) {
     //   }
@@ -89,12 +103,12 @@
       
     // }
 
-    & > div:not(&-deal, &-game, &-checkboxes) {
+    & div:not(&-deal, &-game, &-checkboxes, &-filters) {
+      height: max-content;
       border: 1px solid rgba(var(--color-primary-4-rgb), 0.5);
       border-radius: $default-font-size * 0.25;
       padding: $semantic-ui-text-default-font-size * 0 $default-font-size * 0.25
         $default-font-size * 0.25 $default-font-size * 0.25;
-      margin-top: $default-font-size * 0.25;
     }
   }
 
@@ -103,7 +117,7 @@
     justify-content: space-between;
     align-items: center;
     border-top: 1px solid rgba(var(--color-primary-4-rgb), 1);
-    padding-top: $default-font-size * 0.25;
+    padding: $default-font-size * 0.25 0 ;
 
     @include respond($layout-breakpoint) {
       // justify-content: space-around;

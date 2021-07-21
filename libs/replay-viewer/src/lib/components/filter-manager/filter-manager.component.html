@@ -77,7 +77,6 @@
         Result was ... than ...
       </label>
 
-    
       <!--game filters start here  -->
 
       <label *ngIf="game.checked">
@@ -94,320 +93,324 @@
       </label>
     </div>
 
-    <!-- Date-related filters -->
-    <div *ngIf="date.checked" class="{{ FILTER_MANANGER_CLASSNAME }}__date">
-      <label>
-        Completed after:
-        <input
-          #afterDate
-          id="afterDate"
-          (change)="onDateAfterChange($event)"
-          type="datetime-local"
-        />
-      </label>
-      <label>
-        Completed before:
-        <input
-          #beforeDate
-          id="beforeDate"
-          (change)="onDateBeforeChange($event)"
-          type="datetime-local"
-        />
-      </label>
-    </div>
+    <div class="{{ FILTER_MANANGER_CLASSNAME }}__details-filters">
+      <!-- Date-related filters -->
+      <div *ngIf="date.checked" class="{{ FILTER_MANANGER_CLASSNAME }}__date">
+        <label>
+          Completed after:
+          <input
+            #afterDate
+            id="afterDate"
+            (change)="onDateAfterChange($event)"
+            type="datetime-local"
+          />
+        </label>
+        <label>
+          Completed before:
+          <input
+            #beforeDate
+            id="beforeDate"
+            (change)="onDateBeforeChange($event)"
+            type="datetime-local"
+          />
+        </label>
+      </div>
 
-    <!-- Deal-related filters -->
-    <div
-      *ngIf="deal.checked && contractCheckbox?.nativeElement.checked"
-      class="{{ FILTER_MANANGER_CLASSNAME }}__contract"
-    >
-      <label class="flex-column-start">
-        <span>Contract was :</span>
-        <select
-          (click)="onContractChange()"
-          class="{{ joinedInputErrorClassnames }}"
-          #contractsSelect
-          class=""
-        >
-          <option
-            *ngFor="let contract of contracts; let i = index"
-            innerHTML="{{ contract | getContractAsHtmlEntityString }}"
-            [class]="
-              (i - 1) % 5 === 1 || (i - 1) % 5 === 2
-                ? 'color-red'
-                : 'color-black'
-            "
-            [value]="i - 1"
-          ></option>
-        </select>
-      </label>
-
-      <button
-        (click)="onAddContract($event)"
-        class="ui button filter-manager__add-button"
+      <!-- Deal-related filters -->
+      <div
+        *ngIf="deal.checked && contractCheckbox?.nativeElement.checked"
+        class="{{ FILTER_MANANGER_CLASSNAME }}__contract"
       >
-        Add
-      </button>
-    </div>
-
-    <div
-      *ngIf="deal.checked && doubleCheckbox?.nativeElement.checked"
-      class="{{ FILTER_MANANGER_CLASSNAME }}__double"
-    >
-      <label class="flex-column-start">
-        <span>Deal was doubled:</span>
-        <select
-          (click)="onDoubleChange()"
-          class="{{ joinedInputErrorClassnames }}"
-          #doubleSelect
-          class=""
-        >
-          <option
-            *ngFor="let doubleOption of doubleOptions; let i = index"
-            [value]="i * 2"
-          >
-            {{ doubleOption }}
-          </option>
-        </select>
-      </label>
-      <button
-        (click)="onAddDouble($event)"
-        class="ui button filter-manager__add-button"
-      >
-        Add
-      </button>
-    </div>
-
-    <div
-      *ngIf="deal.checked && declarerCheckbox?.nativeElement.checked"
-      class="{{ FILTER_MANANGER_CLASSNAME }}__declarer"
-    >
-      <label class="flex-column-start">
-        <span>Declarer was:</span>
-        <select
-          #declarerSelect
-          (click)="onDeclarerChange()"
-          class="{{ joinedInputErrorClassnames }}"
-        >
-          <option *ngFor="let playerName of playerNames; let i = index">
-            {{ playerName }}
-          </option>
-        </select>
-      </label>
-      <button
-        (click)="onAddDeclarer($event)"
-        class="ui button filter-manager__add-button"
-      >
-        Add
-      </button>
-    </div>
-
-    <div
-      *ngIf="deal.checked && openingBidCheckbox?.nativeElement.checked"
-      class="{{ FILTER_MANANGER_CLASSNAME }}__opening-bid"
-    >
-      <label class="flex-column-start">
-        <span>Opening bid was :</span>
-        <select
-          (click)="onOpeningBidChange()"
-          class="{{ joinedInputErrorClassnames }}"
-          #openingBidSelect
-          class=""
-        >
-          <option
-            *ngFor="let bid of bids; let i = index"
-            innerHTML="{{ bid | getContractAsHtmlEntityString }}"
-            [class]="
-              (i - 1) % 5 === 1 || (i - 1) % 5 === 2
-                ? 'color-red'
-                : 'color-black'
-            "
-            [value]="i - 1"
-          ></option>
-        </select>
-      </label>
-      <button
-        (click)="onAddOpeningBid($event)"
-        class="ui button filter-manager__add-button"
-      >
-        Add
-      </button>
-    </div>
-
-    <div
-      *ngIf="
-        deal.checked && playerHasCardCheckbox?.nativeElement.checked === true
-      "
-      class="{{ FILTER_MANANGER_CLASSNAME }}__player-has-card"
-    >
-      <label class="flex-column-start">
-        <span>Player:</span>
-        <select
-          #players
-          (click)="onPlayerHasCardChange()"
-          class="{{ joinedInputErrorClassnames }}"
-        >
-          <option *ngFor="let playerName of playerNames; let i = index">
-            {{ playerName }}
-          </option>
-        </select>
-        <span>&nbsp;had the&nbsp;</span>
-        <select
-          (click)="onPlayerHasCardChange()"
-          class="{{ joinedInputErrorClassnames }}"
-          #cards
-          class=""
-        >
-          <option
-            *ngFor="let cardAsNumber of cardsAsNumbers; let i = index"
-            innerHTML="{{ cardAsNumber | cardAsNumberToCardHtmlEntityString }}"
-            [ngClass]="{
-              'color-red': i >= 14 && i <= 39,
-              'color-black': i < 14 || i > 39,
-              'filter-manager__player-options': true
-            }"
-            [value]="i - 1"
-          ></option>
-        </select>
-      </label>
-      <button
-        (click)="onAddPlayerHasCard($event)"
-        class="ui button filter-manager__add-button"
-      >
-        Add
-      </button>
-    </div>
-
-    <div
-      *ngIf="deal.checked && dealResultCheckbox?.nativeElement.checked"
-      class="{{ FILTER_MANANGER_CLASSNAME }}__deal-result"
-    >
-      <label class="flex-column-start">
-        <div>Deal result was:</div>
-        <div class="{{ FILTER_MANANGER_CLASSNAME }}__item-options">
+        <label class="flex-column-start">
+          <span>Contract was :</span>
           <select
-            #dealResultType
-            (click)="onDealResultChange()"
-            class="ui input"
+            (click)="onContractChange()"
+            class="{{ joinedInputErrorClassnames }}"
+            #contractsSelect
+            class=""
           >
-            <option value="equal">=</option>
             <option
-              value="less"
-              [innerHtml]="comparers.lessThanEqualTo"
-            ></option>
-            <option
-              value="more"
-              [innerHtml]="comparers.greaterThanEqualTo"
+              *ngFor="let contract of contracts; let i = index"
+              innerHTML="{{ contract | getContractAsHtmlEntityString }}"
+              [class]="
+                (i - 1) % 5 === 1 || (i - 1) % 5 === 2
+                  ? 'color-red'
+                  : 'color-black'
+              "
+              [value]="i - 1"
             ></option>
           </select>
-          <input
-            #dealResultAmount
-            (click)="onDealResultChange()"
-            type="number"
-            min="-13"
-            max="7"
-            step="1"
-            value="0"
-            class="ui input"
-          />
-        </div>
-      </label>
-      <button
-        (click)="onAddDealResult($event)"
-        class="ui button filter-manager__add-button"
-      >
-        Add
-      </button>
-    </div>
+        </label>
 
-    <!-- Game-related filters -->
-    <div
-      *ngIf="game.checked && gameNameCheckbox?.nativeElement.checked"
-      class="{{ FILTER_MANANGER_CLASSNAME }}__game-name"
-    >
-      <label class="flex-column-start">
-        <div>Game was named:</div>
-        <select
-          #gameNameSelect
-          (click)="onGameNameChange()"
-          class="{{ joinedInputErrorClassnames }}"
+        <button
+          (click)="onAddContract($event)"
+          class="ui button filter-manager__add-button"
         >
-          <option
-            *ngFor="let gameName of gameNames; let i = index"
-            [value]="gameName"
+          Add
+        </button>
+      </div>
+
+      <div
+        *ngIf="deal.checked && doubleCheckbox?.nativeElement.checked"
+        class="{{ FILTER_MANANGER_CLASSNAME }}__double"
+      >
+        <label class="flex-column-start">
+          <span>Deal was doubled:</span>
+          <select
+            (click)="onDoubleChange()"
+            class="{{ joinedInputErrorClassnames }}"
+            #doubleSelect
+            class=""
           >
-            {{ gameName }}
-          </option>
-        </select>
-      </label>
-      <button
-        (click)="onAddGameName($event)"
-        class="ui button filter-manager__add-button"
-      >
-        Add
-      </button>
-    </div>
-
-    <div
-      *ngIf="game.checked && playerInGameCheckbox?.nativeElement.checked"
-      class="{{ FILTER_MANANGER_CLASSNAME }}__player-in-game"
-    >
-      <label class="flex-column-start">
-        <div>Player was in game:</div>
-        <select
-          #playerInGameSelect
-          (click)="onPlayerInGameChange()"
-          class="{{ joinedInputErrorClassnames }}"
+            <option
+              *ngFor="let doubleOption of doubleOptions; let i = index"
+              [value]="i * 2"
+            >
+              {{ doubleOption }}
+            </option>
+          </select>
+        </label>
+        <button
+          (click)="onAddDouble($event)"
+          class="ui button filter-manager__add-button"
         >
-          <option *ngFor="let playerName of playerNames; let i = index">
-            {{ playerName }}
-          </option>
-        </select>
-      </label>
-      <button
-        (click)="onAddPlayerInGame($event)"
-        class="ui button filter-manager__add-button"
-      >
-        Add
-      </button>
-    </div>
+          Add
+        </button>
+      </div>
 
-    <div
-      *ngIf="game.checked && wonByCheckbox?.nativeElement.checked"
-      class="{{ FILTER_MANANGER_CLASSNAME }}__won-by"
-    >
-      <label class="flex-column-start">
-        <div>Won by:</div>
-        <div class="{{ FILTER_MANANGER_CLASSNAME }}__item-options">
-          <select #wonByType (click)="onWonByChange()" class="ui input">
+      <div
+        *ngIf="deal.checked && declarerCheckbox?.nativeElement.checked"
+        class="{{ FILTER_MANANGER_CLASSNAME }}__declarer"
+      >
+        <label class="flex-column-start">
+          <span>Declarer was:</span>
+          <select
+            #declarerSelect
+            (click)="onDeclarerChange()"
+            class="{{ joinedInputErrorClassnames }}"
+          >
+            <option *ngFor="let playerName of playerNames; let i = index">
+              {{ playerName }}
+            </option>
+          </select>
+        </label>
+        <button
+          (click)="onAddDeclarer($event)"
+          class="ui button filter-manager__add-button"
+        >
+          Add
+        </button>
+      </div>
+
+      <div
+        *ngIf="deal.checked && openingBidCheckbox?.nativeElement.checked"
+        class="{{ FILTER_MANANGER_CLASSNAME }}__opening-bid"
+      >
+        <label class="flex-column-start">
+          <span>Opening bid was :</span>
+          <select
+            (click)="onOpeningBidChange()"
+            class="{{ joinedInputErrorClassnames }}"
+            #openingBidSelect
+            class=""
+          >
             <option
-              value="less"
-              [innerHtml]="comparers.lessThanEqualTo"
-            ></option>
-            <option
-              value="more"
-              [innerHtml]="comparers.greaterThanEqualTo"
+              *ngFor="let bid of bids; let i = index"
+              innerHTML="{{ bid | getContractAsHtmlEntityString }}"
+              [class]="
+                (i - 1) % 5 === 1 || (i - 1) % 5 === 2
+                  ? 'color-red'
+                  : 'color-black'
+              "
+              [value]="i - 1"
             ></option>
           </select>
-          <input
-            #wonByAmount
-            (click)="onWonByChange()"
-            type="number"
-            min="0"
-            max="100000"
-            step="10"
-            value="0"
-            placeholder="Enter won by number here"
-            class="ui input"
-          />
-        </div>
-      </label>
-      <button
-        (click)="onAddWonBy($event)"
-        class="ui button filter-manager__add-button"
+        </label>
+        <button
+          (click)="onAddOpeningBid($event)"
+          class="ui button filter-manager__add-button"
+        >
+          Add
+        </button>
+      </div>
+
+      <div
+        *ngIf="
+          deal.checked && playerHasCardCheckbox?.nativeElement.checked === true
+        "
+        class="{{ FILTER_MANANGER_CLASSNAME }}__player-has-card"
       >
-        Add
-      </button>
+        <label class="flex-column-start">
+          <span>Player:</span>
+          <select
+            #players
+            (click)="onPlayerHasCardChange()"
+            class="{{ joinedInputErrorClassnames }}"
+          >
+            <option *ngFor="let playerName of playerNames; let i = index">
+              {{ playerName }}
+            </option>
+          </select>
+          <span>&nbsp;had the&nbsp;</span>
+          <select
+            (click)="onPlayerHasCardChange()"
+            class="{{ joinedInputErrorClassnames }}"
+            #cards
+            class=""
+          >
+            <option
+              *ngFor="let cardAsNumber of cardsAsNumbers; let i = index"
+              innerHTML="{{
+                cardAsNumber | cardAsNumberToCardHtmlEntityString
+              }}"
+              [ngClass]="{
+                'color-red': i >= 14 && i <= 39,
+                'color-black': i < 14 || i > 39,
+                'filter-manager__player-options': true
+              }"
+              [value]="i - 1"
+            ></option>
+          </select>
+        </label>
+        <button
+          (click)="onAddPlayerHasCard($event)"
+          class="ui button filter-manager__add-button"
+        >
+          Add
+        </button>
+      </div>
+
+      <div
+        *ngIf="deal.checked && dealResultCheckbox?.nativeElement.checked"
+        class="{{ FILTER_MANANGER_CLASSNAME }}__deal-result"
+      >
+        <label class="flex-column-start">
+          <span>Deal result was:</span>
+          <span class="{{ FILTER_MANANGER_CLASSNAME }}__item-options">
+            <select
+              #dealResultType
+              (click)="onDealResultChange()"
+              class="ui input"
+            >
+              <option value="equal">=</option>
+              <option
+                value="less"
+                [innerHtml]="comparers.lessThanEqualTo"
+              ></option>
+              <option
+                value="more"
+                [innerHtml]="comparers.greaterThanEqualTo"
+              ></option>
+            </select>
+            <input
+              #dealResultAmount
+              (click)="onDealResultChange()"
+              type="number"
+              min="-13"
+              max="7"
+              step="1"
+              value="0"
+              class="ui input"
+            />
+          </span>
+        </label>
+        <button
+          (click)="onAddDealResult($event)"
+          class="ui button filter-manager__add-button"
+        >
+          Add
+        </button>
+      </div>
+
+      <!-- Game-related filters -->
+      <div
+        *ngIf="game.checked && gameNameCheckbox?.nativeElement.checked"
+        class="{{ FILTER_MANANGER_CLASSNAME }}__game-name"
+      >
+        <label class="flex-column-start">
+          <span>Game was named:</span>
+          <select
+            #gameNameSelect
+            (click)="onGameNameChange()"
+            class="{{ joinedInputErrorClassnames }}"
+          >
+            <option
+              *ngFor="let gameName of gameNames; let i = index"
+              [value]="gameName"
+            >
+              {{ gameName }}
+            </option>
+          </select>
+        </label>
+        <button
+          (click)="onAddGameName($event)"
+          class="ui button filter-manager__add-button"
+        >
+          Add
+        </button>
+      </div>
+
+      <div
+        *ngIf="game.checked && playerInGameCheckbox?.nativeElement.checked"
+        class="{{ FILTER_MANANGER_CLASSNAME }}__player-in-game"
+      >
+        <label class="flex-column-start">
+          <span>Player was in game:</span>
+          <select
+            #playerInGameSelect
+            (click)="onPlayerInGameChange()"
+            class="{{ joinedInputErrorClassnames }}"
+          >
+            <option *ngFor="let playerName of playerNames; let i = index">
+              {{ playerName }}
+            </option>
+          </select>
+        </label>
+        <button
+          (click)="onAddPlayerInGame($event)"
+          class="ui button filter-manager__add-button"
+        >
+          Add
+        </button>
+      </div>
+
+      <div
+        *ngIf="game.checked && wonByCheckbox?.nativeElement.checked"
+        class="{{ FILTER_MANANGER_CLASSNAME }}__won-by"
+      >
+        <label class="flex-column-start">
+          <span>Won by:</span>
+          <span class="{{ FILTER_MANANGER_CLASSNAME }}__item-options">
+            <select #wonByType (click)="onWonByChange()" class="ui input">
+              <option
+                value="less"
+                [innerHtml]="comparers.lessThanEqualTo"
+              ></option>
+              <option
+                value="more"
+                [innerHtml]="comparers.greaterThanEqualTo"
+              ></option>
+            </select>
+            <input
+              #wonByAmount
+              (click)="onWonByChange()"
+              type="number"
+              min="0"
+              max="100000"
+              step="10"
+              value="0"
+              placeholder="Enter won by number here"
+              class="ui input"
+            />
+          </span>
+        </label>
+        <button
+          (click)="onAddWonBy($event)"
+          class="ui button filter-manager__add-button"
+        >
+          Add
+        </button>
+      </div>
     </div>
   </div>
 </section>
