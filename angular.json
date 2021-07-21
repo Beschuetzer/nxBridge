@@ -199,7 +199,8 @@
               }
             ],
             "styles": [
-              "apps/frontend/src/styles.scss"
+              "apps/frontend/src/styles.scss",
+              "./node_modules/semantic-ui/dist/semantic.min.css"
             ],
             "stylePreprocessorOptions": {
               "includePaths": ["apps/frontend/src/styles"]

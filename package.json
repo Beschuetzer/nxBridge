@@ -1,4 +1,5 @@
 {
+  "gulp-header": "1.8.2",
   "name": "nx-bridge",
   "version": "0.0.0",
   "license": "MIT",
@@ -53,6 +54,7 @@
     "postprocessing": "^6.22.2",
     "reflect-metadata": "^0.1.13",
     "rxjs": "~6.6.0",
+    "semantic-ui": "^2.4.2",
     "three": "^0.129.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.11.4"
