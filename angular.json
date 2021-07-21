@@ -199,7 +199,7 @@
               }
             ],
             "styles": [
-              "apps/frontend/src/styles.scss",
+              "apps/frontend/src/styles.scss"
             ],
             "stylePreprocessorOptions": {
               "includePaths": ["apps/frontend/src/styles"]

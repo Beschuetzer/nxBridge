@@ -12,7 +12,7 @@ dotenv.config();
   imports: [
     ControllersModule,
     MongooseModule.forRoot(
-      `mongodb+srv://${process.env.mongoDB_USER}:${process.env.mongoDB_PASSWORD}@cluster0.3trbv.mongodb.net/Bridge?retryWrites=true&w=majority`,
+      process.env.mongoDB_URI,
     ),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'frontend'),
