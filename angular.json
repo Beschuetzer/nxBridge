@@ -200,7 +200,7 @@
             ],
             "styles": [
               "apps/frontend/src/styles.scss",
-              "./node_modules/semantic-ui/dist/semantic.min.css"
+              "./node_modules/fomantic-ui/dist/semantic.min.css"
             ],
             "stylePreprocessorOptions": {
               "includePaths": ["apps/frontend/src/styles"]
