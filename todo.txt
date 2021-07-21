@@ -21,8 +21,6 @@ Optimizations------------------------------------------------------
 Prettification-------------------
   -game-detail__score width is a bit 'off'
   -bolden the high cards ("A, k q j") in table
-  -use deals-list dealResults to change deal-detail table username color (winners = green and losers = red)
-  -change deal-detail__summary-text to red or green depending on if declarer won it.
 
 Todos----------------------------------------------------------
   -figure out how to move landing service validators to a new service folder in the frontend project in a ValidatorsService file

@@ -1,7 +1,7 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 #comment this out when deploying to heroku
-/dist  
+# /dist  
 
 #comment out below when deploying to git hub
 # /apps 

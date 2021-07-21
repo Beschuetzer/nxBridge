@@ -42,6 +42,17 @@
     }
 
     & > * {
+      &:first-child {
+        line-break: anywhere;
+        @include respond(tab-land) {
+          flex-direction: column;
+          align-items: flex-start !important;  
+        }
+
+        @include respond(tab-port) {
+          // font-size: $default-font-size * .75;
+        }
+      }
       &:nth-child(2n + 1) {
         grid-column: 2 / span 1 !important;
         justify-content: flex-start !important;

@@ -20,6 +20,7 @@
   box-shadow: $games-list-outer-box-shadow-left;
 
   @include respond($layout-breakpoint) {
+    resize: none;
     background-image: linear-gradient(
       to top,
       rgba(var(--color-black-rgb), 1),
