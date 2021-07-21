@@ -49,7 +49,7 @@
   &__options label:not(&__date label) {
     @include label-fx;
   }
-  &__details label:not(&__date label) {
+  &__details label:not(&__date label, .flex-column-start) {
     @include label-fx;
     &::before {
       left: $default-font-size * .93;
