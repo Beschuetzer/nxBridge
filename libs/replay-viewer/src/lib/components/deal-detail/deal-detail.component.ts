@@ -8,7 +8,6 @@ import {
 } from '@angular/core';
 import {
   Bid,
-  CardinalDirection,
   CardValuesAsString,
   Contract,
   DealRelevant,
