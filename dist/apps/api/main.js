@@ -133,9 +133,9 @@ const app_service_1 = __webpack_require__(/*! ./app.service */ "./apps/api/src/a
 const controllers_module_1 = __webpack_require__(/*! ./controllers/controllers.module */ "./apps/api/src/app/controllers/controllers.module.ts");
 const mongoose_1 = __webpack_require__(/*! @nestjs/mongoose */ "@nestjs/mongoose");
 const dotenv = __webpack_require__(/*! dotenv */ "dotenv");
-dotenv.config();
 const serve_static_1 = __webpack_require__(/*! @nestjs/serve-static */ "@nestjs/serve-static"); // <- INSERT LINE
 const path_1 = __webpack_require__(/*! path */ "path"); // <- INSERT LINE
+dotenv.config();
 let AppModule = class AppModule {
 };
 AppModule = tslib_1.__decorate([

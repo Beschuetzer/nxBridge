@@ -4,9 +4,9 @@ import { AppService } from './app.service';
 import { ControllersModule } from './controllers/controllers.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import * as dotenv from 'dotenv';
-dotenv.config();
 import { ServeStaticModule } from '@nestjs/serve-static'; // <- INSERT LINE
 import { join } from 'path'; // <- INSERT LINE
+dotenv.config();
 
 @Module({
   imports: [
