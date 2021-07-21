@@ -80,7 +80,7 @@
       align-items: center;
     }
 
-    & > *:nth-child(n + 2) {
+    & > *:nth-child(n + 2):not(button) {
       justify-content: space-between;
       padding: $default-font-size * .25 0;
 

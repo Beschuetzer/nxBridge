@@ -48,7 +48,6 @@
     "@ngrx/store": "^12.1.0",
     "@nrwl/angular": "12.4.0",
     "@types/mongoose": "^5.11.97",
-    "fomantic-ui": "^2.8.8",
     "paper": "^0.12.15",
     "postprocessing": "^6.22.2",
     "reflect-metadata": "^0.1.13",
