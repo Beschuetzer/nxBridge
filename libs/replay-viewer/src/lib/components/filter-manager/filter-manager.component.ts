@@ -669,6 +669,7 @@ export class FilterManagerComponent implements OnInit {
 
   onFilterItemDeletion(toDelete: FilterItemDeletion) {
     if (!toDelete.key) throw new Error('No toDelete.key...');
+    this.lastButtonPressed = null;
     delete this.filterItems[toDelete.key];
 
     //note: if adding filters with multiple instances, need to add logic in getShouldResetStoreOnDeletion
@@ -697,7 +698,6 @@ export class FilterManagerComponent implements OnInit {
     }
   }
   onHide() {
-    debugger;
     const filterManager = this.elRef.nativeElement as HTMLElement;
     const details = filterManager.querySelector(
       `.${FILTER_MANAGER_CLASSNAME}__details`
@@ -770,12 +770,12 @@ export class FilterManagerComponent implements OnInit {
     //note: this assumes error keys and valid keys start with the same string (e.g. 'playerInGame-1' and 'playerInGame-error');
     this.deleteError(
       toDelete,
-      this.filterManagerService.filters.playerHasCard.string,
+      '',
       this.filterManagerService.filters.playerHasCard.errorKey
     );
     this.deleteError(
       toDelete,
-      this.filterManagerService.filters.playerInGame.string,
+      '',
       this.filterManagerService.filters.playerInGame.errorKey
     );
   }

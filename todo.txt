@@ -48,5 +48,4 @@ Testing------------
 
 -can do something about max length names for filter-item player-has-card?
 -filter-item erros are green  
--adding a new filter-item doesn't remove player-has-card-error (only playerHasCard ones do)
--when hoving delete 'x', have a red before pseudo go all the way to the left
+-remove errors when adding a new filter item

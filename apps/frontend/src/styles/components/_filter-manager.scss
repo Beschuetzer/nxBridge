@@ -182,52 +182,59 @@
     // }
 
     &-container {
-      position: relative;
       display: grid;
       grid-template-columns: min-content 1fr;
       column-gap: $semantic-ui-text-default-font-size * 0.25;
 
       & span {
-        transition: color $animation-duration * 0.5 $animation-easing-standard;
-      }
-
-      & button {
         --before-opacity: .1;
         --before-scale-x: 0;
         --before-height: 0px;
         $transform-duration: $animation-duration * 0.5;
+        position: relative;
 
-        &::before {
-          content: '';
-          position: absolute;
-          bottom: 0;
-          left: $default-font-size;
-          right: 0;
-          height: var(--before-height);
-          background-color: rgba(var(--color-red-light-rgb), var(--before-opacity));
-          transform: scaleX(var(--before-scale-x));
-          transform-origin: left;
-          transition: 
-            background $animation-duration * 0.5 $animation-easing-standard $transform-duration,
-            height $animation-duration * 0.5 $animation-easing-standard $transform-duration,
-            transform $transform-duration $animation-easing-standard,
-          ;
-        }
+        transition: color $animation-duration * 0.5 $animation-easing-standard;
+
+        // &::before {
+        //   content: '';
+        //   position: absolute;
+        //   bottom: 0;
+        //   left: 0;
+        //   right: 0;
+        //   height: var(--before-height);
+        //   background-color: rgba(var(--color-red-light-rgb), var(--before-opacity));
+        //   transform: scaleX(var(--before-scale-x));
+        //   transform-origin: left;
+        //   transition: 
+        //     background $animation-duration * 0.5 $animation-easing-standard $transform-duration,
+        //     height $animation-duration * 0.5 $animation-easing-standard $transform-duration,
+        //     transform $transform-duration $animation-easing-standard,
+        //   ;
+
+        
+        // }
+
+        
+      }
+
+      & button {
+        // &:hover + span::before {
+        //   --before-height: #{$default-font-size * .75};
+        //   --before-opacity: 1;
+        //   --before-scale-x: 1;
+        // }
 
         &:hover + * {
-          color: var(--color-red-light) !important;
-        }
-
-        &:hover::before {
-          --before-height: #{$default-font-size * .75};
-          --before-opacity: 1;
-          --before-scale-x: 1;
+          // color: var(--color-red-light) !important;
+          background-image: linear-gradient(to bottom, rgba(var(--color-red-light-rgb), 1), rgba(var(--color-white-rgb), .25));
+          background-clip: text;
+          color: transparent;
         }
       }
     }
 
     &-text {
-      color: var(--color-green-light) !important;
+      // color: var(--color-green-light) !important;
     }
 
     &-options {
