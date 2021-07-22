@@ -1,10 +1,11 @@
-<form (ngSubmit)="onSubmit()" [formGroup]="initialForm" class="ui form">
-  <div class="login-card__header">
-    <h2 class="ui header {{ isLandingPage ? 'login-card__title' : '' }}">
-      {{ titleMsg }}
-    </h2>
-    <button type="button" class="ui button bg-color-1 color-white d-none login-card__hide" (click)="onHide()">Hide</button>
-  </div>
+<div class="login-card__header">
+  <h2 class="ui header {{ isLandingPage ? 'login-card__title' : '' }}">
+    {{ titleMsg }}
+  </h2>
+  <button type="button" class="ui button bg-color-1 color-white d-none login-card__hide" (click)="onHide()">Hide</button>
+</div>
+<form (ngSubmit)="onSubmit()" [formGroup]="initialForm" class="ui form login-card__form">
+  
 
   <div class="login-card__subtitle">
     <h4>Search by:</h4>

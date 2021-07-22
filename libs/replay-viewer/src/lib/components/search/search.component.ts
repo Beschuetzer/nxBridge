@@ -19,9 +19,15 @@ import {
 } from '@nx-bridge/store';
 import { ReducerNames } from '@nx-bridge/interfaces-and-types';
 import {
+  ANIMATION_DURATION,
   DISPLAY_NONE_CLASSNAME,
+  HEIGHT_NONE_CLASSNAME,
+  HIDDEN_CLASSNAME,
   LOGIN_CARD_CLASSNAME,
   rootRoute,
+  SCALE_Y_NONE_CLASSNAME,
+  TRANSLATE_LEFT_CLASSNAME,
+  TRANSLATE_UP_CLASSNAME,
 } from '@nx-bridge/constants';
 import { Router } from '@angular/router';
 
@@ -132,20 +138,28 @@ export class SearchComponent implements OnInit {
 
   onHide() {
     const search = this.elRef.nativeElement as HTMLElement;
-    const subtitle = search.querySelector(`.${LOGIN_CARD_CLASSNAME}__subtitle`) as HTMLElement;
-    const inputs = search.querySelector(`.${LOGIN_CARD_CLASSNAME}__inputs`) as HTMLElement;
-    const submit = search.querySelector(`.${LOGIN_CARD_CLASSNAME}__submit`) as HTMLElement;
+    const form = search.querySelector(`.${LOGIN_CARD_CLASSNAME}__form`) as HTMLElement;
     const button = search.querySelector(`.${LOGIN_CARD_CLASSNAME}__hide`) as HTMLElement;
 
-    if (subtitle?.classList.contains(DISPLAY_NONE_CLASSNAME)) {
-      if (subtitle) this.renderer.removeClass(subtitle, DISPLAY_NONE_CLASSNAME);
-      if (inputs) this.renderer.removeClass(inputs, DISPLAY_NONE_CLASSNAME);
-      if (submit) this.renderer.removeClass(submit, DISPLAY_NONE_CLASSNAME);
+    if (form?.classList.contains(HIDDEN_CLASSNAME)) {
+      if (form) {
+        this.renderer.removeClass(form, DISPLAY_NONE_CLASSNAME);
+        setTimeout(() => {
+          this.renderer.removeClass(form, TRANSLATE_UP_CLASSNAME);
+        }, ANIMATION_DURATION / 16);
+        setTimeout(() => {
+          this.renderer.removeClass(form, HIDDEN_CLASSNAME);
+        }, ANIMATION_DURATION / 2);
+      }
       button.innerHTML = "Hide";
     } else {
-      if (subtitle) this.renderer.addClass(subtitle, DISPLAY_NONE_CLASSNAME);
-      if (inputs) this.renderer.addClass(inputs, DISPLAY_NONE_CLASSNAME);
-      if (submit) this.renderer.addClass(submit, DISPLAY_NONE_CLASSNAME);
+      if (form) {
+        this.renderer.addClass(form, TRANSLATE_UP_CLASSNAME);
+        this.renderer.addClass(form, HIDDEN_CLASSNAME);
+        setTimeout(() => {
+          this.renderer.addClass(form, DISPLAY_NONE_CLASSNAME);
+        }, ANIMATION_DURATION / 2);
+      }
       button.innerHTML = "Show";
     }
   }

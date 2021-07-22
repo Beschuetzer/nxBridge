@@ -31,12 +31,6 @@ Todos----------------------------------------------------------
 -figure out how to make closing deal-player reset everything
 -add goto nth card played text box?
 
-Testing------------
-  -test already stored LocalStorageUser scenario works
-  -how does providing email to a localStorageUser already present work? does it save email?
-
-
-
 -add animations/transitions for things like fade in of filters and games?
 
 -add 'Deal Pass out' filter?

@@ -17,6 +17,20 @@
   text-align: center !important;
 }
 
+//transform
+.scale-y-none {
+  transform: scaleY(0);
+}
+.scale-x-none {
+  transform: scaleY(0);
+}
+.translate-up {
+  transform: translateY(-100%);
+}
+.translate-left {
+  transform: translateX(-100%);
+}
+
 //flexbox
 .flex {
   display: flex !important;

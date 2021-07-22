@@ -27,6 +27,7 @@
   }
 
   &__header {
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -166,5 +167,13 @@
     // & .header {
     //   font-size: $default-font-size * 1 !important;
     // }
+  }
+
+  &__form {
+    transform-origin: top;
+    transition: 
+      opacity $animation-duration $animation-easing-standard,
+      transform $animation-duration $animation-easing-standard,
+    ;
   }
 }
