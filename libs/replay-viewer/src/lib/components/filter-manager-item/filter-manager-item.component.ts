@@ -30,7 +30,7 @@ export class FilterManagerItemComponent implements OnInit {
 
   ngOnInit(): void 
   {
-    const textElement = this.elRef.nativeElement?.querySelector(`.${FILTER_MANAGER_CLASSNAME}__text`);
+    const textElement = this.elRef.nativeElement?.querySelector(`.${FILTER_MANAGER_CLASSNAME}__item-text`);
     if (this.filterItem?.error) {
       this.changeErrorClasses(textElement, false);
       this.messageToShow = this.filterItem.error;

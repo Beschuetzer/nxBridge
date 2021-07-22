@@ -122,7 +122,7 @@ export class FilterManagerComponent implements OnInit {
   @HostBinding('class.h-0') get getHeightAuto() {
     if (window.innerWidth <= MOBILE_START_WIDTH) {
       if (!this.searchService.getAreDealsLoaded()) return true;
-    } 
+    }
     return false;
   }
   @HostBinding('class.announce-self') get toggleAnnounceSelf() {
@@ -194,6 +194,22 @@ export class FilterManagerComponent implements OnInit {
     });
   }
 
+  addFilterItem(filterItem: FilterItem, toDispatch: any, key: string) {
+    this.store.dispatch(toDispatch);
+    this.store.dispatch(new SetIsFilterSame(false));
+    this.searchService.setCurrentlyDisplayingGames();
+
+    this.filterItems[key] = filterItem;
+
+    delete this.filterItems[
+      `${this.filterManagerService.filters.playerHasCard.errorKey}`
+    ];
+
+    delete this.filterItems[
+      `${this.filterManagerService.filters.playerInGame.errorKey}`
+    ];
+  }
+
   //#region onAdd Methods
   onAddContract(e: Event) {
     const eventTarget = e.currentTarget || e.target;
@@ -205,11 +221,6 @@ export class FilterManagerComponent implements OnInit {
     if (!selectedContract) return;
 
     this.lastButtonPressed = eventTarget;
-
-    this.store.dispatch(new SetContractFilter(selectedContract));
-    this.store.dispatch(new SetIsFilterSame(false));
-    this.searchService.setCurrentlyDisplayingGames();
-
     this.filterManagerService.setInputErrorClassnames(
       contractsSelectElement,
       true
@@ -223,9 +234,11 @@ export class FilterManagerComponent implements OnInit {
       elementsToReset: [contractsSelectElement],
     };
 
-    this.filterItems[
+    this.addFilterItem(
+      filterItem,
+      new SetContractFilter(selectedContract),
       this.filterManagerService.filters.contract.string
-    ] = filterItem;
+    );
   }
 
   onAddDealResult(e: Event) {
@@ -249,16 +262,6 @@ export class FilterManagerComponent implements OnInit {
       return;
 
     this.lastButtonPressed = eventTarget;
-
-    this.store.dispatch(
-      new SetDealResultFilter({
-        amount: +selectedAmount,
-        type: selectedType as WonByType,
-      })
-    );
-    this.store.dispatch(new SetIsFilterSame(false));
-    this.searchService.setCurrentlyDisplayingGames();
-
     this.filterManagerService.setInputErrorClassnames(
       dealResultAmountElement,
       true
@@ -287,9 +290,14 @@ export class FilterManagerComponent implements OnInit {
       elementsToReset: [dealResultAmountElement],
     };
 
-    this.filterItems[
+    this.addFilterItem(
+      filterItem,
+      new SetDealResultFilter({
+        amount: +selectedAmount,
+        type: selectedType as WonByType,
+      }),
       this.filterManagerService.filters.dealResult.string
-    ] = filterItem;
+    );
   }
 
   onAddDeclarer(e: Event) {
@@ -302,10 +310,6 @@ export class FilterManagerComponent implements OnInit {
     if (selectedDeclarer === this.playerNames[0]) return;
     this.lastButtonPressed = eventTarget;
 
-    this.store.dispatch(new SetDeclarerFilter(selectedDeclarer));
-    this.store.dispatch(new SetIsFilterSame(false));
-    this.searchService.setCurrentlyDisplayingGames();
-
     this.filterManagerService.setInputErrorClassnames(
       declarerSelectElement,
       true
@@ -317,9 +321,11 @@ export class FilterManagerComponent implements OnInit {
       elementsToReset: [declarerSelectElement],
     };
 
-    this.filterItems[
+    this.addFilterItem(
+      filterItem,
+      new SetDeclarerFilter(selectedDeclarer),
       this.filterManagerService.filters.declarer.string
-    ] = filterItem;
+    );
   }
 
   onAddDouble(e: Event) {
@@ -333,10 +339,6 @@ export class FilterManagerComponent implements OnInit {
     if (!selectedMultiplier || isNaN(selectedMultiplier)) return;
     this.lastButtonPressed = eventTarget;
 
-    this.store.dispatch(new SetIsFilterSame(false));
-    this.store.dispatch(new SetDoubleFilter(selectedMultiplier));
-    this.searchService.setCurrentlyDisplayingGames();
-
     this.filterManagerService.setInputErrorClassnames(doubleSelectOption, true);
 
     const filterItem: FilterItem = {
@@ -347,9 +349,11 @@ export class FilterManagerComponent implements OnInit {
       elementsToReset: [doubleSelectOption],
     };
 
-    this.filterItems[
+    this.addFilterItem(
+      filterItem,
+      new SetDoubleFilter(selectedMultiplier),
       this.filterManagerService.filters.double.string
-    ] = filterItem;
+    );
   }
 
   onAddGameName(e: Event) {
@@ -363,10 +367,6 @@ export class FilterManagerComponent implements OnInit {
     if (!selectedGameName) return;
     this.lastButtonPressed = eventTarget;
 
-    this.store.dispatch(new SetIsFilterSame(false));
-    this.store.dispatch(new SetGameNameFilter(selectedGameName));
-    this.searchService.setCurrentlyDisplayingGames();
-
     this.filterManagerService.setInputErrorClassnames(gameNameOption, true);
 
     const filterItem: FilterItem = {
@@ -375,9 +375,11 @@ export class FilterManagerComponent implements OnInit {
       elementsToReset: [gameNameOption],
     };
 
-    this.filterItems[
+    this.addFilterItem(
+      filterItem,
+      new SetGameNameFilter(selectedGameName),
       this.filterManagerService.filters.gameName.string
-    ] = filterItem;
+    );
   }
 
   onAddOpeningBid(e: Event) {
@@ -391,10 +393,6 @@ export class FilterManagerComponent implements OnInit {
     if (!selectedBid) return;
 
     this.lastButtonPressed = eventTarget;
-    this.store.dispatch(new SetOpeningBidFilter(selectedBid));
-    this.store.dispatch(new SetIsFilterSame(false));
-    this.searchService.setCurrentlyDisplayingGames();
-
     this.filterManagerService.setInputErrorClassnames(openingBidSelect, true);
 
     const filterItem: FilterItem = {
@@ -405,9 +403,11 @@ export class FilterManagerComponent implements OnInit {
       elementsToReset: [openingBidSelect],
     };
 
-    this.filterItems[
+    this.addFilterItem(
+      filterItem,
+      new SetOpeningBidFilter(selectedBid),
       this.filterManagerService.filters.openingBid.string
-    ] = filterItem;
+    );
   }
 
   onAddPlayerHasCard(e: Event) {
@@ -468,17 +468,6 @@ export class FilterManagerComponent implements OnInit {
           if (!isInitialPresent && currentUsernameCards?.includes(selectedCard))
             return;
 
-          if (isInitialPresent)
-            this.store.dispatch(
-              new SetPlayerHasCard({ [selectedUsername]: [selectedCard] })
-            );
-          else
-            this.store.dispatch(
-              new AddPlayerHasCard({ [selectedUsername]: [selectedCard] })
-            );
-          this.store.dispatch(new SetIsFilterSame(false));
-          this.searchService.setCurrentlyDisplayingGames();
-
           const [
             key,
             value,
@@ -488,8 +477,16 @@ export class FilterManagerComponent implements OnInit {
             selectedCard,
             selectedUsername
           );
-          this.filterItems[key] = value;
 
+          let toDispatch: any = new AddPlayerHasCard({
+            [selectedUsername]: [selectedCard],
+          });
+          if (isInitialPresent)
+            toDispatch = new SetPlayerHasCard({
+              [selectedUsername]: [selectedCard],
+            });
+
+          this.addFilterItem(value, toDispatch, key);
           this.hasPlayerHasCardChanged = false;
         });
     }
@@ -502,21 +499,15 @@ export class FilterManagerComponent implements OnInit {
       ?.nativeElement as HTMLSelectElement;
     const selectedPlayerInGame = playerInGameSelect.value;
 
-    let currentPlayerInGame: PlayerInGame = [];
-    this.store
-      .select(ReducerNames.filters)
-      .pipe(take(1))
-      .subscribe((filterState) => {
-        currentPlayerInGame = filterState.playerInGame;
-      });
-
     if (selectedPlayerInGame === filterManagerPlayerNames[0]) return;
     this.lastButtonPressed = eventTarget;
 
     this.filterManagerService.setInputErrorClassnames(playerInGameSelect, true);
 
+    const currentPlayerInGame: PlayerInGame = this.filterManagerService.getPlayerInGameFilter();
     const isTooMany = currentPlayerInGame.length >= 4;
     const isAlreadyPresent = currentPlayerInGame.includes(selectedPlayerInGame);
+    
     const error = isAlreadyPresent
       ? `${selectedPlayerInGame} ${this.filterManagerService.filterMsgs.playerInGame.invalid.alreadyPresent}`
       : isTooMany
@@ -535,19 +526,16 @@ export class FilterManagerComponent implements OnInit {
         `${this.filterManagerService.filters.playerInGame.string}-error`
       ] = filterItem;
     else {
-      this.store.dispatch(new AddPlayerInGameFilter(selectedPlayerInGame));
-      this.store.dispatch(new SetIsFilterSame(false));
-      this.searchService.setCurrentlyDisplayingGames();
-
       const indexToUse = currentPlayerInGame.includes(`${reducerDefaultValue}`)
         ? '0'
         : currentPlayerInGame.length;
-      this.filterItems[
+
+      this.addFilterItem(
+        filterItem,
+        new AddPlayerInGameFilter(selectedPlayerInGame),
         `${this.filterManagerService.filters.playerInGame.string}-${indexToUse}`
-      ] = filterItem;
-      delete this.filterItems[
-        `${this.filterManagerService.filters.playerInGame.string}-error`
-      ];
+      );
+      
     }
   }
 
@@ -571,16 +559,6 @@ export class FilterManagerComponent implements OnInit {
       return;
 
     this.lastButtonPressed = eventTarget;
-
-    this.store.dispatch(
-      new SetWonByFilter({
-        amount: +selectedAmount,
-        type: selectedType as WonByType,
-      })
-    );
-    this.store.dispatch(new SetIsFilterSame(false));
-    this.searchService.setCurrentlyDisplayingGames();
-
     this.filterManagerService.setInputErrorClassnames(wonByAmountElement, true);
     this.filterManagerService.setInputErrorClassnames(wonByTypeElement, true);
 
@@ -599,9 +577,15 @@ export class FilterManagerComponent implements OnInit {
       error: '',
       elementsToReset: [wonByAmountElement],
     };
-    this.filterItems[
+    
+    this.addFilterItem(
+      filterItem,
+      new SetWonByFilter({
+        amount: +selectedAmount,
+        type: selectedType as WonByType,
+      }),
       this.filterManagerService.filters.wonBy.string
-    ] = filterItem;
+    );
   }
   //#endregion
 
@@ -633,8 +617,12 @@ export class FilterManagerComponent implements OnInit {
     const shouldDispatchChange = this.handleDateChange(e, DateType.after);
     this.dispatchChanges(this.afterDate, shouldDispatchChange, DateType.after);
   }
-  onDealResultClick() {this.lastButtonPressed = null;}
-  onDealResultChange() { this.lastButtonPressed = null;}
+  onDealResultClick() {
+    this.lastButtonPressed = null;
+  }
+  onDealResultChange() {
+    this.lastButtonPressed = null;
+  }
   onDeclarerClick() {}
   onDoubleClick() {}
   onDoubleChange() {

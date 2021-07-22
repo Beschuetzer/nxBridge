@@ -372,6 +372,19 @@ export class FiltermanagerService {
     return toAdd;
   }
 
+  getPlayerInGameFilter() {
+    let currentPlayerInGame: PlayerInGame = [];
+
+    this.store
+      .select(ReducerNames.filters)
+      .pipe(take(1))
+      .subscribe((filterState) => {
+        currentPlayerInGame = filterState.playerInGame;
+      });
+
+    return currentPlayerInGame;
+  }
+
   getShouldResetStoreOnDeletion(toDelete: FilterItemDeletion) {
     const isPlayerHasCardError = toDelete.key.match(
       this.filters.playerHasCard.errorKey
