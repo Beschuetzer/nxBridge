@@ -4,7 +4,7 @@
   </h2>
   <button type="button" class="ui button bg-color-1 color-white d-none login-card__hide" (click)="onHide()">Hide</button>
 </div>
-<form (ngSubmit)="onSubmit()" [formGroup]="initialForm" class="ui form login-card__form">
+<form autocomplete="off" (ngSubmit)="onSubmit()" [formGroup]="initialForm" class="ui form login-card__form">
   
 
   <div class="login-card__subtitle">

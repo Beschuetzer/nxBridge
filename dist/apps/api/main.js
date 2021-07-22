@@ -142,7 +142,7 @@ AppModule = tslib_1.__decorate([
     common_1.Module({
         imports: [
             controllers_module_1.ControllersModule,
-            mongoose_1.MongooseModule.forRoot(process.env.mongoDB_URI),
+            mongoose_1.MongooseModule.forRoot(process.env.mongoDB_URI, { 'useCreateIndex': true }),
             serve_static_1.ServeStaticModule.forRoot({
                 rootPath: path_1.join(__dirname, '..', 'frontend'),
                 exclude: ['/api*']

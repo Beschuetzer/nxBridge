@@ -11,7 +11,7 @@
   transform: translate(-50%, -50%);
   overflow: hidden;
 
-  & *:not(.non-existant-class, button) {
+  & *:not(.non-existant-class, button, input) {
     color: var(--color-primary-4) !important;
 
     &:not(label, form, h4, input, span, .login-card__buttons, .login-card__email, .search, .login-card__header, .login-card__title, .login-card__subtitle) {
@@ -107,6 +107,7 @@
   }
 
   &:hover .logo {
+    animation: none;
     opacity: $logo-opacity-hover;
     background-image: url($login-card-logo),
       linear-gradient(

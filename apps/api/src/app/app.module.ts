@@ -13,6 +13,7 @@ dotenv.config();
     ControllersModule,
     MongooseModule.forRoot(
       process.env.mongoDB_URI,
+      {'useCreateIndex': true}
     ),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'frontend'),

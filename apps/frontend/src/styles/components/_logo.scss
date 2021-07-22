@@ -7,10 +7,12 @@
   top: 0;
   left: 0;
   background-position: bottom;
-  background-size: cover;
-  opacity: $logo-opacity-normal;
   background-blend-mode: luminosity;
-  transition: opacity $animation-duration * 1 $animation-easing-standard;
+  background-size: cover;
+
+  animation: logo infinite 50s $animation-easing-flash forwards;
+  // opacity: $logo-opacity-normal;
+  // transition: opacity $animation-duration * 1 $animation-easing-standard;
   // &:hover {
   //   opacity: .5;
   // }
