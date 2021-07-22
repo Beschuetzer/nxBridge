@@ -31,7 +31,7 @@ $scale-lowest: 0;
     opacity: $opacity-highest;
     background-position: left;
   }
-  50%{
+  25%{
     background-position: right;
     opacity: $opacity-lowest;
   }
@@ -40,7 +40,6 @@ $scale-lowest: 0;
     background-size: contain;
     background-position: left;
     opacity: $opacity-highest;
-
   }
 }
 
