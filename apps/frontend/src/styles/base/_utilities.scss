@@ -302,12 +302,15 @@
 }
 
 .matched-deal {
+  --duration: 1s;
+  --times: 5;
+  --easing: #{$animation-easing-standard-easeInOutBack};
   // background-color: rgba(var(--color-primary-3-rgb), 1) !important;
-  animation: matching-item infinite 1s $animation-easing-flash forwards;
+  animation: matching-item var(--times) var(--duration) var(--easing) forwards;
 
   & *:not(button) {
     // background-color: rgba(var(--color-primary-3-rgb), 1) !important;
-    animation: matching-item infinite 1s $animation-easing-flash  forwards;
+    animation: matching-item var(--times) var(--duration) var(--easing)  forwards;
   }
 }
 

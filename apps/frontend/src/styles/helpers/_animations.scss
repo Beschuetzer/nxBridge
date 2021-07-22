@@ -20,87 +20,27 @@
   }
 }
 
-$opacity-highest: .25;
+$opacity-highest: .125;
 $opacity-lowest: .05;
 $scale-highest: 1;
 $scale-lowest: 0;
 @keyframes logo {
   0%{
-    background-blend-mode: luminosity;
+    background-repeat: repeat;
+    background-size: contain;
     opacity: $opacity-highest;
-    transform: scale($scale-highest);
+    background-position: left;
   }
-  2.5% {
+  50%{
+    background-position: right;
+    opacity: $opacity-lowest;
+  }
+  100% {
+    background-repeat: repeat;
+    background-size: contain;
+    background-position: left;
+    opacity: $opacity-highest;
 
-    opacity: $opacity-lowest;
-    transform: scale($scale-lowest);
-  }
-  3.75%{
-    transform-origin: top left;
-    background-blend-mode: multiply;
-    opacity: $opacity-highest;
-    transform: scale($scale-highest);
-  }
-  20%{
-    opacity: $opacity-highest;
-    transform: scale($scale-highest);
-  }
-  22.5% {
-    opacity: $opacity-lowest;
-    transform: scale($scale-lowest);
-  }
-  23.75%{
-    transform-origin: top right;
-    background-blend-mode: darken;
-    opacity: $opacity-highest;
-    transform: scale($scale-highest);
-  }
-  40%{
-    opacity: $opacity-highest;
-    transform: scale($scale-highest);
-  }
-  42.5% {
-    opacity: $opacity-lowest;
-    transform: scale($scale-lowest);
-  }
-  43.75%{
-    transform-origin: bottom right;
-    opacity: $opacity-highest;
-    transform: scale($scale-highest);
-    background-blend-mode: color-dodge;
-  }
-  60%{
-    opacity: $opacity-highest;
-    transform: scale($scale-highest);
-  }
-  62.5% {
-
-    opacity: $opacity-lowest;
-    transform: scale($scale-lowest);
-  }
-  63.75%{
-    transform-origin: bottom left;
-    opacity: $opacity-highest;
-    transform: scale($scale-highest);
-  }
-  80%{
-    background-blend-mode: hard-light;
-    opacity: $opacity-highest;
-    transform: scale($scale-highest);
-  }
-  82.5% {
-
-    opacity: $opacity-lowest;
-    transform: scale($scale-lowest);
-  }
-  83.75%{
-    transform-origin: center;
-    opacity: $opacity-highest;
-    transform: scale($scale-highest);
-  }
-  100%{
-    opacity: $opacity-highest;
-    transform: scale($scale-highest);
   }
 }
 

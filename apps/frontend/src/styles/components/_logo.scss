@@ -10,7 +10,7 @@
   background-blend-mode: luminosity;
   background-size: cover;
 
-  animation: logo infinite 50s $animation-easing-flash forwards;
+  animation: logo infinite 3.33s $animation-easing-standard-easeInOutBack forwards;
   // opacity: $logo-opacity-normal;
   // transition: opacity $animation-duration * 1 $animation-easing-standard;
   // &:hover {

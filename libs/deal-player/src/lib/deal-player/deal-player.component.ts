@@ -36,7 +36,6 @@ import {
 } from '@nx-bridge/store';
 import { Contract, Hands, ReducerNames, Seating } from '@nx-bridge/interfaces-and-types';
 import { DealPlayerService } from '../deal-player.service';
-import { AnonymousSubject } from 'rxjs/internal/Subject';
 
 @Component({
   selector: 'nx-bridge-deal-player',
@@ -104,7 +103,9 @@ export class DealPlayerComponent implements OnInit {
 
   onHostClick(e: Event) {
     const currentTarget = e.target as HTMLElement;
-    const isChildClick =  checkForParentOfType(currentTarget, 'nx-bridge-deal-player', DEAL_PLAYER_CLASSNAME);
+    
+    let isChildClick = true;
+    if (currentTarget.localName !== 'svg' && currentTarget.localName !== 'use') isChildClick =  checkForParentOfType(currentTarget, 'nx-bridge-deal-player', DEAL_PLAYER_CLASSNAME);
 
     if (!isChildClick) this.closeWindow();
   }
@@ -311,6 +312,7 @@ export class DealPlayerComponent implements OnInit {
 
   private playCard(nthCard = this.dealPlayerService.playCount) {
     const cardPlayOrder = this.dealPlayerService.deal?.cardPlayOrder;
+
     if (!this.dealPlayerService.deal || !cardPlayOrder || cardPlayOrder.length < cardsPerDeck)
       return;
 

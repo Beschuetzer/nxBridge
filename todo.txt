@@ -25,5 +25,4 @@ Todos----------------------------------------------------------
 -add 'Deal Pass out' filter?
 -add 'Deal split' filter? (finds games where winning team won by x number of deals)
 -trigger announce-self after loading is complete
-
  
