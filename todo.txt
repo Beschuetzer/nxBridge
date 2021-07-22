@@ -16,6 +16,7 @@ Optimizations------------------------------------------------------
 Prettification-------------------
   -game-detail__score width is a bit 'off'
   -bolden the high cards ("A, k q j") in table
+  -add hcp and dist points to hands table?
 
 Todos----------------------------------------------------------
   -figure out how to move landing service validators to a new service folder in the frontend project in a ValidatorsService file
@@ -24,5 +25,4 @@ Todos----------------------------------------------------------
 -add goto nth card played text box?
 -add 'Deal Pass out' filter?
 -add 'Deal split' filter? (finds games where winning team won by x number of deals)
--trigger announce-self after loading is complete
  

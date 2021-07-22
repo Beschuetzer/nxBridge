@@ -4,7 +4,7 @@
 # /dist  
 
 #comment out below when deploying to git hub
-# /apps 
+/apps 
 
 /tmp
 /out-tsc
