@@ -21,8 +21,9 @@ import { ReducerNames } from '@nx-bridge/interfaces-and-types';
 import {
   DISPLAY_NONE_CLASSNAME,
   LOGIN_CARD_CLASSNAME,
+  rootRoute,
 } from '@nx-bridge/constants';
-import { Renderer } from 'three';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'nx-bridge-search',
@@ -83,13 +84,22 @@ export class SearchComponent implements OnInit {
     private searchService: SearchService,
     private store: Store<AppState>,
     private elRef: ElementRef,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
     this.initializeForm();
     this.subscribeToLoadingErrorMessage();
     this.subscribeToIsLoading();
+
+    this.store.select(ReducerNames.deals).pipe(take(1)).subscribe(dealState => {
+      if (this.router.url === `/${rootRoute}/games` && dealState.fetchedDeals && Object.keys(dealState.fetchedDeals ).length > 0) {
+        setTimeout(() => {
+          this.onHide();
+        }, 100)
+      }
+    })
   }
 
   onInputClick() {
@@ -128,14 +138,14 @@ export class SearchComponent implements OnInit {
     const button = search.querySelector(`.${LOGIN_CARD_CLASSNAME}__hide`) as HTMLElement;
 
     if (subtitle?.classList.contains(DISPLAY_NONE_CLASSNAME)) {
-      this.renderer.removeClass(subtitle, DISPLAY_NONE_CLASSNAME);
-      this.renderer.removeClass(inputs, DISPLAY_NONE_CLASSNAME);
-      this.renderer.removeClass(submit, DISPLAY_NONE_CLASSNAME);
+      if (subtitle) this.renderer.removeClass(subtitle, DISPLAY_NONE_CLASSNAME);
+      if (inputs) this.renderer.removeClass(inputs, DISPLAY_NONE_CLASSNAME);
+      if (submit) this.renderer.removeClass(submit, DISPLAY_NONE_CLASSNAME);
       button.innerHTML = "Hide";
     } else {
-      this.renderer.addClass(subtitle, DISPLAY_NONE_CLASSNAME);
-      this.renderer.addClass(inputs, DISPLAY_NONE_CLASSNAME);
-      this.renderer.addClass(submit, DISPLAY_NONE_CLASSNAME);
+      if (subtitle) this.renderer.addClass(subtitle, DISPLAY_NONE_CLASSNAME);
+      if (inputs) this.renderer.addClass(inputs, DISPLAY_NONE_CLASSNAME);
+      if (submit) this.renderer.addClass(submit, DISPLAY_NONE_CLASSNAME);
       button.innerHTML = "Show";
     }
   }

@@ -43,5 +43,3 @@ Testing------------
 -add 'Deal split' filter? (finds games where winning team won by x number of deals)
 
  
--change .matched-deals to have an animation of some sort
--toggle hide .search when transferring from login card

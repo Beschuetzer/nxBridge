@@ -19,3 +19,12 @@
     transform: translateX(5%) scale(1);
   }
 }
+
+@keyframes matching-item {
+  0% {
+    background-color: rgba(var(--color-white-rgb), 1);
+  }
+  100% {
+    background-color: rgba(var(--color-primary-3-rgb), 1);
+  }
+}

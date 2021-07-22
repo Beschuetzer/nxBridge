@@ -1,13 +1,14 @@
 import { Action } from '@ngrx/store';
-export const SET_IS_LOADING = '[General] SET_IS_LOADING';
-export const SET_SORTING_PREFERENCE = '[General] SET_SORTING_PREFERENCE';
-export const SET_LOADING_ERROR = '[General] SET_LOADING_ERROR';
-export const SET_RESULTS_PER_PAGE_PREFERENCE = '[General] SET_RESULTS_PER_PAGE_PREFERENCE';
 export const SET_BATCH_NUMBER = '[General] SET_BATCH_NUMBER';
+export const SET_IS_LOADING = '[General] SET_IS_LOADING';
+export const SET_LOADING_ERROR = '[General] SET_LOADING_ERROR';
+export const SET_SORTING_PREFERENCE = '[General] SET_SORTING_PREFERENCE';
+export const SET_RESULTS_PER_PAGE_PREFERENCE =
+  '[General] SET_RESULTS_PER_PAGE_PREFERENCE';
 
-export class SetLoadingError implements Action {
-  readonly type = SET_LOADING_ERROR;
-  constructor(public payload: string) {}
+export class SetBatchNumber implements Action {
+  readonly type = SET_BATCH_NUMBER;
+  constructor(public payload: number) {}
 }
 
 export class SetIsLoading implements Action {
@@ -15,8 +16,8 @@ export class SetIsLoading implements Action {
   constructor(public payload: boolean) {}
 }
 
-export class SetSortingPreference implements Action {
-  readonly type = SET_SORTING_PREFERENCE;
+export class SetLoadingError implements Action {
+  readonly type = SET_LOADING_ERROR;
   constructor(public payload: string) {}
 }
 
@@ -25,14 +26,14 @@ export class SetResultsPerPagePreference implements Action {
   constructor(public payload: string) {}
 }
 
-export class SetBatchNumber implements Action {
-  readonly type = SET_BATCH_NUMBER;
-  constructor(public payload: number) {}
+export class SetSortingPreference implements Action {
+  readonly type = SET_SORTING_PREFERENCE;
+  constructor(public payload: string) {}
 }
 
 export type GeneralActions =
+  | SetBatchNumber
   | SetIsLoading
   | SetLoadingError
-  | SetSortingPreference
   | SetResultsPerPagePreference
-  | SetBatchNumber;
+  | SetSortingPreference;

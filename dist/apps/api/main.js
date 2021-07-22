@@ -2231,40 +2231,12 @@ exports.SetIsViewingGame = SetIsViewingGame;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SetBatchNumber = exports.SetResultsPerPagePreference = exports.SetSortingPreference = exports.SetIsLoading = exports.SetLoadingError = exports.SET_BATCH_NUMBER = exports.SET_RESULTS_PER_PAGE_PREFERENCE = exports.SET_LOADING_ERROR = exports.SET_SORTING_PREFERENCE = exports.SET_IS_LOADING = void 0;
-exports.SET_IS_LOADING = '[General] SET_IS_LOADING';
-exports.SET_SORTING_PREFERENCE = '[General] SET_SORTING_PREFERENCE';
-exports.SET_LOADING_ERROR = '[General] SET_LOADING_ERROR';
-exports.SET_RESULTS_PER_PAGE_PREFERENCE = '[General] SET_RESULTS_PER_PAGE_PREFERENCE';
+exports.SetSortingPreference = exports.SetResultsPerPagePreference = exports.SetLoadingError = exports.SetIsLoading = exports.SetBatchNumber = exports.SET_RESULTS_PER_PAGE_PREFERENCE = exports.SET_SORTING_PREFERENCE = exports.SET_LOADING_ERROR = exports.SET_IS_LOADING = exports.SET_BATCH_NUMBER = void 0;
 exports.SET_BATCH_NUMBER = '[General] SET_BATCH_NUMBER';
-class SetLoadingError {
-    constructor(payload) {
-        this.payload = payload;
-        this.type = exports.SET_LOADING_ERROR;
-    }
-}
-exports.SetLoadingError = SetLoadingError;
-class SetIsLoading {
-    constructor(payload) {
-        this.payload = payload;
-        this.type = exports.SET_IS_LOADING;
-    }
-}
-exports.SetIsLoading = SetIsLoading;
-class SetSortingPreference {
-    constructor(payload) {
-        this.payload = payload;
-        this.type = exports.SET_SORTING_PREFERENCE;
-    }
-}
-exports.SetSortingPreference = SetSortingPreference;
-class SetResultsPerPagePreference {
-    constructor(payload) {
-        this.payload = payload;
-        this.type = exports.SET_RESULTS_PER_PAGE_PREFERENCE;
-    }
-}
-exports.SetResultsPerPagePreference = SetResultsPerPagePreference;
+exports.SET_IS_LOADING = '[General] SET_IS_LOADING';
+exports.SET_LOADING_ERROR = '[General] SET_LOADING_ERROR';
+exports.SET_SORTING_PREFERENCE = '[General] SET_SORTING_PREFERENCE';
+exports.SET_RESULTS_PER_PAGE_PREFERENCE = '[General] SET_RESULTS_PER_PAGE_PREFERENCE';
 class SetBatchNumber {
     constructor(payload) {
         this.payload = payload;
@@ -2272,6 +2244,34 @@ class SetBatchNumber {
     }
 }
 exports.SetBatchNumber = SetBatchNumber;
+class SetIsLoading {
+    constructor(payload) {
+        this.payload = payload;
+        this.type = exports.SET_IS_LOADING;
+    }
+}
+exports.SetIsLoading = SetIsLoading;
+class SetLoadingError {
+    constructor(payload) {
+        this.payload = payload;
+        this.type = exports.SET_LOADING_ERROR;
+    }
+}
+exports.SetLoadingError = SetLoadingError;
+class SetResultsPerPagePreference {
+    constructor(payload) {
+        this.payload = payload;
+        this.type = exports.SET_RESULTS_PER_PAGE_PREFERENCE;
+    }
+}
+exports.SetResultsPerPagePreference = SetResultsPerPagePreference;
+class SetSortingPreference {
+    constructor(payload) {
+        this.payload = payload;
+        this.type = exports.SET_SORTING_PREFERENCE;
+    }
+}
+exports.SetSortingPreference = SetSortingPreference;
 
 
 /***/ }),
@@ -2535,26 +2535,26 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.generalReducer = void 0;
 const fromGeneralActions = __webpack_require__(/*! ../actions/general.actions */ "./libs/store/src/lib/actions/general.actions.ts");
 const INITIAL_STATE = {
+    batchNumber: 0,
     isLoading: false,
     loadingError: '',
-    sortingPreference: '',
     resultsPerPagePreference: '',
-    batchNumber: 0,
+    sortingPreference: '',
 };
 function generalReducer(state = INITIAL_STATE, action) {
     switch (action.type) {
-        case fromGeneralActions.SET_IS_LOADING:
-            return Object.assign(Object.assign({}, state), { isLoading: action.payload });
-        case fromGeneralActions.SET_LOADING_ERROR:
-            return Object.assign(Object.assign({}, state), { loadingError: action.payload });
-        case fromGeneralActions.SET_SORTING_PREFERENCE:
-            return Object.assign(Object.assign({}, state), { sortingPreference: action.payload });
-        case fromGeneralActions.SET_RESULTS_PER_PAGE_PREFERENCE:
-            return Object.assign(Object.assign({}, state), { resultsPerPagePreference: action.payload });
         case fromGeneralActions.SET_BATCH_NUMBER:
             if (isNaN(action.payload))
                 return state;
             return Object.assign(Object.assign({}, state), { batchNumber: action.payload });
+        case fromGeneralActions.SET_IS_LOADING:
+            return Object.assign(Object.assign({}, state), { isLoading: action.payload });
+        case fromGeneralActions.SET_LOADING_ERROR:
+            return Object.assign(Object.assign({}, state), { loadingError: action.payload });
+        case fromGeneralActions.SET_RESULTS_PER_PAGE_PREFERENCE:
+            return Object.assign(Object.assign({}, state), { resultsPerPagePreference: action.payload });
+        case fromGeneralActions.SET_SORTING_PREFERENCE:
+            return Object.assign(Object.assign({}, state), { sortingPreference: action.payload });
         default:
             return state;
     }

@@ -80,11 +80,11 @@
 }
 
 .margin-top-fourth {
-  margin-top: $default-font-size * .25 !important;
+  margin-top: $default-font-size * 0.25 !important;
 }
 
 .margin-top-half {
-  margin-top: $default-font-size * .5 !important;
+  margin-top: $default-font-size * 0.5 !important;
 }
 
 .margin-top-1 {
@@ -108,7 +108,7 @@
 }
 
 .margin-left-fourth {
-  margin-left: $default-font-size * .25 !important;
+  margin-left: $default-font-size * 0.25 !important;
 }
 
 .margin-left-1 {
@@ -278,10 +278,12 @@
 }
 
 .matched-deal {
-  background-color: rgba(var(--color-primary-3-rgb), 1) !important;
+  // background-color: rgba(var(--color-primary-3-rgb), 1) !important;
+  animation: matching-item infinite 1s $animation-easing-flash forwards;
 
   & *:not(button) {
-    background-color: rgba(var(--color-primary-3-rgb), 1) !important;
+    // background-color: rgba(var(--color-primary-3-rgb), 1) !important;
+    animation: matching-item infinite 1s $animation-easing-flash  forwards;
   }
 }
 
@@ -289,7 +291,8 @@
   animation: announce-self 1 $animation-duration $animation-easing-standard;
 
   @include respond($layout-breakpoint) {
-    animation: announce-self-mobile 1 $animation-duration * 2 $animation-easing-standard;
+    animation: announce-self-mobile 1 $animation-duration * 2
+      $animation-easing-standard;
   }
 }
 

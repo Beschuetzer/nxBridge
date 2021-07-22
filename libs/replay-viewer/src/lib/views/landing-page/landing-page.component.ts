@@ -4,7 +4,6 @@ import { AppState } from '@nx-bridge/store';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SearchService } from '../../services/search.service';
 import { ReducerNames } from '@nx-bridge/interfaces-and-types';
-import { rootCertificates } from 'node:tls';
 import { rootRoute } from '@nx-bridge/constants';
 
 @Component({
