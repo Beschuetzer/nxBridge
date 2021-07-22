@@ -9,14 +9,9 @@ known bugs --------------------------
 Known Quirks-----------------
   -since users can change username and email, the user has to know the current username or email in order to get results (would have to keep track user username changes on A# maj bridge to remedy )
 
-
-Components:
-  1. UserInputs (inputs for username and email, input for filter before and filter after (three ways to use: get games before date, after date, or between dates), dropdown to select nth page to view when more than specified-amount-to-view-per-page number of games available
-
 Optimizations------------------------------------------------------
   -need to keep track of how many times each userId is queried and use that info to remove the least queried usernames when space runs short (add a check in every localStorageManager method that saves which checks space available and basically deletes the minimal amount of 'least valuable' localStorage data as possible)
   -need a function to remove the oldest localStorageUser by last access date and call when storage is full or approaching it
-
 
 Prettification-------------------
   -game-detail__score width is a bit 'off'
@@ -25,14 +20,10 @@ Prettification-------------------
 Todos----------------------------------------------------------
   -figure out how to move landing service validators to a new service folder in the frontend project in a ValidatorsService file
 
-
-
-
 -figure out how to make closing deal-player reset everything
 -add goto nth card played text box?
-
-
 -add 'Deal Pass out' filter?
 -add 'Deal split' filter? (finds games where winning team won by x number of deals)
+-trigger announce-self after loading is complete
 
  

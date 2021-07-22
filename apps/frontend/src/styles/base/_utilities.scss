@@ -312,7 +312,7 @@
 }
 
 .announce-self {
-  animation: announce-self 1 $animation-duration $animation-easing-standard;
+  animation: announce-self 1 $animation-duration * 1 $animation-easing-standard;
 
   @include respond($layout-breakpoint) {
     animation: announce-self-mobile 1 $animation-duration * 2
