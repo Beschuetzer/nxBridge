@@ -98,6 +98,10 @@
       width: 100%;
       display: flex;
       align-items: center;
+      transition: 
+        opacity $animation-duration $animation-easing-standard,
+        transform $animation-duration $animation-easing-standard,
+      ;
     }
 
     & > *:nth-child(n + 2):not(button) {

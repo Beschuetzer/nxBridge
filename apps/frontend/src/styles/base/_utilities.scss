@@ -19,16 +19,22 @@
 
 //transform
 .scale-y-none {
-  transform: scaleY(0);
+  transform: scaleY(0) !important;
 }
 .scale-x-none {
-  transform: scaleY(0);
+  transform: scaleY(0) !important;
 }
 .translate-up {
-  transform: translateY(-100%);
+  transform: translateY(-100%) !important;
 }
 .translate-left {
-  transform: translateX(-100%);
+  transform: translateX(-100%) !important;
+}
+.translate-down {
+  transform: translateY(100%) !important;
+}
+.translate-right {
+  transform: translateX(100%) !important;
 }
 
 //flexbox
@@ -74,6 +80,10 @@
 
 .hidden {
   visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+.opacity-none {
   opacity: 0 !important;
 }
 

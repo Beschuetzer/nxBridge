@@ -25,6 +25,7 @@ import {
   MOBILE_START_WIDTH,
   filterManagerGameNames,
   COMPARER_HTML_ENTITIES,
+  OPACITY_NONE_CLASSNAME,
 } from '@nx-bridge/constants';
 import {
   AddPlayerHasCard,
@@ -697,13 +698,13 @@ export class FilterManagerComponent implements OnInit {
       `.${FILTER_MANAGER_CLASSNAME}__hide`
     ) as HTMLElement;
 
-    if (filters?.classList.contains(DISPLAY_NONE_CLASSNAME)) {
-      if (details) this.renderer.removeClass(details, DISPLAY_NONE_CLASSNAME);
-      if (filters) this.renderer.removeClass(filters, DISPLAY_NONE_CLASSNAME);
+    if (filters?.classList.contains(OPACITY_NONE_CLASSNAME)) {
+      if (details) this.renderer.removeClass(details, OPACITY_NONE_CLASSNAME);
+      if (filters) this.renderer.removeClass(filters, OPACITY_NONE_CLASSNAME);
       button.innerHTML = 'Hide';
     } else {
-      if (details) this.renderer.addClass(details, DISPLAY_NONE_CLASSNAME);
-      if (filters) this.renderer.addClass(filters, DISPLAY_NONE_CLASSNAME);
+      if (details) this.renderer.addClass(details, OPACITY_NONE_CLASSNAME);
+      if (filters) this.renderer.addClass(filters, OPACITY_NONE_CLASSNAME);
       button.innerHTML = 'Show';
     }
   }

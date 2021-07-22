@@ -25,9 +25,11 @@ export const OVERFLOW_Y_SCROLL_CLASSNAME = 'overflow-y-auto';
 export const HEIGHT_AUTO_CLASSNAME = 'h-auto';
 export const HEIGHT_NONE_CLASSNAME = 'h-0';
 export const HIDDEN_CLASSNAME = 'hidden';
+export const OPACITY_NONE_CLASSNAME = 'opacity-none';
 export const SCALE_Y_NONE_CLASSNAME = 'scale-y-none';
 export const SCALE_X_NONE_CLASSNAME = 'scale-x-none';
 export const TRANSLATE_LEFT_CLASSNAME = 'translate-left';
+export const TRANSLATE_RIGHT_CLASSNAME = 'translate-right';
 export const TRANSLATE_UP_CLASSNAME = 'translate-up';
 
 export const VISIBLE_CLASSNAME = 'visible';

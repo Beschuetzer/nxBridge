@@ -31,7 +31,6 @@ Todos----------------------------------------------------------
 -figure out how to make closing deal-player reset everything
 -add goto nth card played text box?
 
--add animations/transitions for things like fade in of filters and games?
 
 -add 'Deal Pass out' filter?
 -add 'Deal split' filter? (finds games where winning team won by x number of deals)

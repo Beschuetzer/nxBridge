@@ -18,14 +18,19 @@ import {
   ReducerNames,
 } from '@nx-bridge/interfaces-and-types';
 import {
+  ANIMATION_DURATION,
   DISPLAY_NONE_CLASSNAME,
   GAMES_VIEW_CLASSNAME,
   getNewBatchNumber,
   getNewTotalNumberOfPages,
+  HIDDEN_CLASSNAME,
   NOT_AVAILABLE_STRING,
+  OPACITY_NONE_CLASSNAME,
   RESULTS_PER_PAGE_OPTIONS,
   SIZE_OPTIONS,
   SORT_OPTIONS,
+  TRANSLATE_LEFT_CLASSNAME,
+  TRANSLATE_RIGHT_CLASSNAME,
 } from '@nx-bridge/constants';
 import { LocalStorageManagerService } from '../../services/local-storage-manager.service';
 import { SearchService } from '../../services/search.service';
@@ -112,21 +117,39 @@ export class GamesListViewComponent implements OnInit {
     const gamesView = this.elRef.nativeElement as HTMLElement;
     const size = gamesView.querySelector(`.${GAMES_VIEW_CLASSNAME}__size`) as HTMLElement;
     const results = gamesView.querySelector(`.${GAMES_VIEW_CLASSNAME}__results`) as HTMLElement;
-    const sort = gamesView.querySelector(`.${GAMES_VIEW_CLASSNAME}__sort`) as HTMLElement;
-    const page = gamesView.querySelector(`.${GAMES_VIEW_CLASSNAME}__page`) as HTMLElement;
     const button = gamesView.querySelector(`.${GAMES_VIEW_CLASSNAME}__hide`) as HTMLElement;
 
-    if (size.classList.contains(DISPLAY_NONE_CLASSNAME)) {
-      this.renderer.removeClass(size, DISPLAY_NONE_CLASSNAME);
-      this.renderer.removeClass(results, DISPLAY_NONE_CLASSNAME);
-      // this.renderer.removeClass(sort, DISPLAY_NONE_CLASSNAME);
-      // this.renderer.removeClass(page, DISPLAY_NONE_CLASSNAME);
+    if (size.classList.contains(OPACITY_NONE_CLASSNAME)) {
+      if (size) {
+        this.renderer.removeClass(size, DISPLAY_NONE_CLASSNAME);
+        setTimeout(() => {
+          this.renderer.removeClass(size, OPACITY_NONE_CLASSNAME);
+          this.renderer.removeClass(size, TRANSLATE_LEFT_CLASSNAME);
+        }, ANIMATION_DURATION / 128);
+      }
+      if (results) {
+        this.renderer.removeClass(results, DISPLAY_NONE_CLASSNAME);
+        setTimeout(() => {
+          this.renderer.removeClass(results, OPACITY_NONE_CLASSNAME);
+          this.renderer.removeClass(results, TRANSLATE_RIGHT_CLASSNAME);
+        }, ANIMATION_DURATION / 128);
+      }
       button.innerHTML = 'Hide';
     } else {
-      this.renderer.addClass(size, DISPLAY_NONE_CLASSNAME);
-      this.renderer.addClass(results, DISPLAY_NONE_CLASSNAME);
-      // this.renderer.addClass(sort, DISPLAY_NONE_CLASSNAME);
-      // this.renderer.addClass(page, DISPLAY_NONE_CLASSNAME);
+      if (size) {
+        this.renderer.addClass(size, TRANSLATE_LEFT_CLASSNAME);
+        this.renderer.addClass(size, OPACITY_NONE_CLASSNAME);
+        setTimeout(() => {
+          this.renderer.addClass(size, DISPLAY_NONE_CLASSNAME);
+        }, ANIMATION_DURATION / 4)
+      }
+      if (results) {
+        this.renderer.addClass(results, TRANSLATE_RIGHT_CLASSNAME);
+        this.renderer.addClass(results, OPACITY_NONE_CLASSNAME);
+        setTimeout(() => {
+          this.renderer.addClass(results, DISPLAY_NONE_CLASSNAME);
+        }, ANIMATION_DURATION / 4)
+      }
       button.innerHTML = 'Show';
     }
   }
