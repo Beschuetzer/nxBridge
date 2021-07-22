@@ -34,8 +34,14 @@ import {
   DealState,
   GameState,
 } from '@nx-bridge/store';
-import { Contract, Hands, ReducerNames, Seating } from '@nx-bridge/interfaces-and-types';
+import {
+  Contract,
+  Hands,
+  ReducerNames,
+  Seating,
+} from '@nx-bridge/interfaces-and-types';
 import { DealPlayerService } from '../deal-player.service';
+import { debug } from 'node:console';
 
 @Component({
   selector: 'nx-bridge-deal-player',
@@ -43,7 +49,9 @@ import { DealPlayerService } from '../deal-player.service';
   styleUrls: ['./deal-player.component.scss'],
 })
 export class DealPlayerComponent implements OnInit {
-  @HostListener('click', ["$event"]) onClick(e: Event) {this.onHostClick(e)}
+  @HostListener('click', ['$event']) onClick(e: Event) {
+    this.onHostClick(e);
+  }
   @HostBinding(`class.${DEAL_PLAYER_CLASSNAME}`) get classname() {
     return true;
   }
@@ -66,7 +74,7 @@ export class DealPlayerComponent implements OnInit {
   private hasLoadedDeal = false;
   private shouldChangePlaySpeed = false;
   private closeWhenResizedTimeout: any;
-  
+
   public isMobile = window.innerWidth <= MOBILE_START_WIDTH;
   public isPlaying = false;
 
@@ -78,6 +86,7 @@ export class DealPlayerComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    window.addEventListener('resize', this.setHeightAuto.bind(this));
     window.addEventListener(
       'resize',
       this.dealPlayerService.onResize.bind(this.dealPlayerService)
@@ -103,9 +112,14 @@ export class DealPlayerComponent implements OnInit {
 
   onHostClick(e: Event) {
     const currentTarget = e.target as HTMLElement;
-    
+
     let isChildClick = true;
-    if (currentTarget.localName !== 'svg' && currentTarget.localName !== 'use') isChildClick =  checkForParentOfType(currentTarget, 'nx-bridge-deal-player', DEAL_PLAYER_CLASSNAME);
+    if (currentTarget.localName !== 'svg' && currentTarget.localName !== 'use')
+      isChildClick = checkForParentOfType(
+        currentTarget,
+        'nx-bridge-deal-player',
+        DEAL_PLAYER_CLASSNAME
+      );
 
     if (!isChildClick) this.closeWindow();
   }
@@ -169,12 +183,26 @@ export class DealPlayerComponent implements OnInit {
     this.onPause();
     this.dealPlayerService.resetCardsPlayed();
     this.trickNumber = 0;
-    this.playCard(-1)
+    this.playCard(-1);
+  }
+
+  setHeightAuto() {
+    if (
+      window.innerWidth >=
+      this.dealPlayerService.SCALE_AMOUNT_THRESHOLD_VIEW_PORT_WIDTH
+    )
+      this.removeHeightAuto();
   }
 
   private addHeightAuto() {
     const dealPlayer = this.elRef.nativeElement as HTMLElement;
-    if (!dealPlayer.classList.contains(VISIBLE_CLASSNAME)) return;
+    if (
+      !dealPlayer.classList.contains(VISIBLE_CLASSNAME) ||
+      this.dealPlayerService.SCALE_AMOUNT_THRESHOLD_VIEW_PORT_WIDTH <=
+        window.innerWidth
+    )
+      return;
+
     this.renderer.addClass(dealPlayer, HEIGHT_AUTO_CLASSNAME);
   }
 
@@ -313,7 +341,11 @@ export class DealPlayerComponent implements OnInit {
   private playCard(nthCard = this.dealPlayerService.playCount) {
     const cardPlayOrder = this.dealPlayerService.deal?.cardPlayOrder;
 
-    if (!this.dealPlayerService.deal || !cardPlayOrder || cardPlayOrder.length < cardsPerDeck)
+    if (
+      !this.dealPlayerService.deal ||
+      !cardPlayOrder ||
+      cardPlayOrder.length < cardsPerDeck
+    )
       return;
 
     if (nthCard >= cardsPerDeck) return this.onPause();
@@ -441,7 +473,7 @@ export class DealPlayerComponent implements OnInit {
     if (
       suitHtmlEntity === suitsHtmlEntities[0] ||
       suitHtmlEntity === suitsHtmlEntities[3]
-    ) 
+    )
       colorClass = COLOR_BLACK_CLASSNAME;
     this.renderer.removeClass(numberElement, COLOR_BLACK_CLASSNAME);
     this.renderer.removeClass(suitEntityElement, COLOR_BLACK_CLASSNAME);
@@ -449,7 +481,11 @@ export class DealPlayerComponent implements OnInit {
     this.renderer.removeClass(suitEntityElement, COLOR_RED_CLASSNAME);
     this.renderer.addClass(numberElement, colorClass);
     this.renderer.addClass(suitEntityElement, colorClass);
-    this.renderer.setProperty(numberElement, 'innerHTML', number === "10" || number === 10 ? "T" : number);
+    this.renderer.setProperty(
+      numberElement,
+      'innerHTML',
+      number === '10' || number === 10 ? 'T' : number
+    );
     this.renderer.setProperty(suitEntityElement, 'innerHTML', suitHtmlEntity);
   }
 }

@@ -1,7 +1,7 @@
 .deal-player {
   color: var(--color-black);
   font-size: $default-font-size;
-  background-color: rgba(var(--color-green-super-light-rgb), 1);
+  background-color: rgba(var(--color-black-rgb), 1);
   position: absolute;
   top: 0px;
   left: 0;
@@ -331,8 +331,8 @@
   }
 
   &__canvas {
+    --height: auto;
     background-color: rgba(var(--color-green-super-light-rgb), 1);
-    --height: 87.5vh;
     user-select: none;
     -webkit-user-drag: none;
     color: var(--color-primary-1);
@@ -347,16 +347,11 @@
 
     @include respond(deal-player-layout-switch) {
       width: auto;
-      --height: 86.2vh;
-    }
-
-    @include respond($deal-player-layout-breakpoint) {
-      // width: 100vmin;
-      --height: 88vh;
+      --height: 88.2vh;
     }
 
     @include respond(phone) {
-      --height: 89vh;
+      --height: 87.5vh;
       width: 100vw;
     }
 
@@ -364,7 +359,7 @@
       // width: 37vh;
       grid-column: 1 / -1;
       justify-content: flex-start;
-      --height: 89.5vh;
+      --height: 86vh;
 
     }
 

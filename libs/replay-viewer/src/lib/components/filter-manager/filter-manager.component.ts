@@ -26,6 +26,7 @@ import {
   filterManagerGameNames,
   COMPARER_HTML_ENTITIES,
   OPACITY_NONE_CLASSNAME,
+  ANIMATION_DURATION,
 } from '@nx-bridge/constants';
 import {
   AddPlayerHasCard,
@@ -508,7 +509,7 @@ export class FilterManagerComponent implements OnInit {
     const currentPlayerInGame: PlayerInGame = this.filterManagerService.getPlayerInGameFilter();
     const isTooMany = currentPlayerInGame.length >= 4;
     const isAlreadyPresent = currentPlayerInGame.includes(selectedPlayerInGame);
-    
+
     const error = isAlreadyPresent
       ? `${selectedPlayerInGame} ${this.filterManagerService.filterMsgs.playerInGame.invalid.alreadyPresent}`
       : isTooMany
@@ -536,7 +537,6 @@ export class FilterManagerComponent implements OnInit {
         new AddPlayerInGameFilter(selectedPlayerInGame),
         `${this.filterManagerService.filters.playerInGame.string}-${indexToUse}`
       );
-      
     }
   }
 
@@ -578,7 +578,7 @@ export class FilterManagerComponent implements OnInit {
       error: '',
       elementsToReset: [wonByAmountElement],
     };
-    
+
     this.addFilterItem(
       filterItem,
       new SetWonByFilter({
@@ -699,12 +699,32 @@ export class FilterManagerComponent implements OnInit {
     ) as HTMLElement;
 
     if (filters?.classList.contains(OPACITY_NONE_CLASSNAME)) {
-      if (details) this.renderer.removeClass(details, OPACITY_NONE_CLASSNAME);
-      if (filters) this.renderer.removeClass(filters, OPACITY_NONE_CLASSNAME);
+      if (details) {
+        this.renderer.removeClass(details, DISPLAY_NONE_CLASSNAME);
+        setTimeout(() => {
+          this.renderer.removeClass(details, OPACITY_NONE_CLASSNAME);
+        }, ANIMATION_DURATION / 16);
+      }
+      if (filters) {
+        this.renderer.removeClass(filters, DISPLAY_NONE_CLASSNAME);
+        setTimeout(() => {
+          this.renderer.removeClass(filters, OPACITY_NONE_CLASSNAME);
+        }, ANIMATION_DURATION / 16);
+      }
       button.innerHTML = 'Hide';
     } else {
-      if (details) this.renderer.addClass(details, OPACITY_NONE_CLASSNAME);
-      if (filters) this.renderer.addClass(filters, OPACITY_NONE_CLASSNAME);
+      if (details) {
+        this.renderer.addClass(details, OPACITY_NONE_CLASSNAME);
+        setTimeout(() => {
+          this.renderer.addClass(details, DISPLAY_NONE_CLASSNAME);
+        }, ANIMATION_DURATION / 2);
+      }
+      if (filters) {
+        this.renderer.addClass(filters, OPACITY_NONE_CLASSNAME);
+        setTimeout(() => {
+          this.renderer.addClass(filters, DISPLAY_NONE_CLASSNAME);
+        }, ANIMATION_DURATION / 2);
+      }
       button.innerHTML = 'Show';
     }
   }
