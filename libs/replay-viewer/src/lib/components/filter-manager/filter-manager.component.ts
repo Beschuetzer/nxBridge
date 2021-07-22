@@ -273,7 +273,7 @@ export class FilterManagerComponent implements OnInit {
     );
 
     let comparer = '=';
-    if (selectedType === 'less') this.comparers.lessThanEqualTo;
+    if (selectedType === 'less') comparer = this.comparers.lessThanEqualTo;
     else if (selectedType === 'more')
       comparer = this.comparers.greaterThanEqualTo;
 

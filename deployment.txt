@@ -1,6 +1,5 @@
 https://medium.com/@andrew.ray.gilbert/deploy-an-nx-workspace-to-heroku-c0b8ba0e6fe9
 
-
 Modify app.module.ts in the Backend to Statically Serve the Angular Frontend
 
   -npm install --save @nestjs/serve-static
@@ -30,7 +29,6 @@ Modify the .gitignore File to Commit and Push Our /dist Folder(optional?)
 
 Create a Procfile for Heroku in project root called "Procfile" (no extension) and include:
   web: npm run start
-
 
 Build and deploy:
   -remember to build projects with 'nx build [projectName]'
