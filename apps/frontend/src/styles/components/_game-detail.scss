@@ -170,14 +170,14 @@
       position: sticky;
       top: 0;
       grid-row: 3 / span 1;
-      padding: $default-font-size * 0.65625 $default-font-size * 2;
+      padding: $default-font-size * 0.71875 $default-font-size * 2;
 
       @include respond(big-desktop) {
         padding: $default-font-size * .8;
       }
 
       @include respond(phone) {
-        padding: $default-font-size * .375;
+        padding: $default-font-size * 0.46875 $default-font-size * .375;
       }
     }
 
@@ -239,7 +239,7 @@
           width: max-content;
           height: auto;
           font-size: $default-font-size * 1.5 !important;
-          padding: $default-font-size * 0.3125;
+          padding: $default-font-size * 0.40625;
           opacity: 1;
           background-color: transparent !important;
           border: none !important;
@@ -249,8 +249,8 @@
             // padding: $default-font-size * .5;
           }
 
-          @include respond($layout-breakpoint) {
-            padding: $default-font-size * 0.125;
+          @include respond(phone) {
+            padding: $default-font-size * 0.09375;
             
           }
 
