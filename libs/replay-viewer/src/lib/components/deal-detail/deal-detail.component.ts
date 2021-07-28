@@ -27,32 +27,28 @@ import {
   DISPLAY_NONE_CLASSNAME,
   GAME_DETAIL_CLASSNAME,
   getCharValueFromCardValueString,
-  getDirectionFromSeating,
   getHtmlEntityFromSuitOrCardAsNumber,
   getIsBidPlayable,
-  getPartnerFromDirection,
   getSuitAsStringFromArray,
   scrollToSection,
   sortHand,
   suitsHtmlEntities,
   toggleClassOnList,
   toggleInnerHTML,
-  tricksInABook,
   NOT_AVAILABLE_STRING,
   DEAL_PASSED_OUT_MESSAGE,
-  getPlayingPlayers,
-  getAmountMadeAndNeededFromDeal,
+  getDefaultContract,
 } from '@nx-bridge/constants';
 import { Store } from '@ngrx/store';
 import {
   AppState,
   CurrentlyViewingDeal,
-  reducerDefaultValue,
   SetCurrentlyViewingDeal,
   SetCurrentlyViewingDealContract,
 } from '@nx-bridge/store';
 import { switchMap } from 'rxjs/operators';
 import { ReplayViewerDealService } from '../../services/replay-viewer.deal.service';
+import { DealPlayerService } from 'libs/deal-player/src/lib/deal-player.service';
 @Component({
   selector: 'nx-bridge-deal-detail',
   templateUrl: './deal-detail.component.html',
@@ -81,7 +77,7 @@ export class DealDetailComponent implements OnInit {
   public dealSummaryMessageSuffixPre = '';
   public dealSummaryMessageSuffixNumber = '';
   public dealSummaryMessageSuffixPost = '';
-  public contract: Contract = { prefix: '', htmlEntity: '', doubleMultiplier: 1 };
+  public contract: Contract = getDefaultContract();
   public buttonChoices: [string, string] = dealDetailButtonChoices;
   public DEAL_DETAIL_CLASSNAME = DEAL_DETAIL_CLASSNAME;
   public DISPLAY_NONE_CLASSNAME = DISPLAY_NONE_CLASSNAME;
@@ -94,6 +90,7 @@ export class DealDetailComponent implements OnInit {
     private elRef: ElementRef,
     private store: Store<AppState>,
     private replayViewerDealService: ReplayViewerDealService,
+    private dealPlayerService: DealPlayerService,
   ) {}
 
   ngOnInit(): void {
@@ -202,7 +199,7 @@ export class DealDetailComponent implements OnInit {
 
   setContract() {
     if (!this.deal?.contract)
-      return (this.contract = { prefix: '', htmlEntity: '', doubleMultiplier: 1 });
+      return (this.contract = getDefaultContract());
     const splitContract = this.deal?.contract.split(' ');
     if (!splitContract) return;
     const prefix = getCharValueFromCardValueString(

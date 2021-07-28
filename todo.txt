@@ -28,4 +28,3 @@ Todos----------------------------------------------------------
  
 
  -add cypress tests
- -on canDeactivate, need to reset cards in dealplayer

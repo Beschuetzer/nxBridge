@@ -1620,7 +1620,7 @@ exports.teamsFull = ['northSouth', 'eastWest'];
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createHandArrayFromFlatArray = exports.getUserWhoPlayedCard = exports.flatten = exports.sortHand = exports.getSuitAsStringFromArray = exports.getPartnerFromDirection = exports.getDirectionFromSeating = exports.getIsBidPlayable = exports.getHtmlEntitySpan = exports.getHtmlEntityFromSuitOrCardAsNumber = exports.getCharValueFromCardValueString = exports.getCharacterFromCardAsNumber = exports.getSuitFromNumber = exports.getCardStringFromNumber = void 0;
+exports.createHandArrayFromFlatArray = exports.getUserWhoPlayedCard = exports.flatten = exports.sortHand = exports.getSuitAsStringFromArray = exports.getPartnerFromDirection = exports.getDirectionFromSeating = exports.getIsBidPlayable = exports.getHtmlEntitySpan = exports.getHtmlEntityFromSuitOrCardAsNumber = exports.getCharValueFromCardValueString = exports.getCharacterFromCardAsNumber = exports.getSuitFromNumber = exports.getDefaultContract = exports.getCardStringFromNumber = void 0;
 const constants_1 = __webpack_require__(/*! @nx-bridge/constants */ "./libs/constants/index.ts");
 const functions_1 = __webpack_require__(/*! ../functions */ "./libs/constants/functions.ts");
 const constants_2 = __webpack_require__(/*! ../constants */ "./libs/constants/constants.ts");
@@ -1635,6 +1635,10 @@ function getCardStringFromNumber(cardAsNumber) {
     return cardValue + ' of ' + suit;
 }
 exports.getCardStringFromNumber = getCardStringFromNumber;
+function getDefaultContract() {
+    return JSON.parse(JSON.stringify({ prefix: '', doubleMultiplier: 1, htmlEntity: '' }));
+}
+exports.getDefaultContract = getDefaultContract;
 function getSuitFromNumber(cardAsNumber) {
     var _a;
     if (cardAsNumber === null || cardAsNumber === undefined)

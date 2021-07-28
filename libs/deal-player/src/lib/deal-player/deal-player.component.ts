@@ -225,7 +225,7 @@ export class DealPlayerComponent implements OnInit {
   }
 
   private closeWindow() {
-    this.hasLoadedDeal = false;
+    // this.dealPlayerService.hasLoadedDeal = false;
     this.onPause();
     this.dealPlayerService.resetCardsPlayed();
     this.resetTable();
@@ -304,7 +304,7 @@ export class DealPlayerComponent implements OnInit {
   }
 
   private handleDealsUpdates(dealState: DealState) {
-    if (dealState.currentlyViewingDeal?.bids && !this.hasLoadedDeal) {
+    if (dealState.currentlyViewingDeal?.bids) {
       this.dealPlayerService.deal = dealState.currentlyViewingDeal;
       this.declarer = dealState.currentlyViewingDeal.declarer;
       this.dealNumber = dealState.currentlyViewingDeal.dealNumber;
@@ -325,11 +325,11 @@ export class DealPlayerComponent implements OnInit {
       }
 
       this.renderer.addClass(this.elRef.nativeElement, VISIBLE_CLASSNAME);
-      this.hasLoadedDeal = true;
       this.renderRoundWinnersTable();
-    } else if (dealState.currentlyViewingDeal?.bids) {
-      this.dealPlayerService.setCardsRotationAndPosition();
-      this.renderer.addClass(this.elRef.nativeElement, VISIBLE_CLASSNAME);
+    // } else if (dealState.currentlyViewingDeal?.bids) {
+    //   this.dealPlayerService.setCardsRotationAndPosition();
+    //   this.dealPlayerService.positionHands();
+    //   this.renderer.addClass(this.elRef.nativeElement, VISIBLE_CLASSNAME);
     }
 
     if (dealState.currentlyViewingDealContract?.prefix) {

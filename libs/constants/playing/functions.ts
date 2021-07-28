@@ -1,6 +1,7 @@
 import {
   CardinalDirection,
   CardValuesAsString,
+  Contract,
   Hand,
   Hands,
   Seating,
@@ -30,6 +31,10 @@ export function getCardStringFromNumber(cardAsNumber: number) {
   const index = Math.floor(cardAsNumber / cardsPerSuit);
   const suit = suitsAsCapitalizedStrings[index];
   return cardValue + ' of ' + suit;
+}
+
+export function getDefaultContract(): Contract {
+ return JSON.parse(JSON.stringify({prefix: '', doubleMultiplier: 1, htmlEntity: ''}));
 }
 
 export function getSuitFromNumber(cardAsNumber: number) {

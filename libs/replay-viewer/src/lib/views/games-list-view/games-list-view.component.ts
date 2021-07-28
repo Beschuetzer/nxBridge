@@ -8,8 +8,11 @@ import {
 } from '@angular/core';
 import {
   AppState,
+  CurrentlyViewingDeal,
   reducerDefaultValue,
   SetBatchNumber,
+  SetCurrentlyViewingDeal,
+  SetCurrentlyViewingDealContract,
   SetIsViewingGame,
 } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
@@ -18,6 +21,8 @@ import {
   GameDetailDisplayPreferences,
   ReducerNames,
   CanDeactivateOutputTypes,
+  Deal,
+  DealRelevant,
 } from '@nx-bridge/interfaces-and-types';
 import {
   ANIMATION_DURATION,
@@ -26,6 +31,7 @@ import {
   FULL_SIZE_CLASSNAME,
   GAMES_VIEW_CLASSNAME,
   GAME_DETAIL_CLASSNAME,
+  getDefaultContract,
   getNewBatchNumber,
   getNewTotalNumberOfPages,
   HEIGHT_AUTO_CLASSNAME,
@@ -41,6 +47,7 @@ import {
 import { LocalStorageManagerService } from '../../services/local-storage-manager.service';
 import { SearchService } from '../../services/search.service';
 import { ReplayViewerGameService } from '../../services/replay-viewer.game.service';
+import { DealPlayerService } from 'libs/deal-player/src/lib/deal-player.service';
 
 @Component({
   selector: 'nx-bridge-games-list-view',
@@ -82,7 +89,8 @@ export class GamesListViewComponent implements OnInit {
     private searchService: SearchService,
     private elRef: ElementRef,
     private renderer: Renderer2,
-    private replayerViewerGameService: ReplayViewerGameService
+    private replayerViewerGameService: ReplayViewerGameService,
+    private dealPlayerService: DealPlayerService
   ) {}
 
   canDeactivate(): CanDeactivateOutputTypes {
@@ -96,6 +104,8 @@ export class GamesListViewComponent implements OnInit {
     ) {
       dealPlayer.classList.remove(VISIBLE_CLASSNAME);
       dealPlayer.classList.remove(HEIGHT_AUTO_CLASSNAME);
+      this.dealPlayerService.hasLoadedDeal = false;
+
       toReturn = false;
     }
 
@@ -310,5 +320,4 @@ export class GamesListViewComponent implements OnInit {
       }, 50);
     }
   }
-
 }

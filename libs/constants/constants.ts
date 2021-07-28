@@ -1,4 +1,4 @@
-import { GameDetailSizes, SortOptions } from '@nx-bridge/interfaces-and-types';
+import { Contract, GameDetailSizes, SortOptions } from '@nx-bridge/interfaces-and-types';
 
 export const rootRoute = 'replays';
 export const GET_DEALS_CONTROLLER_STRING = 'getDeals';
@@ -106,3 +106,4 @@ export const COMPARER_HTML_ENTITIES = {
   lessThanEqualTo: "&#8804;",
   greaterThanEqualTo: "&#8805;",
 }
+

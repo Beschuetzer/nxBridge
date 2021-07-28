@@ -42,6 +42,8 @@ export class DealPlayerService {
   public cardPlayerOrder: [string, string, string, string] | null = null;
   public handsToRender: Hands | null = null;
   public SCALE_AMOUNT_THRESHOLD_VIEW_PORT_WIDTH = 1350;
+  public hasLoadedDeal = false;
+
   private cardWidth = -1;
   private cardHeight = -1;
   private cardVisibleOffset = -1;
@@ -251,6 +253,7 @@ export class DealPlayerService {
   }
 
   loadCards() {
+    this.cardsLoaded = 0;
     if (this.cards.length > 0) this.removeCards();
     this.cards = [];
     for (let i = 0; i < cardsPerDeck; i++) {
@@ -268,7 +271,7 @@ export class DealPlayerService {
       this.setCanvasMetrics();
       this.setCardMetrics();
       this.positionHands();
-      this.cardsLoaded = 0;
+      this.hasLoadedDeal = true;
     }
   }
 
