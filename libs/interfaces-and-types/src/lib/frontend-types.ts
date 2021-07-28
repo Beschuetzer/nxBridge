@@ -1,5 +1,11 @@
 import { DealRelevant } from './both-types';
+import { Observable } from 'rxjs';
+import { UrlTree } from "@angular/router";
 
+
+export interface CanComponentDeactivate {
+  canDeactivate: () => CanDeactivateOutputTypes;
+}
 export interface CanSkipFilters {
   all: boolean;
   afterDate: boolean;
@@ -216,6 +222,7 @@ export interface WonBy {
 }
 //#endregion
 
+
 //#region Types
 export type AcceptedClaim = {
   claimAmount: number;
@@ -232,6 +239,7 @@ export type AgreeWithClaim = {
   endInHand: null | boolean;
 };
 export type Bid = [string, string];
+export type CanDeactivateOutputTypes = Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree;
 export type CardinalDirection =
   | 'North'
   | 'South'

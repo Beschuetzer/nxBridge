@@ -18,6 +18,8 @@ import { FilterManagerComponent } from './components/filter-manager/filter-manag
 import { FilterManagerItemComponent } from './components/filter-manager-item/filter-manager-item.component';
 import { LineSpinnerComponent } from './components/line-spinner/line-spinner.component';
 import { NebulaComponent } from './components/nebula/nebula.component';
+import {CanDeactivateGuard} from './guards/canDeactivate.service';
+
 @NgModule({
   declarations: [
     LandingPageComponent,
@@ -37,7 +39,7 @@ import { NebulaComponent } from './components/nebula/nebula.component';
     CommonModule,
     RouterModule.forChild([
       {path: '', component: LandingPageComponent},
-      {path: 'games', component: GamesListViewComponent} 
+      {path: 'games', component: GamesListViewComponent, canDeactivate: [CanDeactivateGuard]} 
     ]),
     HeaderModule,
     GridModule,

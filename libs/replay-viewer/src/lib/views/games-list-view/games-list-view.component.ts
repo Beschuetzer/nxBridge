@@ -16,14 +16,18 @@ import {
   LocalStorageUserWithGames,
   GameDetailDisplayPreferences,
   ReducerNames,
+  CanDeactivateOutputTypes,
 } from '@nx-bridge/interfaces-and-types';
 import {
   ANIMATION_DURATION,
+  DEAL_PLAYER_CLASSNAME,
   DISPLAY_NONE_CLASSNAME,
+  FULL_SIZE_CLASSNAME,
   GAMES_VIEW_CLASSNAME,
+  GAME_DETAIL_CLASSNAME,
   getNewBatchNumber,
   getNewTotalNumberOfPages,
-  HIDDEN_CLASSNAME,
+  HEIGHT_AUTO_CLASSNAME,
   NOT_AVAILABLE_STRING,
   OPACITY_NONE_CLASSNAME,
   RESULTS_PER_PAGE_OPTIONS,
@@ -31,6 +35,7 @@ import {
   SORT_OPTIONS,
   TRANSLATE_LEFT_CLASSNAME,
   TRANSLATE_RIGHT_CLASSNAME,
+  VISIBLE_CLASSNAME,
 } from '@nx-bridge/constants';
 import { LocalStorageManagerService } from '../../services/local-storage-manager.service';
 import { SearchService } from '../../services/search.service';
@@ -76,30 +81,59 @@ export class GamesListViewComponent implements OnInit {
     private searchService: SearchService,
     private elRef: ElementRef,
     private renderer: Renderer2,
-    private replayerViewerGameService: ReplayViewerGameService,
+    private replayerViewerGameService: ReplayViewerGameService
   ) {}
 
+  canDeactivate(): CanDeactivateOutputTypes {
+    debugger;
+    const dealPlayer = document.querySelector(
+      `.${DEAL_PLAYER_CLASSNAME}`
+    ) as HTMLElement;
+    if (
+      dealPlayer.classList.contains(VISIBLE_CLASSNAME) ||
+      dealPlayer.classList.contains(HEIGHT_AUTO_CLASSNAME)
+    ) {
+      dealPlayer.classList.remove(VISIBLE_CLASSNAME);
+      dealPlayer.classList.remove(HEIGHT_AUTO_CLASSNAME);
+      return false;
+    }
+
+    const gameDetailsFullSize = document.querySelectorAll(
+      `.${GAME_DETAIL_CLASSNAME}.${FULL_SIZE_CLASSNAME}`
+    );
+    if (gameDetailsFullSize.length > 0) {
+      this.replayerViewerGameService.resetGameDetails(gameDetailsFullSize);
+      return false;
+    }
+
+    return true;
+  }
+
   ngOnInit(): void {
-    this.store.select(ReducerNames.deals).subscribe(dealState => {
+    this.store.select(ReducerNames.deals).subscribe((dealState) => {
       this.totalNumberOfDeals = dealState.dealsAsStrings?.length;
-    })
+    });
     this.store.select(ReducerNames.users).subscribe((userState) => {
       this.currentlyViewingUser = userState.currentlyViewingUser;
     });
 
-    this.store.select(ReducerNames.games).subscribe(gameState => {
+    this.store.select(ReducerNames.games).subscribe((gameState) => {
       this.totalGames = gameState.filteredGames?.length;
       this.totalNumberOfPages = Math.ceil(
         this.totalGames / this.resultsPerPage
       );
-    })
+    });
 
     this.store.select(ReducerNames.filters).subscribe((filterState) => {
-      if (!filterState.dealsThatMatchFilters.includes(`${reducerDefaultValue}`)) this.numberOfDealsMatchingFilters = filterState.dealsThatMatchFilters.length;
+      if (!filterState.dealsThatMatchFilters.includes(`${reducerDefaultValue}`))
+        this.numberOfDealsMatchingFilters =
+          filterState.dealsThatMatchFilters.length;
       else this.numberOfDealsMatchingFilters = -1;
     });
 
-    this.replayerViewerGameService.setDefaultResultsPerPage(this.resultsElement);
+    this.replayerViewerGameService.setDefaultResultsPerPage(
+      this.resultsElement
+    );
     this.preferences = this.localStorageManager.getPreferences();
     this.setOptionElementsPerPreferences();
     this.replayerViewerGameService.changeGameSize(this.preferences.size);
@@ -115,9 +149,15 @@ export class GamesListViewComponent implements OnInit {
 
   onHide() {
     const gamesView = this.elRef.nativeElement as HTMLElement;
-    const size = gamesView.querySelector(`.${GAMES_VIEW_CLASSNAME}__size`) as HTMLElement;
-    const results = gamesView.querySelector(`.${GAMES_VIEW_CLASSNAME}__results`) as HTMLElement;
-    const button = gamesView.querySelector(`.${GAMES_VIEW_CLASSNAME}__hide`) as HTMLElement;
+    const size = gamesView.querySelector(
+      `.${GAMES_VIEW_CLASSNAME}__size`
+    ) as HTMLElement;
+    const results = gamesView.querySelector(
+      `.${GAMES_VIEW_CLASSNAME}__results`
+    ) as HTMLElement;
+    const button = gamesView.querySelector(
+      `.${GAMES_VIEW_CLASSNAME}__hide`
+    ) as HTMLElement;
 
     if (size.classList.contains(OPACITY_NONE_CLASSNAME)) {
       if (size) {
@@ -141,14 +181,14 @@ export class GamesListViewComponent implements OnInit {
         this.renderer.addClass(size, OPACITY_NONE_CLASSNAME);
         setTimeout(() => {
           this.renderer.addClass(size, DISPLAY_NONE_CLASSNAME);
-        }, ANIMATION_DURATION / 4)
+        }, ANIMATION_DURATION / 4);
       }
       if (results) {
         this.renderer.addClass(results, TRANSLATE_RIGHT_CLASSNAME);
         this.renderer.addClass(results, OPACITY_NONE_CLASSNAME);
         setTimeout(() => {
           this.renderer.addClass(results, DISPLAY_NONE_CLASSNAME);
-        }, ANIMATION_DURATION / 4)
+        }, ANIMATION_DURATION / 4);
       }
       button.innerHTML = 'Show';
     }
@@ -176,7 +216,10 @@ export class GamesListViewComponent implements OnInit {
       this.totalGames
     );
 
-    this.replayerViewerGameService.selectCurrentPage(this.currentBatch, this.currentPageElement);
+    this.replayerViewerGameService.selectCurrentPage(
+      this.currentBatch,
+      this.currentPageElement
+    );
   }
 
   onSizeChange(e: Event, shouldSave = true) {
@@ -198,7 +241,10 @@ export class GamesListViewComponent implements OnInit {
     this.store.dispatch(new SetBatchNumber(this.currentBatch));
 
     this.searchService.setCurrentlyDisplayingGames();
-    this.replayerViewerGameService.selectCurrentPage(this.currentBatch, this.currentPageElement);
+    this.replayerViewerGameService.selectCurrentPage(
+      this.currentBatch,
+      this.currentPageElement
+    );
   }
 
   setOptionElementsPerPreferences() {
