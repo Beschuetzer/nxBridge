@@ -10,6 +10,7 @@ import {
   AppState,
   reducerDefaultValue,
   SetBatchNumber,
+  SetIsViewingGame,
 } from '@nx-bridge/store';
 import { Store } from '@ngrx/store';
 import {
@@ -85,7 +86,7 @@ export class GamesListViewComponent implements OnInit {
   ) {}
 
   canDeactivate(): CanDeactivateOutputTypes {
-    debugger;
+    let toReturn = true;
     const dealPlayer = document.querySelector(
       `.${DEAL_PLAYER_CLASSNAME}`
     ) as HTMLElement;
@@ -95,7 +96,7 @@ export class GamesListViewComponent implements OnInit {
     ) {
       dealPlayer.classList.remove(VISIBLE_CLASSNAME);
       dealPlayer.classList.remove(HEIGHT_AUTO_CLASSNAME);
-      return false;
+      toReturn = false;
     }
 
     const gameDetailsFullSize = document.querySelectorAll(
@@ -103,10 +104,13 @@ export class GamesListViewComponent implements OnInit {
     );
     if (gameDetailsFullSize.length > 0) {
       this.replayerViewerGameService.resetGameDetails(gameDetailsFullSize);
-      return false;
+      toReturn = false;
     }
 
-    return true;
+    if (!toReturn) {
+      this.store.dispatch(new SetIsViewingGame(false));
+    }
+    return toReturn;
   }
 
   ngOnInit(): void {

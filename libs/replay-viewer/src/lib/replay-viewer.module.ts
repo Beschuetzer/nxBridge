@@ -19,6 +19,7 @@ import { FilterManagerItemComponent } from './components/filter-manager-item/fil
 import { LineSpinnerComponent } from './components/line-spinner/line-spinner.component';
 import { NebulaComponent } from './components/nebula/nebula.component';
 import {CanDeactivateGuard} from './guards/canDeactivate.service';
+import { CanActivateGamesView } from './guards/canActivateGamesView.service';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,7 @@ import {CanDeactivateGuard} from './guards/canDeactivate.service';
     CommonModule,
     RouterModule.forChild([
       {path: '', component: LandingPageComponent},
-      {path: 'games', component: GamesListViewComponent, canDeactivate: [CanDeactivateGuard]} 
+      {path: 'games', component: GamesListViewComponent, canDeactivate: [CanDeactivateGuard], canActivate: [CanActivateGamesView]} 
     ]),
     HeaderModule,
     GridModule,

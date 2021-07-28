@@ -28,4 +28,4 @@ Todos----------------------------------------------------------
  
 
  -add cypress tests
- -hitting back when deal-player is visible causes inability to open game detail cards if logging in again (use canDeactivate to clear/reset things)
+ -on canDeactivate, need to reset cards in dealplayer
