@@ -1,5 +1,11 @@
 
 
+# Getting Started after Cloning
+
+run `npm i`
+create .env file and grab config variable for mongoDB_URI from heroku dashboard
+run `npm start`
+
 # NxBridge
 
 This project was generated using [Nx](https://nx.dev).

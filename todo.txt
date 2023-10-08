@@ -1,3 +1,7 @@
+-load only the first 25 most recent games on load
+-add pagination to backend api to allow loading next page on scroll down
+-add option to find games based on the filters (makes call to api to get)
+
 reminders -------------------------------------------------
   -any bottlenecks likely come from the deal-handling branch
   -must call store.dispatch(new SetIsFilterSame(false)) before calling searchService.setCurrentlyDisplayingGames();
