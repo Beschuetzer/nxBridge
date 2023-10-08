@@ -75,7 +75,7 @@ export class NebulaComponent implements OnInit {
 
   private cloudXRotationStart = 1.16;
   private cloudYRotationStart = -0.12;
-  private cloudZRotationStart = Math.random() * 2 * Math.PI;
+  private cloudZRotationStart = Math.random() * 1.5 * Math.PI;
   //#endregion
 
   //#region Post Processing
