@@ -66,8 +66,8 @@ export class NebulaComponent implements OnInit {
   private cloudOpacityMax = .5;
   private cloudParticlesMin = 50;
   private cloudParticlesMax = 150;
-  private cloudWidthMin = 400;
-  private cloudWidthMax =  600;
+  private cloudWidthMin = 500;
+  private cloudWidthMax =  750;
   private cloudZRotationAmountMin =  .00033;
   private cloudZRotationAmountMax =  .0009;
   private fogDensityMin =  0.0005;
@@ -141,15 +141,18 @@ export class NebulaComponent implements OnInit {
   //#endregion
 
   //#region Light Settings
-  private orangeLightIntensity = 60; // 60
-  private orangeLightDistance = 450; // 450
-  private orangeLightDecay = 1.7; // 1.7
-  private redLightIntensity = 60; // 60
-  private redLightDistance = 450; // 450
-  private redLightDecay = 1.7; // 1.7
-  private blueLightIntensity = 60; // 60
-  private blueLightDistance = 450; // 450
-  private blueLightDecay = 1.7; // 1.7
+  private lightIntensity = 30; //60 was default
+  private lightDistance = 450; //450 was default
+  private lightDecay = 1.7; //1.7 was default
+  private orangeLightIntensity = this.lightIntensity;
+  private orangeLightDistance = this.lightDistance;
+  private orangeLightDecay = this.lightDecay;
+  private redLightIntensity = this.lightIntensity; 
+  private redLightDistance = this.lightDistance;
+  private redLightDecay = this.lightDecay;
+  private blueLightIntensity = this.lightIntensity; 
+  private blueLightDistance = this.lightDistance;
+  private blueLightDecay = this.lightDecay;
 
   private orangeLightXPosition = 200; //200
   private orangeLightYPosition = 300; //300
@@ -252,7 +255,7 @@ export class NebulaComponent implements OnInit {
         const cloud = new THREE.Mesh(cloudGeo, cloudMaterial);
         cloud.position.set(
           Math.random() * 800 - 400,
-          500,
+          window.innerHeight / 2,
           Math.random() * 500 - 500
         );
 
