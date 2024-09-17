@@ -35,5 +35,5 @@ Build and deploy:
   -connect project to heroku project (if necessary) heroku git:remote -a [projectName]
   -push to heroku per usual
   -remember to add any .env variables to the heroku project as config vars:
-    heroku config:set SOME_ENV_VAR=soMeValuE
+    heroku config:set SOME_ENV_VAR=soMeValuE 
   -if an npm package doesn't install properly (e.g. semantic-ui) try using the CDN instead
